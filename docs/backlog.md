@@ -1898,8 +1898,16 @@ missing from it entirely.
             sign-in required = yes, username `appreview@sebell.dk`, mailbox
             password, contact (Thomas Sebell + phone + thomas@sebell.dk) and the
             §3 Notes (with the real webmail URL + password) all filled and saved.
-            Prerequisite still on Thomas: the `appreview@sebell.dk` mailbox must
-            be live so the reviewer can read the emailed OTP.
+            - [x] **THE WHOLE REVIEWER SIGN-IN PATH IS CONFIRMED WORKING,
+                  2026-08-07** (Thomas: *"All mailboxes and access is tested and
+                  passed"*). The `appreview@sebell.dk` mailbox is live, the
+                  webmail credentials Apple holds do sign in, and a one-time code
+                  arrives. This was the last prerequisite on Thomas and the one
+                  thing that could have turned a week in the queue into a
+                  rejection plus another week – the reviewer's very first action
+                  is a sign-in the app cannot complete for them.
+                  Checked ahead of any nudge to Apple deliberately, so that
+                  hurrying the review along could not hurry it into a failure.
 - [x] **Screenshots** – 4 iPhone 6.5"/6.9" screenshots (Weekly plan, Recipes,
       Shopping list, Household) uploaded to App Store Connect (verified
       2026-07-31). iPhone-only build confirmed – App Store Connect shows NO iPad
@@ -1971,10 +1979,18 @@ missing from it entirely.
       already in app.json, so submission stops asking every time.
 - [x] In-app account deletion built (guideline 5.1.1(v), required for any app
       with account creation) – Delete profile, shipped 2026-07-22.
-- [ ] **Confirm the support address actually receives mail** – see the
-      two-addresses item above. Whichever address wins, it is promised in the
-      privacy policy AND the App Store description and is the app's only
-      support channel, so it has to work before either goes live.
+- [x] **Support address CONFIRMED RECEIVING 2026-08-07** (Thomas: *"All
+      mailboxes and access is tested and passed"*). It is promised in the
+      privacy policy AND the App Store description and is the app's only support
+      channel, so this was a genuine launch gate.
+      **Known and accepted: `hello@prepeat.app` is SLOW to arrive** – Thomas's
+      call that it is not a concern, and the mechanism explains it: the address
+      is a Porkbun FORWARD (MX `fwd1/fwd2.porkbun.com`) rather than a mailbox,
+      so every message takes an extra hop. Worth having written down for two
+      futures: if a user ever reports "I emailed support and heard nothing",
+      slowness is the first thing to rule out rather than a lost message; and if
+      it ever becomes a real problem the fix is a proper mailbox on the domain,
+      not a DNS change.
 - [x] **`prepeat://ds-check` no longer reachable in production (2026-07-30).**
       The token-debug screen is now development-only: the route redirects to
       home when `!__DEV__` (a deep link in a Release build goes nowhere) and
