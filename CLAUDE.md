@@ -101,9 +101,30 @@ not a developer and should not have to remember them). Standing rules:
 ## Design system workflow (agreed 2026-07-12)
 
 The app is a testbed for the Sebell DS, which is still under development.
-The DS is the source of truth for every colour, radius, spacing and type
-value – not the hex numbers visible in Figma frames (published library
-values in Figma lag behind the DS repo).
+
+**Figma is the source of truth for the DS** (Thomas, 2026-08-07, correcting the
+older wording here). Two things follow, and they are not the same thing:
+
+- **DS components and VARIABLES in Figma are right.** Read them with
+  `get_variable_defs`, which returns the real values.
+- **⚠️ STILL COMPARE FIGMA AGAINST `ds-theme.cjs`** (Thomas, 2026-08-07). The two
+  are not interchangeable: the bridge is a GENERATED COPY, produced by
+  `npm run sync-ds-tokens`, so it goes stale the moment the DS is republished and
+  nobody re-syncs. **A disagreement is the signal that the sync was missed** –
+  it is not a licence to pick whichever value you prefer. Done on 2026-08-07 for
+  the shopping list: all seven colours matched exactly, and the header font came
+  back Montserrat both sides.
+- **SCREEN FRAMES are Thomas's design work and can contain mistakes** – "I can
+  still make mistakes in the design phase, but DS components should be right."
+  So when a screen frame disagrees with a DS component, the component wins and
+  the frame is worth querying rather than copying.
+
+⚠️ **`get_design_context`'s CSS fallbacks are still stale** and always have been
+– that payload is where `Noto Serif` and old hexes come from (the 2026-08-06
+round where they were read aloud three times before Thomas caught it). Take
+token NAMES from that output and never its numbers. The older note here said the
+whole published library lagged the DS repo; that was too broad – it is only this
+one output.
 
 1. **Never improvise a token.** If a screen needs a token family that is
    not in `src/constants/ds-theme.cjs` yet (like forms/* before

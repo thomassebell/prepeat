@@ -111,14 +111,18 @@ export function DoneSection({
             /label, and the sheet delete button already uses them. Same colour
             today either way (#DE2D12); the right token name is what survives
             the next DS retune. Spacing already matched the spec: 4 gap, 24
-            horizontal, 16 vertical. */}
+            horizontal, 16 vertical.
+            RADIUS DID NOT: the button is radius/medium (12) - read straight off
+            the component with get_variable_defs on 74:5764 - and this was
+            rounded-small (8). Fixed 2026-08-07, which also makes it agree with
+            the sheet delete button, the app's other danger button. */}
         {!collapsed && (
           <Animated.View layout={LinearTransition.duration(250)}>
             <Pressable
               onPress={onClear}
               accessibilityRole="button"
               accessibilityLabel="Clear done items"
-              className="w-full flex-row items-center justify-center gap-comp-xsmall rounded-small bg-button-danger-fill-enabled px-comp-xlarge py-comp-large">
+              className="w-full flex-row items-center justify-center gap-comp-xsmall rounded-medium bg-button-danger-fill-enabled px-comp-xlarge py-comp-large">
               <MaterialIcons
                 name="delete"
                 size={24}

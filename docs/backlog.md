@@ -2492,11 +2492,45 @@ missing from it entirely.
     them. Same colour today (#DE2D12); the right token name is what survives the
     next retune. **A comment asserting what the DS does or does not carry is a
     claim with a shelf life.**
-  - **The payload's own values were stale AGAIN** (the 2026-08-06 lesson): it
-    offered `Noto Serif` for the header font and `#e3ddcf` for the band. The DS
-    says Montserrat and `#D6D4D1`. Token names taken, numbers ignored - which
-    does mean the app and the Figma render will not look identical, and the DS is
-    the one that is right.
+  - **⚠️ AND THE 2026-08-06 "FIGMA LAGS THE DS" RULE TURNS OUT TO BE TOO BROAD -
+    CLAUDE.md CORRECTED.** The `get_design_context` payload was stale again
+    (`Noto Serif`, `#e3ddcf`), so the token names were taken and the numbers
+    ignored, as the rule said. But reading the SAME nodes with
+    **`get_variable_defs` returned entirely correct values** - all seven colours
+    matching `ds-theme.cjs` exactly, and Montserrat for the header font.
+    So the published library is NOT lagging. Only that one output's CSS
+    fallbacks are stale, and always were.
+    **Thomas set the hierarchy straight (2026-08-07):** *"Figma should be correct
+    as it is the source of truth for the DS. But I can still make mistakes in the
+    design phase, but DS components should be right."* So: **DS components and
+    variables in Figma are authoritative; screen frames are design work and can
+    contain mistakes.** When a frame disagrees with a component, the component
+    wins and the frame is worth querying rather than copying.
+    **AND THE COMPARISON STILL HAPPENS** (Thomas, correcting a first draft of
+    this entry that read as if Figma and `ds-theme.cjs` were interchangeable):
+    *"you should still compare Figma to DS code."* They are not interchangeable -
+    the bridge is a GENERATED COPY produced by `npm run sync-ds-tokens`, so it
+    goes stale the moment the DS is republished and nobody re-syncs. **A
+    disagreement is the signal that the sync was missed**, not a choice between
+    two values. That comparison is exactly what was run here (all seven matched);
+    the first write-up just described it as optional.
+    WHY IT MATTERS: the old wording made every number Figma produced suspect,
+    which is expensive. Reading Figma is now cheap and reliable - and checking it
+    against the bridge is what catches a missed sync.
+  - [x] **A RECONCILIATION PASS AFTER A FIGMA ROUND IS WORTH DOING, and this is
+    the evidence.** Thomas: *"will you check Figma for the last shopping
+    upgrades. I've done some of them, but not sure I got them all."* Four of five
+    were already in sync (category headings, band shade, band spacing, chevron).
+    The fifth was the **Clear button's corner radius**: the component uses
+    `radius/medium` (12) and the app had `rounded-small` (8) - read straight off
+    74:5764 with `get_variable_defs`. Not a thing either of us would have caught
+    by eye. Cheap to repeat now the right call is known.
+  - [ ] **Open, deliberately not changed: the drag handle's token.** The frame
+    binds it to `color/surface/secondary/main`; the app uses `text.accent`. Both
+    are #6F5D44 today, so nothing looks wrong - but a retune that moves one and
+    not the other splits them. Not fixed here because the same handle appears on
+    the recipe screens and changing one instance on a guess about the others is
+    how a treatment drifts. Worth checking once and aligning everywhere.
   - [ ] **Figma has not caught up with the CATEGORY headings** - the frame still
     draws them at 16px text with an 8px gap. Thomas changed the done section;
     the categories were changed verbally. Worth updating the frame before this is
