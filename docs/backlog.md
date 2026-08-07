@@ -1106,13 +1106,23 @@ cut: fix 1 and 6 before the next build, the rest as a fast follow.
             code (6 Aug) is now dead with a fresh one minted 09:41, so
             rotate_invite_code still retires the old code with the raw insert
             permission gone.
-            - [ ] **LEAVING A HOUSEHOLD IS STILL UNWALKED IN THE APP.** The
-                  instruction said "leave from the switcher", which was wrong –
-                  it lives under Edit profile, and only appears when the
-                  household has another member, so the freshly created solo
-                  household had nothing to leave. Re-walk on the 2-member
-                  TestKitchen. The SQL path is tested both ways; the app's
-                  version of it is not.
+            - [x] **LEAVING WALKED AND PASSED 2026-08-07** on the 2-member
+                  TestKitchen, after a first attempt that failed on a bad
+                  instruction: leaving is not in the switcher but under Edit
+                  profile, and it only appears when the household has another
+                  member – so the freshly created solo household had nothing to
+                  leave either way.
+                  **THE DATA IS THE PROOF, and it covers the two things
+                  dropping `household_members_delete_self` could have broken.**
+                  Thomas is out of TestKitchen while **thomas@sebell.dk is still
+                  in it**, so the delete was scoped to the caller alone rather
+                  than clearing the household; and "Tom's Kitchen" was created
+                  09:47:40 holding **2 recipes, both with
+                  `forked_from_recipe_id` set**, so the GDPR copy-on-leave
+                  snapshot ran. TestKitchen keeps its own 2.
+                  That is the whole reason the policy was dropped rather than
+                  tightened – a tightened policy would have permitted a raw
+                  leave that skipped exactly this snapshot.
       - [x] **THE VERIFYING SELECT CAUGHT ITSELF, first run, and the lesson is
             worth more than the bug.** `redeem_rejects_null_expiry` came back
             FALSE against a function body that was perfectly correct – because a
