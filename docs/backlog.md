@@ -2447,6 +2447,29 @@ missing from it entirely.
 
 ## Decisions log (recent)
 
+- **2026-08-07 – NOTHING TO REORDER MEANS NO DRAG HANDLE, and the app was
+  drawing one anyway.** Walked and confirmed the same day.
+  **HOW IT WAS FOUND, which is the part worth keeping.** Chasing an unrelated
+  problem (Claude could not point Thomas at a node in Figma), Claude painted a
+  hidden `drag_handle` purple purely to prove the deep-link mechanism worked.
+  Seeing it, Thomas remembered why he had hidden it: *"there is only one
+  category, so it does not make any sense to order it differently."*
+  **SO THE FIGMA FRAME WAS MORE CORRECT THAN THE CODE, and neither review
+  direction could have caught it.** A hidden layer is invisible in the app by
+  definition, and nobody reads a frame looking for things that are not there. It
+  surfaced only because of a detour that had nothing to do with it.
+  **LESSON: a hidden layer in a frame is usually a RULE, not a leftover.** Claude
+  had called this one debris and suggested deleting it.
+  Fixed in three places, and the rule was already half-applied:
+  - **Shopping** – a lone category gets no handle. Reordering only ever moves the
+    TITLED groups (the uncategorised group is pinned to the top), so one titled
+    group means nothing can move, whether or not loose items sit above it.
+  - **`CategoryGroup`** – draws no handle at all when there is no reorder
+    callback and no gesture, rather than a dead one.
+  - **The recipe EDIT screen's per-section handle** – the one place not gated.
+    The "Ingredients" and "Instructions" handles above it already were
+    (`length > 1`), and so was the detail screen. Now all four agree.
+
 - **2026-08-07 – THE SHOPPING LIST'S HEADINGS NOW MATCH A RECIPE'S INGREDIENT
   SECTIONS.** Thomas: *"the category style on shopping should match the style of
   recipe sections"*, then *"the done section should match too"*. So all three

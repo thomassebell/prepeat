@@ -30,6 +30,9 @@ export function CategoryGroup({
   dragGesture,
 }: CategoryGroupProps) {
   if (items.length === 0) return null;
+  // No reorder callback and no gesture means there is nothing to reorder - draw
+  // no handle rather than a dead one (Thomas, 2026-08-07).
+  const canReorder = onReorder != null || dragGesture != null;
   const handle = (
     <Pressable
       onPress={onReorder}
@@ -69,9 +72,9 @@ export function CategoryGroup({
             </Text>
             {dragGesture ? (
               <GestureDetector gesture={dragGesture}>{handle}</GestureDetector>
-            ) : (
+            ) : canReorder ? (
               handle
-            )}
+            ) : null}
           </View>
         )}
         <View className="w-full overflow-hidden rounded-large">

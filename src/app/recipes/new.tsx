@@ -435,18 +435,23 @@ export default function AddRecipeScreen() {
                         {group.section.row.name}
                       </Text>
                     </Pressable>
-                    <Pressable
-                      onPress={() => setReordering("ingredients")}
-                      hitSlop={8}
-                      accessibilityRole="button"
-                      accessibilityLabel="Reorder ingredients"
-                    >
-                      <MaterialIcons
-                        name="drag-handle"
-                        size={24}
-                        color={ds.colors.text.accent}
-                      />
-                    </Pressable>
+                    {/* Same rule as the "Ingredients" header above and as the
+                        recipe detail screen: nothing to reorder, no handle
+                        (2026-08-07). This one was the odd one out. */}
+                    {ingredients.length > 1 && (
+                      <Pressable
+                        onPress={() => setReordering("ingredients")}
+                        hitSlop={8}
+                        accessibilityRole="button"
+                        accessibilityLabel="Reorder ingredients"
+                      >
+                        <MaterialIcons
+                          name="drag-handle"
+                          size={24}
+                          color={ds.colors.icon.subtle}
+                        />
+                      </Pressable>
+                    )}
                   </View>
                 )}
                 {group.rows.length > 0 && (

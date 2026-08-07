@@ -66,6 +66,9 @@ released first either way.
   drops between other sections rather than into the middle of one, so nothing
   changes section without you asking. Dragging a single ingredient works exactly
   as before – that is still how you move one into another section.
+- **No drag handle where there is nothing to drag.** A shopping list with only
+  one category no longer offers to reorder it, and the same is true for a recipe
+  with a single ingredient section.
 - **The shopping list reads like the rest of the app.** Category headings and
   the "items done" heading now use the same style as a recipe's ingredient
   sections, with more room around them, so the list is easier to scan.

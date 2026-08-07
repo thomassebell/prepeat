@@ -213,8 +213,21 @@ function ShoppingListScreen() {
                     onToggle={toggleItem}
                     onEdit={setEditing}
                     onDelete={removeItem}
-                    onReorder={() => setReordering(true)}
-                    dragGesture={makeDragGesture(category)}
+                    // ONE CATEGORY HAS NOTHING TO REORDER, so it gets no handle
+                    // (Thomas, 2026-08-07 - found because he had hidden exactly
+                    // this handle in the Figma frame and remembered why: "there
+                    // is only one category, so it does not make any sense to
+                    // order it differently"). The app was still drawing it.
+                    // The recipe screens already worked this way
+                    // (ingredients.length > 1); this is shopping catching up.
+                    // Reordering only ever moves the TITLED groups - the
+                    // uncategorised group is pinned to the top - so one titled
+                    // group means nothing can move, whether or not loose items
+                    // exist above it.
+                    onReorder={groups.length > 1 ? () => setReordering(true) : undefined}
+                    dragGesture={
+                      groups.length > 1 ? makeDragGesture(category) : undefined
+                    }
                   />
                 ))}
                 <DoneSection
