@@ -561,8 +561,13 @@ export function ShoppingListProvider({ children }: { children: ReactNode }) {
   // planned anything, weekOptions is just the current week and BOTH ARROWS ARE
   // DEAD - two switchers that look identical behaving differently. Found by
   // Thomas on device 2026-08-07 in a freshly created household; behaviour dates
-  // to 2026-07-18, not a regression. Whether Shopping should create weeks too is
-  // an open product question - see the backlog.
+  // to 2026-07-18, not a regression.
+  // NOT CREATING WEEKS HERE IS DELIBERATE (Thomas decided 2026-08-07, decisions
+  // log). The list is downstream of the plan - a week nobody planned has nothing
+  // to shop for - and the one real case, a non-recipe item for a future week,
+  // is served by adding it to THIS week and letting "Move all items to this
+  // week" carry it forward. Do not "fix" this by calling getOrCreateListId on
+  // the forward arrow.
   // Live, not computed once at mount – see useCurrentWeekStart and known bug 3.
   const currentWeekStart = useCurrentWeekStart();
   // Callbacks and the boot effect read the week through this ref, so a week

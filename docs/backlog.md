@@ -236,41 +236,6 @@ invite. Check betaTesters vs Users-and-Access before blaming email or spam.
 
 ## Known bugs (open)
 
-- [ ] **Shopping's week switcher is dead until you have planned something, and
-      the two tabs' identical-looking switchers behave differently** (Thomas, on
-      device 2026-08-07: *"you can not scroll the weeks in shopping before you
-      have done so in plan. I think Plan is creating the weeks"* – exactly
-      right).
-      **THE ASYMMETRY.** Plan's "›" past the last week **creates** a clean next
-      week (`getOrCreatePlan`,
-      [meal-plan.tsx:670](../src/lib/meal-plan.tsx)) – documented behaviour from
-      2026-07-17, replacing the old header "+". Shopping's arrows only move
-      between weeks that ALREADY EXIST
-      ([shopping-list.tsx:1102](../src/lib/shopping-list.tsx)), and its week list
-      is built from existing shopping lists + existing meal plans + the current
-      week. So a household that has never planned anything has exactly one
-      reachable week and both arrows are disabled.
-      **NOT A REGRESSION** – `git log -S` puts this in `e1cc357`, 2026-07-18, the
-      original weekly-plan milestone. The 2026-08-04 clock work only changed how
-      it reads the current week. It went unnoticed for three weeks because it
-      only bites an EMPTY household, and every household in use has plans.
-      **A code comment claimed the opposite** ("Reachable weeks mirror the plan's
-      rule") and was corrected the same day. It is how the gap survived review:
-      the comment described an intention, and nobody diffed it against what
-      meal-plan.tsx actually does. LESSON: a comment asserting two things agree
-      is a claim, and claims rot silently.
-      **NEEDS A DECISION, not a fix yet:** should Shopping's "›" create next
-      week's list the way Plan's does? For it – the shopping list takes manual
-      items too, so "add loo roll to next week" is currently impossible until a
-      meal is planned, and two switchers that look the same should not behave
-      differently. Against – the list is downstream of the plan by design, so
-      creating list rows for weeks nobody has planned is clutter, and the honest
-      fix might instead be to make Shopping's dead arrows LOOK dead rather than
-      to create weeks. No design exists for either.
-      Low urgency: invisible to any household that plans meals, which is all of
-      them. It is a first-run sharp edge, which is also the worst place to have
-      one.
-
 - [x] **A plan change that needed MORE than you ticked off was completely
       invisible. FIXED AND APPLIED 2026-08-04 as migration 0028.** Found
       2026-08-04 from Thomas's report: *"it does not update shopping list when
@@ -2340,6 +2305,44 @@ missing from it entirely.
       ds-theme.cjs and walk the affected screens (agreed 2026-07-12).
 
 ## Decisions log (recent)
+
+- **2026-08-07 – SHOPPING DELIBERATELY DOES NOT CREATE WEEKS. Decided by
+  Thomas; do not re-litigate.** Found on device the same day: *"you can not
+  scroll the weeks in shopping before you have done so in plan. I think Plan is
+  creating the weeks"* – exactly right. Plan's "›" past the last week CREATES a
+  clean next week (`getOrCreatePlan`,
+  [meal-plan.tsx:670](../src/lib/meal-plan.tsx), behaviour from 2026-07-17);
+  Shopping's arrows only move between weeks that already exist, so a household
+  that has never planned has one reachable week and two disabled arrows.
+  **THE QUESTION THOMAS ASKED IS THE ONE THAT SETTLED IT** – *"is there a user
+  story where you will create a new week without creating a new plan?"* Going
+  looking for one is what killed the idea. The only real candidate is a
+  NON-RECIPE item for a future week ("we're out of dishwasher tablets", and the
+  list does take manually typed items) – **and that is already served**: add it
+  to THIS week's list, which always exists, leave it unticked, and next week's
+  "Move all items to this week" carries it forward, which is exactly what the
+  leftover move (0026) was built for. Every other candidate collapses: a party
+  in a future week means planning meals for it, which creates the week anyway;
+  looking ahead at someone else's plan shows nothing if they have not planned.
+  **And the data model agrees** – ingredients are snapshotted from the plan onto
+  the list, so the list is downstream by design. A week nobody has planned has
+  nothing to shop for, and creating list rows for it is empty scaffolding.
+  **What is left is a first-run oddity, not a missing capability**, and a small
+  one. **CONFIRMED BY THOMAS THE SAME DAY, and it is what closes the item:**
+  *"arrows looked disabled as designed"*. So there is no UI defect here – the
+  control correctly says it cannot go anywhere, and the surprise was conceptual
+  (why does the identical control on the next tab behave differently?). A live
+  button that did nothing would have been the 2026-08-03 retry-button bug again
+  and would have needed fixing today; a correctly disabled one needs nothing.
+  The whole thing self-resolves the moment anyone plans anything – which is the
+  first thing anyone does.
+  NOT A REGRESSION – `git log -S` puts it in `e1cc357`, 2026-07-18, three weeks
+  before the clock work.
+  **LESSON, and it is why this survived review for three weeks:** a code comment
+  claimed *"Reachable weeks mirror the plan's rule"*. They do not, and nobody
+  diffed the claim against what `meal-plan.tsx` actually does. A comment
+  asserting that two pieces of code agree is a CLAIM, not documentation, and
+  claims rot silently. Corrected in place 2026-08-07.
 
 - **⚠️ 2026-08-06 – `get_design_context` output embeds STALE token values, and
   I read them out loud three times before Thomas caught it.** *"You keep saying
