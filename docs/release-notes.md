@@ -66,6 +66,9 @@ released first either way.
   drops between other sections rather than into the middle of one, so nothing
   changes section without you asking. Dragging a single ingredient works exactly
   as before – that is still how you move one into another section.
+- **The shopping list reads like the rest of the app.** Category headings and
+  the "items done" heading now use the same style as a recipe's ingredient
+  sections, with more room around them, so the list is easier to scan.
 - **Editing a section no longer turns it into an ingredient.** Opening a
   heading to edit it and pressing Done used to save it as an ordinary
   ingredient – which then appeared on your shopping list. Headings stay

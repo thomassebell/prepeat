@@ -2447,6 +2447,61 @@ missing from it entirely.
 
 ## Decisions log (recent)
 
+- **2026-08-07 – THE SHOPPING LIST'S HEADINGS NOW MATCH A RECIPE'S INGREDIENT
+  SECTIONS.** Thomas: *"the category style on shopping should match the style of
+  recipe sections"*, then *"the done section should match too"*. So all three
+  headings across the two list screens are one treatment - `font-header
+  text-display-6 font-emphasized leading-xsmall text-text-default` - token for
+  token, which is what makes a DS retune move them together instead of leaving
+  one behind. They were only ever different because sections arrived three weeks
+  after the shopping list.
+  - **⚠️ THE CHEVRON WAS AN SF SYMBOL, AND THE FRAME HAD ALWAYS SAID MATERIAL.**
+    Thomas spotted it OPTICALLY before either of us checked the design: *"is the
+    chevron a SF Symbol? Because it optically looks off."* It was - `SymbolView`
+    - sitting beside a Material drag handle in a matching 24 box, and the two
+    families draw to different weights. The Figma frame names the icon
+    **`expand_less`**, a Material name (35:8048), so this was drift, not a design
+    gap.
+    **THE APP MIXES BOTH FAMILIES: 8 files on SF Symbols, 32 on Material**, and
+    chevrons appear in BOTH - Material on the week picker, SF in the done band,
+    edit-item picker, step sheet and collapsible. Only the done band put them
+    side by side, which is why the seam showed there first. **Worth a
+    foundations-level decision** rather than fixing them one at a time.
+  - **ICON BOXES FOLLOW THE LINE-HEIGHT OF THE TEXT BESIDE THEM** (Thomas: *"if
+    line-height of done header is 24px the icons bounding box should also be
+    24px"*). Verified against the DS rather than assumed - `leading-xsmall` is
+    exactly 24px in `ds-theme.cjs`. A rule worth applying to the next
+    icon-beside-heading rather than guessing a size each time.
+  - **The spacing came from the frame, not from taste** (35:8045, which Thomas
+    reworked the same day): 16 padding all round the done band, 16 between its
+    header and the items, 16 before the Clear button. The band's own bottom
+    padding is still the 1000px bleed override, which is not a spacing choice.
+  - **⚠️ THE SHADE WENT THE OTHER WAY, and that is worth knowing before someone
+    "corrects" it.** The frame called for `surface/neutral/light`; implemented,
+    Thomas compared it on the device and preferred the app's existing
+    `lighter` - *"lighter is better (i have changed it in figma)"*. So the FRAME
+    followed the APP here, which is the opposite of the usual direction.
+  - **The frame's 8px category gap is STALE, not a disagreement.** It still shows
+    header y=0 h=24, content y=32. That predates the heading growing from 16px
+    text to 24px on the same day. The rhythm is **gap small - category header -
+    gap small**, 16 either side, matching the recipe sections and the done band.
+  - **Two stale claims found in code comments in one day**, after the reorder
+    sheet's "reachable weeks mirror the plan's rule": this file said the
+    `button/danger` tokens were absent from the DS bridge so the Clear button
+    mapped to the error scale. They are present - the sheet delete button uses
+    them. Same colour today (#DE2D12); the right token name is what survives the
+    next retune. **A comment asserting what the DS does or does not carry is a
+    claim with a shelf life.**
+  - **The payload's own values were stale AGAIN** (the 2026-08-06 lesson): it
+    offered `Noto Serif` for the header font and `#e3ddcf` for the band. The DS
+    says Montserrat and `#D6D4D1`. Token names taken, numbers ignored - which
+    does mean the app and the Figma render will not look identical, and the DS is
+    the one that is right.
+  - [ ] **Figma has not caught up with the CATEGORY headings** - the frame still
+    draws them at 16px text with an 8px gap. Thomas changed the done section;
+    the categories were changed verbally. Worth updating the frame before this is
+    treated as settled.
+
 - **2026-08-07 – EDITING A RECIPE ROW: tap the row, delete inside the sheet.
   Two rejected attempts recorded, because both are the obvious thing to reach
   for.** Thomas: *"when recipe is in edit mode you have to tap the three dots to

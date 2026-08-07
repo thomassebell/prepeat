@@ -1,5 +1,4 @@
 import { MaterialIcons } from '@expo/vector-icons';
-import { SymbolView } from 'expo-symbols';
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
@@ -40,22 +39,47 @@ export function DoneSection({
   return (
     <Animated.View layout={LinearTransition.duration(250)} exiting={FadeOut.duration(150)}>
       <View
-        className="w-full gap-layout-small bg-surface-neutral-lighter px-layout-small pt-layout-xsmall"
+        // Spec: Figma 35:8045 "doneList" - 16 padding all round, 16 between the
+        // block and the Clear button (Thomas reworked these spacings
+        // 2026-08-07). paddingBottom below deliberately overrides the 16 so the
+        // band can bleed; that is the bleed, not a spacing choice.
+        // SHADE: `lighter`, not the `light` the frame carried when this was
+        // implemented - Thomas compared the two on the device and changed Figma
+        // to match ("lighter is better", 2026-08-07). The app is right and the
+        // frame followed it, rather than the usual direction.
+        className="w-full gap-layout-small bg-surface-neutral-lighter p-layout-small"
         style={{ paddingBottom: BOTTOM_BLEED, marginBottom: -BOTTOM_BLEED }}>
-        <View className="w-full gap-layout-xsmall">
+        {/* 16 between the header and the checked items (Figma 73:3496), not 8. */}
+        <View className="w-full gap-layout-small">
           <Pressable
             accessibilityRole="button"
             accessibilityLabel={collapsed ? `Show ${label}` : `Hide ${label}`}
             onPress={() => setCollapsed((value) => !value)}
             hitSlop={8}
-            className="w-full flex-row items-center py-comp-xsmall">
-            <Text className="flex-1 font-paragraph text-small font-emphasized text-text-default">
+            className="w-full flex-row items-center gap-comp-small">
+            {/* Matches a category heading, which in turn matches a recipe's
+                ingredient section (Thomas, 2026-08-07 - he asked for the
+                categories first, then "the done section should match too").
+                So all three headings on the two list screens are now one
+                treatment, and a DS retune moves them together.
+                Was: font-paragraph text-small. */}
+            <Text className="flex-1 font-header text-display-6 font-emphasized leading-xsmall text-text-default">
               {label}
             </Text>
-            <SymbolView
-              name={collapsed ? 'chevron.down' : 'chevron.up'}
-              size={16}
-              tintColor={ds.colors.icon.default}
+            {/* MATERIAL, not an SF Symbol, and the design says so: the frame
+                names this icon `expand_less` (Figma 35:8048), which is a
+                Material name. The SF chevron was the deviation, and it showed -
+                Thomas spotted it optically before either of us checked the
+                frame, because it sat beside a Material drag handle in a matching
+                24 box and the two families draw to different weights.
+                24 because the heading beside it has leading-xsmall = 24px in the
+                DS, so the icon's box matches the text's line box (Thomas: "if
+                line-height of done header is 24px the icons bounding box should
+                also be 24px"). Was an SF chevron at 16. */}
+            <MaterialIcons
+              name={collapsed ? 'expand-more' : 'expand-less'}
+              size={24}
+              color={ds.colors.icon.default}
             />
           </Pressable>
           {!collapsed && (
@@ -80,18 +104,27 @@ export function DoneSection({
             </View>
           )}
         </View>
-        {/* Danger button from the Figma doneList design (node 74:5804);
-            button/danger tokens are not in the DS bridge, so the fill maps
-            to the error scale. */}
+        {/* Danger button from the Figma doneList design (74:5764/74:5804).
+            NOW ON THE REAL TOKENS: the old note here said button/danger was
+            absent from the DS bridge and mapped the fill to the error scale.
+            That is no longer true - ds-theme.cjs carries button/danger/fill and
+            /label, and the sheet delete button already uses them. Same colour
+            today either way (#DE2D12); the right token name is what survives
+            the next DS retune. Spacing already matched the spec: 4 gap, 24
+            horizontal, 16 vertical. */}
         {!collapsed && (
           <Animated.View layout={LinearTransition.duration(250)}>
             <Pressable
               onPress={onClear}
               accessibilityRole="button"
               accessibilityLabel="Clear done items"
-              className="w-full flex-row items-center justify-center gap-comp-xsmall rounded-small bg-error-main px-comp-xlarge py-comp-large">
-              <MaterialIcons name="delete" size={24} color={ds.colors.error['contrast-text']} />
-              <Text className="font-paragraph text-components-button-label font-default text-error-contrast-text">
+              className="w-full flex-row items-center justify-center gap-comp-xsmall rounded-small bg-button-danger-fill-enabled px-comp-xlarge py-comp-large">
+              <MaterialIcons
+                name="delete"
+                size={24}
+                color={ds.colors.button.danger.label.enabled}
+              />
+              <Text className="font-paragraph text-components-button-label font-default text-button-danger-label-enabled">
                 Clear done items
               </Text>
             </Pressable>
