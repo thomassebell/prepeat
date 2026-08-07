@@ -1093,6 +1093,26 @@ cut: fix 1 and 6 before the next build, the rest as a fast follow.
             local, dev AND production; `backup:verify` re-run afterwards, 7,254
             rows restored exact. Production still holds 7 invites, 5 live codes,
             7 memberships – the migration moved no data.
+      - [x] **WALKED IN THE APP ON DEVICE 2026-08-07** (dev build 09:38, dev
+            database, both migrations already applied there). Thomas: *"List A
+            1 to 4 is passed"* – the invite sheet shows a code, "New code"
+            rotates it, creating a household works, joining with a code works,
+            and a wrong code still says *"That code is not valid"* in plain
+            language rather than a raw database error.
+            **CORROBORATED IN THE DATA, not just on screen** – worth doing
+            because a screen can look right for the wrong reason. Dev shows the
+            join landing at 09:40:58 and the household creation at 09:42, both
+            AFTER the migrations went on at ~09:21; and TestKitchen's previous
+            code (6 Aug) is now dead with a fresh one minted 09:41, so
+            rotate_invite_code still retires the old code with the raw insert
+            permission gone.
+            - [ ] **LEAVING A HOUSEHOLD IS STILL UNWALKED IN THE APP.** The
+                  instruction said "leave from the switcher", which was wrong –
+                  it lives under Edit profile, and only appears when the
+                  household has another member, so the freshly created solo
+                  household had nothing to leave. Re-walk on the 2-member
+                  TestKitchen. The SQL path is tested both ways; the app's
+                  version of it is not.
       - [x] **THE VERIFYING SELECT CAUGHT ITSELF, first run, and the lesson is
             worth more than the bug.** `redeem_rejects_null_expiry` came back
             FALSE against a function body that was perfectly correct – because a
@@ -1545,7 +1565,26 @@ Closed 2026-07-27:
 
 ## Ideas – not yet committed
 
-- [ ] **The app is unusable offline, and the shopping list is where that
+- [ ] **Leave a household from the SWITCHER** (Thomas, 2026-08-07, walking the
+      0032/0033 device list: *"it is not possible to leave a household from the
+      switcher, but maybe it should be"*).
+      **Leaving does exist** – Household tab → tap your own name → Edit profile →
+      Leave household, gated on `members.length > 1`
+      ([household.tsx:200](../src/app/household.tsx)). Thomas could not find it
+      because it is not where he looked, and because the household he had just
+      created was solo, so the option was correctly absent anyway.
+      **THE REAL QUESTION IS WHERE LEAVING BELONGS, and Claude thinks the
+      current home is wrong** (flagged as Claude's opinion, not Thomas's ask):
+      leaving a HOUSEHOLD sits inside EDIT PROFILE, which is about your name and
+      your account. The switcher is where the household you are in is the subject
+      of the screen, so it is the natural place to ask to get out of one – and it
+      is where a second household becomes visible in the first place.
+      Worth weighing against two things before building: leaving is
+      irreversible-ish (you get a copy of the recipes, not the shared household
+      back), so it should not sit one tap from a routine switch; and the switcher
+      is a small surface that already carries create and join.
+      **Needs a design**, per the no-improvised-UI rule – no frame draws a leave
+      affordance in the switcher today.
       hurts** (found 2026-08-03 by Thomas testing the retry screens).
       Force-quit the app, lose signal, reopen: you get "Can't reach your
       kitchen" and nothing else – no plan, no recipes, and no shopping list.
