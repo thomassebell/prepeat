@@ -38,7 +38,7 @@ export function CategoryGroup({
       accessibilityLabel="Reorder categories">
       {/* 24, not 22, to sit beside the taller heading the way the recipe
           screen's handle does - the two screens now draw the same row. */}
-      <MaterialIcons name="drag-handle" size={24} color={ds.colors.text.accent} />
+      <MaterialIcons name="drag-handle" size={24} color={ds.colors.icon.subtle} />
     </Pressable>
   );
   return (

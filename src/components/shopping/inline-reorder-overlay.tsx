@@ -88,7 +88,7 @@ function OverlayRow({ category, index, count, activeIndex, isActive, fingerY, li
         <Text className="flex-1 font-paragraph text-paragraph font-default text-text-default">
           {category}
         </Text>
-        <MaterialIcons name="drag-handle" size={22} color={ds.colors.text.accent} />
+        <MaterialIcons name="drag-handle" size={22} color={ds.colors.icon.subtle} />
       </View>
     </Animated.View>
   );

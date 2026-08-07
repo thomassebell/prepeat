@@ -119,6 +119,33 @@ older wording here). Two things follow, and they are not the same thing:
   So when a screen frame disagrees with a DS component, the component wins and
   the frame is worth querying rather than copying.
 
+**POINTING AT SOMETHING IN FIGMA – the working recipe** (worked out with Thomas
+2026-08-07, after two failed attempts):
+
+```bash
+open -a "Figma" "https://www.figma.com/design/nA8SLN8rhdBov97B1IYxnP/App?node-id=29-3417"
+```
+
+…then tell him to press **`Shift 2`** (zoom to selection).
+
+Three things this gets right, each of which failed on its own:
+1. **Never a bare node id.** It cannot be searched in the Figma UI at all.
+2. **Never `figma.currentPage.selection`** set through the MCP – it does not
+   reach the canvas Thomas has open. *"I can't see your selection."*
+3. **`open -a "Figma"`, not a bare link.** Thomas works in the **macOS desktop
+   app**; an `https://` URL on its own opens the browser. Handing it to the app
+   avoids both the browser and any `figma://` scheme guessing.
+
+Node ids take a **HYPHEN** in the URL (`29-3417`), not the colon the API returns
+(`29:3417`).
+
+⚠️ **The link carries the SELECTION but not the CAMERA** – verified: the node
+was correctly selected in the properties panel while the viewport sat thousands
+of pixels away on a blank part of the canvas. Hence `Shift 2`. Always say so;
+without it the file looks empty and the link looks broken.
+Add the layer path from the page down when the node is deeply nested, so it can
+also be found by hand.
+
 ⚠️ **`get_design_context`'s CSS fallbacks are still stale** and always have been
 – that payload is where `Noto Serif` and old hexes come from (the 2026-08-06
 round where they were read aloud three times before Thomas caught it). Take

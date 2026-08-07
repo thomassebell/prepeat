@@ -2525,12 +2525,38 @@ missing from it entirely.
     `radius/medium` (12) and the app had `rounded-small` (8) - read straight off
     74:5764 with `get_variable_defs`. Not a thing either of us would have caught
     by eye. Cheap to repeat now the right call is known.
-  - [ ] **Open, deliberately not changed: the drag handle's token.** The frame
-    binds it to `color/surface/secondary/main`; the app uses `text.accent`. Both
-    are #6F5D44 today, so nothing looks wrong - but a retune that moves one and
-    not the other splits them. Not fixed here because the same handle appears on
-    the recipe screens and changing one instance on a guess about the others is
-    how a treatment drifts. Worth checking once and aligning everywhere.
+  - [x] **THE DRAG HANDLE'S TOKEN – FIXED IN BOTH FIGMA AND CODE 2026-08-07, and
+    the reason it was wrong is the interesting part.** The frame bound it to
+    `color/surface/secondary/main`; the app used `text.accent`. Both #6F5D44, so
+    nothing looked wrong.
+    **⚠️ WHY THOMAS HAD USED A SURFACE TOKEN ON AN ICON, in his words:** *"I
+    scoped the text-tokens only to be visible to text. But you work in the code
+    so you don't get 'scoped out' of applying a color-token."* Verified exactly:
+    `text/accent` is scoped `[TEXT_FILL]` so it cannot be picked for a vector
+    fill, while **`color/surface/secondary/main` is `ALL_SCOPES`** and therefore
+    shows up in every picker. **His scoping worked; one unscoped token undermined
+    it** and was the only plausible-looking thing on offer.
+    **AND THE DS ALREADY HAD THE RIGHT ANSWER: `icon/subtle`** - same #6F5D44,
+    scoped `[SHAPE_FILL, TEXT_FILL]`, sitting beside `icon/default` and
+    `icon/brand` and already in use elsewhere in the file. So neither
+    `surface/secondary/main` nor `text/accent` was right; the icon family was.
+    Thomas's call once the scoping was understood: *"use icon/subtle everywhere,
+    both figma and code."*
+    DONE: **113 drag handles rebound in Figma** across Recipes, shopping and
+    sketches (verified by re-reading every one), and **8 code sites across 4
+    files** moved from `ds.colors.text.accent` to `ds.colors.icon.subtle`. No
+    visible change - identical colour.
+    **THE LESSON, and it is a general one: code has no scope guard, so a token
+    has to be chosen by MEANING, not by matching a hex.** Figma physically
+    stopped Thomas reaching a text token for a vector. Nothing stops Claude - the
+    path is just typed. Which means when the two disagree about a token, the
+    scoping is evidence about intent, not an obstacle to route around. The first
+    fix here rebound 109 nodes to `text/accent` via the API, which is precisely
+    routing around it.
+    - [ ] **Worth doing in the DS: tighten `color/surface/secondary/main` off
+      `ALL_SCOPES`.** It is what put a surface token in front of a designer
+      colouring an icon, and it will do the same for any property until it is
+      scoped. Thomas's repo, not this one.
   - [ ] **Figma has not caught up with the CATEGORY headings** - the frame still
     draws them at 16px text with an 8px gap. Thomas changed the done section;
     the categories were changed verbally. Worth updating the frame before this is

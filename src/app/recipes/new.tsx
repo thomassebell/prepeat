@@ -409,7 +409,7 @@ export default function AddRecipeScreen() {
                   <MaterialIcons
                     name="drag-handle"
                     size={24}
-                    color={ds.colors.text.accent}
+                    color={ds.colors.icon.subtle}
                   />
                 </Pressable>
               )}
@@ -512,7 +512,7 @@ export default function AddRecipeScreen() {
                   <MaterialIcons
                     name="drag-handle"
                     size={24}
-                    color={ds.colors.text.accent}
+                    color={ds.colors.icon.subtle}
                   />
                 </Pressable>
               )}
