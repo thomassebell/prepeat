@@ -787,9 +787,40 @@ cut: fix 1 and 6 before the next build, the rest as a fast follow.
       name and email. Mitigated by the tiny launch user base, the 14-day
       expiry, and that it only ever lands them in a RANDOM household, never a
       chosen one. Not a launch blocker – the verifier said so explicitly.
-      FIX (post-launch): throttle by the CODE being guessed (or by IP) rather
-      than by account, so total guesses against a code are capped however many
-      accounts try. A longer code would also help.
+      **⚠️ THE AUDIT'S SUGGESTED FIX DOES NOT WORK, worked out 2026-08-07 while
+      building 0032.** It said "throttle by the CODE being guessed". But a sweep
+      tries each code ONCE – that is what a sweep is – so a per-code cap of 10
+      is never reached by the attack it was written for. Wrong axis entirely.
+      **AND THE REAL NUMBERS ARE WORSE THAN THE ENTRY SUGGESTS**, because the
+      guesser does not need a CHOSEN household, only ANY live code. So the
+      difficulty is the code space divided by the number of live codes, and it
+      falls as the app succeeds:
+      | live codes | guesses to land in someone's household | at 100 throwaway accounts |
+      |---|---|---|
+      | 5 (production today) | ~123,000 | ~5 days |
+      | 20 | ~30,700 | ~31 hours |
+      | 200 | ~3,100 | ~3 hours |
+      | 1,000 | ~615 | under an hour |
+      (28^4 = 614,656 codes; 10 guesses/hour/account.) **So what protects the
+      app today is that it has 5 households – not the throttle.** That is the
+      opposite of a mitigation that survives launch, and it is why this stopped
+      being a comfortable post-launch item.
+      **AWAITING A DECISION FROM THOMAS – three options, deliberately not
+      chosen** (the 2026-08-04 rule: a choice surfaced during implementation is
+      a decision, not a detail):
+      - **A. A GLOBAL cap on failed redemptions** (say 30/hour across the whole
+        app). Cheap, one migration, no UX change, and it is the only option that
+        actually scales with the table above. Cost: an attacker can also spend
+        that budget to block legitimate joins for an hour at a time – a denial
+        of service, but a mild one against a rare action.
+      - **B. A LONGER CODE.** 6 characters is 481 million instead of 614,656, so
+        every row of that table grows by ~780×. Costs the fridge-worthy short
+        code, which was a deliberate product choice (0003), and touches the
+        designed Invite sheet – so it is a design conversation, not just SQL.
+      - **C. Both**, which is what a bank would do and probably more than a
+        family meal planner needs today.
+      Whatever is chosen, the per-account cap stays: it is not useless, it just
+      does not address this.
 - [x] **8. FIXED AND APPLIED 2026-08-03 (migration 0027). `liter` and `liters`
       split into two shopping rows, a regression from migration 0024.** `supabase/migrations/0024_merge_key_ignores_unit_
       plural.sql`:61. The unit normalizer stripped a trailing `s` OR `r` to
@@ -880,7 +911,9 @@ cut: fix 1 and 6 before the next build, the rest as a fast follow.
         itself was proved only by the verifying select above. Neither step
         substitutes for the other: the simulation cannot catch a syntax error,
         and an all-true select on three examples would not have found pinches.
-- [ ] **9. A raw API call can leave an account belonging to zero households.**
+- [x] **9. FIXED AND APPLIED 2026-08-07 (migration 0032), together with #10 –
+      see the shared write-up under #10.**
+      **A raw API call could leave an account belonging to zero households.**
       `supabase/migrations/0001_households_and_shopping_lists.sql`:157.
       The leave rules – reject leaving your only household, snapshot recipes
       on the way out for GDPR – live in the `leave_household` FUNCTION, which
@@ -893,7 +926,8 @@ cut: fix 1 and 6 before the next build, the rest as a fast follow.
       FIX: tighten the delete-self policy so it cannot remove a solo
       membership, or revoke direct delete on `household_members` and force
       every leave through the function.
-- [ ] **10. A member can mint a never-expiring invite code via raw API.**
+- [x] **10. FIXED AND APPLIED 2026-08-07 (migration 0032).**
+      **A member could mint a never-expiring invite code via raw API.**
       `supabase/migrations/0001_households_and_shopping_lists.sql`:165-169
       (and :52). The 14-day expiry is enforced only in the rotate function,
       not in the database: the expiry column is nullable with no default, the
@@ -905,6 +939,76 @@ cut: fix 1 and 6 before the next build, the rest as a fast follow.
       retires the planted code.
       FIX: make the expiry NOT NULL with a 14-day default plus a CHECK that it
       is in the future, and drop the "no expiry" branch from redeem.
+
+      **DONE as `0032_household_boundary_only_through_functions.sql`, both
+      findings in one migration because they are ONE MISTAKE MADE TWICE.** Each
+      time, a rule was written into a SECURITY DEFINER function, the app was
+      taught to call that function – and the raw TABLE PERMISSION the function
+      was meant to replace was left switched on. The app obeys the rule because
+      the app uses the front door. The anon key ships inside every copy of the
+      app and is not a secret, so anyone can walk round the back.
+      **THE FIX REMOVES THE BACK DOOR RATHER THAN PUTTING A LOCK ON IT**, and
+      the audit's "tighten the policy" alternative was rejected for both: a
+      tightened delete policy would still skip the GDPR copy-on-leave snapshot,
+      and a tightened insert policy would be a second way to mint a code that
+      must agree with `rotate_invite_code()` forever. One path is testable; two
+      paths that must agree are a future divergence. Concretely, `0032`:
+      - drops `household_members_delete_self`, so leaving is only
+        `leave_household()` (guards + GDPR snapshot) and account deletion only
+        `delete_profile()`;
+      - drops `household_invites_insert`, so `rotate_invite_code()` is the only
+        way a code exists at all;
+      - makes `expires_at` NOT NULL with a 14-day default, and removes the
+        null-expiry branch from redeem.
+      **A CHECK CONSTRAINT WAS THE OBVIOUS FIX AND WOULD HAVE BEEN A TRAP,
+      twice.** `check (expires_at > now())` reads right, but `rotate_invite_code`
+      retires an old code by setting `expires_at = now()`, which the check would
+      reject – and worse, a CHECK against `now()` **re-validates on RESTORE**, so
+      every backup containing an expired code would refuse to load. The restore
+      path is verified machinery here and must not become conditional on the
+      clock. NOT NULL does the job with none of that.
+      **SAFE FOR THE PHONES, and checked rather than assumed** – dropping a
+      policy reaches every installed build the instant it runs. All 11 revisions
+      of `src/lib/household.ts` in git history were scanned: not one issues a
+      direct delete on `household_members` or a direct insert into
+      `household_invites`. Leaving, account deletion, household deletion and
+      code minting have always gone through the four SECURITY DEFINER functions,
+      which bypass RLS and are untouched. The one direct write that does exist –
+      `createHousehold()` inserting the creator's own membership – uses
+      `household_members_insert_creator`, deliberately left alone. Builds 12–16
+      keep working unchanged, and **this is live for everybody already**, no app
+      change needed.
+      - [x] **PROVED BY RUNNING THE SQL, not by mirroring it – the harness the
+            2026-08-04 note asked for now exists and this is its first use.**
+            `supabase/tests/household-boundary.sql` walks 12 checks as a real
+            RLS-bound client against local Postgres: creator bootstrap still
+            works, `rotate_invite_code` still mints a 14-day code, a raw invite
+            insert is refused, a raw membership delete removes NOTHING, leaving
+            your only household is still refused with its proper message, a live
+            code still lets someone join, an expired one does not, and leaving
+            still works when another household remains.
+            **MOST OF THE CHECKS ASSERT THAT SOMETHING STILL WORKS**, which is
+            the point: the risk in dropping a policy is never "did the hole
+            close" (the verifying select shows that) but "did a legitimate path
+            close with it".
+      - [x] **APPLIED 2026-08-07** – backup first, all 32 migrations replayed
+            onto an empty local database, dev, then production dry-run read,
+            then production. Verifying select returned all six columns true on
+            local, dev AND production; `backup:verify` re-run afterwards, 7,254
+            rows restored exact. Production still holds 7 invites, 5 live codes,
+            7 memberships – the migration moved no data.
+      - [x] **THE VERIFYING SELECT CAUGHT ITSELF, first run, and the lesson is
+            worth more than the bug.** `redeem_rejects_null_expiry` came back
+            FALSE against a function body that was perfectly correct – because a
+            COMMENT I had written inside that body said "the `expires_at is
+            null` branch is gone", and the check greps `prosrc` for exactly that
+            phrase. A prose-matching check reads the comments too.
+            Fixed on both sides: the comment is reworded, and the column now
+            asserts the negative AND the positive (`prosrc like '%0032%'`) –
+            because "the old branch is absent" is also true of a function that
+            was never replaced, while "this body knows it is 0032" is what
+            proves the new body landed. That positive half is 0030's lesson;
+            the negative half is this migration's.
 
 **Verification of the 1 + 6 fixes: CONFIRMED ON DEVICE 2026-08-02.** Typecheck
 and lint clean, every NativeWind class checked to exist elsewhere in `src/`
@@ -1478,6 +1582,24 @@ Closed 2026-07-27:
       for Apple's review result; if the demo mailbox OTP is the sticking point,
       the Supabase test-OTP trigger is the documented fallback (see the demo
       account item).
+      - [ ] **⏳ STILL WAITING ON DAY 7 (checked 2026-08-07 08:45 CEST).** App
+            Store Connect reports the version `WAITING_FOR_REVIEW` and the
+            review submission `submitted 2026-07-31T11:30Z`, item state
+            `READY_FOR_REVIEW`, not cancelled. So it is correctly queued and has
+            NOT been rejected – Apple simply has not picked it up. Apple's own
+            published expectation is ~24h with most through in 48, so a week is
+            well outside normal though not unheard of for a first submission
+            from a new developer account.
+            Queried through the ASC API (the same key `asc-build-state.mjs`
+            uses) rather than by reading the dashboard, so this is Apple's own
+            answer. **Remember the 2026-08-03 lesson in the other direction
+            too:** one query is a point in time – but here the state has been
+            stable and the submitted date is a fact, so this is not the
+            "not processed YET" window.
+            OPTION IF IT DRAGS: Contact Us → App Review → status enquiry. Low
+            risk, sometimes unsticks a queue. Thomas's call; he chose to check
+            the mailboxes first (below) so that a nudged review cannot fail at
+            sign-in.
 - [x] **First-look trademark search done 2026-07-27** – full write-up in
       [trademark-search.md](trademark-search.md). Headline: the NAME is clear
       (nobody holds "Prepeat" anywhere; no EU/DK registration; Prepear Inc.
@@ -1919,6 +2041,18 @@ missing from it entirely.
   Still standing, and NOT replaced by any of this: **never drop or rename a
   column in the same round as the code change that stops using it** (2026-07-27)
   – local Postgres cannot see what is on somebody's phone.
+
+- **When a migration touches RLS, run and extend
+  `supabase/tests/household-boundary.sql`** (started 2026-08-07 with 0032).
+  It walks the household boundary as a REAL RLS-bound client against real SQL,
+  and most of its checks assert that a LEGITIMATE path still works – which is
+  where the risk in a policy change actually lives. A dropped policy reaches
+  every installed build the instant it runs, so "the hole is closed" is the easy
+  half; "the front door still opens" is the half that bites.
+  Run it against a fresh `npm run db:reset`; the file carries its own how-to.
+  Its first run also produced a false FAIL that was purely the test's own doing –
+  a check reading under one user's RLS to assert a fact about another's. Read a
+  failure before believing it.
 
 - **Keep [release-notes.md](release-notes.md) current, INCLUDING the version
   number** (started 2026-08-03; Thomas wants something ready to post whenever

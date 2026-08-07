@@ -142,6 +142,16 @@ at launch.
 
 ## Server changes (live for everyone, no build needed)
 
+- **2026-08-07 – migration 0032.** Security hardening around joining and
+  leaving a household. **Nothing changes on screen** – this closes two ways the
+  app's own rules could be side-stepped by talking to the server directly
+  instead of through the app: an account could be left in no household at all
+  (skipping the recipe copy you are entitled to when you leave), and an invite
+  code could be created that never expired. Leaving, deleting an account and
+  creating an invite code now have exactly one route each.
+  **Live for everyone including v1.0's build 12.** No user-facing line needed
+  when this ships – there is nothing for a reader to notice, which is the point.
+
 - **2026-08-04 – migration 0030.** Clearing the done
   items no longer stops the above from working: change a meal afterwards and
   what you still need shows up as usual. Before this it went quiet again.
