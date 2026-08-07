@@ -66,6 +66,9 @@ released first either way.
   drops between other sections rather than into the middle of one, so nothing
   changes section without you asking. Dragging a single ingredient works exactly
   as before – that is still how you move one into another section.
+- **Reordering no longer jumps when you let go.** Anything you drop now settles
+  where you put it. This affected every reorder list – ingredients, instructions
+  and shopping categories – and had done since reordering was built.
 
 ## Build 16 – TestFlight 2026-08-06 (VALID, not in review)
 

@@ -149,13 +149,50 @@ invite. Check betaTesters vs Users-and-Access before blaming email or spam.
                   JS thread rather than carrying its own copy. Deliberate – one
                   shape rebuilt by hand in two places is exactly how the
                   isSection bug survived three device builds on 2026-08-06.
-            - [ ] **WALK IT ON THE DEVICE.** Built and installed 2026-08-07.
-                  Drag a heading and check its ingredients come with it; try to
-                  drop one INSIDE another section and check it snaps out; drag a
-                  single ingredient into another section and check it still
-                  works; then open **Reorder instructions** and the **shopping
-                  categories** sheet, which have no sections and must behave
-                  exactly as before.
+            - [x] **WALKED AND PASSED ON DEVICE 2026-08-07.** A heading carries
+                  its ingredients; a section dropped inside another section
+                  snaps out ("works perfectly"); a single ingredient still moves
+                  into another section; and the two sectionless lists –
+                  instructions and shopping categories – behave exactly as
+                  before, which was the real risk in the change.
+            - [x] **⚠️ THE WALK FOUND A FLICKER ON DROP THAT WAS THREE MONTHS
+                  OLD** (Thomas: *"a weird jumping animation when you let go"*,
+                  reported on BOTH a section and a single row – which is the
+                  clue that it was not about sections).
+                  **PRE-EXISTING, proved by `git show 0a7a659^` rather than
+                  assumed:** the idle branch of the animated style returned
+                  `withTiming(0, 140)`, so the moment a drag ended the row you
+                  had just dropped ANIMATED back towards its old position over
+                  140ms while its slot jumped to the new one in the same
+                  instant. Two movements at once. A single row doing it survived
+                  three months and several device walks; a whole section doing it
+                  was impossible to miss. **The group feature did not cause this
+                  bug, it made it visible** – worth remembering as an argument
+                  for building the thing that exercises a path harder.
+                  **IT TOOK THREE GOES, AND THE FIRST TWO WERE THE WRONG KIND OF
+                  FIX.** Removing the 140ms animation helped and left a
+                  one-frame flicker; re-ordering the resets by hand did not fix
+                  that. Both were attempts to win a RACE by guessing, and a race
+                  won by guessing is one that comes back.
+                  **THE REAL CAUSE: a row's position comes from TWO sources** –
+                  React layout picks its slot (`top`), the shared values pick its
+                  offset (`translateY`). On a drop both change, and nothing makes
+                  them land in the same frame. Clear the offset early and it
+                  paints at the old slot; clear it late and it paints at the new
+                  slot still offset.
+                  **THE FIX: `useLayoutEffect`, keyed on the ORDER**, which is
+                  the one place React guarantees to run after the commit that
+                  changed the order and before it is painted – so the new slot
+                  and the cleared offset are painted together BY CONSTRUCTION
+                  rather than by timing. It also degrades well: a slow parent now
+                  leaves the block where it was dropped (where it belongs)
+                  instead of flickering elsewhere.
+                  The no-move drop is the one path it cannot cover, since nothing
+                  reorders and no effect fires, so that path cleans up after
+                  itself – walked separately and passes.
+                  LESSON: when a visual bug survives two timing fixes, stop
+                  adjusting the timing. Ask what two things are disagreeing, and
+                  make one of them wait for the other by construction.
             - [ ] **Cosmetic, found while measuring and NOT fixed here:** the
                   design gives the FIRST heading no space above it, so a real
                   list is 16px shorter at the top than uniform slots draw. Every
