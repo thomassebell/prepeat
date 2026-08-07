@@ -142,6 +142,15 @@ at launch.
 
 ## Server changes (live for everyone, no build needed)
 
+- **2026-08-07 – migration 0033.** Guessing an invite code is now genuinely
+  limited: the app allows 30 join attempts an hour in total and refuses the
+  rest. **Nothing changes for anyone using a code they were given.** The limit
+  that was supposed to do this before turned out never to have worked at all –
+  every failed guess undid its own record – so until today there was nothing
+  stopping someone trying codes until one landed them in a stranger's
+  household. **Live for everyone including v1.0's build 12.**
+  If a join is ever refused with "Too many tries", waiting an hour clears it.
+
 - **2026-08-07 – migration 0032.** Security hardening around joining and
   leaving a household. **Nothing changes on screen** – this closes two ways the
   app's own rules could be side-stepped by talking to the server directly

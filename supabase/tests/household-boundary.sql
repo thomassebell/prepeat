@@ -151,3 +151,122 @@ begin
     not exists (select 1 from household_members where household_id = h_solo));
 end;
 $outer$;
+
+-- ===========================================================================
+-- The global guess limit (0033).
+--
+-- READ THIS BEFORE CHANGING ANY OF IT. The reason 0012's throttle recorded
+-- nothing for six weeks is that it wrote a row and then RAISED, and a raise
+-- undoes the write. So the only check here that really matters is the one
+-- asserting the counter SURVIVED a run of failures - a limiter that cannot
+-- count a failed guess is not a limiter, however good its arithmetic looks.
+--
+-- Each guess below runs in its own sub-block whose exception handler rolls it
+-- back to a savepoint, which is exactly what PostgREST does to a failed RPC.
+-- Sequence movements are non-transactional and survive it; table writes do not.
+-- ===========================================================================
+
+do $guess$
+declare
+  b constant uuid := '22222222-2222-2222-2222-222222222222';
+  v_msg text;
+  v_invalid integer := 0;
+  v_counter_before bigint;
+  v_counter_after bigint;
+  i integer;
+  h uuid;
+  v_code text;
+  v_joined uuid;
+begin
+  -- Open a clean window. Done as the OWNER, because a signed-in client must not
+  -- be able to touch the limiter - asserted a few lines down rather than just
+  -- assumed, since a counter the attacker can reset is no counter at all.
+  perform set_config('role', 'postgres', true);
+  perform setval('invite_guess_window', extract(epoch from now())::bigint);
+  perform setval('invite_guess_counter', 0);
+  select last_value into v_counter_before from invite_guess_counter;
+
+  perform set_config('role', 'authenticated', true);
+  perform pg_temp.as_user(b);
+
+  begin
+    perform setval('invite_guess_counter', 0);
+    perform pg_temp.check('a signed-in client CANNOT reset the guess counter', false);
+  exception when insufficient_privilege then
+    perform pg_temp.check('a signed-in client CANNOT reset the guess counter', true);
+  end;
+
+  -- 30 wrong guesses, each rolled back exactly as a failed request would be.
+  for i in 1..30 loop
+    begin
+      perform join_household_with_code('PREP-Z' || lpad(i::text, 3, '0'));
+    exception when others then
+      get stacked diagnostics v_msg = message_text;
+      if v_msg like 'Invalid%' then v_invalid := v_invalid + 1; end if;
+    end;
+  end loop;
+  perform pg_temp.check('30 wrong guesses are answered "invalid", not blocked',
+    v_invalid = 30);
+
+  -- THE CHECK THAT MATTERS. 0012's counter would read 0 here.
+  perform set_config('role', 'postgres', true);
+  select last_value into v_counter_after from invite_guess_counter;
+  perform set_config('role', 'authenticated', true);
+  perform pg_temp.as_user(b);
+  perform pg_temp.check(
+    'the counter SURVIVED 30 rolled-back guesses (' || v_counter_after || ' of 30)',
+    v_counter_after - v_counter_before >= 30);
+
+  -- The 31st crosses the cap and must be refused before any lookup happens.
+  begin
+    perform join_household_with_code('PREP-ZZZZ');
+    perform pg_temp.check('the 31st guess is REFUSED', false);
+  exception when others then
+    get stacked diagnostics v_msg = message_text;
+    perform pg_temp.check('the 31st guess is refused as "too many", not "invalid"',
+      v_msg like 'Too many%');
+  end;
+
+  -- Wording matters: every installed build matches on this text to show its
+  -- friendly message (src/lib/household.ts:216). A reworded raise would leave
+  -- shipped phones showing a raw database error.
+  perform pg_temp.check('...and the wording is the one shipped builds match on',
+    v_msg like 'Too many attempts%');
+
+  -- A CORRECT code is refused too while the cap is exceeded. This is the
+  -- accepted cost, asserted rather than left as a surprise: checking validity
+  -- first would spare legitimate joiners and would also defeat the whole
+  -- mechanism, since a sweep allowed to look codes up will eventually hit one.
+  perform set_config('role', 'postgres', true);
+  insert into households (name, created_by_user_id) values ('Cap Kitchen', b)
+  returning id into h;
+  insert into household_members (user_id, household_id) values (b, h);
+  select code into v_code from household_invites where household_id = h;
+  perform set_config('role', 'authenticated', true);
+  perform pg_temp.as_user(b);
+
+  -- No code exists for that household yet (rotate is the only mint path), so
+  -- mint one as the member, then confirm even IT is refused over the cap.
+  if v_code is null then
+    v_code := rotate_invite_code(h) ->> 'code';
+  end if;
+  begin
+    perform join_household_with_code(v_code);
+    perform pg_temp.check('over the cap, even a VALID code is refused', false);
+  exception when others then
+    get stacked diagnostics v_msg = message_text;
+    perform pg_temp.check('over the cap, even a VALID code is refused (accepted cost)',
+      v_msg like 'Too many%');
+  end;
+
+  -- And the window really does reopen. Age it out rather than waiting an hour.
+  perform set_config('role', 'postgres', true);
+  perform setval('invite_guess_window',
+    extract(epoch from now())::bigint - 3601);
+  perform set_config('role', 'authenticated', true);
+  perform pg_temp.as_user(b);
+  select join_household_with_code(v_code) into v_joined;
+  perform pg_temp.check('once the hour passes, a valid code works again',
+    v_joined = h);
+end;
+$guess$;

@@ -777,7 +777,103 @@ cut: fix 1 and 6 before the next build, the rest as a fast follow.
       logged under Ideas, not carried here as unfinished work.
       The DS-side retune of `text/link` is the separate, slower fix – see the
       DS nit under Code debts.
-- [ ] **7. The invite-code guess limit is per-account, so extra sign-ups
+- [x] **7. FIXED AND APPLIED 2026-08-07 (migration 0033) – and the finding was
+      badly understated. THE THROTTLE HAD NEVER WORKED AT ALL.**
+      **⚠️ THE HEADLINE, because everything else follows from it.** This entry,
+      and the audit that produced it, both assumed 0012's "10 tries per hour"
+      was real protection with the wrong KEY. It was not weak protection. It was
+      **none** – for six weeks, including through the whole App Store
+      submission.
+      **THE MECHANISM IS ONE LINE OF STRUCTURE, NOT A TYPO.**
+      `join_household_with_code()` inserts the attempt row, then RAISES on a bad
+      code. An unhandled raise aborts the transaction and PostgREST rolls the
+      request back – **so the insert made three lines earlier is undone. Every
+      failed guess erases its own evidence.** The table only ever accumulated
+      SUCCESSFUL joins, which is exactly what production held: 2 rows, both real.
+      **PROVED, NOT REASONED ABOUT.** 15 wrong guesses in 15 separate
+      transactions recorded **0** attempts, and the 16th was still answered
+      "Invalid or expired invite code" rather than "Too many attempts". So the
+      real exposure was ~123,000 guesses to land in one of 5 households – under
+      an hour at ordinary request rates, from ONE account, with nothing slowing
+      it down.
+      LESSON, and it is a new one for this project: **a security control that is
+      never exercised is indistinguishable from one that does not exist.** Nobody
+      had ever made a wrong guess on purpose. Code review passed it twice (0012
+      itself, then the 2026-08-02 audit) because reading it top to bottom, the
+      logic is correct – the defect is in what the database does AFTER the raise,
+      which is invisible unless you run it. Same family as the 2026-08-03 retry
+      button that did nothing: error paths are exactly the code ordinary use
+      never touches.
+      **THE FIX, chosen by Thomas 2026-08-07** from three options (global cap /
+      longer code / both): a **global cap of 30 attempts per hour**, keeping the
+      short fridge-worthy code that was a deliberate product decision in 0003.
+      **WHY IT IS TWO SEQUENCES AND NO TABLE.** A global counter kept in a table
+      would vanish exactly the way the per-account one does – same transaction,
+      same rollback. The counter has to survive a rolled-back transaction, and in
+      Postgres precisely one thing does: **sequences**. `nextval`/`setval` are
+      explicitly non-transactional. Usually that is a footnote about gaps in id
+      columns; here it is the entire mechanism. `invite_guess_counter` holds the
+      count, `invite_guess_window` holds the window start as epoch seconds.
+      **THE CAP IS CHECKED BEFORE THE CODE IS LOOKED UP, deliberately.** Checking
+      validity first would spare legitimate joiners – and would also be useless,
+      because a sweep still allowed to LOOK UP every code will eventually hit a
+      live one however carefully we count afterwards. The lookup is the thing
+      that has to stop.
+      **ACCEPTED COST, Thomas's call:** an attacker can burn the hourly budget on
+      purpose and make legitimate joining fail for up to an hour. A mild denial
+      of service against a rare action, traded against a stranger landing inside
+      a family's household. The refusal reuses 0012's exact wording, so every
+      installed build already shows the right friendly message
+      ([household.ts:216](../src/lib/household.ts)).
+      - [x] **⚠️ A SUPABASE DEFAULT NEARLY HANDED THE LIMITER TO THE ATTACKER,
+            and the test caught it.** Supabase ships `alter default privileges
+            in schema public grant all on sequences to anon, authenticated, …`
+            so serial columns work. So both new sequences were born with UPDATE
+            granted to `anon` and `authenticated` – and **UPDATE is exactly the
+            privilege `setval()` needs.** A counter the guesser can reset to zero
+            is not a counter.
+            Found because the harness ASSERTS the property instead of assuming
+            it: the check "a signed-in client CANNOT reset the guess counter"
+            failed on its first run. Closed with a REVOKE, and the verifying
+            select now proves it for `anon` too – the anon key ships inside every
+            copy of the app and is not a secret.
+            Not reachable through PostgREST today (`setval` lives in
+            `pg_catalog`, which is not an exposed schema), but **"the app cannot
+            reach it" is the precise reasoning that left findings #9 and #10
+            standing for six weeks**, so it was closed rather than argued away.
+            **CARRY THIS FORWARD: any NEW sequence in `public` is born the same
+            way.** Revoke, or it is public by default.
+      - [x] **VERIFIED BY RUNNING IT, 19 checks in
+            `supabase/tests/household-boundary.sql`.** The one that matters is
+            *"the counter SURVIVED 30 rolled-back guesses"* – 0012's counter reads
+            0 there, and that single assertion is the whole difference between
+            this migration and the one it replaces. Also proved: 30 wrong guesses
+            are answered "invalid" rather than blocked, the 31st is refused as
+            "too many" **in the exact wording shipped builds match on**, a valid
+            code is refused too while over the cap (the accepted cost, asserted
+            so it cannot be a surprise later), and the window genuinely reopens
+            after the hour.
+      - [x] **APPLIED 2026-08-07** – backup, full replay onto an empty database,
+            harness, dev, production dry-run read, production. Verifying select
+            all six columns true on local, dev AND production. `backup:verify`
+            run twice on purpose: once on the pre-migration archive and again on
+            a post-migration one, because 0033 introduces a new KIND of object
+            and the restore had never carried a sequence before. It does – and it
+            carries the REVOKE with it, so a rebuilt database is not born wide
+            open. 7,254 rows exact both times; production data untouched
+            (5 households, 7 memberships, 5 live codes).
+      - [ ] **WHEN TO RAISE THE CAP – and why raising it is the wrong instinct.**
+            30/hour is enormous headroom today (the whole app sees a handful of
+            joins a MONTH) and turns a sweep from under an hour into ~170 days.
+            But the protection weakens on its own as households multiply, because
+            more live codes means fewer guesses to hit one: ~615 guesses at 1,000
+            households. So this buys years at today's size and months at a
+            hundred times it. **The fix that actually scales is the longer code**
+            (option B below: 6 characters is 481 million instead of 614,656, or
+            ~780×). Revisit that at real growth rather than repeatedly raising a
+            number that weakens the guard every time it moves.
+      The original finding, kept for the record:
+      **The invite-code guess limit is per-account, so extra sign-ups
       bypass it.** `supabase/migrations/0012_throttle_invite_redemption.sql`
       :37-49. Joining is the one action that crosses the household boundary
       for a non-member, and the only guard on the 4-character code is 10
@@ -1596,10 +1692,20 @@ Closed 2026-07-27:
             too:** one query is a point in time – but here the state has been
             stable and the submitted date is a fact, so this is not the
             "not processed YET" window.
-            OPTION IF IT DRAGS: Contact Us → App Review → status enquiry. Low
-            risk, sometimes unsticks a queue. Thomas's call; he chose to check
-            the mailboxes first (below) so that a nudged review cannot fail at
-            sign-in.
+            - [x] **STATUS ENQUIRY SENT TO APPLE 2026-08-07**, after the demo
+                  mailbox was proven working – deliberately in that order, so
+                  that hurrying the review along could not hurry it into a
+                  failure at sign-in. Apple replies by email with a Case ID.
+                  **THE PATH, because it is four clicks deep and nothing along
+                  the way says "my app is stuck":**
+                  [developer.apple.com/contact](https://developer.apple.com/contact/)
+                  → *Get help with a new issue* → **View topics** → **App
+                  Review** → **App Review Status** → **Email**.
+                  Field trap worth remembering: **"Apple Account of the App" is
+                  NOT an email address**, despite sitting directly under a field
+                  where you just typed one. It wants the app's numeric id,
+                  `6793690543`. Name and Apple Account pre-fill from the signed-in
+                  developer account; Related Apps stays empty; Platform iOS.
 - [x] **First-look trademark search done 2026-07-27** – full write-up in
       [trademark-search.md](trademark-search.md). Headline: the NAME is clear
       (nobody holds "Prepeat" anywhere; no EU/DK registration; Prepear Inc.
