@@ -139,6 +139,13 @@ Three things this gets right, each of which failed on its own:
 Node ids take a **HYPHEN** in the URL (`29-3417`), not the colon the API returns
 (`29:3417`).
 
+⚠️ **RUNNING `open` IS THE DELIVERABLE – printing the URL in chat is not.**
+Claude wrote this rule and then, an hour later, listed seven findings as
+clickable `https://` links; Thomas: *"I can still not get anything from
+42-10704 (http link)"*. A link in chat opens his BROWSER. If several nodes need
+showing, run `open` for the one being discussed and offer the rest one at a
+time – do not paste a list of links and call it pointing.
+
 ⚠️ **The link carries the SELECTION but not the CAMERA** – verified: the node
 was correctly selected in the properties panel while the viewport sat thousands
 of pixels away on a blank part of the canvas. Hence `Shift 2`. Always say so;

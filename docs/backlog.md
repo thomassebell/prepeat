@@ -1430,6 +1430,12 @@ Closed 2026-07-27:
       or a group of equal names? One-directional is simpler and matches the
       category-memory precedent; start there unless Thomas wants groups.
 - [ ] **Drag a meal to another day on the Plan screen** (Thomas asked
+      **⚠️ RAISED AGAIN 2026-08-07, which is a priority signal.** Thomas listed
+      this among his ideas a second time, apparently without recalling it was
+      already filed. Twice-asked is the closest thing to a vote this backlog
+      has - worth pulling out of "v1.1+ polish" and putting in front of him as a
+      real candidate next time the order is reviewed, rather than leaving it to
+      surface a third time.
       2026-07-30: *"is it possible to drag a meal to another day in Plan? It
       has the slide to edit already"*). Answer: yes, and the data side is
       already done – the swipe "Move to another day" action already calls
@@ -1455,6 +1461,12 @@ Closed 2026-07-27:
       (see decisions log ~line 998: rows scroll inside, target slot shown) –
       reuse its visual language rather than inventing a new one.
 - [ ] **Drag a shopping item to another category** (Thomas, 2026-07-30).
+      **⚠️ RAISED AGAIN 2026-08-07, which is a priority signal.** Thomas listed
+      this among his ideas a second time, apparently without recalling it was
+      already filed. Twice-asked is the closest thing to a vote this backlog
+      has - worth pulling out of "v1.1+ polish" and putting in front of him as a
+      real candidate next time the order is reviewed, rather than leaving it to
+      surface a third time.
       Pick up a single item and drop it on a different category group to
       recategorize it. Like the meal-drag item above, the data side already
       exists: `editItem(id, { ...aisle })` in
@@ -1702,6 +1714,145 @@ Closed 2026-07-27:
       a bug in Prep+Eat, and it can wait for the next DS pass.
 
 ## Ideas – not yet committed
+
+- [ ] **🌙 MOONSHOT: import a recipe from an Instagram video** (Thomas,
+      2026-08-07, confirming he means the recipe is IN THE VIDEO - spoken aloud
+      or shown as on-screen text - not in the caption).
+      **⚠️ THE HARD PART IS NOT THE AI. IT IS GETTING THE VIDEO.** Ranked by
+      actual difficulty, which is the reverse of how it feels:
+      1. **Obtaining the file - the real blocker, and it is legal rather than
+         technical.** Instagram has no public API for arbitrary Reels and blocks
+         unauthenticated fetches hard; downloading media programmatically is
+         against their terms. That is a genuine risk for an App Store app, not a
+         puzzle to engineer around. **Settle this before writing any code** - if
+         the answer is no, everything below is moot.
+         The plausible route is the **iOS Share Sheet**: the user shares a Reel
+         to Prep+Eat and the app receives a URL. Note that is a URL, not a video,
+         so it does not by itself solve this step. A share extension is also a
+         separate iOS target, app groups and config-plugin work - real effort
+         before a single frame is read.
+      2. **Reading the content - the solved part, and cheaper than expected on
+         iOS.** Apple ships both halves on-device: `Speech` for transcription and
+         `Vision` for OCR of on-screen text. On-device means no per-import API
+         cost, no network dependency and no recipe text leaving the phone, which
+         also keeps the privacy policy as it stands. Most Reels carry the
+         ingredients as overlay TEXT, so OCR on sampled frames may beat
+         transcription; likely both, merged.
+      3. **Turning the result into ingredients - this is the moonshot below, but
+         worse.** Spoken recipes routinely have no amounts at all ("a good glug
+         of olive oil", "season to taste"), so the output is inherently poorer
+         than any written source. Build that one first; this one depends on it.
+      4. **Review - already built.** The import screen populates the editor and
+         saves nothing until Save is pressed, so a rough extraction is
+         correctable rather than damaging. Same de-risking as below.
+      **THE MUCH CHEAPER ADJACENT WIN, worth knowing even though Thomas asked
+      for the video:** a large share of recipe Reels ALSO put the full recipe in
+      the caption. Caption text needs no transcription, no OCR and no frame
+      sampling - it is ordinary text through the parser that already exists. If
+      Instagram access is ever solved for step 1, the caption path is a fraction
+      of the work for a large fraction of the recipes. Do not skip past it on the
+      way to the harder thing.
+      **RELATED:** the existing "Import fallback for bot-blocking sites" item
+      under Conditional - a hidden WebView fetch - is the same class of problem
+      one notch easier, and would be the natural place to learn whether this
+      approach is viable at all.
+
+- [ ] **🌙 MOONSHOT: pull the ingredient and the amount out of a messy line, and
+      nothing else** (Thomas, 2026-08-07). His examples, one per language:
+      - `½ cup long beans, cut into short pieces` → **long beans, ½ cup**
+      - `æg, sammenpisket til pensling, 1` → **æg, 1**
+      **WHY IT IS A MOONSHOT AND NOT A PARSER TWEAK.** The boundary between a
+      NAME and a MODIFIER is semantic, not syntactic, and no rule finds it:
+      - `long beans, cut into short pieces` → the tail is prep, drop it.
+      - `beans, black` → the tail is the ingredient. Same shape, opposite answer.
+      - `salt, flaky sea` → is "flaky sea" prep, or a different salt you would
+        buy separately? Genuinely ambiguous, and the shopping list cares.
+      - The Danish example puts the quantity **last** and the prep in the
+        **middle**; today's `parseIngredient` strips only a LEADING amount, so it
+        would not even find the `1`.
+      - It has to work in at least two languages, and the prep vocabulary is
+        entirely different in each (`chopped`/`minced` vs
+        `hakket`/`sammenpisket`/`snittet`).
+      **WHY IT MATTERS MORE THAN IT LOOKS.** The shopping list merges rows on
+      `item_merge_key`, which is the normalised NAME plus unit. Prep text left in
+      the name splits a row: "long beans, cut into short pieces" and "long beans"
+      are two different items to buy. So this feeds straight into the open
+      duplicate-items bug, and it is the same underlying wound as
+      Teach-a-synonym - the shopping list cannot merge what the importer did not
+      clean.
+      **⚠️ THE THING THAT MAKES IT FAR LESS RISKY THAN IT SOUNDS: the human
+      already reviews every import before it saves.** The import screen shows the
+      parsed recipe in the editor and nothing is stored until Save is pressed. So
+      this is ASSISTIVE extraction, not autonomous - it does not have to be
+      right, it has to be better than leaving an instruction in the name, and a
+      wrong guess costs one edit. That single fact moves the acceptable error
+      rate from "near perfect" to "usefully better", which is the difference
+      between impossible and buildable.
+      **THREE ROUTES, cheapest first:**
+      1. **Extend the rules.** Split on commas, drop a tail that starts with a
+         known prep word, and look for a trailing amount as well as a leading
+         one. Cheap, reuses everything already built (vulgar-fraction folding,
+         `UNIT_SINGULARS`, the Danish unit lists). Partial by nature, and needs a
+         hand-kept prep vocabulary per language. Will get `beans, black` wrong
+         unless the list is conservative.
+      2. **Ask a model per ingredient line**, returning `{name, quantity, unit}`.
+         The only route that handles arbitrary phrasing in any language. Costs:
+         an API key in the app's supply chain, a per-import cost, a network
+         dependency on a flow that currently works offline once fetched, and
+         non-determinism. Also sends recipe text off-device, which the privacy
+         policy would have to cover.
+      3. **Hybrid - rules first, model only for the lines rules cannot parse
+         confidently.** Most lines are simple (`400 g cherry tomatoes`) and
+         already work; the spend and the exposure land only on the hard ones.
+         Probably the right shape if this is ever built.
+      **RELATED, and worth reading first:** the existing code debt "Recipe import
+      leaves prep instructions in the ingredient NAME" carries a list of real
+      failures harvested from the demo household - that list is the test set for
+      any of this. Note also that fixing the importer does NOT repair recipes
+      already imported: there is still no re-import action.
+
+- [ ] **Keep the screen awake on a recipe's detail screen** (Thomas,
+      2026-08-07). Cooking with sticky hands and a phone that dims every 30
+      seconds is the problem; this is the one screen where the phone is propped
+      up and read from across a worktop.
+      Cheap: `expo-keep-awake` ships with the SDK, and `useKeepAwake()` in
+      [src/app/recipes/[id].tsx](../src/app/recipes/[id].tsx) is roughly the
+      whole build - it activates on mount and releases on unmount, so leaving
+      the screen restores normal behaviour by itself.
+      **THREE THINGS TO DECIDE, none of them technical:**
+      1. **The detail screen only, or a deliberate "cook mode"?** Always-on for
+         anyone who merely opens a recipe to read it will flatten batteries for
+         a benefit they did not ask for.
+      2. **Does it belong to the whole screen or to the steps?** Arguably the
+         instructions are where you are hands-busy; the ingredients you read
+         once.
+      3. **Should it be visible?** An always-on screen that the user did not ask
+         for and cannot see the reason for reads as a bug, not a feature.
+      No design exists for any of that.
+
+- [ ] **A Danish version of the app** (Thomas, 2026-08-07). ⚠️ **This reverses a
+      standing decision, so it is a product call before it is a build.**
+      [projektgrundlag.md](projektgrundlag.md) fixes the UI language as English
+      for an international audience, and the App Store listing, the privacy
+      policy and the marketing site all follow from that.
+      **THE APP IS NOT PREPARED FOR IT.** There is no i18n layer at all - every
+      string is a literal in the component that renders it. So the work is not
+      "translate the app", it is "make the app translatable, then translate it":
+      extract several hundred strings, choose a library, decide how the language
+      is picked (device locale or a setting), and take on a second copy of every
+      piece of UI text forever.
+      **AND SOME OF IT IS NOT TEXT.** Worth thinking about before committing:
+      - **Quantities and units already speak both languages.** `UNIT_SINGULARS`
+        / `UNIT_PLURALS` and `norm_item_unit` carry Danish units *today* because
+        recipes get imported in Danish even though the UI is English. A Danish
+        UI does not change that machinery, but it does change which language a
+        user expects to see back.
+      - **Dates and week numbers** are already ISO weeks, which suits Denmark.
+      - **The name and tagline are English** and deliberately so.
+      **THE REAL QUESTION IS WHO IT IS FOR.** Every user today is Danish and
+      reads English comfortably. If this is for the family, it buys warmth. If it
+      is for a Danish App Store launch, it is a market decision and the listing,
+      screenshots and support address come with it. Those are different projects.
 
 - [ ] **⚠️ NINE SHEETS STILL HAVE NO HEIGHT CAP** (found 2026-08-07 while fixing
       the ingredient sheet, which was the tenth). A `BottomSheet` without the
