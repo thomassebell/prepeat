@@ -552,8 +552,17 @@ export function ShoppingListProvider({ children }: { children: ReactNode }) {
   // back – see refresh().
   const [channelAttempt, setChannelAttempt] = useState(0);
   // Week navigation (designed 2026-07-16): every week has its own list.
-  // Reachable weeks mirror the plan's rule – existing lists, weeks with a
-  // plan, and the current week; two weeks back at most.
+  // Reachable weeks are existing lists, weeks with a plan, and the current
+  // week; two weeks back at most.
+  // ⚠️ THESE DO NOT MIRROR THE PLAN'S RULE, though this comment claimed they
+  // did until 2026-08-07. Plan's "›" past the last week CREATES a clean next
+  // week (meal-plan.tsx goForward); Shopping's only moves between weeks that
+  // already exist and never creates one. So in a household that has never
+  // planned anything, weekOptions is just the current week and BOTH ARROWS ARE
+  // DEAD - two switchers that look identical behaving differently. Found by
+  // Thomas on device 2026-08-07 in a freshly created household; behaviour dates
+  // to 2026-07-18, not a regression. Whether Shopping should create weeks too is
+  // an open product question - see the backlog.
   // Live, not computed once at mount – see useCurrentWeekStart and known bug 3.
   const currentWeekStart = useCurrentWeekStart();
   // Callbacks and the boot effect read the week through this ref, so a week

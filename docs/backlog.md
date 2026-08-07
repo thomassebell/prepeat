@@ -236,6 +236,41 @@ invite. Check betaTesters vs Users-and-Access before blaming email or spam.
 
 ## Known bugs (open)
 
+- [ ] **Shopping's week switcher is dead until you have planned something, and
+      the two tabs' identical-looking switchers behave differently** (Thomas, on
+      device 2026-08-07: *"you can not scroll the weeks in shopping before you
+      have done so in plan. I think Plan is creating the weeks"* – exactly
+      right).
+      **THE ASYMMETRY.** Plan's "›" past the last week **creates** a clean next
+      week (`getOrCreatePlan`,
+      [meal-plan.tsx:670](../src/lib/meal-plan.tsx)) – documented behaviour from
+      2026-07-17, replacing the old header "+". Shopping's arrows only move
+      between weeks that ALREADY EXIST
+      ([shopping-list.tsx:1102](../src/lib/shopping-list.tsx)), and its week list
+      is built from existing shopping lists + existing meal plans + the current
+      week. So a household that has never planned anything has exactly one
+      reachable week and both arrows are disabled.
+      **NOT A REGRESSION** – `git log -S` puts this in `e1cc357`, 2026-07-18, the
+      original weekly-plan milestone. The 2026-08-04 clock work only changed how
+      it reads the current week. It went unnoticed for three weeks because it
+      only bites an EMPTY household, and every household in use has plans.
+      **A code comment claimed the opposite** ("Reachable weeks mirror the plan's
+      rule") and was corrected the same day. It is how the gap survived review:
+      the comment described an intention, and nobody diffed it against what
+      meal-plan.tsx actually does. LESSON: a comment asserting two things agree
+      is a claim, and claims rot silently.
+      **NEEDS A DECISION, not a fix yet:** should Shopping's "›" create next
+      week's list the way Plan's does? For it – the shopping list takes manual
+      items too, so "add loo roll to next week" is currently impossible until a
+      meal is planned, and two switchers that look the same should not behave
+      differently. Against – the list is downstream of the plan by design, so
+      creating list rows for weeks nobody has planned is clutter, and the honest
+      fix might instead be to make Shopping's dead arrows LOOK dead rather than
+      to create weeks. No design exists for either.
+      Low urgency: invisible to any household that plans meals, which is all of
+      them. It is a first-run sharp edge, which is also the worst place to have
+      one.
+
 - [x] **A plan change that needed MORE than you ticked off was completely
       invisible. FIXED AND APPLIED 2026-08-04 as migration 0028.** Found
       2026-08-04 from Thomas's report: *"it does not update shopping list when
@@ -619,11 +654,18 @@ cut: fix 1 and 6 before the next build, the rest as a fast follow.
             stops only when the last consumer unmounts, a foreground catches up
             a week-old clock, and a remount re-syncs a stale module value.
             Typecheck and lint clean.
-      - [ ] **WALK ORDINARY USE ON THE DEVICE.** Still unproven, and the
-            2026-08-03 retry-button lesson says this is exactly the class of
-            code review passes and use breaks: that normal operation survived
-            the effect-dependency surgery in both providers – open both tabs,
-            switch weeks, add and remove a meal, force-quit and reopen.
+      - [x] **WALKED AND PASSED ON DEVICE 2026-08-07** (dev build 09:38),
+            three days after the code was written. Both tabs opened, weeks
+            switched, a meal added and removed with the shopping list following
+            it, then force-quit and reopened and the same again. Thomas: *"7
+            passed"*, *"8 same findings"*.
+            **SO THE EFFECT-DEPENDENCY SURGERY IN BOTH PROVIDERS DID NOT BREAK
+            ORDINARY USE**, which is the single question this item existed to
+            answer – the 2026-08-03 retry-button lesson being that error paths
+            and rewired effects are exactly what review passes and use breaks.
+            The walk did surface one thing, but it turned out to predate this
+            work by three weeks – see the shopping week-switcher item under
+            Known bugs.
       - [x] **A RACE THIS INTRODUCED, found and fixed 2026-08-04 while chasing
             something else.** The first version had the roll-over call
             `viewWeek` on the shopping side. That starts a SECOND chain
