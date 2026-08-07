@@ -21,8 +21,14 @@ import { IngredientSheet } from "@/components/recipes/ingredient-sheet";
 import { StepSheet } from "@/components/recipes/step-sheet";
 import type { ImportedRecipe } from "@/lib/recipe-import";
 import { ReorderSheet } from "@/components/ui/reorder-sheet";
+// SwipeHint is deliberately gone from this screen (2026-08-07). Its job was to
+// advertise the swipe; the whole row now opens the editor on a tap, and
+// deleting lives inside that editor beside Done (Thomas: "put the delete
+// function on the edit sheet instead"). So there are no hidden actions left to
+// hint at. The swipe still works underneath for anyone used to it.
+// It stays in use on the shopping list, the plan and the recipe DETAIL screen,
+// where a row tap already means something else (ticking an ingredient off).
 import { SwipeActions } from "@/components/recipes/swipe-actions";
-import { SwipeHint } from "@/components/ui/swipe-hint";
 import { Input } from "@/components/ui/input";
 import { ds } from "@/constants/ds";
 import { Spacing, tabBarClearance } from "@/constants/theme";
@@ -458,15 +464,21 @@ export default function AddRecipeScreen() {
                           }
                         >
                           <View className="h-[56px] w-full flex-row items-center gap-layout-small bg-surface-neutral-white px-layout-small">
-                            <Text className="flex-1 font-paragraph text-paragraph font-default text-text-default">
-                              {row.name}
-                            </Text>
-                            {(row.quantityText?.length ?? 0) > 0 && (
-                              <Text className="font-paragraph text-paragraph font-default text-text-subtle">
-                                {row.quantityText}
+                            <Pressable
+                              className="min-w-0 flex-1 flex-row items-center gap-layout-small"
+                              onPress={() => setIngredientSheet({ index })}
+                              accessibilityRole="button"
+                              accessibilityLabel={`Edit ${row.name}`}
+                            >
+                              <Text className="min-w-0 flex-1 font-paragraph text-paragraph font-default text-text-default">
+                                {row.name}
                               </Text>
-                            )}
-                            <SwipeHint />
+                              {(row.quantityText?.length ?? 0) > 0 && (
+                                <Text className="font-paragraph text-paragraph font-default text-text-subtle">
+                                  {row.quantityText}
+                                </Text>
+                              )}
+                            </Pressable>
                           </View>
                         </SwipeActions>
                       </Fragment>
@@ -525,18 +537,24 @@ export default function AddRecipeScreen() {
                         }
                       >
                         <View className="w-full flex-row items-start gap-layout-small bg-surface-neutral-white px-layout-small py-layout-small">
-                          <View className="min-w-[32px] items-center justify-center rounded-xlarge bg-surface-neutral-main px-comp-medium py-comp-small">
-                            <Text className="font-paragraph text-small font-emphasized leading-xxsmall text-text-default">
-                              {index + 1}
-                            </Text>
-                          </View>
-                          <Text
-                            style={{ paddingTop: 4 }}
-                            className="min-w-0 flex-1 font-paragraph text-paragraph font-default leading-xsmall text-text-default"
+                          <Pressable
+                            className="min-w-0 flex-1 flex-row items-start gap-layout-small"
+                            onPress={() => setStepSheet({ index })}
+                            accessibilityRole="button"
+                            accessibilityLabel={`Edit step ${index + 1}`}
                           >
-                            {step}
-                          </Text>
-                          <SwipeHint />
+                            <View className="min-w-[32px] items-center justify-center rounded-xlarge bg-surface-neutral-main px-comp-medium py-comp-small">
+                              <Text className="font-paragraph text-small font-emphasized leading-xxsmall text-text-default">
+                                {index + 1}
+                              </Text>
+                            </View>
+                            <Text
+                              style={{ paddingTop: 4 }}
+                              className="min-w-0 flex-1 font-paragraph text-paragraph font-default leading-xsmall text-text-default"
+                            >
+                              {step}
+                            </Text>
+                          </Pressable>
                         </View>
                       </SwipeActions>
                     </Fragment>
@@ -674,6 +692,13 @@ export default function AddRecipeScreen() {
             ? stepSheet.index + 1
             : steps.length + 1
         }
+        onDelete={() => {
+          const target = stepSheet;
+          setStepSheet(null);
+          if (target != null && target !== "add") {
+            setSteps((current) => current.filter((_, i) => i !== target.index));
+          }
+        }}
         onClose={() => setStepSheet(null)}
         onSubmit={(text, position) => {
           const target = stepSheet;

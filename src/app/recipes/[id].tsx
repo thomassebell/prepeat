@@ -695,9 +695,10 @@ export default function RecipeDetailScreen() {
           const target = editingIngredient;
           setEditingIngredient(null);
           if (target === null || target === "new") return;
-          // The heading only. Its ingredients stay and join the section above,
-          // which is decision 2 and needs no extra work - grouping is
-          // positional. Undo uses the same path as a swiped row.
+          // Deletes whichever row is open - ingredient or heading. For a
+          // HEADING only the heading goes: its ingredients stay and join the
+          // section above, which is decision 2 and needs no extra work, since
+          // grouping is positional. Undo uses the same path as a swiped row.
           setUndoTarget({ kind: "ingredient", snapshot: target });
           await deleteIngredient(target.id).catch((error) =>
             console.warn("[recipes] delete section failed", error),
@@ -757,6 +758,17 @@ export default function RecipeDetailScreen() {
             ? editingStep.stepNumber
             : recipe.steps.length + 1
         }
+        onDelete={async () => {
+          const target = editingStep;
+          setEditingStep(null);
+          if (target === null || target === "new") return;
+          // Same path as swiping the step away, undo toast included.
+          setUndoTarget({ kind: "step", snapshot: target });
+          await deleteStep(recipe.id, target.id).catch((error) =>
+            console.warn("[recipes] delete step failed", error),
+          );
+          reload();
+        }}
         onClose={() => setEditingStep(null)}
         onSubmit={async (text, position) => {
           const target = editingStep;

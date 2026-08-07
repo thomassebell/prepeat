@@ -324,6 +324,39 @@ invite. Check betaTesters vs Users-and-Access before blaming email or spam.
 
 ## Known bugs (open)
 
+- [x] **EDITING A SECTION SILENTLY TURNED IT INTO AN INGREDIENT. Found by
+      Thomas on device 2026-08-07, fixed the same hour.** *"there is a bug in
+      edit section. when you edit the section it becomes a ingredient."*
+      **WORSE THAN IT LOOKS:** a demoted heading is a real ingredient, so
+      "DOUGH" then lands on the shopping list the next time that recipe is
+      planned – precisely the failure sections were built to prevent, arriving
+      through the back door. And it was silent: no error, and the row only looks
+      wrong once you notice the heading has become a list item.
+      **THE CAUSE IS A BOUNDARY, not a typo.** `BottomSheet` renders its children
+      only while visible (deliberately, so field state resets per open without
+      key juggling). The ingredient sheet's TAB state has to live OUTSIDE that
+      boundary, because the sheet's title follows the tab and the title is a prop
+      on BottomSheet. So `useState(initialKind)` captured its value at the very
+      first mount – when nothing was being edited, i.e. "ingredient" – and never
+      read it again. Open a section, the tab says Ingredient, save, and
+      `isSection` is written false.
+      Fixed by re-syncing on open, using React's documented adjust-state-during-
+      render pattern rather than an effect, which would show one frame of the
+      wrong tab.
+      **BOTH SCREENS WERE ALREADY CORRECT** – the create/edit screen and the
+      recipe detail both passed `initialKind` properly. The single shared sheet
+      was the whole bug, so one fix covered both.
+      LESSON, and it is why neither device walk caught it: the walk lists said
+      "create a section" and "delete a section" but never **"edit one and save it
+      unchanged"** – the most ordinary thing anyone does to a heading, and an
+      action with no visible error when it goes wrong. **Add edit-and-save-
+      unchanged to the walk list for anything carrying a type or a mode.**
+      - [x] **A related trap, found by sweeping for the same shape rather than
+            waiting for it.** `add-meal-sheet.tsx` also holds tab state outside
+            the boundary. NOT the same bug – its initial value is a constant, so
+            nothing is silently converted – but the tab is sticky between opens.
+            Left alone as possibly intended; noted so it is not re-diagnosed.
+
 - [x] **A plan change that needed MORE than you ticked off was completely
       invisible. FIXED AND APPLIED 2026-08-04 as migration 0028.** Found
       2026-08-04 from Thomas's report: *"it does not update shopping list when
@@ -1670,6 +1703,26 @@ Closed 2026-07-27:
 
 ## Ideas – not yet committed
 
+- [ ] **⚠️ NINE SHEETS STILL HAVE NO HEIGHT CAP** (found 2026-08-07 while fixing
+      the ingredient sheet, which was the tenth). A `BottomSheet` without the
+      `scroll` prop has no maxHeight at all: it simply grows with its body, and
+      the title-and-close row sits ABOVE the scroll area, so once content plus
+      keyboard exceeds the screen the close button goes off the top and the sheet
+      cannot be dismissed. That is what happened to the ingredient sheet the
+      moment it gained one more button.
+      Capped today: recipe detail, edit-item, add-meal, add-to-plan, step,
+      ingredient. **Uncapped: import-recipe, leave-household, move-day,
+      invite-someone, servings, edit-profile, edit-household, delete-profile,
+      delete-household.**
+      Most are short confirmations that will never reach the top. The two to
+      watch are **import-recipe** (a URL field, so the keyboard is up) and
+      **edit-profile** (three buttons) – neither is tall enough to break TODAY,
+      which is exactly what was true of the ingredient sheet until it wasn't.
+      NOT done in the same pass on purpose: adding the cap also wraps a sheet's
+      contents in a spacing container, so it can shift layout subtly, and nine
+      screens changed without walking any of them is how a fix becomes a bug
+      round. Worth its own sitting, each one walked.
+
 - [ ] **Leave a household from the SWITCHER** (Thomas, 2026-08-07, walking the
       0032/0033 device list: *"it is not possible to leave a household from the
       switcher, but maybe it should be"*).
@@ -2393,6 +2446,56 @@ missing from it entirely.
       ds-theme.cjs and walk the affected screens (agreed 2026-07-12).
 
 ## Decisions log (recent)
+
+- **2026-08-07 – EDITING A RECIPE ROW: tap the row, delete inside the sheet.
+  Two rejected attempts recorded, because both are the obvious thing to reach
+  for.** Thomas: *"when recipe is in edit mode you have to tap the three dots to
+  edit. you should be able to tap the whole row. And maybe the three dots should
+  become a delete icon. I have not designed this, but it is ok for you to give
+  it a go."* – an explicit, one-off waiver of the no-improvised-UI rule.
+  **WHAT LANDED:** the whole row opens the editor (matching the section heading
+  on the same screen, which already worked that way – the real complaint was that
+  headings were one tap and rows were two), and deleting lives in the edit sheet
+  beside Done. Instructions got the same treatment; leaving them on the old
+  two-step interaction would have made the screen inconsistent with itself.
+  - **REJECTED 1 – a delete icon on the row** (Claude built it, Thomas tried it:
+    *"you did exactly as described, so thank you. but I'm not happy with it"*).
+    His replacement is better and cheaper: the sheet ALREADY had a red delete
+    button, drawn to his own 2026-08-06 spec and gated to sections only. So the
+    fix was ungating something that existed rather than drawing something new,
+    and it makes ingredients and sections behave identically instead of each
+    having a private way to be removed. It also restores two deliberate steps
+    before a destructive act, which the row icon had reduced to one.
+    LESSON: before drawing a new control, check whether the app already draws
+    one for that job somewhere it is currently hidden.
+  - **REJECTED 2 – pinning Done and Delete in the sheet's `footer`** (Claude,
+    reasoning that always-visible beats reachable-by-scrolling; Thomas on the
+    device: *"this is worse. there is no room to move for your finger to scroll
+    the screen"*). He is right, and the arithmetic explains it: two pinned
+    full-width buttons cost ~120px of a strip the keyboard has already halved,
+    leaving a scroll area one field tall – too small to get a thumb into. The
+    quantity field went from ONE SCROLL AWAY to effectively unreachable while
+    being technically visible.
+    **This is written into the code beside the `scroll` prop**, because a future
+    reader looking at a Done button that scrolls out of view will reach for
+    `footer` immediately. It is the obvious-looking fix that makes it worse.
+  - **The keyboard no longer opens on EDIT, only on ADD** (Thomas, same session:
+    *"when editing, we don't know if the user wants to edit the name, quantity or
+    delete the item. so let's not open with name input active"*). Adding has one
+    sensible next action; editing has at least three, so auto-focusing guesses
+    wrong most of the time AND buries the other options. It is also what makes
+    the whole sheet visible on open, which turned out to matter more than any
+    amount of height tuning.
+  - **The sheet reaches 96% rather than 90%** (Thomas marked the unused strip on
+    a screenshot: *"is there more room for the sheet"* – it was almost exactly
+    the tenth the default ceiling reserves). NOT an invented number: the shopping
+    list's edit-item sheet already ships `minHeightPercent 0` + `maxHeightPercent
+    96`, so the app now has one answer to "hug short content, grow nearly
+    full-screen when long". The remaining 4% keeps the title clear of the notch.
+  - **Still improvised, and still flagged:** no frame draws any of this. The
+    delete button was blessed verbally for sections on 2026-08-06 and is now the
+    delete for every row; the tappable row copies the heading's existing layout.
+    Worth frames if any of it is to be treated as settled.
 
 - **2026-08-07 – SHOPPING DELIBERATELY DOES NOT CREATE WEEKS. Decided by
   Thomas; do not re-litigate.** Found on device the same day: *"you can not

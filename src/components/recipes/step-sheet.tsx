@@ -4,6 +4,7 @@ import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { Input } from "@/components/ui/input";
+import { SheetDeleteButton } from "@/components/ui/sheet-delete-button";
 import { ds } from "@/constants/ds";
 
 /**
@@ -18,6 +19,7 @@ export function StepSheet({
   initialText,
   positionCount,
   initialPosition,
+  onDelete,
   onClose,
   onSubmit,
 }: {
@@ -27,6 +29,13 @@ export function StepSheet({
   /** Number of positions offered when adding (existing steps + 1). */
   positionCount: number;
   initialPosition: number;
+  /**
+   * Removes the instruction being edited. Wired 2026-08-07, when Thomas moved
+   * deleting off the row and onto the sheet ("put the delete function on the
+   * edit sheet instead") - the ingredient sheet gained the same thing in the
+   * same change, so the two sheets stay alike. Absent when adding.
+   */
+  onDelete?: () => void;
   onClose: () => void;
   onSubmit: (text: string, position: number) => void;
 }) {
@@ -42,6 +51,7 @@ export function StepSheet({
         initialText={initialText}
         positionCount={positionCount}
         initialPosition={initialPosition}
+        onDelete={editing ? onDelete : undefined}
         onSubmit={onSubmit}
       />
     </BottomSheet>
@@ -53,12 +63,14 @@ function SheetContent({
   initialText,
   positionCount,
   initialPosition,
+  onDelete,
   onSubmit,
 }: {
   editing: boolean;
   initialText: string;
   positionCount: number;
   initialPosition: number;
+  onDelete?: () => void;
   onSubmit: (text: string, position: number) => void;
 }) {
   const [text, setText] = useState(initialText);
@@ -66,9 +78,18 @@ function SheetContent({
   const [pickerOpen, setPickerOpen] = useState(false);
   const textRef = useRef<TextInput>(null);
 
+  // ⚠️ ONLY WHEN ADDING (Thomas, 2026-08-07, about the ingredient sheet and
+  // true here for exactly the same reason): "when editing, we don't know if the
+  // user wants to edit the name, quantity or delete the item. so let's not open
+  // with name input active." Adding has one sensible next action - type the
+  // instruction - so the keyboard is a shortcut. Editing has several, and
+  // opening on one of them guesses wrong most of the time AND throws the
+  // keyboard over the rest.
   useEffect(() => {
+    if (editing) return;
     const timer = setTimeout(() => textRef.current?.focus(), 450);
     return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const positions = Array.from({ length: positionCount }, (_, i) => i + 1);
@@ -160,6 +181,9 @@ function SheetContent({
           Done
         </Text>
       </Pressable>
+      {onDelete != null && (
+        <SheetDeleteButton label="Delete instruction" onPress={onDelete} />
+      )}
     </>
   );
 }

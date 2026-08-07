@@ -66,6 +66,18 @@ released first either way.
   drops between other sections rather than into the middle of one, so nothing
   changes section without you asking. Dragging a single ingredient works exactly
   as before – that is still how you move one into another section.
+- **Editing a section no longer turns it into an ingredient.** Opening a
+  heading to edit it and pressing Done used to save it as an ordinary
+  ingredient – which then appeared on your shopping list. Headings stay
+  headings.
+- **Tap a row to edit it.** While editing a recipe, tapping anywhere on an
+  ingredient or instruction opens it, instead of having to find the three dots
+  first. Deleting has moved into that same sheet, so every row is edited and
+  removed in one place.
+- **The edit sheet behaves itself.** It no longer opens so tall that the close
+  button is off screen, it uses more of the screen when it needs to, and it no
+  longer throws the keyboard at you when you are only editing – so you can see
+  the whole thing and choose what you came to change.
 - **Reordering no longer jumps when you let go.** Anything you drop now settles
   where you put it. This affected every reorder list – ingredients, instructions
   and shopping categories – and had done since reordering was built.
