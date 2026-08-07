@@ -102,21 +102,72 @@ invite. Check betaTesters vs Users-and-Access before blaming email or spam.
       - **Reuse, do not rebuild:** `add-meal-sheet.tsx` already has the tab
             component the design uses (`TabItem`, "Recipes"/…), and section
             headers want the Shopping screen's drag-handle reorder pattern.
-      - [ ] **TRUE SECTION DRAGGING – deferred, Thomas 2026-08-06: "for now is
-            fine that every row moves independently".** The reorder sheet
-            (Figma 508:13822) draws a handle on each heading and each row, and
-            today every item moves ALONE. Because grouping is positional that
-            still behaves coherently – drag a row past a heading and it joins
-            that section – but dragging a heading does not carry its rows, which
-            is what the handle implies.
-            **Two things to settle before building it.** First, a design
-            question Thomas has not drawn: should dragging a heading move the
-            whole group, and what happens when one is dropped INTO another
-            section? Second, the cost: `reorder-sheet.tsx` positions rows
-            absolutely at `index * ROW_HEIGHT` and the drag maths assumes every
-            item is the same height. Group dragging means variable-height
-            blocks, so it is a rewrite of the gesture geometry rather than a
-            tweak – the reason it was worth deferring rather than half-doing.
+      - [x] **TRUE SECTION DRAGGING – BUILT 2026-08-07** (deferred 2026-08-06,
+            Thomas: *"for now is fine that every row moves independently"*).
+            A heading now carries its ingredients, and a section can only land
+            on a section boundary.
+            **THE DESIGN QUESTION, decided by Thomas 2026-08-07** from three
+            options. It is not obvious, and the example is why: with
+            DOUGH[flour, water] / FILLING[sugar, cinnamon], dragging FILLING
+            between flour and water would – if a group simply landed where you
+            dropped it – leave **water inside FILLING**, because sections are
+            positional. An ingredient changes section with nobody touching it.
+            So the group **snaps to section boundaries** and that case is
+            unreachable rather than merely unlikely. A single ROW still goes
+            anywhere: dropping an ingredient into another section is how you
+            assign it to one, so that freedom is the feature.
+            **⚠️ THE DEFERRAL'S COST ESTIMATE WAS WRONG, and it is worth knowing
+            why.** The note said groups are variable-height blocks so the drag
+            geometry needed rewriting. Checking the actual Figma numbers
+            (508:13822) says otherwise: a heading is drawn **24 tall with 16 of
+            space either side, so in the body of the list it occupies exactly
+            56 – the same as a row.** The design's rhythm and the code's uniform
+            slots already agreed. A section is not a variable-height block, it is
+            N+1 uniform slots, and the existing integer arithmetic still holds.
+            **LESSON: the estimate was made from the code's shape alone.** Five
+            minutes reading the design's numbers would have shown the geometry
+            was never the problem – and deferring on a cost that was not real is
+            a decision made on a wrong premise, even though deferring to get the
+            DESIGN answer was right.
+            - [x] **The arithmetic is its own module, and it is TESTED BY BEING
+                  RUN.** `src/lib/reorder.ts` has zero runtime imports so
+                  `scripts/check-reorder.mjs` transpiles and imports the REAL
+                  functions – the recipe-import trick from 2026-08-04, and the
+                  answer to the reconciler lesson that a mirror written from the
+                  same wrong model agrees with the bug. 24 checks pass.
+                  **The load-bearing check is not about sections at all:**
+                  *"single-row moves match the old splice exactly, every
+                  from/to"*, brute-forced over every combination. THREE screens
+                  share this sheet – ingredients, instructions and shopping
+                  categories – and the last two have no sections, so the real
+                  risk in this change was regressing them. Also proved: every
+                  legal section move leaves each section owning exactly the rows
+                  it started with, a section can be dropped above loose leading
+                  rows, and an empty section (allowed, decision 3) moves alone.
+            - [x] **One rule, one place.** The "did this actually move anything"
+                  test lives only in `reorder.ts`; the gesture calls back to the
+                  JS thread rather than carrying its own copy. Deliberate – one
+                  shape rebuilt by hand in two places is exactly how the
+                  isSection bug survived three device builds on 2026-08-06.
+            - [ ] **WALK IT ON THE DEVICE.** Built and installed 2026-08-07.
+                  Drag a heading and check its ingredients come with it; try to
+                  drop one INSIDE another section and check it snaps out; drag a
+                  single ingredient into another section and check it still
+                  works; then open **Reorder instructions** and the **shopping
+                  categories** sheet, which have no sections and must behave
+                  exactly as before.
+            - [ ] **Cosmetic, found while measuring and NOT fixed here:** the
+                  design gives the FIRST heading no space above it, so a real
+                  list is 16px shorter at the top than uniform slots draw. Every
+                  later heading matches exactly. Too small to justify breaking
+                  the uniform geometry that makes the drag maths sound.
+            - [ ] **Improvisation flagged:** the whole dragged section now shows
+                  the lifted look (the pale background a dragged row already
+                  had), rather than only the heading under the finger. No frame
+                  draws a section mid-drag. It is the minimal consistent
+                  extension of an existing treatment rather than a new one, but
+                  it is Claude's call, not Thomas's – worth a frame if it reads
+                  wrong.
       - **Sections are REORDERABLE** – the Figma header carries a drag_handle,
             and there is one "Add ingredient" button at the end of the list
             rather than one per section.

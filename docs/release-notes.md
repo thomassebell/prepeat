@@ -61,7 +61,11 @@ a feature makes it MINOR. It stays unnumbered in `app.json` until it is
 actually being prepared for submission, and v1.0.0 has to be approved and
 released first either way.
 
-_(nothing yet – build 16 took everything below)_
+- **Drag a section and its ingredients come with it.** Moving "DOUGH" now moves
+  everything under it, instead of leaving the ingredients behind. A section
+  drops between other sections rather than into the middle of one, so nothing
+  changes section without you asking. Dragging a single ingredient works exactly
+  as before – that is still how you move one into another section.
 
 ## Build 16 – TestFlight 2026-08-06 (VALID, not in review)
 
