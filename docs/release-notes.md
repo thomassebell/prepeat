@@ -61,6 +61,17 @@ a feature makes it MINOR. It stays unnumbered in `app.json` until it is
 actually being prepared for submission, and v1.0.0 has to be approved and
 released first either way.
 
+_(nothing yet – build 17 took everything below)_
+
+## Build 17 – TestFlight 2026-08-07 (cutting now)
+
+Marketing version stays **1.0.0**: this is a TestFlight build, not a
+submission, so `app.json` is untouched – same as builds 13 through 16. The
+version only moves when a release is actually prepared, and v1.0.0 is still in
+review bound to build 12.
+
+**The App Store review is untouched by this.** v1.0 stays on build 12.
+
 - **Drag a section and its ingredients come with it.** Moving "DOUGH" now moves
   everything under it, instead of leaving the ingredients behind. A section
   drops between other sections rather than into the middle of one, so nothing
