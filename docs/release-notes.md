@@ -63,14 +63,25 @@ released first either way.
 
 _(nothing yet – build 17 took everything below)_
 
-## Build 17 – TestFlight 2026-08-07 (cutting now)
+## Build 17 – TestFlight 2026-08-07 (VALID, not in review)
 
-Marketing version stays **1.0.0**: this is a TestFlight build, not a
-submission, so `app.json` is untouched – same as builds 13 through 16. The
-version only moves when a release is actually prepared, and v1.0.0 is still in
-review bound to build 12.
+Uploaded 17:45 CEST, VALID about 40 minutes later. Marketing version stays
+**1.0.0**: this is a TestFlight build, not a submission, so `app.json` is
+untouched – same as builds 13 through 16.
 
-**The App Store review is untouched by this.** v1.0 stays on build 12.
+**The App Store review is untouched.** v1.0 stays on build 12, so none of this
+is in it.
+
+**Slower to appear than any build so far, and the two-source check is what kept
+it honest.** The local watcher was killed by its watchdog at 600s and Apple had
+still not listed the build after 30 minutes of polling – the exact shape that
+produced a wrong "Apple never received it" call on 2026-08-03. Asking EXPO
+instead (`eas submit:list`) returned `Status finished` for build 17, proving
+delivery, which left "Apple is still processing" as the only reading. It
+appeared a few minutes later.
+**THE RULE THIS ADDS:** when Apple has not listed a build, ask Expo whether the
+submission finished. Two independent sources separate "not delivered" from "not
+processed yet"; polling Apple alone can never tell them apart.
 
 - **Drag a section and its ingredients come with it.** Moving "DOUGH" now moves
   everything under it, instead of leaving the ingredients behind. A section
