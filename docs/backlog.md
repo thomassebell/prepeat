@@ -1343,6 +1343,52 @@ Closed 2026-07-27:
       optional convenience.
 ## Later (v1.1+)
 
+- [ ] **⭐ IMPORTANT – A DANISH VERSION OF THE APP** (Thomas, 2026-08-07, raised
+      as an idea and promoted the same day: *"add danish version to the backlog,
+      and mark it as important"*). **Graduated out of Ideas because he committed
+      to it** – this is now something the project intends to do, not something it
+      is considering.
+      ⚠️ **It reverses a standing decision, so it is a product call before it is
+      a build.** [projektgrundlag.md](projektgrundlag.md) fixes the UI language
+      as English for an international audience, and the App Store listing, the
+      privacy policy and the marketing site all follow from that. **That document
+      needs amending as part of this**, or the two records disagree and the next
+      cold read believes the wrong one.
+      **THE APP IS NOT PREPARED FOR IT.** There is no i18n layer at all – every
+      string is a literal in the component that renders it. So the work is not
+      "translate the app", it is "make the app translatable, then translate it":
+      extract several hundred strings, choose a library, decide how the language
+      is picked (device locale or a setting), and take on a second copy of every
+      piece of UI text forever.
+      **THE SIZE OF IT, measured 2026-08-07 rather than guessed:** ~**242
+      user-visible strings** across 65 `.tsx` files – 105 text nodes sitting
+      between JSX tags and 137 in `accessibilityLabel` / `placeholder` / `title`
+      / `label` props. Plus the strings that live outside components at all:
+      `friendlyError()`, and the OTP email Resend sends.
+      That is a real but finite number – a few days of extraction, not a month –
+      and the ongoing cost of keeping a second copy true is the larger half.
+      **AND SOME OF IT IS NOT TEXT.** Worth thinking about before starting:
+      - **Quantities and units already speak both languages.** `UNIT_SINGULARS`
+        / `UNIT_PLURALS` and `norm_item_unit` carry Danish units *today* because
+        recipes get imported in Danish even though the UI is English. A Danish
+        UI does not change that machinery, but it does change which language a
+        user expects to see back.
+      - **Dates and week numbers** are already ISO weeks, which suits Denmark.
+      - **The name and tagline are English** and deliberately so – "Prep+Eat" and
+        "prep. cook. eat. repeat." are brand, not UI, and do not translate.
+      - **Error messages from `friendlyError()`** and the OTP email that Resend
+        sends are text users read but that do not live in screen components.
+      **THE REAL QUESTION IS WHO IT IS FOR, and it changes the scope entirely.**
+      Every user today is Danish and reads English comfortably.
+      - **For the family** – it buys warmth, and the app can ship Danish only
+        where it matters most, with no listing work at all.
+      - **For a Danish App Store launch** – it is a market decision that drags in
+        the listing, the screenshots, the privacy policy, the support address and
+        the marketing site. A different project with a different cost.
+      **DECIDE THAT FIRST.** Everything else follows from it, and building the
+      i18n layer before answering it risks doing the large version of the work
+      for the small version of the reason.
+
 - [ ] **Swap the App Store Connect URLs from `github.io` to `prepeat.app` –
       AFTER v1.0 is approved** (found 2026-08-04). The custom domain went live
       at some point without the paperwork catching up: `prepeat.app` serves a
@@ -1829,30 +1875,6 @@ Closed 2026-07-27:
       3. **Should it be visible?** An always-on screen that the user did not ask
          for and cannot see the reason for reads as a bug, not a feature.
       No design exists for any of that.
-
-- [ ] **A Danish version of the app** (Thomas, 2026-08-07). ⚠️ **This reverses a
-      standing decision, so it is a product call before it is a build.**
-      [projektgrundlag.md](projektgrundlag.md) fixes the UI language as English
-      for an international audience, and the App Store listing, the privacy
-      policy and the marketing site all follow from that.
-      **THE APP IS NOT PREPARED FOR IT.** There is no i18n layer at all - every
-      string is a literal in the component that renders it. So the work is not
-      "translate the app", it is "make the app translatable, then translate it":
-      extract several hundred strings, choose a library, decide how the language
-      is picked (device locale or a setting), and take on a second copy of every
-      piece of UI text forever.
-      **AND SOME OF IT IS NOT TEXT.** Worth thinking about before committing:
-      - **Quantities and units already speak both languages.** `UNIT_SINGULARS`
-        / `UNIT_PLURALS` and `norm_item_unit` carry Danish units *today* because
-        recipes get imported in Danish even though the UI is English. A Danish
-        UI does not change that machinery, but it does change which language a
-        user expects to see back.
-      - **Dates and week numbers** are already ISO weeks, which suits Denmark.
-      - **The name and tagline are English** and deliberately so.
-      **THE REAL QUESTION IS WHO IT IS FOR.** Every user today is Danish and
-      reads English comfortably. If this is for the family, it buys warmth. If it
-      is for a Danish App Store launch, it is a market decision and the listing,
-      screenshots and support address come with it. Those are different projects.
 
 - [ ] **⚠️ NINE SHEETS STILL HAVE NO HEIGHT CAP** (found 2026-08-07 while fixing
       the ingredient sheet, which was the tenth). A `BottomSheet` without the
