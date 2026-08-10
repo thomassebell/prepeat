@@ -169,6 +169,24 @@ export async function fetchRecipes(
   }));
 }
 
+/**
+ * Does this kitchen hold any recipe at all?
+ *
+ * Asked once per launch to decide whether to open on Recipes instead of an
+ * empty week (Thomas, 2026-08-10). `limit(1)` because only the yes/no matters –
+ * a household with four hundred recipes costs the same as one with one.
+ */
+export async function hasAnyRecipe(householdId: string): Promise<boolean> {
+  const { data, error } = await supabase
+    .from("recipes")
+    .select("id")
+    .eq("household_id", householdId)
+    .is("deleted_at", null)
+    .limit(1);
+  if (error) throw error;
+  return (data ?? []).length > 0;
+}
+
 /** One search box matches titles AND ingredients (decided 2026-07-12). */
 export function matchesSearch(recipe: RecipeSummary, query: string): boolean {
   const needle = query.trim().toLowerCase();

@@ -1,5 +1,5 @@
-import { useRouter } from "expo-router";
-import { useMemo, useState } from "react";
+import { Redirect, useRouter } from "expo-router";
+import { useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 import {
   SafeAreaView,
@@ -15,11 +15,13 @@ import { UndoToast } from "@/components/ui/undo-toast";
 import { WeekPicker } from "@/components/ui/week-picker";
 import { ds } from "@/constants/ds";
 import { Spacing, tabBarClearance } from "@/constants/theme";
+import { useHousehold } from "@/lib/household-context";
 import {
   MealPlanProvider,
   useMealPlan,
   type PlanEntry,
 } from "@/lib/meal-plan";
+import { hasAnyRecipe } from "@/lib/recipes";
 import { useTodayKey } from "@/lib/use-today";
 import { DAY_LABELS, DAY_NAMES, weekDates } from "@/lib/week";
 
@@ -29,7 +31,55 @@ import { DAY_LABELS, DAY_NAMES, weekDates } from "@/lib/week";
 // meals; the week switcher moves between existing weeks; "+" adds the next
 // week; "Add all to shopping list" links the week to the list, after which
 // plan edits reconcile automatically (A + rails).
+
+// Which kitchens have already had their launch decision made. ONCE PER LAUNCH,
+// not once per render: without this, adding your first recipe and tapping Plan
+// would bounce you straight back to Recipes (Thomas, 2026-08-10).
+const launchDecided = new Set<string>();
+
+/**
+ * An empty cookbook opens on Recipes instead of on an empty week.
+ *
+ * Not "first launch" – the cookbook itself is the signal. Someone who sets the
+ * app up and closes it to do the real job another time has not learned anything
+ * yet, so a first-launch flag would drop them on the empty week next morning
+ * (Thomas, 2026-08-10). Self-correcting: the moment a recipe exists, Plan opens
+ * for good.
+ *
+ * Deliberately NOT blocking. Everyone with recipes – nearly every launch – gets
+ * the plan with no delay; only the empty case pays, and it pays by being moved
+ * somewhere more useful.
+ */
+function useEmptyCookbookRedirect(): boolean {
+  const household = useHousehold();
+  const [leave, setLeave] = useState(false);
+  useEffect(() => {
+    if (launchDecided.has(household.id)) return;
+    let cancelled = false;
+    hasAnyRecipe(household.id)
+      .then((has) => {
+        if (cancelled) return;
+        launchDecided.add(household.id);
+        if (!has) setLeave(true);
+      })
+      .catch((error) => {
+        // Never strand someone on an empty week because a query failed.
+        console.warn("[plan] cookbook check failed", error);
+        if (!cancelled) launchDecided.add(household.id);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [household.id]);
+  return leave;
+}
+
 export default function PlanScreen() {
+  // Checked before MealPlanProvider mounts, so a kitchen we are about to leave
+  // never loads a week it will not show.
+  if (useEmptyCookbookRedirect()) {
+    return <Redirect href="/recipes" />;
+  }
   return (
     <MealPlanProvider>
       <PlanContent />
