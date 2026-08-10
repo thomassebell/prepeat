@@ -113,6 +113,10 @@ Not in the repo, so it has to be written down:
 
 ## ⏳ Leaving the company Mac
 
+**➡️ For the step-by-step version, see [if-the-mac-is-gone.md](if-the-mac-is-gone.md)**
+– a playbook written for Thomas to follow directly, covering stolen, handed
+back, and setting up a replacement. This section is the audit behind it.
+
 **This Mac belongs to Thomas's employer** (told 2026-08-04, while applying for
 a new job). So it is not a question of *if* the machine goes – it is *when*,
 on a date that will eventually be known. Everything below has that deadline

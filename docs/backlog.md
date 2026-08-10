@@ -185,6 +185,9 @@ Everything the App Store release is actually waiting on. If it is not blocking l
       ⚖️ Worth a professional, not Claude: a commercial product built on
            employer hardware. IP clauses sometimes reach further than people
            expect, and it is cheaper to check early.
+      Do it with: [if-the-mac-is-gone.md](if-the-mac-is-gone.md), the
+           step-by-step playbook written 2026-08-11. Section B is the
+           handing-it-back list.
 
       (2026-08-04.) **Full checklist:
       [backups-and-local-db.md](backups-and-local-db.md) → "Leaving the company
