@@ -87,7 +87,7 @@ function Content({
               color={ds.colors.error['contrast-text']}
             />
             <Text className="font-paragraph text-components-button-label font-default text-button-danger-label-enabled">
-              Leave household
+              Leave kitchen
             </Text>
           </>
         )}

@@ -152,7 +152,7 @@ export function JoinHouseholdModal({
                 <ActivityIndicator color={ds.colors.button.solid.label.enabled} />
               ) : (
                 <Text className="font-paragraph text-paragraph font-default leading-xsmall text-button-solid-label-enabled">
-                  Join household
+                  Join
                 </Text>
               )}
             </Pressable>

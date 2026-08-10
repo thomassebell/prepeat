@@ -28,7 +28,7 @@ export function DeleteHouseholdSheet({
   onConfirm: () => Promise<void>;
 }) {
   return (
-    <BottomSheet visible={visible} title="Delete kitchen" onClose={onClose}>
+    <BottomSheet visible={visible} title={`Delete “${householdName}”?`} onClose={onClose}>
       {visible && <Content householdName={householdName} onConfirm={onConfirm} />}
     </BottomSheet>
   );
@@ -112,7 +112,7 @@ function Content({
                 (canDelete ? "text-button-danger-label-enabled" : "text-text-disabled")
               }
             >
-              Delete household
+              Delete kitchen
             </Text>
           </>
         )}

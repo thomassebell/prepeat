@@ -133,7 +133,7 @@ function SheetContent({
         >
           <MaterialIcons name="logout" size={24} color={ds.colors.error.main} />
           <Text className="font-paragraph text-components-button-label font-default text-error">
-            Leave household
+            Leave kitchen
           </Text>
         </Pressable>
       )}

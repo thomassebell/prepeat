@@ -21,11 +21,14 @@ export default function AppTabs() {
       <TabSlot style={{ height: '100%' }} />
       <TabList asChild>
         <CustomTabList>
-          <TabTrigger name="plan" href="/" asChild>
-            <TabButton>Plan</TabButton>
-          </TabTrigger>
+          {/* Recipes first – see the note in app-tabs.tsx. On web the plan is
+              still the "/" route, so this changes the order, not the landing
+              page; native is where the first trigger decides the opening tab. */}
           <TabTrigger name="recipes" href="/recipes" asChild>
             <TabButton>Recipes</TabButton>
+          </TabTrigger>
+          <TabTrigger name="plan" href="/" asChild>
+            <TabButton>Plan</TabButton>
           </TabTrigger>
           <TabTrigger name="shopping" href="/shopping" asChild>
             <TabButton>Shopping</TabButton>

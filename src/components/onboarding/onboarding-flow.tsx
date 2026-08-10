@@ -211,7 +211,8 @@ function HouseholdSteps({ onHouseholdReady }: { onHouseholdReady: (h: Household)
               </Text>
               <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-subtle">
                 Your recipes, weekly plan and shopping list live in a kitchen – shared with
-                whoever you cook with.
+                whoever you cook with. If someone at home already has one, join theirs
+                instead of starting another.
               </Text>
             </View>
             <View className="w-full gap-layout-small">

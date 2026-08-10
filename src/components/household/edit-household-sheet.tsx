@@ -110,8 +110,8 @@ function SheetContent({
       {canDelete && (
         <>
           <Text className="w-full font-paragraph text-paragraph font-default leading-xsmall text-text-subtle">
-            If you delete this household, all its plans, recipes and shopping
-            lists will be deleted. This cannot be undone.
+            Everything in this kitchen goes: the plans, the recipes and the
+            shopping list. This cannot be undone.
           </Text>
           <Pressable
             accessibilityRole="button"
@@ -125,7 +125,7 @@ function SheetContent({
               color={ds.colors.error["contrast-text"]}
             />
             <Text className="font-paragraph text-components-button-label font-default text-button-danger-label-enabled">
-              Delete household
+              Delete kitchen
             </Text>
           </Pressable>
         </>
