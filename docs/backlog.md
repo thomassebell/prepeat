@@ -169,7 +169,19 @@ Everything the App Store release is actually waiting on. If it is not blocking l
            `app-store-assets/` (10 MB), Claude's memory folder, the two env
            files.
       Travels by itself: all four accounts are personal, and the signing key is
-           already in Apple Passwords on a personal Apple ID.
+           already in Apple Passwords on a personal Apple ID. The CODE is safe –
+           three repos on GitHub, 0 unpushed commits, and the post-commit hook
+           keeps it that way.
+      ⚠️ VERIFIED 2026-08-11, because "surely GitHub and iCloud cover it"
+           (Thomas) is the natural assumption and it is WRONG: **macOS Desktop &
+           Documents sync is OFF.** `~/Documents` and the `Documents` folder
+           visible in iCloud Drive are two different folders with the same name
+           (different inodes; the project is not in the iCloud one). So nothing
+           under `~/Documents` is backed up by iCloud, including the gitignored
+           `app-store-assets/`, which sits inside a folder anyone would assume
+           was safe. Re-check with `stat -f '%d %i' ~/Documents ~/Library/Mobile\
+           Documents/com~apple~CloudDocs/Documents` rather than by looking in
+           Finder, which is what makes this believable in the first place.
       ⚖️ Worth a professional, not Claude: a commercial product built on
            employer hardware. IP clauses sometimes reach further than people
            expect, and it is cheaper to check early.
