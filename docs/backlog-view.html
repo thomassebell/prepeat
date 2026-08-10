@@ -74,23 +74,10 @@
 <main>
   <header>
     <h1>Prep+Eat – open backlog</h1>
-    <p class="meta">81 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
+    <p class="meta">80 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
   </header>
   <div class="filter"><input id="q" type="search" placeholder="Filter tasks…" autocomplete="off"></div>
   <div id="list">
-    <section>
-      <h2>In flight (built, not yet live) <span class="count" data-total="1">1</span></h2>
-      
-    <article class="item">
-      <h3>
-        
-        
-        <span><strong>Move a past week's unbought shopping items to this week</strong></span>
-      </h3>
-      <dl><dt>Why</dt><dd>things you did not get round to buying should not be stranded on a week that has ended.</dd><dt>Left</dt><dd>nothing of its own – it only carries known bug 3 with it (below).</dd><dt>Size</dt><dd>shipped to the family in TestFlight build 15 (2026-08-04).</dd></dl>
-      <details><summary>Full note</summary><p>Thomas 2026-08-03; Figma 434:7148 "transfer items from last week". Built the same day it was designed. A past week whose list still has unchecked items ends in a full-width <strong>"Move all items to this week"</strong>; pressing it empties that week onto the current one and offers the undo toast. Graduated out of Ideas – the decisions that shaped it are in the log below. - [x] <strong>APPLIED 2026-08-03</strong> (<code>0026_move_week_leftovers.sql</code>), verifying select returned move_fn and undo_fn both true. <strong>SAFE FOR THE PHONES</strong> (the 0022 lesson): it only ADDS two functions – nothing dropped, no signature changed – so TestFlight build 13 is unaffected by it. Note the asymmetry, the usual one: the server half is live for everybody now, but nothing can reach it until the app half ships in a build, so no phone behaves differently yet. - [x] <strong>VERIFIED ON DEVICE 2026-08-03</strong> – "it worked perfectly" (Thomas, on the dev build installed 14:53). Still only on the dev build: SHIPPED to the family in TestFlight build 15 (2026-08-04). - [x] <strong>The pressed state is the DS's, not an improvisation</strong> (checked 2026-08-03 after Thomas pushed back on it being flagged at all, and he was right). <code>button/solid/fill/*</code> defines enabled #83E651 / pressed #56C91D with the label unchanged at #4F4230, and that is exactly what is built. The screen's frames not drawing a pressed state is normal – states live on the DS component, not on every frame that uses it. LESSON: before flagging a component state as a design gap, look it up in <code>ds-theme.cjs</code> and the DS component; a gap is a state nothing defines anywhere, not a state this particular frame did not draw. - [x] <strong>PINNED above the tab bar</strong> (Thomas, 2026-08-03), resolving the one gap the frames left. They only show short weeks, where the button sits at the bottom of the list area either way – but a week with twenty leftovers would have hidden it below the fold, the same trap the recipe Save button fell into on a long recipe (2026-07-28). So it reuses that footer exactly: top border in <code>border/subtle</code>, the screen's own background so rows scroll under rather than through, and the scroll area drops its tab-bar clearance while the footer is there. Note the footer chrome itself is still undrawn in Figma on both screens – worth a frame if a third one ever needs it. - [ ] <strong>It inherits known bug 3</strong> (frozen "this week"). The move targets the current week as computed at app launch, so an app left open across Sunday midnight would push into what is by then last week. The server refuses to move backwards, so the worst case is a move that does nothing – not a wrong one. Fixing bug 3 fixes this too.</p></details>
-    </article>
-    </section>
     <section>
       <h2>Known bugs (open) <span class="count" data-total="1">1</span></h2>
       

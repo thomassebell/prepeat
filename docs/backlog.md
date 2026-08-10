@@ -27,6 +27,13 @@ almost always, and no label should carry an argument the first line already
 made. Reformatted on 2026-08-11 after Thomas: *"I need to recognize a task."*
 The reasoning was never the problem; leading with it was.
 
+**⚠️ A FIX THAT NAMES WHAT IT CLOSES HAS TO GO AND CLOSE IT.** Both directions
+of this have now cost real time: a bug entry proposing a fix went on asking for
+a decision made three days earlier (the duplicate-ingredients item), and a fix
+that stated in its own words which item it unblocked left that item open for a
+week (the leftover move, closed 2026-08-11). Cross-references decay unless the
+edit that makes one true is the same edit that follows it.
+
 `npm run backlog:view` renders the open items as a scannable page.
 
 Ordering principle (agreed 2026-07-08): things that stand on their own and
@@ -283,11 +290,17 @@ invite. Check betaTesters vs Users-and-Access before blaming email or spam.
       `59ac675d-75ec-425b-8b8f-be95d71d4908`,
       `8676ad2c-9c50-4481-925d-222237a502c8`.
 
-- [ ] **Move a past week's unbought shopping items to this week**
+- [x] **DONE – move a past week's unbought shopping items to this week**
       Why: things you did not get round to buying should not be stranded on a
            week that has ended.
-      Left: nothing of its own – it only carries known bug 3 with it (below).
-      Size: shipped to the family in TestFlight build 15 (2026-08-04).
+      Closed: 2026-08-11. Shipped to the family in TestFlight build 15
+           (2026-08-04), and the one thing holding it open – the inherited
+           frozen-week bug – was fixed the same day and walked on device
+           2026-08-07.
+      ⚠️ It stayed open for a week for no reason. Known bug 3's entry says in
+           its own words that it closes this item; nobody carried that back
+           here. The mirror of the stale-fix lesson under Known bugs – **a fix
+           that names what it closes has to go and close it.**
 
       Thomas 2026-08-03; Figma 434:7148 "transfer items from last week". Built
       the same day it was designed. A past week whose list still has unchecked
@@ -326,11 +339,13 @@ invite. Check betaTesters vs Users-and-Access before blaming email or spam.
             clearance while the footer is there. Note the footer chrome itself
             is still undrawn in Figma on both screens – worth a frame if a
             third one ever needs it.
-      - [ ] **It inherits known bug 3** (frozen "this week"). The move targets
-            the current week as computed at app launch, so an app left open
-            across Sunday midnight would push into what is by then last week.
-            The server refuses to move backwards, so the worst case is a move
-            that does nothing – not a wrong one. Fixing bug 3 fixes this too.
+      - [x] **It inherited known bug 3** (frozen "this week") – **fixed
+            2026-08-04 with bug 3 itself, walked on device 2026-08-07.** The
+            move used to target the current week as computed at app launch, so
+            an app left open across Sunday midnight would push into what was by
+            then last week. It now reads the live week from the shared clock.
+            (The worst case was always a move that did nothing rather than a
+            wrong one – the server refuses to move backwards.)
 
 - [x] **Shopping checkbox sat between the two lines of a row** – found by
       Thomas on device 2026-08-03, fixed the same day. The checkbox and the
