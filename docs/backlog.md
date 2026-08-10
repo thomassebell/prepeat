@@ -221,43 +221,6 @@ Everything the App Store release is actually waiting on. If it is not blocking l
       files (re-derivable from the Supabase dashboard). The other single-copy
       item is `~/Prepeat-backups/` itself.
 
-- [ ] **Watch for the moment Supabase Pro becomes necessary** (a standing check, not a task to do)
-      Upgrade when ANY one of these is true:
-        1. real users who cannot be phoned – ~30+ monthly actives, or the first
-           support email from a stranger. Today's 18 are family and testers;
-        2. more than a few days away from the Mac – turn it on BEFORE
-           travelling;
-        3. egress or database past half the free limit. At 162 MB / 31 MB
-           today, so distant.
-      Why not now: Pro only adds two things – it runs when the Mac does not,
-           and it sits somewhere other than the desk. On retention it is
-           WORSE than what we have, and its backups have never been restored.
-      Do together with: the dev-environment decision. Trigger 1 is the same
-           moment for both.
-
-      (Thomas, 2026-08-04, after
-      asking whether he had to upgrade or could watch – the honest answer
-      changed once the local backup was proven to restore).
-      **What Pro would actually add, given what now exists:** only two things –
-      it runs when the Mac does not, and it lives somewhere other than the desk.
-      On frequency it matches nightly-vs-daily, on retention it is WORSE (7 days
-      against 30), and its backups have never been restored, where ours have.
-      **Upgrade when any ONE of these becomes true:**
-      1. **Real users who cannot be phoned** – ~30+ monthly actives, or the
-         first support email from a stranger. Today's 18 are family and testers.
-      2. **More than a few days away from the Mac.** Turn it on BEFORE
-         travelling, not after.
-      3. **Egress or database size past half the free limit** – 250 MB egress,
-         250 MB database. At 162 MB / 31 MB today, so distant, but that is the
-         point where the free tier stops being a choice.
-      Keep the two free projects by putting anything else in a **separate Free
-      organisation**; a Pro org bills every project in it.
-      Not needed: PITR (~$100/mo add-on, rejected), and any capacity upgrade.
-      **Decide the DEV ENVIRONMENT in the same sitting** – trigger 1 is the
-      same moment for both, and doing them together is one upheaval instead of
-      two. See "A second, free Supabase project as a DEV environment" under
-      Ideas.
-
 - [x] **🚀 SUBMITTED FOR REVIEW 2026-07-31.** All App Store Connect metadata
       entered and the version sent to Apple ("Add for Review" → Submit). Build
       12, EU-27 only, Free, 4+, privacy label published, manual release – so
@@ -703,22 +666,6 @@ missing from it entirely.
       home when `!__DEV__` (a deep link in a Release build goes nowhere) and
       the hidden tab trigger is only registered under `__DEV__`. Kept for dev
       use rather than deleted – it is the DS-token verification tool.
-- [ ] **Finish the icon and splash variants**
-      Why: nothing here ships while the app is iOS-only, so this waits for
-           Android and for an iOS 18 appearance pass.
-      Left: no ios-dark / ios-tinted icon variants, and the Android splash
-           still uses Expo's default.
-      Done: the iOS icon, the iOS launch screen, and the Android adaptive icon.
-
-      iOS app icon + launch screen shipped
-      2026-07-23; the **Android adaptive icon is DONE too** (foreground,
-      background and monochrome art all present in assets/images, contrary to
-      the older note here). Still open: no ios-dark / ios-tinted icon variants
-      (iOS 18+ appearance icons), and the Android splash still uses Expo's
-      splash-icon.png (the Android 12+ centred-icon-in-a-circle system cannot
-      reuse the full-bleed iOS launch image). None of it ships while it is
-      iOS-only.
-
 ## Next – v1.1
 
 Committed work for the first update after launch. Panel findings default here unless Thomas moves them.
@@ -2967,6 +2914,22 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
 
 ### Ideas – not yet committed
 
+- [ ] **Finish the icon and splash variants**
+      Why: nothing here ships while the app is iOS-only, so this waits for
+           Android and for an iOS 18 appearance pass.
+      Left: no ios-dark / ios-tinted icon variants, and the Android splash
+           still uses Expo's default.
+      Done: the iOS icon, the iOS launch screen, and the Android adaptive icon.
+
+      iOS app icon + launch screen shipped
+      2026-07-23; the **Android adaptive icon is DONE too** (foreground,
+      background and monochrome art all present in assets/images, contrary to
+      the older note here). Still open: no ios-dark / ios-tinted icon variants
+      (iOS 18+ appearance icons), and the Android splash still uses Expo's
+      splash-icon.png (the Android 12+ centred-icon-in-a-circle system cannot
+      reuse the full-bleed iOS launch image). None of it ships while it is
+      iOS-only.
+
 - [ ] **🌙 MOONSHOT: import a recipe from an Instagram video**
       Why: the recipe is IN the video – spoken aloud or on-screen – not in the
            caption (Thomas, 2026-08-07).
@@ -3420,6 +3383,43 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
 ## Standing – recurring
 
 Chores with a trigger rather than a finish line. These never get ticked off for good.
+
+- [ ] **Watch for the moment Supabase Pro becomes necessary** (a standing check, not a task to do)
+      Upgrade when ANY one of these is true:
+        1. real users who cannot be phoned – ~30+ monthly actives, or the first
+           support email from a stranger. Today's 18 are family and testers;
+        2. more than a few days away from the Mac – turn it on BEFORE
+           travelling;
+        3. egress or database past half the free limit. At 162 MB / 31 MB
+           today, so distant.
+      Why not now: Pro only adds two things – it runs when the Mac does not,
+           and it sits somewhere other than the desk. On retention it is
+           WORSE than what we have, and its backups have never been restored.
+      Do together with: the dev-environment decision. Trigger 1 is the same
+           moment for both.
+
+      (Thomas, 2026-08-04, after
+      asking whether he had to upgrade or could watch – the honest answer
+      changed once the local backup was proven to restore).
+      **What Pro would actually add, given what now exists:** only two things –
+      it runs when the Mac does not, and it lives somewhere other than the desk.
+      On frequency it matches nightly-vs-daily, on retention it is WORSE (7 days
+      against 30), and its backups have never been restored, where ours have.
+      **Upgrade when any ONE of these becomes true:**
+      1. **Real users who cannot be phoned** – ~30+ monthly actives, or the
+         first support email from a stranger. Today's 18 are family and testers.
+      2. **More than a few days away from the Mac.** Turn it on BEFORE
+         travelling, not after.
+      3. **Egress or database size past half the free limit** – 250 MB egress,
+         250 MB database. At 162 MB / 31 MB today, so distant, but that is the
+         point where the free tier stops being a choice.
+      Keep the two free projects by putting anything else in a **separate Free
+      organisation**; a Pro org bills every project in it.
+      Not needed: PITR (~$100/mo add-on, rejected), and any capacity upgrade.
+      **Decide the DEV ENVIRONMENT in the same sitting** – trigger 1 is the
+      same moment for both, and doing them together is one upheaval instead of
+      two. See "A second, free Supabase project as a DEV environment" under
+      Ideas.
 
 - [ ] **After every TestFlight build, sweep the open items and close what shipped**
       Trigger: the build's release notes being written – that is the one moment

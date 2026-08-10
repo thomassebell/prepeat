@@ -129,7 +129,7 @@
     </section>
   <div id="list">
     <section>
-      <h2>Now – before v1 goes live <span class="count" data-total="4">4</span></h2>
+      <h2>Now – before v1 goes live <span class="count" data-total="2">2</span></h2>
       <h4>Pre-launch checklist (v1 ship)</h4>
     <article class="item">
       <h3>
@@ -140,15 +140,6 @@
       <dl><dt>Why</dt><dd>the machine belongs to the employer and Thomas is job-hunting. Not <em>if</em> it goes but <em>when</em>.</dd></dl>
       <details><summary>Full note</summary><p>Must be copied off: <code>~/Prepeat-backups/</code> (58 MB, nothing else holds it), <code>app-store-assets/</code> (10 MB), Claude's memory folder, the two env files. Travels by itself: all four accounts are personal, and the signing key is already in Apple Passwords on a personal Apple ID. ⚖️ Worth a professional, not Claude: a commercial product built on employer hardware. IP clauses sometimes reach further than people expect, and it is cheaper to check early. (2026-08-04.) **Full checklist: backups-and-local-db.md → "Leaving the company Mac"**, audited the same day. Headlines: - <strong>Travels by itself:</strong> all four accounts are personal (GitHub, Apple Developer, Supabase, Expo), so do the three repos, and the signing key is already in Apple Passwords on a personal Apple ID. - <strong>Must be copied off:</strong> <code>~/Prepeat-backups/</code> (58 MB – nothing else holds it), <code>app-store-assets/</code> (10 MB, gitignored because it shows real household data), Claude's memory folder, the two env files. - <strong>Regenerates:</strong> the LaunchAgent, the runtime copy, the log, the Apple <em>Development</em> certificate and provisioning profiles. Distribution credentials live at EAS, not locally. - <strong>Re-weigh Supabase Pro when the job actually changes.</strong> The backup system built today runs on a machine that gets handed back – a different argument from the one declined earlier, since $25/mo buys backups sitting nowhere near a computer somebody else owns. - <strong>⚖️ Worth checking with a professional, not with Claude:</strong> a commercial product built on employer-owned hardware, and IP clauses in employment contracts sometimes reach further than people expect. Cheaper to check early. Noted so it is not forgotten.</p></details>
     </article>
-    <article class="item">
-      <h3>
-        
-        
-        <span><strong>Watch for the moment Supabase Pro becomes necessary</strong> (a standing check, not a task to do)</span>
-      </h3>
-      
-      <details><summary>Full note</summary><p>Upgrade when ANY one of these is true: 1. real users who cannot be phoned – ~30+ monthly actives, or the first support email from a stranger. Today's 18 are family and testers; 2. more than a few days away from the Mac – turn it on BEFORE travelling; 3. egress or database past half the free limit. At 162 MB / 31 MB today, so distant. Why not now: Pro only adds two things – it runs when the Mac does not, and it sits somewhere other than the desk. On retention it is WORSE than what we have, and its backups have never been restored. Do together with: the dev-environment decision. Trigger 1 is the same moment for both. (Thomas, 2026-08-04, after asking whether he had to upgrade or could watch – the honest answer changed once the local backup was proven to restore). <strong>What Pro would actually add, given what now exists:</strong> only two things – it runs when the Mac does not, and it lives somewhere other than the desk. On frequency it matches nightly-vs-daily, on retention it is WORSE (7 days against 30), and its backups have never been restored, where ours have. <strong>Upgrade when any ONE of these becomes true:</strong> 1. <strong>Real users who cannot be phoned</strong> – ~30+ monthly actives, or the first support email from a stranger. Today's 18 are family and testers. 2. <strong>More than a few days away from the Mac.</strong> Turn it on BEFORE travelling, not after. 3. <strong>Egress or database size past half the free limit</strong> – 250 MB egress, 250 MB database. At 162 MB / 31 MB today, so distant, but that is the point where the free tier stops being a choice. Keep the two free projects by putting anything else in a **separate Free organisation**; a Pro org bills every project in it. Not needed: PITR (~$100/mo add-on, rejected), and any capacity upgrade. <strong>Decide the DEV ENVIRONMENT in the same sitting</strong> – trigger 1 is the same moment for both, and doing them together is one upheaval instead of two. See "A second, free Supabase project as a DEV environment" under Ideas.</p></details>
-    </article>
     <article class="item flagged">
       <h3>
         <span class="flag">⚠️</span>
@@ -157,15 +148,6 @@
       </h3>
       <dl><dt>Why</dt><dd>the app signs you in with an emailed code, so a reviewer needs a real mailbox they can open. This is the reviewer's very first action, and the one thing that turns a week in the queue into a rejection plus another week.</dd><dt>Status</dt><dd>built, seeded and CONFIRMED WORKING 2026-08-07. Open only because it needs re-checking before each submission – the demo week is dated, so re-run the seed close to submitting.</dd><dt>Do not</dt><dd>use the Postgres test-OTP trigger. It writes into Supabase's internal auth schema, is a permanent known-code backdoor, and rots silently. Fallback only if Apple pushes back.</dd></dl>
       <details><summary>Full note</summary><p><code>src/lib/auth.tsx:58</code> uses <code>signInWithOtp</code> – a one-time code emailed to you, no password anywhere. A reviewer handed an email address cannot receive that code, and offering to relay it by hand does not pass review. <strong>Researched 2026-07-27: Supabase has NO fixed test-OTP for email.</strong> The feature exists for SMS only (<code>auth.sms.test_otp</code> maps a phone number to a fixed code); there is no <code>auth.email.test_otp</code>, in the CLI config or the dashboard. The community workaround is a Postgres trigger that overwrites <code>auth.users.recovery_token</code> with a SHA224 hash of a known code and backdates <code>recovery_sent_at</code> past the 60s rate limit. **Rejected as the plan**: it writes into Supabase's internal <code>auth</code> schema, which is undocumented and changes without notice (the discussion thread already has it breaking after an update), it is a permanent known-code backdoor, and it is load-bearing for review while never exercised day to day – so it rots silently and fails at submission, which is the worst place to find out. <strong>Plan instead: a real mailbox the reviewer can open.</strong> A dedicated demo address on sebell.dk with webmail; App Review notes give the address plus the webmail login and one line of instruction. No auth-schema tampering, nothing shipped in the app, nothing to rot. If Apple pushes back, the trigger is the fallback, not the opening move. - [x] <strong>Demo account built and seeded, 2026-07-30.</strong> Mailbox <code>appreview@sebell.dk</code> created (webmail, its own password – shared with Apple only, never committed to this public repo). Bootstrapped in the app: signed in, name set, household <strong>"Demo Kitchen"</strong> created. Then seeded server-side with 9 recipes + a planned CURRENT and NEXT week + shopping lists (generator <code>scratchpad/gen-demo.ts</code> → the SQL, re-runnable; the weeks are <code>date_trunc('week', now())</code> so re-run it close to submission to keep "this week" populated). Verified recipes 9, entries 14. SEPARATE from "The Hanson Kitchen" (Thomas's own account, used only for the App Store screenshots) – the reviewer never sees the real household. <strong>App Review Information ENTERED in App Store Connect 2026-07-31:</strong> sign-in required = yes, username <code>appreview@sebell.dk</code>, mailbox password, contact (Thomas Sebell + phone + thomas@sebell.dk) and the §3 Notes (with the real webmail URL + password) all filled and saved. - [x] **THE WHOLE REVIEWER SIGN-IN PATH IS CONFIRMED WORKING, 2026-08-07*<em> (Thomas: </em>"All mailboxes and access is tested and passed"*). The <code>appreview@sebell.dk</code> mailbox is live, the webmail credentials Apple holds do sign in, and a one-time code arrives. This was the last prerequisite on Thomas and the one thing that could have turned a week in the queue into a rejection plus another week – the reviewer's very first action is a sign-in the app cannot complete for them. Checked ahead of any nudge to Apple deliberately, so that hurrying the review along could not hurry it into a failure.</p></details>
-    </article>
-    <article class="item">
-      <h3>
-        
-        
-        <span><strong>Finish the icon and splash variants</strong></span>
-      </h3>
-      <dl><dt>Why</dt><dd>nothing here ships while the app is iOS-only, so this waits for Android and for an iOS 18 appearance pass.</dd><dt>Left</dt><dd>no ios-dark / ios-tinted icon variants, and the Android splash still uses Expo's default.</dd><dt>Done</dt><dd>the iOS icon, the iOS launch screen, and the Android adaptive icon.</dd></dl>
-      <details><summary>Full note</summary><p>iOS app icon + launch screen shipped 2026-07-23; the <strong>Android adaptive icon is DONE too</strong> (foreground, background and monochrome art all present in assets/images, contrary to the older note here). Still open: no ios-dark / ios-tinted icon variants (iOS 18+ appearance icons), and the Android splash still uses Expo's splash-icon.png (the Android 12+ centred-icon-in-a-circle system cannot reuse the full-bleed iOS launch image). None of it ships while it is iOS-only.</p></details>
     </article>
     </section>
     <section>
@@ -668,8 +650,17 @@
     </article>
     </section>
     <section>
-      <h2>Someday – not committed <span class="count" data-total="19">19</span></h2>
+      <h2>Someday – not committed <span class="count" data-total="20">20</span></h2>
       <h4>Ideas – not yet committed</h4>
+    <article class="item">
+      <h3>
+        
+        
+        <span><strong>Finish the icon and splash variants</strong></span>
+      </h3>
+      <dl><dt>Why</dt><dd>nothing here ships while the app is iOS-only, so this waits for Android and for an iOS 18 appearance pass.</dd><dt>Left</dt><dd>no ios-dark / ios-tinted icon variants, and the Android splash still uses Expo's default.</dd><dt>Done</dt><dd>the iOS icon, the iOS launch screen, and the Android adaptive icon.</dd></dl>
+      <details><summary>Full note</summary><p>iOS app icon + launch screen shipped 2026-07-23; the <strong>Android adaptive icon is DONE too</strong> (foreground, background and monochrome art all present in assets/images, contrary to the older note here). Still open: no ios-dark / ios-tinted icon variants (iOS 18+ appearance icons), and the Android splash still uses Expo's splash-icon.png (the Android 12+ centred-icon-in-a-circle system cannot reuse the full-bleed iOS launch image). None of it ships while it is iOS-only.</p></details>
+    </article>
     <article class="item">
       <h3>
         
@@ -843,8 +834,17 @@
     </article>
     </section>
     <section>
-      <h2>Standing – recurring <span class="count" data-total="3">3</span></h2>
+      <h2>Standing – recurring <span class="count" data-total="4">4</span></h2>
       
+    <article class="item">
+      <h3>
+        
+        
+        <span><strong>Watch for the moment Supabase Pro becomes necessary</strong> (a standing check, not a task to do)</span>
+      </h3>
+      
+      <details><summary>Full note</summary><p>Upgrade when ANY one of these is true: 1. real users who cannot be phoned – ~30+ monthly actives, or the first support email from a stranger. Today's 18 are family and testers; 2. more than a few days away from the Mac – turn it on BEFORE travelling; 3. egress or database past half the free limit. At 162 MB / 31 MB today, so distant. Why not now: Pro only adds two things – it runs when the Mac does not, and it sits somewhere other than the desk. On retention it is WORSE than what we have, and its backups have never been restored. Do together with: the dev-environment decision. Trigger 1 is the same moment for both. (Thomas, 2026-08-04, after asking whether he had to upgrade or could watch – the honest answer changed once the local backup was proven to restore). <strong>What Pro would actually add, given what now exists:</strong> only two things – it runs when the Mac does not, and it lives somewhere other than the desk. On frequency it matches nightly-vs-daily, on retention it is WORSE (7 days against 30), and its backups have never been restored, where ours have. <strong>Upgrade when any ONE of these becomes true:</strong> 1. <strong>Real users who cannot be phoned</strong> – ~30+ monthly actives, or the first support email from a stranger. Today's 18 are family and testers. 2. <strong>More than a few days away from the Mac.</strong> Turn it on BEFORE travelling, not after. 3. <strong>Egress or database size past half the free limit</strong> – 250 MB egress, 250 MB database. At 162 MB / 31 MB today, so distant, but that is the point where the free tier stops being a choice. Keep the two free projects by putting anything else in a **separate Free organisation**; a Pro org bills every project in it. Not needed: PITR (~$100/mo add-on, rejected), and any capacity upgrade. <strong>Decide the DEV ENVIRONMENT in the same sitting</strong> – trigger 1 is the same moment for both, and doing them together is one upheaval instead of two. See "A second, free Supabase project as a DEV environment" under Ideas.</p></details>
+    </article>
     <article class="item">
       <h3>
         
