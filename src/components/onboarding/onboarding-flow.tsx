@@ -93,28 +93,19 @@ function AuthSteps() {
             </Text>
           </View>
           <View className="w-full flex-1 items-center justify-end gap-layout-small pb-layout-xsmall">
+            {/* ONE entrance, not two (decided 2026-08-10). Sign-up and sign-in are the
+                same passwordless step, so a "Get started" / "Sign in" fork asked the
+                reader to declare something the server works out for itself – both
+                buttons went to this very screen. The real fork happens after the code,
+                into either the name step or the kitchen. */}
             <Pressable
               accessibilityRole="button"
               onPress={() => setStep({ kind: 'email' })}
               className="w-full items-center rounded-medium bg-surface-neutral-white px-comp-xlarge py-comp-large">
               <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-default">
-                Get started
+                Continue with email
               </Text>
             </Pressable>
-            <View className="flex-row items-center" style={{ columnGap: 4 }}>
-              <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-inverse">
-                Already cooking?
-              </Text>
-              <Pressable
-                accessibilityRole="button"
-                onPress={() => setStep({ kind: 'email' })}
-                hitSlop={8}
-                style={{ borderBottomWidth: 2, borderBottomColor: ds.colors.text.inverse, paddingBottom: 2 }}>
-                <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-inverse">
-                  Sign in
-                </Text>
-              </Pressable>
-            </View>
           </View>
         </SafeAreaView>
       </ImageBackground>
@@ -125,7 +116,7 @@ function AuthSteps() {
     return (
       <FormScreen
         title="What's your email?"
-        subtitle="We'll send you a sign-in code – no password to remember."
+        subtitle="New here or coming back, it's the same – we'll send you a code. No password to remember."
         onBack={() => setStep({ kind: 'welcome' })}
         submitLabel="Send code"
         onSubmit={async () => {
@@ -155,7 +146,7 @@ function AuthSteps() {
   return (
     <FormScreen
       title="Check your email"
-      subtitle={`We sent a code to ${step.email}. Can't find it? Check your spam folder.`}
+      subtitle={`We sent a code to ${step.email}.\nCan't find it? Check your spam folder.`}
       onBack={() => setStep({ kind: 'email' })}
       submitLabel="Continue"
       onSubmit={() => verifyCode(step.email, code)}
