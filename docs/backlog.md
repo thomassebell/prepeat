@@ -2,11 +2,44 @@
 
 The working to-do list for the project. Scope and decisions live in
 [projektgrundlag.md](projektgrundlag.md) – this file is about what happens
-next and in which order. Completed items are pruned and live in git history;
-the Decisions log below keeps the reasoning that's still worth having close.
-Ideas graduate upward when we commit to them.
+next and in which order. Items graduate upward as we commit to them – Someday
+→ Next → Now – and end in Record rather than being deleted.
 
-## ⚠️ HOW TO WRITE AN ITEM HERE (agreed 2026-08-11)
+## ⚠️ HOW THIS FILE IS STRUCTURED (agreed 2026-08-11)
+
+**THERE ARE EXACTLY FIVE TOP-LEVEL SECTIONS AND THE LIST IS CLOSED.** They are
+milestones – *when*, and nothing else:
+
+| Section | What belongs in it |
+|---|---|
+| **Now** | Only what the App Store release is waiting on. |
+| **Next** | Committed for v1.1. Panel findings default here. |
+| **Someday** | Wanted, unscheduled, or waiting for a trigger. |
+| **Standing** | Chores with a trigger instead of a finish line. |
+| **Record** | Not work – closed items and the decisions log. |
+
+**Adding a sixth needs a decisions-log entry, not a judgement call.** Anything
+that feels like it needs a new section is almost certainly a `Kind:` or a
+`Source:`, and those are fields.
+
+**WHY ONE AXIS** (Thomas, 2026-08-11: *"make a structure… so we don't just make
+up new categories"*). The old structure had eleven sections built on FOUR
+different questions at once – when (*Later v1.1*), what kind (*Known bugs*,
+*Code debts*), how committed (*Ideas*, *Conditional*) and where it came from
+(*Panel round 1*, *round 2*). That is why new headings kept appearing: a second
+panel study arrived, no section fitted, so it got its own. Any structure built
+on more than one axis does that forever.
+
+This follows standard backlog practice rather than taste: one ordered list,
+milestones as the only structural division (they are mutually exclusive –
+something is before launch or after it, never both), and every other attribute
+carried as a field you filter on. `npm run backlog:view` is the filter.
+
+Groups from the old structure survive as `###` subsections – they carry
+caveats that apply to a whole set, especially the panel rounds, and separating
+a finding from its ceiling and mode loses the confidence bound.
+
+### How to write an item
 
 **The first line is the job, in plain words, and Thomas can stop reading
 there.** Everything under it is indented and labelled, so the eye knows it is
@@ -21,11 +54,24 @@ Claude needs the reasoning, Thomas needs to recognise a task.
       Size: …          ← only when it is genuinely known
 ```
 
-Labels are free-form – `Why`, `Left`, `Blocked by`, `Decide first`, `Wait
-for`, `Trigger`, `Evidence`, `Note`, `Watch out` – but `Why` earns its place
-almost always, and no label should carry an argument the first line already
-made. Reformatted on 2026-08-11 after Thomas: *"I need to recognize a task."*
-The reasoning was never the problem; leading with it was.
+**The labels are a SHORT LIST, and `Note:` is the escape hatch** – reach for it
+rather than inventing a twelfth label, which is how the section sprawl started.
+
+| Label | Use |
+|---|---|
+| `Why:` | Almost always. What breaks or improves for a real person. |
+| `Left:` | What remains, when part of it has landed. |
+| `Blocked by:` | What must happen first. |
+| `Needs:` | Parked on Thomas – feeds the "Waiting on you" index above. |
+| `Wait for:` | An external event: an approval, a build, a threshold. |
+| `Decide first:` | A choice that must be settled before building. |
+| `Source:` | Where it came from – a panel finding, an audit, a date. |
+| `Size:` | Only when genuinely known. Never a guess dressed up. |
+| `Note:` | Anything else. Deliberately open, so the list can stay closed. |
+
+No label should carry an argument the first line already made. Reformatted on
+2026-08-11 after Thomas: *"I need to recognize a task."* The reasoning was
+never the problem; leading with it was.
 
 **⚠️ CLOSING IS A SEPARATE JOB FROM DOING, and it does not happen by itself**
 (agreed 2026-08-11, Thomas: *"we need to be better at getting items closed.
@@ -63,25 +109,25 @@ Nothing moves on these until Thomas decides or draws something.
 Everything else in this file is Claude's to get on with.
 
 - **Add Sign in with Apple on iOS** – a frame placing the Apple button on the welcome screen.
-  <sub>Later (v1.1+)</sub>
+  <sub>Next – v1.1</sub>
 - **Let the household teach the app that two ingredient names mean the same thing** – design the "same as…" action, and settle whether an alias is one-directional.
-  <sub>Later (v1.1+)</sub>
+  <sub>Next – v1.1</sub>
 - **Drag a meal to another day on the Plan screen** – the drag states (lifted card, drop highlight), and a yes/no on promoting it.
-  <sub>Later (v1.1+)</sub>
+  <sub>Next – v1.1</sub>
 - **Drag a shopping item into another category** – the item-drag states, and which regions are valid drop targets.
-  <sub>Later (v1.1+)</sub>
+  <sub>Next – v1.1</sub>
 - **⭐ Share a recipe with someone – FIRST ITEM IN v1.1** – how much of a recipe a stranger sees before installing.
-  <sub>Later (v1.1+)</sub>
+  <sub>Next – v1.1</sub>
 - `2.27` **Decide whether Kitchen should be a tab at all** – a navigation call, not a wording one.
-  <sub>Synthetic User Panel findings, round 2 (2026-08-10)</sub>
+  <sub>Next – v1.1</sub>
 - `2.21` **⚠️ BRAND-LEVEL: decide whether "Prep" is costing us readers** – a brand call, on one reader's evidence.
-  <sub>Synthetic User Panel findings, round 2 (2026-08-10)</sub>
+  <sub>Next – v1.1</sub>
 - **Stop the screen dimming while you cook from a recipe** – whole recipe or a cook mode, steps or everything, visible or silent.
-  <sub>Ideas – not yet committed</sub>
+  <sub>Someday – not committed</sub>
 - **Let people leave a kitchen from the switcher** – a frame for the leave affordance, and whether it belongs there at all.
-  <sub>Ideas – not yet committed</sub>
+  <sub>Someday – not committed</sub>
 - **Show the invite code as a filled brand chip** – a call on whether it is worth designing at all.
-  <sub>Ideas – not yet committed</sub>
+  <sub>Someday – not committed</sub>
 
 <!-- WAITING-ON-THOMAS:END -->
 
@@ -110,328 +156,574 @@ ever "never got the invite": TestFlight tester membership and App Store
 Connect TEAM membership are two separate lists, and being on the team sends no
 invite. Check betaTesters vs Users-and-Access before blaming email or spam.
 
-## In flight (built, not yet live)
+## Now – before v1 goes live
 
-- [x] **DONE – group a recipe's ingredients under headings like DOUGH and FILLING**
-      Why: imported recipes arrive with those headings as ingredients with no
-           amount, so they land on the shopping list as things to buy.
-      Closed: 2026-08-11, Thomas – *"I'm happy with it."* Built, walked on
-           device 2026-08-07, and shipped to the family in TestFlight builds
-           16 and 17. Migration 0031 is on dev and production.
-      Approved with it: the mid-drag look Claude improvised (the whole dragged
-           section shows the lifted background, since no frame draws a section
-           mid-drag). It was flagged as Claude's call and is now Thomas's.
-      Left behind deliberately: the 16px first-heading spacing, moved to Code
-           debts rather than dropped – see there for why it was not fixed.
+Everything the App Store release is actually waiting on. If it is not blocking launch, it is not here.
 
-      Thomas designed 2026-08-04; Figma `nA8SLN8rhdBov97B1IYxnP` node
-      **121:11255**, "recipe – add recipe". Came out of importing
-      ambitiouskitchen.com's cinnamon rolls.
-      - [x] **Migration 0031 applied to DEV, then PRODUCTION (2026-08-06)** –
-            `recipe_ingredients.is_section`. Backed up first, all 31 migrations
-            replayed onto an empty local database first, and the restore
-            re-verified afterwards (7,249 rows exact). Production came out
-            identical to dev, 0 rows flagged - nothing is backfilled.
-            **SAFE FOR THE PHONES:** additive only, and every installed build
-            selects named columns, so TestFlight build 14 is unaffected.
-      - [x] **⚠️ PRODUCTION HAD NO MIGRATION LEDGER – created 2026-08-06.**
-            Found while applying 0031: `supabase_migrations.schema_migrations`
-            did not exist there, because production's history had been applied
-            by hand through the SQL editor. **`supabase db push` would have
-            treated production as empty and re-run all 31 migrations, including
-            0022, which DROPS columns.** One query to check; not checking would
-            have caused the worst outage this project has had, using a command
-            that looks routine.
-            Fixed rather than worked around. The ledger's 31 rows were derived
-            from the migration FILENAMES, after verifying those were
-            byte-identical to the ledger the CLI itself wrote on the dev project
-            - a copy of a known-good ledger, not a guess. Verified with
-            `db push --dry-run`: *"Remote database is up to date"*, 0 pending.
-            **So production is now pushable like dev**, which ends the
-            hand-application that once half-applied a migration (the SQL editor
-            runs only what is highlighted, 2026-07-30).
-      - [x] **The DATA half works, verified on device 2026-08-06.** Importing
-            ambitiouskitchen's cinnamon rolls now flags DOUGH / FILLING / CREAM
-            CHEESE FROSTING as sections, keeps **"Extra-virgin olive oil"** as a
-            real ingredient (the amountless case that detection could have
-            hidden), and puts **no headings** in the plan snapshot or on the
-            shopping list. Checked in the database, not on the screen.
-      - **⚠️ IT TOOK THREE DEVICE BUILDS, AND THE LESSON IS STRUCTURAL.** The
-            importer was right the whole time; the editor threw the flag away at
-            **six** separate places – the import handoff, the edit load, the
-            sheet's add and edit branches, and BOTH save branches. Each site
-            rebuilt `{ name, quantityText }` by hand, so adding a field to the
-            shared type could not make any of them fail to compile. It passed
-            typecheck, lint, a device build and a careful re-read, twice.
-            **What actually fixed it: making `isSection` REQUIRED on
-            `DraftIngredient` rather than optional.** It found the sixth site
-            within seconds. An optional field is one the compiler cannot help
-            with, and the editor also had a *duplicate local* `DraftIngredient`
-            shadowing the shared one – same name, narrower shape, no complaint.
-            Both are gone; `toDraftIngredients()` is the single conversion.
-            THE RULE: when a shape is built by hand in more than one place, make
-            new fields required and give it one constructor. Vigilance is not a
-            mechanism.
-      - **NAMED "Section", NOT "Category"** (proposed by Claude, agreed by
-            Thomas, corrected in Figma the same day). **"Category" already means
-            the shopping list's aisles** – there is a `CategoryGroup` component,
-            a `Category` type, and draggable category headers on the Shopping
-            screen. Two different "categories", both rendered as a header over a
-            group with a drag handle, with ingredients flowing from one into the
-            other, is a collision users would meet within a minute.
-      - **The four states, all Thomas's calls (2026-08-04):**
-            1. **The first section absorbs what is already there.** It replaces
-               the "Ingredients" header rather than sitting beside it, and the
-               ingredients already listed become part of it.
-            2. **Deleting a section keeps its ingredients** – they become
-               unsectioned rather than being deleted with it.
-            3. **An empty section is allowed** – a heading over nothing is a
-               legitimate state, not something to prevent.
-            4. **Delete every section and the "Ingredients" header comes back.**
-      - **Sheet colour: match the add-meal sheet**, not a DS-wide retune – so
-            no other screens need walking.
-      - **The "Ingredients" header uses the SAME style as a section heading**
-            (`header/display-6`, Montserrat) – Thomas, 2026-08-06, asked because
-            no frame draws "Ingredients" in the new style and guessing would
-            have invented it. It follows from decision 1: the first section
-            *replaces* that line, so they are one slot and it must not change
-            typeface the moment a section appears.
-      - **Reuse, do not rebuild:** `add-meal-sheet.tsx` already has the tab
-            component the design uses (`TabItem`, "Recipes"/…), and section
-            headers want the Shopping screen's drag-handle reorder pattern.
-      - [x] **TRUE SECTION DRAGGING – BUILT 2026-08-07** (deferred 2026-08-06,
-            Thomas: *"for now is fine that every row moves independently"*).
-            A heading now carries its ingredients, and a section can only land
-            on a section boundary.
-            **THE DESIGN QUESTION, decided by Thomas 2026-08-07** from three
-            options. It is not obvious, and the example is why: with
-            DOUGH[flour, water] / FILLING[sugar, cinnamon], dragging FILLING
-            between flour and water would – if a group simply landed where you
-            dropped it – leave **water inside FILLING**, because sections are
-            positional. An ingredient changes section with nobody touching it.
-            So the group **snaps to section boundaries** and that case is
-            unreachable rather than merely unlikely. A single ROW still goes
-            anywhere: dropping an ingredient into another section is how you
-            assign it to one, so that freedom is the feature.
-            **⚠️ THE DEFERRAL'S COST ESTIMATE WAS WRONG, and it is worth knowing
-            why.** The note said groups are variable-height blocks so the drag
-            geometry needed rewriting. Checking the actual Figma numbers
-            (508:13822) says otherwise: a heading is drawn **24 tall with 16 of
-            space either side, so in the body of the list it occupies exactly
-            56 – the same as a row.** The design's rhythm and the code's uniform
-            slots already agreed. A section is not a variable-height block, it is
-            N+1 uniform slots, and the existing integer arithmetic still holds.
-            **LESSON: the estimate was made from the code's shape alone.** Five
-            minutes reading the design's numbers would have shown the geometry
-            was never the problem – and deferring on a cost that was not real is
-            a decision made on a wrong premise, even though deferring to get the
-            DESIGN answer was right.
-            - [x] **The arithmetic is its own module, and it is TESTED BY BEING
-                  RUN.** `src/lib/reorder.ts` has zero runtime imports so
-                  `scripts/check-reorder.mjs` transpiles and imports the REAL
-                  functions – the recipe-import trick from 2026-08-04, and the
-                  answer to the reconciler lesson that a mirror written from the
-                  same wrong model agrees with the bug. 24 checks pass.
-                  **The load-bearing check is not about sections at all:**
-                  *"single-row moves match the old splice exactly, every
-                  from/to"*, brute-forced over every combination. THREE screens
-                  share this sheet – ingredients, instructions and shopping
-                  categories – and the last two have no sections, so the real
-                  risk in this change was regressing them. Also proved: every
-                  legal section move leaves each section owning exactly the rows
-                  it started with, a section can be dropped above loose leading
-                  rows, and an empty section (allowed, decision 3) moves alone.
-            - [x] **One rule, one place.** The "did this actually move anything"
-                  test lives only in `reorder.ts`; the gesture calls back to the
-                  JS thread rather than carrying its own copy. Deliberate – one
-                  shape rebuilt by hand in two places is exactly how the
-                  isSection bug survived three device builds on 2026-08-06.
-            - [x] **WALKED AND PASSED ON DEVICE 2026-08-07.** A heading carries
-                  its ingredients; a section dropped inside another section
-                  snaps out ("works perfectly"); a single ingredient still moves
-                  into another section; and the two sectionless lists –
-                  instructions and shopping categories – behave exactly as
-                  before, which was the real risk in the change.
-            - [x] **⚠️ THE WALK FOUND A FLICKER ON DROP THAT WAS THREE MONTHS
-                  OLD** (Thomas: *"a weird jumping animation when you let go"*,
-                  reported on BOTH a section and a single row – which is the
-                  clue that it was not about sections).
-                  **PRE-EXISTING, proved by `git show 0a7a659^` rather than
-                  assumed:** the idle branch of the animated style returned
-                  `withTiming(0, 140)`, so the moment a drag ended the row you
-                  had just dropped ANIMATED back towards its old position over
-                  140ms while its slot jumped to the new one in the same
-                  instant. Two movements at once. A single row doing it survived
-                  three months and several device walks; a whole section doing it
-                  was impossible to miss. **The group feature did not cause this
-                  bug, it made it visible** – worth remembering as an argument
-                  for building the thing that exercises a path harder.
-                  **IT TOOK THREE GOES, AND THE FIRST TWO WERE THE WRONG KIND OF
-                  FIX.** Removing the 140ms animation helped and left a
-                  one-frame flicker; re-ordering the resets by hand did not fix
-                  that. Both were attempts to win a RACE by guessing, and a race
-                  won by guessing is one that comes back.
-                  **THE REAL CAUSE: a row's position comes from TWO sources** –
-                  React layout picks its slot (`top`), the shared values pick its
-                  offset (`translateY`). On a drop both change, and nothing makes
-                  them land in the same frame. Clear the offset early and it
-                  paints at the old slot; clear it late and it paints at the new
-                  slot still offset.
-                  **THE FIX: `useLayoutEffect`, keyed on the ORDER**, which is
-                  the one place React guarantees to run after the commit that
-                  changed the order and before it is painted – so the new slot
-                  and the cleared offset are painted together BY CONSTRUCTION
-                  rather than by timing. It also degrades well: a slow parent now
-                  leaves the block where it was dropped (where it belongs)
-                  instead of flickering elsewhere.
-                  The no-move drop is the one path it cannot cover, since nothing
-                  reorders and no effect fires, so that path cleans up after
-                  itself – walked separately and passes.
-                  LESSON: when a visual bug survives two timing fixes, stop
-                  adjusting the timing. Ask what two things are disagreeing, and
-                  make one of them wait for the other by construction.
-            - [x] **Cosmetic – MOVED to Code debts 2026-08-11**, so it is
-                  recorded as a known deviation rather than an open task. The
-                  design gives the FIRST heading no space above it, so a real
-                  list is 16px shorter at the top than uniform slots draw.
-            - [x] **Improvisation ACCEPTED by Thomas 2026-08-11** – *"I'm happy
-                  with it."* The whole dragged section shows the lifted look
-                  (the pale background a dragged row already had), rather than
-                  only the heading under the finger. No frame draws a section
-                  mid-drag; this was the minimal consistent extension of an
-                  existing treatment, offered as Claude's call and now signed
-                  off as design.
-      - **Sections are REORDERABLE** – the Figma header carries a drag_handle,
-            and there is one "Add ingredient" button at the end of the list
-            rather than one per section.
-      - [x] **Wording settled and corrected in Figma 2026-08-04.** The sheet
-            **title follows the tab** – "Add ingredient" / "Add section"
-            (`496:5765`), rather than one neutral title for both. And
-            **placeholders all carry "e.g."**: "e.g. Cherry tomatoes" beside
-            the existing "e.g. 250g".
-            The Section field's placeholder is **"e.g. Sauce"** (Thomas, drawn
-            in Figma the same day). Claude proposed "e.g. Dough" from the
-            ingredient field and Thomas rejected it, rightly: it only makes
-            sense to someone who bakes, and it repeated the word the filled
-            frame already used, so the example taught nothing. "Sauce" is a part
-            of the dish in almost any cuisine. **The rule for any future
-            placeholder here: one concrete example, universal rather than
-            domain-locked, and never the same word the filled state shows.**
+### Pre-launch checklist (v1 ship)
 
-- [x] **Build 14 shipped to TestFlight, VALID (2026-08-03).** Carries the
-      leftover move and the two checkbox fixes; cut from the code as it stood
-      at 15:39, so the "1 liter / 2 liters" app-side work committed after that
-      is NOT in it. **The App Store review is untouched** – v1.0 stays bound to
-      build 12.
-      **I CALLED THIS WRONG AND IT IS THE LESSON OF THE DAY.** Three submits
-      each sat on "Submitting" and were killed by the watchdog at 600s. I
-      queried App Store Connect after the third, saw build 13 as newest, and
-      concluded "Apple has never received 14" – and wrote it here. Thomas then
-      found version 14 on his phone. A re-query showed build 14 VALID, uploaded
-      17:06 CEST: one of the "stalled" submits HAD succeeded, the CLI hung
-      after the upload rather than during it, and Apple was still processing
-      when I looked.
-      SO THE OLD RULE NEEDED SHARPENING. "Trust App Store Connect, not the
-      CLI spinner" (2026-07-25) is right but incomplete: **ASC's answer is
-      also a point in time.** A build missing right after a stall means "not
-      processed YET", never "never arrived". The upload lands minutes before
-      Apple lists it, so one negative check proves nothing – poll for 10-15
-      minutes before concluding anything, and never write a conclusion into
-      the backlog off a single query.
-      The watchdog is still worth keeping (it stops a genuine 90-minute hang),
-      but its message should say "check ASC in a few minutes" rather than
-      implying failure. Retrying stays free either way – Apple ignores a
-      duplicate upload of a build number it already has.
-      Submission ids, if the server-side logs are ever worth reading:
-      `031c4a16-7106-4a72-b190-a4379a3daeb0`,
-      `59ac675d-75ec-425b-8b8f-be95d71d4908`,
-      `8676ad2c-9c50-4481-925d-222237a502c8`.
+- [ ] **⏳ Get everything off the work Mac before it goes back**
+      Why: the machine belongs to the employer and Thomas is job-hunting. Not
+           *if* it goes but *when*.
+      Must be copied off: `~/Prepeat-backups/` (58 MB, nothing else holds it),
+           `app-store-assets/` (10 MB), Claude's memory folder, the two env
+           files.
+      Travels by itself: all four accounts are personal, and the signing key is
+           already in Apple Passwords on a personal Apple ID.
+      ⚖️ Worth a professional, not Claude: a commercial product built on
+           employer hardware. IP clauses sometimes reach further than people
+           expect, and it is cheaper to check early.
 
-- [x] **DONE – move a past week's unbought shopping items to this week**
-      Why: things you did not get round to buying should not be stranded on a
-           week that has ended.
-      Closed: 2026-08-11. Shipped to the family in TestFlight build 15
-           (2026-08-04), and the one thing holding it open – the inherited
-           frozen-week bug – was fixed the same day and walked on device
-           2026-08-07.
-      ⚠️ It stayed open for a week for no reason. Known bug 3's entry says in
-           its own words that it closes this item; nobody carried that back
-           here. The mirror of the stale-fix lesson under Known bugs – **a fix
-           that names what it closes has to go and close it.**
+      (2026-08-04.) **Full checklist:
+      [backups-and-local-db.md](backups-and-local-db.md) → "Leaving the company
+      Mac"**, audited the same day. Headlines:
+      - **Travels by itself:** all four accounts are personal (GitHub, Apple
+        Developer, Supabase, Expo), so do the three repos, and the signing key
+        is already in Apple Passwords on a personal Apple ID.
+      - **Must be copied off:** `~/Prepeat-backups/` (58 MB – nothing else
+        holds it), `app-store-assets/` (10 MB, gitignored because it shows real
+        household data), Claude's memory folder, the two env files.
+      - **Regenerates:** the LaunchAgent, the runtime copy, the log, the Apple
+        *Development* certificate and provisioning profiles. Distribution
+        credentials live at EAS, not locally.
+      - **Re-weigh Supabase Pro when the job actually changes.** The backup
+        system built today runs on a machine that gets handed back – a
+        different argument from the one declined earlier, since $25/mo buys
+        backups sitting nowhere near a computer somebody else owns.
+      - **⚖️ Worth checking with a professional, not with Claude:** a
+        commercial product built on employer-owned hardware, and IP clauses in
+        employment contracts sometimes reach further than people expect.
+        Cheaper to check early. Noted so it is not forgotten.
 
-      Thomas 2026-08-03; Figma 434:7148 "transfer items from last week". Built
-      the same day it was designed. A past week whose list still has unchecked
-      items ends in a full-width **"Move all items to this week"**; pressing it
-      empties that week onto the current one and offers the undo toast.
-      Graduated out of Ideas – the decisions that shaped it are in the log below.
-      - [x] **APPLIED 2026-08-03** (`0026_move_week_leftovers.sql`), verifying
-            select returned move_fn and undo_fn both true.
-            **SAFE FOR THE PHONES** (the 0022 lesson): it only ADDS two
-            functions – nothing dropped, no signature changed – so TestFlight
-            build 13 is unaffected by it. Note the asymmetry, the usual one:
-            the server half is live for everybody now, but nothing can reach
-            it until the app half ships in a build, so no phone behaves
-            differently yet.
-      - [x] **VERIFIED ON DEVICE 2026-08-03** – "it worked perfectly"
-            (Thomas, on the dev build installed 14:53). Still only on the dev
-            build: SHIPPED to the family in TestFlight build 15 (2026-08-04).
-      - [x] **The pressed state is the DS's, not an improvisation** (checked
-            2026-08-03 after Thomas pushed back on it being flagged at all,
-            and he was right). `button/solid/fill/*` defines
-            enabled #83E651 / pressed #56C91D with the label unchanged at
-            #4F4230, and that is exactly what is built. The screen's frames
-            not drawing a pressed state is normal – states live on the DS
-            component, not on every frame that uses it. LESSON: before
-            flagging a component state as a design gap, look it up in
-            `ds-theme.cjs` and the DS component; a gap is a state nothing
-            defines anywhere, not a state this particular frame did not draw.
-      - [x] **PINNED above the tab bar** (Thomas, 2026-08-03), resolving the
-            one gap the frames left. They only show short weeks, where the
-            button sits at the bottom of the list area either way – but a week
-            with twenty leftovers would have hidden it below the fold, the
-            same trap the recipe Save button fell into on a long recipe
-            (2026-07-28). So it reuses that footer exactly: top border in
-            `border/subtle`, the screen's own background so rows scroll under
-            rather than through, and the scroll area drops its tab-bar
-            clearance while the footer is there. Note the footer chrome itself
-            is still undrawn in Figma on both screens – worth a frame if a
-            third one ever needs it.
-      - [x] **It inherited known bug 3** (frozen "this week") – **fixed
-            2026-08-04 with bug 3 itself, walked on device 2026-08-07.** The
-            move used to target the current week as computed at app launch, so
-            an app left open across Sunday midnight would push into what was by
-            then last week. It now reads the live week from the shared clock.
-            (The worst case was always a move that did nothing rather than a
-            wrong one – the server refuses to move backwards.)
+- [x] **DONE 2026-08-04 – `credentials/AuthKey_UN3YR958DC.p8` is copied into
+      Apple Passwords**, and **Thomas confirmed it visible on his iPhone**, so
+      it is genuinely off this machine rather than merely saved on it. (Checked
+      on purpose: an unsynced entry looks like protection and is not – the same
+      trap as the scheduled job that "looked installed" twice today.)
+      Found when Thomas asked whether the setup could be rebuilt on a new Mac.
+      App Store Connect issues that key **once** and it can never be downloaded
+      again; it is gitignored because it signs releases, so until today it
+      existed in exactly one place on earth. Losing the Mac would have meant
+      revoking and regenerating it – discovered at the moment a fix needed
+      shipping.
+      Stored as a password entry rather than an attachment (Apple Passwords
+      takes no files, and the key is 257 bytes of ASCII), with the Key ID and
+      Issuer ID in the notes. **The BEGIN/END PRIVATE KEY lines are part of the
+      key** – it is unusable without them.
+      Recoverable anyway, and deliberately not duplicated: `ascApiKeyId` and
+      `ascApiKeyIssuerId` live in `eas.json`, which is in the PUBLIC repo.
+      Neither is usable without the `.p8`, so this is not an exposure – but if
+      the key file is ever compromised, **revoke it in App Store Connect**
+      rather than merely replacing it, because the other two pieces are public.
+      Full "if the Mac were lost" audit in
+      [backups-and-local-db.md](backups-and-local-db.md) – everything else is
+      recoverable, including the design system (pushed to GitHub) and both env
+      files (re-derivable from the Supabase dashboard). The other single-copy
+      item is `~/Prepeat-backups/` itself.
 
-- [x] **Shopping checkbox sat between the two lines of a row** – found by
-      Thomas on device 2026-08-03, fixed the same day. The checkbox and the
-      text column were centred against each other, so on every row WITH an
-      amount the box landed in the gap between name and amount; single-line
-      rows looked right, which is why it survived. The design's `checkboxField`
-      is `items-start` – box against the name, amount hanging below. The two
-      lines also lacked their designed leadings (label 24, hint 16), so the
-      name's line box was not 24 tall for the 24-tall checkbox slot to centre
-      on, and rows missed the designed 56/72 heights.
-      SHIPPED to the family in TestFlight build 15 (2026-08-04).
-      - [x] **Checkbox now binds the forms/* recipe** (Thomas asked for it the
-            same day): `forms/background/default` + `forms/border/enabled`
-            unchecked, `forms/surface/active` checked – the same group the
-            shared text input already uses. Only the unchecked box changes on
-            screen; the checked fill is the same #56C91D either way, but the
-            right token name is what survives the next DS retune.
-      - [x] **NOT A BUG: the square checkbox is the DEFAULT brand.** I read
-            the Figma output as specifying radius 0 (it emits a radius for the
-            initials badge beside it and none for the checkbox) and flagged
-            the app's `radius/xsmall` as a drift. Thomas, same day: "The
-            square check box is the default brand, not the Prep+Eat brand."
-            The rounded box was right; nothing changed.
-            LESSON, the 2026-07-22 one again in a new coat: geometry resolves
-            per brand just like colour and type, so the ABSENCE of a property
-            in `get_design_context` is as brand-dependent as its value. A
-            missing radius is not evidence of radius 0. `ds-theme.cjs` decides.
+- [ ] **Watch for the moment Supabase Pro becomes necessary** (a standing check, not a task to do)
+      Upgrade when ANY one of these is true:
+        1. real users who cannot be phoned – ~30+ monthly actives, or the first
+           support email from a stranger. Today's 18 are family and testers;
+        2. more than a few days away from the Mac – turn it on BEFORE
+           travelling;
+        3. egress or database past half the free limit. At 162 MB / 31 MB
+           today, so distant.
+      Why not now: Pro only adds two things – it runs when the Mac does not,
+           and it sits somewhere other than the desk. On retention it is
+           WORSE than what we have, and its backups have never been restored.
+      Do together with: the dev-environment decision. Trigger 1 is the same
+           moment for both.
 
-## Known bugs (open)
+      (Thomas, 2026-08-04, after
+      asking whether he had to upgrade or could watch – the honest answer
+      changed once the local backup was proven to restore).
+      **What Pro would actually add, given what now exists:** only two things –
+      it runs when the Mac does not, and it lives somewhere other than the desk.
+      On frequency it matches nightly-vs-daily, on retention it is WORSE (7 days
+      against 30), and its backups have never been restored, where ours have.
+      **Upgrade when any ONE of these becomes true:**
+      1. **Real users who cannot be phoned** – ~30+ monthly actives, or the
+         first support email from a stranger. Today's 18 are family and testers.
+      2. **More than a few days away from the Mac.** Turn it on BEFORE
+         travelling, not after.
+      3. **Egress or database size past half the free limit** – 250 MB egress,
+         250 MB database. At 162 MB / 31 MB today, so distant, but that is the
+         point where the free tier stops being a choice.
+      Keep the two free projects by putting anything else in a **separate Free
+      organisation**; a Pro org bills every project in it.
+      Not needed: PITR (~$100/mo add-on, rejected), and any capacity upgrade.
+      **Decide the DEV ENVIRONMENT in the same sitting** – trigger 1 is the
+      same moment for both, and doing them together is one upheaval instead of
+      two. See "A second, free Supabase project as a DEV environment" under
+      Ideas.
+
+- [x] **🚀 SUBMITTED FOR REVIEW 2026-07-31.** All App Store Connect metadata
+      entered and the version sent to Apple ("Add for Review" → Submit). Build
+      12, EU-27 only, Free, 4+, privacy label published, manual release – so
+      after Apple approves, Thomas presses the release button to go live. See
+      the itemised entries below and
+      [app-store-connect-answers.md](app-store-connect-answers.md). NEXT: watch
+      for Apple's review result; if the demo mailbox OTP is the sticking point,
+      the Supabase test-OTP trigger is the documented fallback (see the demo
+      account item).
+      - [ ] **⏳ STILL WAITING ON DAY 7 (checked 2026-08-07 08:45 CEST).** App
+            Store Connect reports the version `WAITING_FOR_REVIEW` and the
+            review submission `submitted 2026-07-31T11:30Z`, item state
+            `READY_FOR_REVIEW`, not cancelled. So it is correctly queued and has
+            NOT been rejected – Apple simply has not picked it up. Apple's own
+            published expectation is ~24h with most through in 48, so a week is
+            well outside normal though not unheard of for a first submission
+            from a new developer account.
+            Queried through the ASC API (the same key `asc-build-state.mjs`
+            uses) rather than by reading the dashboard, so this is Apple's own
+            answer. **Remember the 2026-08-03 lesson in the other direction
+            too:** one query is a point in time – but here the state has been
+            stable and the submitted date is a fact, so this is not the
+            "not processed YET" window.
+            - [x] **STATUS ENQUIRY SENT TO APPLE 2026-08-07**, after the demo
+                  mailbox was proven working – deliberately in that order, so
+                  that hurrying the review along could not hurry it into a
+                  failure at sign-in. Apple replies by email with a Case ID.
+                  **THE PATH, because it is four clicks deep and nothing along
+                  the way says "my app is stuck":**
+                  [developer.apple.com/contact](https://developer.apple.com/contact/)
+                  → *Get help with a new issue* → **View topics** → **App
+                  Review** → **App Review Status** → **Email**.
+                  Field trap worth remembering: **"Apple Account of the App" is
+                  NOT an email address**, despite sitting directly under a field
+                  where you just typed one. It wants the app's numeric id,
+                  `6793690543`. Name and Apple Account pre-fill from the signed-in
+                  developer account; Related Apps stays empty; Platform iOS.
+- [x] **First-look trademark search done 2026-07-27** – full write-up in
+      [trademark-search.md](trademark-search.md). Headline: the NAME is clear
+      (nobody holds "Prepeat" anywhere; no EU/DK registration; Prepear Inc.
+      holds classes 42+45 in US/UK/CA/AU but NOT in the EU). The TAGLINE is
+      not: "Prep Eat Repeat" is registered in the UK in class 9 (software),
+      and Sistema Plastics holds "PREP. EAT. REPEAT." in class 21 via WIPO.
+      Domains: we already own **prepeat.app** and **prepeat.love** (both
+      parked at Porkbun; .love registered 2026-06-12, the day the name was
+      decided). prepeat.dk and prepeat.eu are available if wanted defensively;
+      .com has been taken since 2004.
+      - [x] **Tagline decided 2026-07-27: "prep. cook. eat. repeat."** – the
+            launch-screen wordmark, promoted to the public strapline (24 chars,
+            fits Apple's 30-char subtitle). Chosen knowing it is modestly
+            risky rather than clean: it CONTAINS the registered UK class 9 mark
+            "Prep Eat Repeat", separated only by a generic verb. See
+            [trademark-search.md](trademark-search.md) for the reasoning.
+            - [ ] ⚠️ **UK caveat – revisit before adding the UK storefront.**
+                  Exposure is territorial: none in DK/EU, real in the UK, and
+                  the App Store ships worldwide BY DEFAULT unless territories
+                  are restricted at submission. Replacement already checked and
+                  clean: "One kitchen, every phone." (25 chars).
+      - [ ] Attorney clearance before filing an EUTM (classes 9 + 42) or
+            launching in the US/UK. While you have them: **also ask the
+            imported-recipe copyright question** from the share item under Later
+            (v1.1+). It does not block v1.0 – nothing is published publicly
+            until sharing ships – but the answer shapes that feature, and it
+            costs nothing to ask both in one conversation.
+- [x] **Privacy policy WRITTEN and PUBLISHED** –
+      [privacy-policy.md](privacy-policy.md), dated 2026-07-27, live at
+      https://thomassebell.github.io/prepeat-web/privacy.html since 2026-07-28.
+      Covers what is collected and why, what is not, retention incl.
+      soft-delete, GDPR rights, Datatilsynet as the complaints route, children,
+      and hello@prepeat.app as the contact.
+      - [x] **FACTUAL ERROR CORRECTED 2026-07-28, in both copies.** The policy
+            listed only TWO processors and said "we do not use any other
+            processors" – but **Resend** handles every user's email address and
+            one-time code, and was missing. The old text also credited **Apple**
+            with delivering the sign-in emails, which Apple does not do. Now
+            three processors with accurate roles. This mattered: an incomplete
+            processor list in a published privacy policy is a GDPR problem, not
+            a typo. It was found only because the SMTP screenshot showed who
+            actually sends the mail – nothing in the repo said so.
+      - [ ] ⚠️ **VERIFY the data-residency wording with the attorney.** The
+            policy says data stays in the EU (Supabase, Stockholm), which is
+            true of the database – but sign-in now means an email address is
+            processed by **Resend, a US company**, and on the free tier there is
+            no EU region. The page currently states that transfer is covered by
+            the Standard Contractual Clauses. That is the normal position for
+            such a vendor and it is what Resend's DPA is expected to say, but it
+            has NOT been read and confirmed. Do that, and fold it into the
+            attorney conversation queued below.
+      - [x] **Contact address DECIDED and CHANGED 2026-07-28: hello@prepeat.app**
+            everywhere – all 8 references across privacy-policy.md,
+            app-store-listing.md and the three web pages. Live on the site.
+- [x] **App Store listing text DRAFTED** – [app-store-listing.md](app-store-listing.md),
+      name / subtitle / promotional text / keywords / description / What's New,
+      all within Apple's character limits. NOT yet committed to git.
+
+Audit of what submission actually requires, done 2026-07-27. The items above
+were already further along than this list claimed; the ones below were
+missing from it entirely.
+
+- [x] **The website is BUILT AND LIVE, 2026-07-28** –
+      **https://thomassebell.github.io/prepeat-web/** (privacy.html, support.html and
+      a minimal index). Separate repo `thomassebell/prepeat-web`, three static pages,
+      no build step, no framework, no JavaScript, GitHub Pages on the free tier.
+      Verified live on desktop and at 375px: no console errors, no horizontal
+      overflow, Montserrat headings + IBM Plex Sans body loading, and **zero
+      third-party network requests** – the fonts are self-hosted precisely so
+      the page that promises "no third-party tracking" does not hand every
+      visitor's IP to Google to render itself.
+      ## ✅ THE URLs FOR APP STORE CONNECT (live 2026-07-29, verified over HTTPS)
+
+      ```
+      Privacy Policy URL   https://prepeat.app/privacy.html
+      Support URL          https://prepeat.app/support.html
+      ```
+
+      The github.io address now 301-redirects to prepeat.app, so do not use it
+      anywhere. `www.prepeat.app` and plain `http://` both redirect to the
+      canonical https apex.
+      - [x] **prepeat.app – DONE 2026-07-29.** Certificate `CN=prepeat.app`
+            covering apex + www, valid to 27 Oct 2026, Enforce HTTPS on.
+            - **Order matters, and the first instinct was wrong.** GitHub is
+              explicit: claim the domain on the REPO first, then point DNS. Do
+              it the other way and there is a window where anyone on GitHub can
+              attach the name to their own Pages site. The cost of the correct
+              order is that the site is briefly dark, which was free here
+              because nothing pointed at it yet.
+            - **Porkbun DNS, as changed** (there were never any A records to
+              delete – Porkbun parks via ALIAS):
+              - `ALIAS prepeat.app` → `thomassebell.github.io` (was
+                pixie.porkbun.com). Porkbun supports ALIAS at the apex and
+                GitHub accepts it – one edit beside the mail records instead of
+                adding four A records, which is the safer operation.
+              - `CNAME www.prepeat.app` → `thomassebell.github.io` (new)
+              - deleted the parking wildcard `CNAME *.prepeat.app`
+              - all 7 mail records untouched and re-verified afterwards
+              Apex now flattens to GitHub's four IPs (185.199.108-111.153),
+              identical across Google, Cloudflare and Quad9.
+            - ⚠️ **`.app` is HSTS-preloaded**, so browsers refuse to fall back
+              to HTTP. Until the certificate exists the domain is dark in a
+              browser even though GitHub IS serving it – `curl http://` returns
+              200. Confirmed not a misconfiguration: no CAA record blocks Let's
+              Encrypt, DNS is stable, and the TLS error is simply GitHub
+              answering with its default `*.github.io` certificate.
+            - ⚠️ **The certificate genuinely got stuck, and the fix is worth
+              remembering.** It never arrived on its own – not in 30 minutes,
+              not in 2 hours, not overnight. The tell was that
+              `https_certificate` was ABSENT from the Pages API response rather
+              than showing a pending state: provisioning had never STARTED, as
+              opposed to being slow. Everything else checked out (no CAA record
+              blocking Let's Encrypt, DNS stable across three resolvers, GitHub
+              serving the site fine over plain HTTP), which is what made it
+              clear the problem was on GitHub's side, not in the DNS.
+              **Fix: remove the custom domain and re-add it** (`PUT
+              .../pages -f cname=""` then `-f cname=prepeat.app`). The field
+              appeared immediately as `authorization_created`, then `approved`
+              within a minute of triggering a fresh build. The rapid toggle left
+              `status: errored` – a `POST .../pages/builds` cleared it.
+              Do NOT reach for this while provisioning might still be in flight;
+              it resets the queue position. Only once the field is missing
+              entirely and hours have passed.
+              Rollout across GitHub's edge nodes is not instant: for a minute
+              some paths returned 200 and others failed. Not a fault, just wait.
+            - [x] **Enforce HTTPS ON**, verified: `http://` → 301 → https, and
+              `www` → 301 → apex.
+            - [x] Mail re-verified AFTER all DNS changes: both root MX, root
+              SPF, Resend DKIM, send.prepeat.app SPF + MX, and DMARC all intact.
+      - [ ] **Two copies of the privacy policy exist** –
+            `docs/privacy-policy.md` here (where it was authored) and
+            `privacy.html` in the web repo (the one that legally matters).
+            Change one, change the other. Worth collapsing to one source if it
+            ever drifts in practice.
+      - [x] **A THIRD copy existed and was deleted, 2026-07-28.** The app repo
+            had a `gh-pages` branch quietly serving its own landing page and
+            `privacy/index.html` – built in an earlier session for App Store
+            submission, and never mentioned in this backlog. So two privacy
+            policies with different contents were live on the internet at once,
+            the older one naming two processors instead of three and giving the
+            superseded contact address. That is the worst category of thing to
+            have a stale public copy of.
+            Claude's pre-launch audit MISSED it: the audit read the docs and the
+            app config but never asked GitHub what the account was already
+            publishing, and concluded "you need a website" while one existed.
+            `gh repo list` + the Pages API found it in seconds. **Check what is
+            already deployed before concluding something is missing.**
+            Branch deleted (tip was `d41c6f9`), Pages deactivated on that repo,
+            URL confirmed 404. Note it did NOT self-retire on the username
+            rename as first predicted – GitHub rebuilt it under the new name,
+            and it took the branch deletion plus a CDN expiry to actually go.
+      - **IMPROVISED, flagged per the 2026-07-17 rule**: no Figma frames exist
+            for any web page. They are typographic document pages assembled from
+            DS tokens, deliberately restrained – a real marketing landing page
+            is a design job and was NOT invented here. The index is minimal on
+            purpose: enough that the domain does not 404.
+      Note this survived the sharing deferral: dropping share from v1.0 did not
+      remove the need for a web presence, it only shrank it – v1.0 needs two
+      static pages, no database and no share tokens, where the v1.1 share page
+      needs the rest. Build the small one now and the share page grows into it.
+      **PLAN, settled 2026-07-28: neither piece costs anything new. Do not buy
+      a one.com plan for this.** Thomas asked whether his paid one.com account
+      could serve – it could, but only makes sense if it ALREADY includes web
+      hosting + mail; buying an upgrade would be paying for two things he has
+      for free:
+      - [ ] **Pages → GitHub Pages.** Free for public repos (this repo is
+            public), custom domain, free HTTPS. Serves the privacy policy and a
+            support page as static HTML. Suggest a SEPARATE small repo
+            (`prepeat-web`) rather than this one, so the site does not rebuild
+            on every app commit and the app's history stays clean.
+      - [ ] **Inbound mail → Porkbun email forwarding.** Free, up to 20
+            addresses per domain, already included with prepeat.app. Forward
+            hello@prepeat.app → thomas@sebell.dk and support requests stop
+            vanishing.
+            **Caveat worth knowing:** forwarding delivers TO your inbox, but a
+            reply goes out as thomas@sebell.dk, not as hello@prepeat.app. A user
+            writes to the app and gets an answer from a stranger's personal
+            address. Fixing that needs a real hosted mailbox – Porkbun's own
+            hosted email is a few dollars a month, or one.com IF the plan
+            already covers it. Cheap either way, and it can wait until somebody
+            actually writes in.
+      - **Keep DNS at Porkbun** (it runs on Cloudflare) and add records there.
+        Do NOT move nameservers – that means re-creating the Resend records
+        elsewhere, and a mistake there stops sign-in for everyone. Inbound mail
+        (MX) and outbound (Resend) do not conflict; they are different record
+        types. The one collision risk is SPF – see the email decision in the log
+        below, one record only, both senders inside it.
+      Fit for the v1.1 share page too, with one caveat: static hosting plus
+      client-side Supabase calls would render a recipe fine, but **link
+      previews** (the card that appears in WhatsApp/iMessage) need per-recipe
+      Open Graph tags in the served HTML, which a purely client-rendered page
+      cannot produce. For a feature whose whole point is being passed between
+      phones, that preview matters – so the share page needs either
+      pre-generated HTML per share or a small server. Decide when share is
+      designed, not now.
+- [x] **Custom SMTP is configured – checked 2026-07-28, NOT a blocker.**
+      Supabase's built-in sender would have been (2 messages/hour, no SLA,
+      team addresses only – *"We urge all customers to set up custom SMTP
+      server"*), and since every sign-in is an emailed code, the default sender
+      would have meant the app simply did not work for the public. It is on:
+      **Resend** (smtp.resend.com:465), sending as **hello@prepeat.app**, sender
+      name "Prep+Eat", minimum 60s between codes to one user. So prepeat.app is
+      already carrying live DNS records, which shortens the website item below.
+      - [ ] **The Resend free tier caps at 100 emails/DAY** (3,000/month, one
+            domain). One sign-in = one email, so 100/day is fine for the family
+            and thin for a launch spike – and when it is hit, new users cannot
+            get in at all, which is the same failure mode as the default sender
+            just at a higher threshold. Decide before launch whether to move to
+            Pro ($20/mo, 50,000) or launch on Free and watch it.
+- [x] **One contact address, settled 2026-07-28: `hello@prepeat.app`.** All 8
+      references changed and live (privacy-policy.md ×3, privacy.html ×3,
+      support.html, index.html, app-store-listing.md). The app already MAILED
+      from this address; now it is also the one every page tells you to write
+      to, so the GDPR contact, the App Store support channel and the reply-to
+      are a single address on the product's own domain.
+      Why it mattered: the moment that decides whether a stranger trusts you is
+      BEFORE any contact – they get a code from hello@prepeat.app, hit trouble,
+      and the support page used to send them to prepeat@sebell.dk, a domain
+      they had never seen. (Claude first argued the opposite, weighting the
+      reply-from over the inbound direction, and withdrew it.)
+      "Thomas Sebell, Denmark" stays as the named data controller in the policy –
+      that is correct and legally required; only the contact address moved.
+      - [x] **DONE 2026-07-28: Porkbun free email forwarding is live.**
+            `hello@prepeat.app` → `prepeat@sebell.dk`, a mailbox Thomas created
+            for the purpose – so replies go out as prepeat@sebell.dk rather than
+            his personal thomas@, which is a better outcome than the plan
+            assumed. Free, up to 20 forwards, included with the domain.
+            **Deliberately NOT the $24/year hosted mailbox.** Buy that when the
+            reply-from address actually confuses somebody, not before; it is a
+            toggle in the same account.
+            (one.com was ruled out entirely – it does not support .app domains.
+            No loss: GitHub Pages does not care about the TLD.)
+      - [x] **DNS verified after the change, 2026-07-28 – NOTHING BROKE, and
+            the reason is worth keeping.** Enabling forwarding DID create a root
+            SPF record, `v=spf1 include:_spf.porkbun.com ~all` – exactly the
+            thing feared, and contrary to Claude's prediction that a
+            receive-only forward would not add one. It is harmless anyway,
+            because **Resend does not use the root domain for sending**:
+            - `prepeat.app` TXT → `v=spf1 include:_spf.porkbun.com ~all` (new,
+              Porkbun's forwarding)
+            - `send.prepeat.app` TXT → `v=spf1 include:amazonses.com ~all`
+              (Resend's, untouched)
+            - `send.prepeat.app` MX → `feedback-smtp.eu-west-1.amazonses.com`
+            - `prepeat.app` MX → `fwd1/fwd2.porkbun.com` (new)
+            - `resend._domainkey.prepeat.app` → DKIM key, still present
+            - `_dmarc.prepeat.app` → `v=DMARC1; p=none;`
+            **The one-SPF-record rule is per NAME, not per domain.** Resend's
+            envelope return-path is `send.prepeat.app`, so its SPF is checked
+            against that subdomain and never against the root. Two records, two
+            names, no collision. DMARC aligns twice over – by DKIM on the root,
+            and by relaxed SPF alignment from the subdomain.
+            **Keep the rule anyway**: anything that ever adds a second SENDER on
+            the ROOT (a newsletter tool, a hosted mailbox that sends) must go
+            into the root's single record beside Porkbun's include – it cannot
+            have its own. Re-run `dig +short TXT prepeat.app` after any mail
+            change.
+      - **Bonus finding, feeds the residency question above**: that bounce MX is
+            `eu-west-1` – Ireland. Resend is handling this domain's mail in an
+            **EU region**, which is evidence (not proof) that sign-in emails are
+            processed inside the EU rather than the US. Good for the privacy
+            policy's data-location paragraph; still confirm it in Resend's own
+            terms before treating it as settled.
+- [ ] ⚠️ **Keep the Apple reviewer's demo mailbox working**
+      Why: the app signs you in with an emailed code, so a reviewer needs a
+           real mailbox they can open. This is the reviewer's very first
+           action, and the one thing that turns a week in the queue into a
+           rejection plus another week.
+      Status: built, seeded and CONFIRMED WORKING 2026-08-07. Open only
+           because it needs re-checking before each submission – the demo
+           week is dated, so re-run the seed close to submitting.
+      Do not: use the Postgres test-OTP trigger. It writes into Supabase's
+           internal auth schema, is a permanent known-code backdoor, and rots
+           silently. Fallback only if Apple pushes back.
+
+      `src/lib/auth.tsx:58` uses
+      `signInWithOtp` – a one-time code emailed to you, no password anywhere.
+      A reviewer handed an email address cannot receive that code, and offering
+      to relay it by hand does not pass review.
+      **Researched 2026-07-27: Supabase has NO fixed test-OTP for email.** The
+      feature exists for SMS only (`auth.sms.test_otp` maps a phone number to a
+      fixed code); there is no `auth.email.test_otp`, in the CLI config or the
+      dashboard. The community workaround is a Postgres trigger that overwrites
+      `auth.users.recovery_token` with a SHA224 hash of a known code and
+      backdates `recovery_sent_at` past the 60s rate limit. **Rejected as the
+      plan**: it writes into Supabase's internal `auth` schema, which is
+      undocumented and changes without notice (the discussion thread already
+      has it breaking after an update), it is a permanent known-code backdoor,
+      and it is load-bearing for review while never exercised day to day – so
+      it rots silently and fails at submission, which is the worst place to
+      find out.
+      **Plan instead: a real mailbox the reviewer can open.** A dedicated demo
+      address on sebell.dk with webmail; App Review notes give the address plus
+      the webmail login and one line of instruction. No auth-schema tampering,
+      nothing shipped in the app, nothing to rot. If Apple pushes back, the
+      trigger is the fallback, not the opening move.
+      - [x] **Demo account built and seeded, 2026-07-30.** Mailbox
+            `appreview@sebell.dk` created (webmail, its own password – shared
+            with Apple only, never committed to this public repo). Bootstrapped
+            in the app: signed in, name set, household **"Demo Kitchen"**
+            created. Then seeded server-side with 9 recipes + a planned CURRENT
+            and NEXT week + shopping lists (generator
+            `scratchpad/gen-demo.ts` → the SQL, re-runnable; the weeks are
+            `date_trunc('week', now())` so re-run it close to submission to keep
+            "this week" populated). Verified recipes 9, entries 14. SEPARATE
+            from "The Hanson Kitchen" (Thomas's own account, used only for the
+            App Store screenshots) – the reviewer never sees the real household.
+            **App Review Information ENTERED in App Store Connect 2026-07-31:**
+            sign-in required = yes, username `appreview@sebell.dk`, mailbox
+            password, contact (Thomas Sebell + phone + thomas@sebell.dk) and the
+            §3 Notes (with the real webmail URL + password) all filled and saved.
+            - [x] **THE WHOLE REVIEWER SIGN-IN PATH IS CONFIRMED WORKING,
+                  2026-08-07** (Thomas: *"All mailboxes and access is tested and
+                  passed"*). The `appreview@sebell.dk` mailbox is live, the
+                  webmail credentials Apple holds do sign in, and a one-time code
+                  arrives. This was the last prerequisite on Thomas and the one
+                  thing that could have turned a week in the queue into a
+                  rejection plus another week – the reviewer's very first action
+                  is a sign-in the app cannot complete for them.
+                  Checked ahead of any nudge to Apple deliberately, so that
+                  hurrying the review along could not hurry it into a failure.
+- [x] **Screenshots** – 4 iPhone 6.5"/6.9" screenshots (Weekly plan, Recipes,
+      Shopping list, Household) uploaded to App Store Connect (verified
+      2026-07-31). iPhone-only build confirmed – App Store Connect shows NO iPad
+      screenshot requirement, so the iPad tab is correctly empty. The
+      `app-store-assets/screenshots/` folder stays gitignored (real household
+      data, public repo).
+- [x] **App Privacy card in App Store Connect – ENTERED and PUBLISHED
+      2026-07-31.** Declared as "Data Linked to You": Email Address, Name,
+      Photos or Videos, Other User Content, User ID – every one for App
+      Functionality, none for tracking, so the label has NO "Data Used to Track
+      You" section, matching the listing's "NO ADS. NO TRACKING." promise.
+      Resolved the CONFIRM: **User ID declared** (conservative, adds no tracking
+      disclosure). Added **"Photos or Videos"** beyond the original draft –
+      the app stores user recipe photos, a distinct Apple data type, and
+      under-declaring is what gets labels rejected. Privacy Policy URL
+      (prepeat.app/privacy.html) also set. Original draft:
+      [app-store-connect-answers.md](app-store-connect-answers.md).
+- [x] **The remaining App Store Connect paperwork – ENTERED 2026-07-31.**
+      - **Age rating: 4+** (every content question None/No, "Made for Kids" NOT
+        enrolled). Resolved the alcohol CONFIRM = None. Apple's new 2025
+        social-media/UGC questions (which the draft predated) all answered No.
+        **⚠️ The "User-Generated Content = No" answer MUST be revisited when the
+        public recipe-sharing feature ships (v1.1+)** – that turns on real UGC
+        visible to strangers and needs report/block controls (Guideline 1.2).
+      - **Category: Food & Drink.** Subtitle "prep. cook. eat. repeat."
+        Copyright "2026 Thomas Sebell".
+      - **Territory: EU-27 only** – the UK-tagline call, decided EU-only so both
+        the "Prep Eat Repeat" UK registration and Prepear (US/UK/CA/AU) are
+        sidestepped entirely. Price Free, base country Denmark (DKK), manual
+        release. Revisit territory before any US/UK launch.
+      - **Content Rights: No** (does not contain third-party content) – business
+        call, not legal advice: recipe link-import is user-initiated into a
+        private household with attribution + source link. Thomas has no attorney
+        and may not get one; the EU-only territory is the main trademark
+        de-risk, so the attorney is now an expansion-time concern, not a
+        launch gate.
+- [x] **Build 13 shipped to TestFlight, VALID (2026-08-03).** Carries the
+      pre-build audit fixes: #1 (an imported recipe is no longer lost when its
+      photo can't be fetched, and a failed save shows a real error), #5 (the
+      Recipes tab, recipe detail and the shopping week switch all offer "Try
+      again"; Shopping also gained the loading spinner it never had), and #6
+      (the invite code is legible). #2 is NOT in this build – it is migration
+      0025 and has been live for everyone since it was applied the same day.
+      **The App Store review is untouched**: v1.0 is still bound to build 12
+      and was deliberately left alone (Thomas, 2026-08-03, choosing to ship to
+      testers without disturbing the queue). **So v1.0 will launch WITHOUT
+      these four fixes** – plan a 1.0.1 with build 13 or later once v1.0 is
+      approved and released.
+      SUBMIT WENT CLEANLY THIS TIME – no hang, unlike build 12. But note the
+      submit script's closing line printed "Build 12 is VALID" because Apple
+      had not finished processing 13 yet: **that line names the latest build it
+      can SEE, not the one you just shipped.** If the number is not yours, it
+      has not landed. Polling for build 13 specifically found it VALID after
+      3 minutes – much faster than build 12's ~25.
+- [x] **Build 12 shipped to TestFlight, VALID (2026-07-30).** Supersedes the
+      "ship build 11" item – build 12 carries the Plan-tab retry screen, all
+      the import/parser fixes, migration 0024's behaviour, the ds-check
+      lockdown, and the household-switcher redesign. `autoIncrement` set the
+      number (11 → 12 during the build). Marketing version 1.0.0.
+      NOTE FOR NEXT TIME – the submit CLI hung TWICE (the watchdog killed both
+      local watchers at 600s), yet build 12 landed on App Store Connect anyway
+      ~25 min later: the upload runs on Expo's SERVERS and killing the watcher
+      never stops it. So when a submit stalls, do not rush to retry or to the
+      altool fallback – wait and poll `asc-build-state.mjs` for the specific
+      build number first (a 24-min poll timed out here just before it landed;
+      give it 30-40 min). Apple's VALID is the only truth, exactly as the
+      recurring note says.
+- [x] Export compliance handled – `ITSAppUsesNonExemptEncryption: false` is
+      already in app.json, so submission stops asking every time.
+- [x] In-app account deletion built (guideline 5.1.1(v), required for any app
+      with account creation) – Delete profile, shipped 2026-07-22.
+- [x] **Support address CONFIRMED RECEIVING 2026-08-07** (Thomas: *"All
+      mailboxes and access is tested and passed"*). It is promised in the
+      privacy policy AND the App Store description and is the app's only support
+      channel, so this was a genuine launch gate.
+      **Known and accepted: `hello@prepeat.app` is SLOW to arrive** – Thomas's
+      call that it is not a concern, and the mechanism explains it: the address
+      is a Porkbun FORWARD (MX `fwd1/fwd2.porkbun.com`) rather than a mailbox,
+      so every message takes an extra hop. Worth having written down for two
+      futures: if a user ever reports "I emailed support and heard nothing",
+      slowness is the first thing to rule out rather than a lost message; and if
+      it ever becomes a real problem the fix is a proper mailbox on the domain,
+      not a DNS change.
+- [x] **`prepeat://ds-check` no longer reachable in production (2026-07-30).**
+      The token-debug screen is now development-only: the route redirects to
+      home when `!__DEV__` (a deep link in a Release build goes nowhere) and
+      the hidden tab trigger is only registered under `__DEV__`. Kept for dev
+      use rather than deleted – it is the DS-token verification tool.
+- [ ] **Finish the icon and splash variants**
+      Why: nothing here ships while the app is iOS-only, so this waits for
+           Android and for an iOS 18 appearance pass.
+      Left: no ios-dark / ios-tinted icon variants, and the Android splash
+           still uses Expo's default.
+      Done: the iOS icon, the iOS launch screen, and the Android adaptive icon.
+
+      iOS app icon + launch screen shipped
+      2026-07-23; the **Android adaptive icon is DONE too** (foreground,
+      background and monochrome art all present in assets/images, contrary to
+      the older note here). Still open: no ios-dark / ios-tinted icon variants
+      (iOS 18+ appearance icons), and the Android splash still uses Expo's
+      splash-icon.png (the Android 12+ centred-icon-in-a-circle system cannot
+      reuse the full-bleed iOS launch image). None of it ships while it is
+      iOS-only.
+
+## Next – v1.1
+
+Committed work for the first update after launch. Panel findings default here unless Thomas moves them.
+
+### Known bugs (open)
 
 - [x] **EDITING A SECTION SILENTLY TURNED IT INTO AN INGREDIENT. Found by
       Thomas on device 2026-08-07, fixed the same hour.** *"there is a bug in
@@ -677,7 +969,7 @@ invite. Check betaTesters vs Users-and-Access before blaming email or spam.
       itself from the plan" – a shopper seeing garlic twice reads that as
       broken even when the quantities are right.
 
-### Pre-build audit, 2026-08-02
+#### Pre-build audit, 2026-08-02
 
 Found by a multi-agent review of the whole shipping surface (5 angles –
 RLS/security, auth lifecycle, data correctness, recipe import, UI states –
@@ -1446,22 +1738,7 @@ Closed 2026-07-27:
 - **The Live badge lag** (fixed, see the decisions log) and the **"blank
   swiped row"** (never a bug – a short name sliding out of view).
 
-## Conditional – only if it bites
-
-- [ ] **Make recipe import work on sites that block us**
-      Why: madensverden.dk and allrecipes refuse non-browser fetches, so
-           pasting a link from them fails.
-      Trigger: only build it if a site the family actually uses gets blocked.
-      Size: a hidden-WebView fetch is the known fix; nothing exists in code
-           today (a comment in recipe-import.ts names it, and
-           react-native-webview is not installed).
-
-- [ ] **Add "Continue with Apple" sign-in**
-      Why: convenience only.
-      Trigger: not required by Apple – guideline 4.8 only forces it when you
-           also offer a third-party login (Google/Facebook), and Prep+Eat only
-           offers email-code sign-in.
-## Later (v1.1+)
+### Later (v1.1+)
 
 - [ ] **⭐ Show the app in Danish when the phone is set to Danish**
       Why: one app, two languages, iOS picks. Not a Danish edition and not a
@@ -1933,160 +2210,7 @@ Closed 2026-07-27:
       Better: let the copy-on-leave recipes land in an EXISTING kitchen you
       choose.
 
-## Code debts (small, known, deliberate)
-
-- [ ] **The first ingredient heading sits 16px lower than the design draws it**
-      Why not fixed: every LATER heading matches Figma exactly. Only the first
-           one differs, because the design gives it no space above and the code
-           draws every slot the same height.
-      Cost of fixing: the uniform slot height is what makes the section-drag
-           arithmetic provably correct (`src/lib/reorder.ts`, 24 checks). Losing
-           it to win 16px is a bad trade.
-      Status: recorded 2026-08-11 when the sections work closed. Reopen only if
-           it reads wrong on a long recipe.
-
-- [ ] **Clean up recipes imported before 2026-07-29**
-      Why: the parser used to leave whole instructions in the ingredient name
-           ("garlic clove, cut in half"), and the shopping list inherited it.
-      Left: the parser itself is FIXED. What remains is the old recipes still
-           holding mangled names – which needs the re-import gap below.
-
-      (found 2026-07-29 while shooting App Store
-      screenshots). `parseIngredient` in
-      [src/lib/recipe-import.ts](../src/lib/recipe-import.ts) only strips a
-      LEADING amount + known unit; everything else stays in the name verbatim.
-      Real items produced from imported recipes in the demo household:
-      - `Prik Nam Pla (condiment for seasoning the egg, optional): Mix together
-        some fish sauce, a squeeze of lime juice, chopped Thai chilies, and
-        chopped garlic.` – a whole instruction the source site filed under
-        `recipeIngredient`
-      - `½ tsp black soy sauce (or sub dark soy sauce and reduce regular soy
-        sauce to 2 tsp)`, quantity `1` – the `½` never parsed as an amount
-      - `coriander leaves, 1 large handful` – quantity is not leading, so it
-        stays in the name
-      - `½ cup long beans, cut into short pieces`, `cheese, grated (any melting
-        cheese will do)`, `garlic clove, cut in half`, `tomato, sliced`
-      This is the shopping list – the feature the listing calls the centrepiece
-      ("The list builds itself from the plan"). It makes an imported week's list
-      read as broken, and it is why the store screenshot of Shopping is not
-      usable as-is. Worth fixing at least: vulgar fractions (½ ¼ ¾) as amounts,
-      strip a trailing `, <prep word>` clause, drop parentheticals, and reject
-      ingredient strings that are obviously sentences.
-      **PARSER FIXED 2026-07-29** (vulgar fractions, trailing prep clauses
-      both opening AND ending in the prep word, parentheticals, `or`/`eller`
-      alternatives, trailing amounts, colon sentences, US `c.` for cup –
-      31 English + 18 Danish cases verified, range/Danish regressions intact).
-      Danish vocabulary completed the same day; other languages are a v1.1+
-      item under Later. Recipes imported
-      BEFORE that date still hold the old mangled names; see the re-import
-      gap below.
-- [ ] **Add "Re-import from source" to the recipe edit screen**
-      Why: every parser improvement only ever benefits NEW recipes. Existing
-           ones can only be fixed ingredient by ingredient by hand.
-      Size: small – `applyImport` already does the right thing to the form and
-           `replaceIngredientsAndSteps` already saves it in place.
-
-      The "paste a link"
-      button in [src/app/recipes/new.tsx](../src/app/recipes/new.tsx) is gated
-      behind `!editing`, so the edit screen has no import trigger. Found
-      2026-07-29 when the parser fix above could not be applied to recipes
-      already in the demo household. Consequence: every parser improvement, and
-      every site that fixes its own markup, only ever benefits NEW recipes –
-      existing ones can only be corrected ingredient by ingredient by hand, or
-      by creating a duplicate and deleting the original (which also orphans the
-      meal-plan snapshots). A "Re-import from source" action on the edit screen
-      would fix it; `applyImport` already does exactly the right thing to the
-      form, and `replaceIngredientsAndSteps` already saves it in place.
-- [ ] **Drop the `meal_plans.pushed_to_list_at` column, eventually**
-      Why: it is a compatibility shim kept alive only for TestFlight build 10.
-           Nothing reads or writes it.
-      Wait for: every tester's phone to run build 11 or later, confirmed
-           INSTALLED in App Store Connect – not merely committed here.
-      Size: no hurry. A nullable column nobody touches costs nothing.
-
-      Migration 0023,
-      APPLIED 2026-07-27, an always-null compatibility shim so TestFlight
-      build 10 keeps working. Nothing reads or writes it. Drop it
-      again – a fresh migration, never by editing 0022 or 0023 – only once
-      every tester's phone runs a build that does not SELECT it (11 or later,
-      confirmed INSTALLED in App Store Connect, not merely committed here).
-      No hurry: a nullable column nobody touches costs nothing.
-- **NOT A DEBT – `fillFromWeeklyPlan` is unreachable from the UI on purpose.**
-      Standing note so it stops being re-flagged as dead code (last reviewed
-      2026-07-27). It is the "reset this week's list" escape hatch from the
-      A + rails decision and the only repair path if a contribution ever fails
-      mid-write (offline at the wrong moment – nothing retries it). Its doc
-      comment and its RPC `push_plan_to_list` both say so.
-- [ ] **Split the `text/link` token in the DS – it is unreadable on white**
-      Why: #56C91D measures 2.15:1 on white, well below the accessibility
-           minimum. The token whose whole job is "this is a link" cannot be
-           legible only on coloured surfaces.
-      Owner: THE DS PROJECT, not this repo (Thomas, 2026-08-02). The app picks
-           it up on the next `npm run sync-ds-tokens`.
-      Meanwhile: the app has one use left – the wordmark – and it is exempt.
-           Any NEW use reintroduces the defect.
-
-      (measured 2026-07-28
-      while building the website). `text/link` is **#56C91D**, which is
-      **2.15:1** against #FFFFFF – far below the WCAG AA minimum of 4.5:1 for
-      body text. It is the token whose whole job is "this is a link", so it
-      cannot be legible only on coloured surfaces.
-      `text/brand` (#378112) is the same family and measures **4.87:1**, so the
-      website uses that for links and underlines them as well, keeping colour
-      off the critical path. Everything else measured clean: text/default 9.75:1,
-      text/subtle 7.79:1, button label on lime 6.22:1.
-      **SWEPT 2026-08-02, and it WAS in the app** – see finding 6 of the
-      pre-build audit under Known bugs. The onboarding "household is ready"
-      step printed the INVITE CODE in this token on the near-white panel
-      (2.01:1), the worst possible place for it: the code a new user must read
-      accurately to give a family member full access. **That screen is now
-      fixed** (swapped to `text/default`, 9.12:1), and the sweep found no other
-      app surface using `text/link`.
-      **The TOKEN is still wrong, and the fix is a SPLIT – not a retune.**
-      HANDED TO THE DS PROJECT 2026-08-02 (Thomas: *"this is a bigger token
-      rewrite in the DS. Leave it for now and I will fix it in the DS
-      project"*). Nothing more happens in this repo until the DS ships it;
-      the app then picks it up on the next `npm run sync-ds-tokens`.
-      WHY A SPLIT. `text/link` is doing two incompatible jobs: "this is
-      tappable" (needs to be dark enough to read – #56C91D is 2.15:1 on white,
-      a real accessibility defect) and "this is the brand" (the lime full stops
-      in the welcome wordmark, which want to stay bright). Retuning the single
-      token fixes links and silently darkens the brand mark – trading one
-      problem for another, and the kind of change nobody notices until it has
-      shipped.
-      THE SHAPE, which needs no invention because the website already solved
-      it: links there use `text/brand` #378112 with an underline, precisely
-      because lime failed on white. So –
-      - links point at `text/brand` (#378112, measures 4.55:1 on #F8F7F7 and
-        4.87:1 on white – already the website's answer),
-      - lime #56C91D survives unchanged under a name that says what it is for
-        (a brand accent, not a link),
-      - the wordmark periods point at THAT, and the welcome screen looks
-        identical to today.
-      Until it lands, any NEW use of `text/link` in the app reintroduces the
-      defect – the app currently has exactly one, the wordmark, which is
-      exempt (see the decided item under the pre-build audit).
-- [ ] **Repoint `contrast-text` in the prep-eat brand – it is wired to the wrong colour**
-      Why: DS hygiene. It aliases the dark ink where the sebell brand has
-           near-white.
-      Where: in FIGMA, not in code – the token exports are generated, so a
-           hand-edit would be overwritten.
-      Urgency: none. Nothing in the app consumes the affected tokens today.
-
-      (diagnosed 2026-07-27):
-      in the **prep-eat** brand `color/text/contrast-text` aliases
-      `{color.text.primary}` – i.e. the dark ink #4F4230 – where the **sebell**
-      brand has it as a literal near-white #FBFBF9. That asymmetry between the
-      two brand modes is the wiring slip; Figma renders near-white, so the
-      export is what is wrong. `figma-exports/*.tokens.json` are generated FROM
-      Figma, so hand-editing them would be overwritten – the variable has to be
-      repointed in the Figma file, then re-exported and rebuilt.
-      NO EFFECT ON THE APP TODAY: the only contrast-text the app consumes is
-      `error.contrast-text` (#FFFFFF), which is correct in both brands. Nothing
-      uses text/success/warning/info contrast-text. So this is DS hygiene, not
-      a bug in Prep+Eat, and it can wait for the next DS pass.
-
-## Synthetic User Panel findings (round 1, 2026-08-10)
+### Synthetic User Panel findings (round 1, 2026-08-10)
 
 **Every item below is tagged `(Synthetic User Panel: …)` as well as sitting under
 this heading.** That is deliberate belt-and-braces: if an item is promoted into
@@ -2127,7 +2251,7 @@ RE-TESTED** – "solved" means the mechanism was addressed, not that the fix was
 shown to work. Re-running the comprehension study on the new screen 5 is the
 cheapest way to find out, and is owed.
 
-### The reframe that decides how much work this is
+#### The reframe that decides how much work this is
 
 Run against the product's real capabilities rather than the screens alone, most
 findings turned out to be things **unsaid**, not things **missing**. First run
@@ -2166,7 +2290,7 @@ capability the report claims exists, does:
       belonging to more than one kitchen. This was the panel's biggest reframe and
       is mostly still open.
 
-### "household" – the one word that failed in all five modes
+#### "household" – the one word that failed in all five modes
 
 Seven readers out of seven could not say what a household *is*, proposing eleven
 different nouns between them.
@@ -2223,7 +2347,7 @@ different nouns between them.
       empty state no longer assumes a family loves the dishes, and the invite and
       delete-profile lines were rewritten. This was the Tier A break.
 
-### Screen 9 is where it ends
+#### Screen 9 is where it ends
 
 **⚠️ STANDING CAVEAT ON WALKTHROUGH FINDINGS (Thomas, 2026-08-10:
 *"overtesting/overthinking"*).** The walkthrough personas READ a description of
@@ -2337,7 +2461,7 @@ previous week to copy, which is the point: the split needs two fixes.
       produce that artefact at all. Same step, unrelated failures. Do not fix it
       as one thing. (Synthetic User Panel: walkthrough, medium.)
 
-### The strings that failed (copy review, ceiling high)
+#### The strings that failed (copy review, ceiling high)
 
 Reactions, not recommended replacements. Rewriting these is design work and
 belongs in Figma – logged here, not improvised.
@@ -2421,7 +2545,7 @@ belongs in Figma – logged here, not improvised.
       over the silence. The product genuinely has no paid tier, **so this is a
       sentence, not a decision.** (Synthetic User Panel: copy review, high.)
 
-### Genuine capability gaps, as opposed to things merely unsaid
+#### Genuine capability gaps, as opposed to things merely unsaid
 
 - [x] **Portion arithmetic is one scalar per meal**, where P07's household eats
       one pot in four sittings. Tier A on the timing facts. Confirmed in code:
@@ -2449,7 +2573,7 @@ belongs in Figma – logged here, not improvised.
       practice. Tier A – but a product-scope decision, not a first-run defect.
       (Synthetic User Panel: persona-as-lens, medium-high.)
 
-### Two additions from the code that the panel could not see (Claude, 2026-08-10)
+#### Two additions from the code that the panel could not see (Claude, 2026-08-10)
 
 - [x] **CLOSED 2026-08-10, Thomas: *"This is my choice – close it!"*** The flat
       unlabelled day is a decision taken 2026-07-16 and recorded in
@@ -2476,7 +2600,7 @@ belongs in Figma – logged here, not improvised.
       button. The fork now happens after the code, where the server actually knows
       whether you are new or returning.
 
-### What the pre-mortem added (objection harvest, ceiling high)
+#### What the pre-mortem added (objection harvest, ceiling high)
 
 Seven distinct failure mechanisms, no two alike. Objections are claims about
 mechanisms, which is why they are cheap to go and check – they are not market
@@ -2505,7 +2629,7 @@ recruited, and nothing is lost when the week goes wrong.**
 feature Danish reviewers ask for more than any other – shared access – and the
 panel raised that shipping it did not move the problem the request was about.
 
-### What to verify with real humans (ranked across all five studies)
+#### What to verify with real humans (ranked across all five studies)
 
 - [ ] 1. **Show screen 5 cold and ask what they are about to create.** Every mode
       failed on this word. (Synthetic User Panel: all five modes.)
@@ -2528,7 +2652,7 @@ panel raised that shipping it did not move the problem the request was about.
       (Synthetic User Panel: raised in every mode – and see limit 3 above, the
       panel cannot size this one.)
 
-### Panel health, for weighing the above
+#### Panel health, for weighing the above
 
 - **Held.** Twenty-four responses, all distinguishable with names removed. No
   persona invented a history with the product outside the pre-mortem, where the
@@ -2544,7 +2668,7 @@ panel raised that shipping it did not move the problem the request was about.
   rejection and comprehension never asks, so after five studies the panel has not
   yet had a fair chance to approve of anything. Weigh the findings accordingly.
 
-## Synthetic User Panel findings, round 2 (2026-08-10)
+### Synthetic User Panel findings, round 2 (2026-08-10)
 
 Second round, run the same day as round 1 and against the REWRITTEN screens.
 Source: `~/Documents/Claude/Projects/Synthetic User Panel`, study
@@ -2576,7 +2700,7 @@ never reused.
 **Standing limits, both still true:** nothing here is visual, and nothing here
 says whether any of it costs anything commercially.
 
-### What round 2 says about round 1's fixes
+#### What round 2 says about round 1's fixes
 
 - [ ] `2.22` **Reduce what "kitchen" costs a first-time reader**
       Why: all five understood it, and all five had to work for it. That is a
@@ -2610,7 +2734,7 @@ says whether any of it costs anything commercially.
       Note: a TREATMENT problem, not a wording one. Renaming did not touch it.
       (Panel round 2: comprehension, high.)
 
-### Screen 6 – what the report numbers 2.1 and 2.2
+#### Screen 6 – what the report numbers 2.1 and 2.2
 
 Missed when these findings were first logged, and caught on 2026-08-10 while
 tagging the backlog against the report. Both are in the report.
@@ -2630,7 +2754,7 @@ tagging the backlog against the report. Both are in the report.
       expected to be asked who eats here, and when.
       (Panel round 2: comprehension, high.)
 
-### The precondition problem – the biggest finding, and the most over-readable
+#### The precondition problem – the biggest finding, and the most over-readable
 
 - [ ] `2.8` `2.9` **Stop the first screen reading as homework**
       Why: all five concluded, unprompted, that the plan and the shopping list
@@ -2661,7 +2785,7 @@ tagging the backlog against the report. Both are in the report.
            promising a destination, and it promises an experience instead.
       (Panel round 2: comprehension, high.)
 
-### Screen 6 – the choice is understood, four things around it are not
+#### Screen 6 – the choice is understood, four things around it are not
 
 The create-or-join fork itself now reads cleanly, which is the round-1 fix
 holding. What remains is information, not wording.
@@ -2694,7 +2818,7 @@ holding. What remains is information, not wording.
            an answer about his own data, and could not tell what it promises.
       (Panel round 2: comprehension, high.)
 
-### The store page – promises the first session does not keep
+#### The store page – promises the first session does not keep
 
 **These are edits to text that has NOT shipped** (the v1.1 draft in
 [app-store-listing.md](app-store-listing.md)), so they are the cheapest items
@@ -2774,7 +2898,7 @@ here. Fix them there, not in a copy of them.
            either round that touches the name itself.
       (Panel round 2: comprehension, high.)
 
-### Sentences nobody could parse
+#### Sentences nobody could parse
 
 The panel grouped these as *"words that failed for everyone"* – five of five
 stopped on each, which is what makes them the cheapest items in the round.
@@ -2800,7 +2924,7 @@ are just sentences, and were missed on the first pass through these findings.
            badly, not a wrong sentence.
       (Panel round 2: comprehension, high.)
 
-### One sentence that did opposite jobs
+#### One sentence that did opposite jobs
 
 - [ ] `2.6` **Reassure people the invite code persists without telling them to skip it**
       Why: the same sentence did both jobs. P05 read *the code persists*. P01
@@ -2816,7 +2940,7 @@ are just sentences, and were missed on the first pass through these findings.
       compulsory. It worked, and that is the problem.
       (Panel round 2: comprehension, high.)
 
-### What WORKS – logged before anyone changes it
+#### What WORKS – logged before anyone changes it
 
 - [x] `2.5` **The invite code is understood perfectly.** All five read `PREP-6A3V`
       correctly: the other person installs the app and types it in. **Nobody
@@ -2826,7 +2950,7 @@ are just sentences, and were missed on the first pass through these findings.
       has to clear this bar, and the case for the link is convenience, NOT
       comprehension.
 
-### What to verify with real humans (the panel's own three)
+#### What to verify with real humans (the panel's own three)
 
 - [ ] 1. **Show a real person screen 10 cold and ask what has to happen before
       the plan works.** Directly tests the precondition finding, and the caveat
@@ -2837,7 +2961,11 @@ are just sentences, and were missed on the first pass through these findings.
       research idea in either round – it tests the product's actual premise,
       which is that the second person's arrival changes something.
 
-## Ideas – not yet committed
+## Someday – not committed
+
+Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attached to it.
+
+### Ideas – not yet committed
 
 - [ ] **🌙 MOONSHOT: import a recipe from an Instagram video**
       Why: the recipe is IN the video – spoken aloud or on-screen – not in the
@@ -3120,566 +3248,178 @@ are just sentences, and were missed on the first pass through these findings.
       which makes it cheap to try. Worth deciding early how much is a screen
       you visit versus quiet suggestions inside the existing flow.
 
-## Pre-launch checklist (v1 ship)
+### Conditional – only if it bites
 
-- [ ] **⏳ Get everything off the work Mac before it goes back**
-      Why: the machine belongs to the employer and Thomas is job-hunting. Not
-           *if* it goes but *when*.
-      Must be copied off: `~/Prepeat-backups/` (58 MB, nothing else holds it),
-           `app-store-assets/` (10 MB), Claude's memory folder, the two env
-           files.
-      Travels by itself: all four accounts are personal, and the signing key is
-           already in Apple Passwords on a personal Apple ID.
-      ⚖️ Worth a professional, not Claude: a commercial product built on
-           employer hardware. IP clauses sometimes reach further than people
-           expect, and it is cheaper to check early.
+- [ ] **Make recipe import work on sites that block us**
+      Why: madensverden.dk and allrecipes refuse non-browser fetches, so
+           pasting a link from them fails.
+      Trigger: only build it if a site the family actually uses gets blocked.
+      Size: a hidden-WebView fetch is the known fix; nothing exists in code
+           today (a comment in recipe-import.ts names it, and
+           react-native-webview is not installed).
 
-      (2026-08-04.) **Full checklist:
-      [backups-and-local-db.md](backups-and-local-db.md) → "Leaving the company
-      Mac"**, audited the same day. Headlines:
-      - **Travels by itself:** all four accounts are personal (GitHub, Apple
-        Developer, Supabase, Expo), so do the three repos, and the signing key
-        is already in Apple Passwords on a personal Apple ID.
-      - **Must be copied off:** `~/Prepeat-backups/` (58 MB – nothing else
-        holds it), `app-store-assets/` (10 MB, gitignored because it shows real
-        household data), Claude's memory folder, the two env files.
-      - **Regenerates:** the LaunchAgent, the runtime copy, the log, the Apple
-        *Development* certificate and provisioning profiles. Distribution
-        credentials live at EAS, not locally.
-      - **Re-weigh Supabase Pro when the job actually changes.** The backup
-        system built today runs on a machine that gets handed back – a
-        different argument from the one declined earlier, since $25/mo buys
-        backups sitting nowhere near a computer somebody else owns.
-      - **⚖️ Worth checking with a professional, not with Claude:** a
-        commercial product built on employer-owned hardware, and IP clauses in
-        employment contracts sometimes reach further than people expect.
-        Cheaper to check early. Noted so it is not forgotten.
+- [ ] **Add "Continue with Apple" sign-in**
+      Why: convenience only.
+      Trigger: not required by Apple – guideline 4.8 only forces it when you
+           also offer a third-party login (Google/Facebook), and Prep+Eat only
+           offers email-code sign-in.
 
-- [x] **DONE 2026-08-04 – `credentials/AuthKey_UN3YR958DC.p8` is copied into
-      Apple Passwords**, and **Thomas confirmed it visible on his iPhone**, so
-      it is genuinely off this machine rather than merely saved on it. (Checked
-      on purpose: an unsynced entry looks like protection and is not – the same
-      trap as the scheduled job that "looked installed" twice today.)
-      Found when Thomas asked whether the setup could be rebuilt on a new Mac.
-      App Store Connect issues that key **once** and it can never be downloaded
-      again; it is gitignored because it signs releases, so until today it
-      existed in exactly one place on earth. Losing the Mac would have meant
-      revoking and regenerating it – discovered at the moment a fix needed
-      shipping.
-      Stored as a password entry rather than an attachment (Apple Passwords
-      takes no files, and the key is 257 bytes of ASCII), with the Key ID and
-      Issuer ID in the notes. **The BEGIN/END PRIVATE KEY lines are part of the
-      key** – it is unusable without them.
-      Recoverable anyway, and deliberately not duplicated: `ascApiKeyId` and
-      `ascApiKeyIssuerId` live in `eas.json`, which is in the PUBLIC repo.
-      Neither is usable without the `.p8`, so this is not an exposure – but if
-      the key file is ever compromised, **revoke it in App Store Connect**
-      rather than merely replacing it, because the other two pieces are public.
-      Full "if the Mac were lost" audit in
-      [backups-and-local-db.md](backups-and-local-db.md) – everything else is
-      recoverable, including the design system (pushed to GitHub) and both env
-      files (re-derivable from the Supabase dashboard). The other single-copy
-      item is `~/Prepeat-backups/` itself.
+### Code debts (small, known, deliberate)
 
-- [ ] **Watch for the moment Supabase Pro becomes necessary** (a standing check, not a task to do)
-      Upgrade when ANY one of these is true:
-        1. real users who cannot be phoned – ~30+ monthly actives, or the first
-           support email from a stranger. Today's 18 are family and testers;
-        2. more than a few days away from the Mac – turn it on BEFORE
-           travelling;
-        3. egress or database past half the free limit. At 162 MB / 31 MB
-           today, so distant.
-      Why not now: Pro only adds two things – it runs when the Mac does not,
-           and it sits somewhere other than the desk. On retention it is
-           WORSE than what we have, and its backups have never been restored.
-      Do together with: the dev-environment decision. Trigger 1 is the same
-           moment for both.
+- [ ] **The first ingredient heading sits 16px lower than the design draws it**
+      Why not fixed: every LATER heading matches Figma exactly. Only the first
+           one differs, because the design gives it no space above and the code
+           draws every slot the same height.
+      Cost of fixing: the uniform slot height is what makes the section-drag
+           arithmetic provably correct (`src/lib/reorder.ts`, 24 checks). Losing
+           it to win 16px is a bad trade.
+      Status: recorded 2026-08-11 when the sections work closed. Reopen only if
+           it reads wrong on a long recipe.
 
-      (Thomas, 2026-08-04, after
-      asking whether he had to upgrade or could watch – the honest answer
-      changed once the local backup was proven to restore).
-      **What Pro would actually add, given what now exists:** only two things –
-      it runs when the Mac does not, and it lives somewhere other than the desk.
-      On frequency it matches nightly-vs-daily, on retention it is WORSE (7 days
-      against 30), and its backups have never been restored, where ours have.
-      **Upgrade when any ONE of these becomes true:**
-      1. **Real users who cannot be phoned** – ~30+ monthly actives, or the
-         first support email from a stranger. Today's 18 are family and testers.
-      2. **More than a few days away from the Mac.** Turn it on BEFORE
-         travelling, not after.
-      3. **Egress or database size past half the free limit** – 250 MB egress,
-         250 MB database. At 162 MB / 31 MB today, so distant, but that is the
-         point where the free tier stops being a choice.
-      Keep the two free projects by putting anything else in a **separate Free
-      organisation**; a Pro org bills every project in it.
-      Not needed: PITR (~$100/mo add-on, rejected), and any capacity upgrade.
-      **Decide the DEV ENVIRONMENT in the same sitting** – trigger 1 is the
-      same moment for both, and doing them together is one upheaval instead of
-      two. See "A second, free Supabase project as a DEV environment" under
-      Ideas.
+- [ ] **Clean up recipes imported before 2026-07-29**
+      Why: the parser used to leave whole instructions in the ingredient name
+           ("garlic clove, cut in half"), and the shopping list inherited it.
+      Left: the parser itself is FIXED. What remains is the old recipes still
+           holding mangled names – which needs the re-import gap below.
 
-- [x] **🚀 SUBMITTED FOR REVIEW 2026-07-31.** All App Store Connect metadata
-      entered and the version sent to Apple ("Add for Review" → Submit). Build
-      12, EU-27 only, Free, 4+, privacy label published, manual release – so
-      after Apple approves, Thomas presses the release button to go live. See
-      the itemised entries below and
-      [app-store-connect-answers.md](app-store-connect-answers.md). NEXT: watch
-      for Apple's review result; if the demo mailbox OTP is the sticking point,
-      the Supabase test-OTP trigger is the documented fallback (see the demo
-      account item).
-      - [ ] **⏳ STILL WAITING ON DAY 7 (checked 2026-08-07 08:45 CEST).** App
-            Store Connect reports the version `WAITING_FOR_REVIEW` and the
-            review submission `submitted 2026-07-31T11:30Z`, item state
-            `READY_FOR_REVIEW`, not cancelled. So it is correctly queued and has
-            NOT been rejected – Apple simply has not picked it up. Apple's own
-            published expectation is ~24h with most through in 48, so a week is
-            well outside normal though not unheard of for a first submission
-            from a new developer account.
-            Queried through the ASC API (the same key `asc-build-state.mjs`
-            uses) rather than by reading the dashboard, so this is Apple's own
-            answer. **Remember the 2026-08-03 lesson in the other direction
-            too:** one query is a point in time – but here the state has been
-            stable and the submitted date is a fact, so this is not the
-            "not processed YET" window.
-            - [x] **STATUS ENQUIRY SENT TO APPLE 2026-08-07**, after the demo
-                  mailbox was proven working – deliberately in that order, so
-                  that hurrying the review along could not hurry it into a
-                  failure at sign-in. Apple replies by email with a Case ID.
-                  **THE PATH, because it is four clicks deep and nothing along
-                  the way says "my app is stuck":**
-                  [developer.apple.com/contact](https://developer.apple.com/contact/)
-                  → *Get help with a new issue* → **View topics** → **App
-                  Review** → **App Review Status** → **Email**.
-                  Field trap worth remembering: **"Apple Account of the App" is
-                  NOT an email address**, despite sitting directly under a field
-                  where you just typed one. It wants the app's numeric id,
-                  `6793690543`. Name and Apple Account pre-fill from the signed-in
-                  developer account; Related Apps stays empty; Platform iOS.
-- [x] **First-look trademark search done 2026-07-27** – full write-up in
-      [trademark-search.md](trademark-search.md). Headline: the NAME is clear
-      (nobody holds "Prepeat" anywhere; no EU/DK registration; Prepear Inc.
-      holds classes 42+45 in US/UK/CA/AU but NOT in the EU). The TAGLINE is
-      not: "Prep Eat Repeat" is registered in the UK in class 9 (software),
-      and Sistema Plastics holds "PREP. EAT. REPEAT." in class 21 via WIPO.
-      Domains: we already own **prepeat.app** and **prepeat.love** (both
-      parked at Porkbun; .love registered 2026-06-12, the day the name was
-      decided). prepeat.dk and prepeat.eu are available if wanted defensively;
-      .com has been taken since 2004.
-      - [x] **Tagline decided 2026-07-27: "prep. cook. eat. repeat."** – the
-            launch-screen wordmark, promoted to the public strapline (24 chars,
-            fits Apple's 30-char subtitle). Chosen knowing it is modestly
-            risky rather than clean: it CONTAINS the registered UK class 9 mark
-            "Prep Eat Repeat", separated only by a generic verb. See
-            [trademark-search.md](trademark-search.md) for the reasoning.
-            - [ ] ⚠️ **UK caveat – revisit before adding the UK storefront.**
-                  Exposure is territorial: none in DK/EU, real in the UK, and
-                  the App Store ships worldwide BY DEFAULT unless territories
-                  are restricted at submission. Replacement already checked and
-                  clean: "One kitchen, every phone." (25 chars).
-      - [ ] Attorney clearance before filing an EUTM (classes 9 + 42) or
-            launching in the US/UK. While you have them: **also ask the
-            imported-recipe copyright question** from the share item under Later
-            (v1.1+). It does not block v1.0 – nothing is published publicly
-            until sharing ships – but the answer shapes that feature, and it
-            costs nothing to ask both in one conversation.
-- [x] **Privacy policy WRITTEN and PUBLISHED** –
-      [privacy-policy.md](privacy-policy.md), dated 2026-07-27, live at
-      https://thomassebell.github.io/prepeat-web/privacy.html since 2026-07-28.
-      Covers what is collected and why, what is not, retention incl.
-      soft-delete, GDPR rights, Datatilsynet as the complaints route, children,
-      and hello@prepeat.app as the contact.
-      - [x] **FACTUAL ERROR CORRECTED 2026-07-28, in both copies.** The policy
-            listed only TWO processors and said "we do not use any other
-            processors" – but **Resend** handles every user's email address and
-            one-time code, and was missing. The old text also credited **Apple**
-            with delivering the sign-in emails, which Apple does not do. Now
-            three processors with accurate roles. This mattered: an incomplete
-            processor list in a published privacy policy is a GDPR problem, not
-            a typo. It was found only because the SMTP screenshot showed who
-            actually sends the mail – nothing in the repo said so.
-      - [ ] ⚠️ **VERIFY the data-residency wording with the attorney.** The
-            policy says data stays in the EU (Supabase, Stockholm), which is
-            true of the database – but sign-in now means an email address is
-            processed by **Resend, a US company**, and on the free tier there is
-            no EU region. The page currently states that transfer is covered by
-            the Standard Contractual Clauses. That is the normal position for
-            such a vendor and it is what Resend's DPA is expected to say, but it
-            has NOT been read and confirmed. Do that, and fold it into the
-            attorney conversation queued below.
-      - [x] **Contact address DECIDED and CHANGED 2026-07-28: hello@prepeat.app**
-            everywhere – all 8 references across privacy-policy.md,
-            app-store-listing.md and the three web pages. Live on the site.
-- [x] **App Store listing text DRAFTED** – [app-store-listing.md](app-store-listing.md),
-      name / subtitle / promotional text / keywords / description / What's New,
-      all within Apple's character limits. NOT yet committed to git.
+      (found 2026-07-29 while shooting App Store
+      screenshots). `parseIngredient` in
+      [src/lib/recipe-import.ts](../src/lib/recipe-import.ts) only strips a
+      LEADING amount + known unit; everything else stays in the name verbatim.
+      Real items produced from imported recipes in the demo household:
+      - `Prik Nam Pla (condiment for seasoning the egg, optional): Mix together
+        some fish sauce, a squeeze of lime juice, chopped Thai chilies, and
+        chopped garlic.` – a whole instruction the source site filed under
+        `recipeIngredient`
+      - `½ tsp black soy sauce (or sub dark soy sauce and reduce regular soy
+        sauce to 2 tsp)`, quantity `1` – the `½` never parsed as an amount
+      - `coriander leaves, 1 large handful` – quantity is not leading, so it
+        stays in the name
+      - `½ cup long beans, cut into short pieces`, `cheese, grated (any melting
+        cheese will do)`, `garlic clove, cut in half`, `tomato, sliced`
+      This is the shopping list – the feature the listing calls the centrepiece
+      ("The list builds itself from the plan"). It makes an imported week's list
+      read as broken, and it is why the store screenshot of Shopping is not
+      usable as-is. Worth fixing at least: vulgar fractions (½ ¼ ¾) as amounts,
+      strip a trailing `, <prep word>` clause, drop parentheticals, and reject
+      ingredient strings that are obviously sentences.
+      **PARSER FIXED 2026-07-29** (vulgar fractions, trailing prep clauses
+      both opening AND ending in the prep word, parentheticals, `or`/`eller`
+      alternatives, trailing amounts, colon sentences, US `c.` for cup –
+      31 English + 18 Danish cases verified, range/Danish regressions intact).
+      Danish vocabulary completed the same day; other languages are a v1.1+
+      item under Later. Recipes imported
+      BEFORE that date still hold the old mangled names; see the re-import
+      gap below.
+- [ ] **Add "Re-import from source" to the recipe edit screen**
+      Why: every parser improvement only ever benefits NEW recipes. Existing
+           ones can only be fixed ingredient by ingredient by hand.
+      Size: small – `applyImport` already does the right thing to the form and
+           `replaceIngredientsAndSteps` already saves it in place.
 
-Audit of what submission actually requires, done 2026-07-27. The items above
-were already further along than this list claimed; the ones below were
-missing from it entirely.
+      The "paste a link"
+      button in [src/app/recipes/new.tsx](../src/app/recipes/new.tsx) is gated
+      behind `!editing`, so the edit screen has no import trigger. Found
+      2026-07-29 when the parser fix above could not be applied to recipes
+      already in the demo household. Consequence: every parser improvement, and
+      every site that fixes its own markup, only ever benefits NEW recipes –
+      existing ones can only be corrected ingredient by ingredient by hand, or
+      by creating a duplicate and deleting the original (which also orphans the
+      meal-plan snapshots). A "Re-import from source" action on the edit screen
+      would fix it; `applyImport` already does exactly the right thing to the
+      form, and `replaceIngredientsAndSteps` already saves it in place.
+- [ ] **Drop the `meal_plans.pushed_to_list_at` column, eventually**
+      Why: it is a compatibility shim kept alive only for TestFlight build 10.
+           Nothing reads or writes it.
+      Wait for: every tester's phone to run build 11 or later, confirmed
+           INSTALLED in App Store Connect – not merely committed here.
+      Size: no hurry. A nullable column nobody touches costs nothing.
 
-- [x] **The website is BUILT AND LIVE, 2026-07-28** –
-      **https://thomassebell.github.io/prepeat-web/** (privacy.html, support.html and
-      a minimal index). Separate repo `thomassebell/prepeat-web`, three static pages,
-      no build step, no framework, no JavaScript, GitHub Pages on the free tier.
-      Verified live on desktop and at 375px: no console errors, no horizontal
-      overflow, Montserrat headings + IBM Plex Sans body loading, and **zero
-      third-party network requests** – the fonts are self-hosted precisely so
-      the page that promises "no third-party tracking" does not hand every
-      visitor's IP to Google to render itself.
-      ## ✅ THE URLs FOR APP STORE CONNECT (live 2026-07-29, verified over HTTPS)
+      Migration 0023,
+      APPLIED 2026-07-27, an always-null compatibility shim so TestFlight
+      build 10 keeps working. Nothing reads or writes it. Drop it
+      again – a fresh migration, never by editing 0022 or 0023 – only once
+      every tester's phone runs a build that does not SELECT it (11 or later,
+      confirmed INSTALLED in App Store Connect, not merely committed here).
+      No hurry: a nullable column nobody touches costs nothing.
+- **NOT A DEBT – `fillFromWeeklyPlan` is unreachable from the UI on purpose.**
+      Standing note so it stops being re-flagged as dead code (last reviewed
+      2026-07-27). It is the "reset this week's list" escape hatch from the
+      A + rails decision and the only repair path if a contribution ever fails
+      mid-write (offline at the wrong moment – nothing retries it). Its doc
+      comment and its RPC `push_plan_to_list` both say so.
+- [ ] **Split the `text/link` token in the DS – it is unreadable on white**
+      Why: #56C91D measures 2.15:1 on white, well below the accessibility
+           minimum. The token whose whole job is "this is a link" cannot be
+           legible only on coloured surfaces.
+      Owner: THE DS PROJECT, not this repo (Thomas, 2026-08-02). The app picks
+           it up on the next `npm run sync-ds-tokens`.
+      Meanwhile: the app has one use left – the wordmark – and it is exempt.
+           Any NEW use reintroduces the defect.
 
-      ```
-      Privacy Policy URL   https://prepeat.app/privacy.html
-      Support URL          https://prepeat.app/support.html
-      ```
+      (measured 2026-07-28
+      while building the website). `text/link` is **#56C91D**, which is
+      **2.15:1** against #FFFFFF – far below the WCAG AA minimum of 4.5:1 for
+      body text. It is the token whose whole job is "this is a link", so it
+      cannot be legible only on coloured surfaces.
+      `text/brand` (#378112) is the same family and measures **4.87:1**, so the
+      website uses that for links and underlines them as well, keeping colour
+      off the critical path. Everything else measured clean: text/default 9.75:1,
+      text/subtle 7.79:1, button label on lime 6.22:1.
+      **SWEPT 2026-08-02, and it WAS in the app** – see finding 6 of the
+      pre-build audit under Known bugs. The onboarding "household is ready"
+      step printed the INVITE CODE in this token on the near-white panel
+      (2.01:1), the worst possible place for it: the code a new user must read
+      accurately to give a family member full access. **That screen is now
+      fixed** (swapped to `text/default`, 9.12:1), and the sweep found no other
+      app surface using `text/link`.
+      **The TOKEN is still wrong, and the fix is a SPLIT – not a retune.**
+      HANDED TO THE DS PROJECT 2026-08-02 (Thomas: *"this is a bigger token
+      rewrite in the DS. Leave it for now and I will fix it in the DS
+      project"*). Nothing more happens in this repo until the DS ships it;
+      the app then picks it up on the next `npm run sync-ds-tokens`.
+      WHY A SPLIT. `text/link` is doing two incompatible jobs: "this is
+      tappable" (needs to be dark enough to read – #56C91D is 2.15:1 on white,
+      a real accessibility defect) and "this is the brand" (the lime full stops
+      in the welcome wordmark, which want to stay bright). Retuning the single
+      token fixes links and silently darkens the brand mark – trading one
+      problem for another, and the kind of change nobody notices until it has
+      shipped.
+      THE SHAPE, which needs no invention because the website already solved
+      it: links there use `text/brand` #378112 with an underline, precisely
+      because lime failed on white. So –
+      - links point at `text/brand` (#378112, measures 4.55:1 on #F8F7F7 and
+        4.87:1 on white – already the website's answer),
+      - lime #56C91D survives unchanged under a name that says what it is for
+        (a brand accent, not a link),
+      - the wordmark periods point at THAT, and the welcome screen looks
+        identical to today.
+      Until it lands, any NEW use of `text/link` in the app reintroduces the
+      defect – the app currently has exactly one, the wordmark, which is
+      exempt (see the decided item under the pre-build audit).
+- [ ] **Repoint `contrast-text` in the prep-eat brand – it is wired to the wrong colour**
+      Why: DS hygiene. It aliases the dark ink where the sebell brand has
+           near-white.
+      Where: in FIGMA, not in code – the token exports are generated, so a
+           hand-edit would be overwritten.
+      Urgency: none. Nothing in the app consumes the affected tokens today.
 
-      The github.io address now 301-redirects to prepeat.app, so do not use it
-      anywhere. `www.prepeat.app` and plain `http://` both redirect to the
-      canonical https apex.
-      - [x] **prepeat.app – DONE 2026-07-29.** Certificate `CN=prepeat.app`
-            covering apex + www, valid to 27 Oct 2026, Enforce HTTPS on.
-            - **Order matters, and the first instinct was wrong.** GitHub is
-              explicit: claim the domain on the REPO first, then point DNS. Do
-              it the other way and there is a window where anyone on GitHub can
-              attach the name to their own Pages site. The cost of the correct
-              order is that the site is briefly dark, which was free here
-              because nothing pointed at it yet.
-            - **Porkbun DNS, as changed** (there were never any A records to
-              delete – Porkbun parks via ALIAS):
-              - `ALIAS prepeat.app` → `thomassebell.github.io` (was
-                pixie.porkbun.com). Porkbun supports ALIAS at the apex and
-                GitHub accepts it – one edit beside the mail records instead of
-                adding four A records, which is the safer operation.
-              - `CNAME www.prepeat.app` → `thomassebell.github.io` (new)
-              - deleted the parking wildcard `CNAME *.prepeat.app`
-              - all 7 mail records untouched and re-verified afterwards
-              Apex now flattens to GitHub's four IPs (185.199.108-111.153),
-              identical across Google, Cloudflare and Quad9.
-            - ⚠️ **`.app` is HSTS-preloaded**, so browsers refuse to fall back
-              to HTTP. Until the certificate exists the domain is dark in a
-              browser even though GitHub IS serving it – `curl http://` returns
-              200. Confirmed not a misconfiguration: no CAA record blocks Let's
-              Encrypt, DNS is stable, and the TLS error is simply GitHub
-              answering with its default `*.github.io` certificate.
-            - ⚠️ **The certificate genuinely got stuck, and the fix is worth
-              remembering.** It never arrived on its own – not in 30 minutes,
-              not in 2 hours, not overnight. The tell was that
-              `https_certificate` was ABSENT from the Pages API response rather
-              than showing a pending state: provisioning had never STARTED, as
-              opposed to being slow. Everything else checked out (no CAA record
-              blocking Let's Encrypt, DNS stable across three resolvers, GitHub
-              serving the site fine over plain HTTP), which is what made it
-              clear the problem was on GitHub's side, not in the DNS.
-              **Fix: remove the custom domain and re-add it** (`PUT
-              .../pages -f cname=""` then `-f cname=prepeat.app`). The field
-              appeared immediately as `authorization_created`, then `approved`
-              within a minute of triggering a fresh build. The rapid toggle left
-              `status: errored` – a `POST .../pages/builds` cleared it.
-              Do NOT reach for this while provisioning might still be in flight;
-              it resets the queue position. Only once the field is missing
-              entirely and hours have passed.
-              Rollout across GitHub's edge nodes is not instant: for a minute
-              some paths returned 200 and others failed. Not a fault, just wait.
-            - [x] **Enforce HTTPS ON**, verified: `http://` → 301 → https, and
-              `www` → 301 → apex.
-            - [x] Mail re-verified AFTER all DNS changes: both root MX, root
-              SPF, Resend DKIM, send.prepeat.app SPF + MX, and DMARC all intact.
-      - [ ] **Two copies of the privacy policy exist** –
-            `docs/privacy-policy.md` here (where it was authored) and
-            `privacy.html` in the web repo (the one that legally matters).
-            Change one, change the other. Worth collapsing to one source if it
-            ever drifts in practice.
-      - [x] **A THIRD copy existed and was deleted, 2026-07-28.** The app repo
-            had a `gh-pages` branch quietly serving its own landing page and
-            `privacy/index.html` – built in an earlier session for App Store
-            submission, and never mentioned in this backlog. So two privacy
-            policies with different contents were live on the internet at once,
-            the older one naming two processors instead of three and giving the
-            superseded contact address. That is the worst category of thing to
-            have a stale public copy of.
-            Claude's pre-launch audit MISSED it: the audit read the docs and the
-            app config but never asked GitHub what the account was already
-            publishing, and concluded "you need a website" while one existed.
-            `gh repo list` + the Pages API found it in seconds. **Check what is
-            already deployed before concluding something is missing.**
-            Branch deleted (tip was `d41c6f9`), Pages deactivated on that repo,
-            URL confirmed 404. Note it did NOT self-retire on the username
-            rename as first predicted – GitHub rebuilt it under the new name,
-            and it took the branch deletion plus a CDN expiry to actually go.
-      - **IMPROVISED, flagged per the 2026-07-17 rule**: no Figma frames exist
-            for any web page. They are typographic document pages assembled from
-            DS tokens, deliberately restrained – a real marketing landing page
-            is a design job and was NOT invented here. The index is minimal on
-            purpose: enough that the domain does not 404.
-      Note this survived the sharing deferral: dropping share from v1.0 did not
-      remove the need for a web presence, it only shrank it – v1.0 needs two
-      static pages, no database and no share tokens, where the v1.1 share page
-      needs the rest. Build the small one now and the share page grows into it.
-      **PLAN, settled 2026-07-28: neither piece costs anything new. Do not buy
-      a one.com plan for this.** Thomas asked whether his paid one.com account
-      could serve – it could, but only makes sense if it ALREADY includes web
-      hosting + mail; buying an upgrade would be paying for two things he has
-      for free:
-      - [ ] **Pages → GitHub Pages.** Free for public repos (this repo is
-            public), custom domain, free HTTPS. Serves the privacy policy and a
-            support page as static HTML. Suggest a SEPARATE small repo
-            (`prepeat-web`) rather than this one, so the site does not rebuild
-            on every app commit and the app's history stays clean.
-      - [ ] **Inbound mail → Porkbun email forwarding.** Free, up to 20
-            addresses per domain, already included with prepeat.app. Forward
-            hello@prepeat.app → thomas@sebell.dk and support requests stop
-            vanishing.
-            **Caveat worth knowing:** forwarding delivers TO your inbox, but a
-            reply goes out as thomas@sebell.dk, not as hello@prepeat.app. A user
-            writes to the app and gets an answer from a stranger's personal
-            address. Fixing that needs a real hosted mailbox – Porkbun's own
-            hosted email is a few dollars a month, or one.com IF the plan
-            already covers it. Cheap either way, and it can wait until somebody
-            actually writes in.
-      - **Keep DNS at Porkbun** (it runs on Cloudflare) and add records there.
-        Do NOT move nameservers – that means re-creating the Resend records
-        elsewhere, and a mistake there stops sign-in for everyone. Inbound mail
-        (MX) and outbound (Resend) do not conflict; they are different record
-        types. The one collision risk is SPF – see the email decision in the log
-        below, one record only, both senders inside it.
-      Fit for the v1.1 share page too, with one caveat: static hosting plus
-      client-side Supabase calls would render a recipe fine, but **link
-      previews** (the card that appears in WhatsApp/iMessage) need per-recipe
-      Open Graph tags in the served HTML, which a purely client-rendered page
-      cannot produce. For a feature whose whole point is being passed between
-      phones, that preview matters – so the share page needs either
-      pre-generated HTML per share or a small server. Decide when share is
-      designed, not now.
-- [x] **Custom SMTP is configured – checked 2026-07-28, NOT a blocker.**
-      Supabase's built-in sender would have been (2 messages/hour, no SLA,
-      team addresses only – *"We urge all customers to set up custom SMTP
-      server"*), and since every sign-in is an emailed code, the default sender
-      would have meant the app simply did not work for the public. It is on:
-      **Resend** (smtp.resend.com:465), sending as **hello@prepeat.app**, sender
-      name "Prep+Eat", minimum 60s between codes to one user. So prepeat.app is
-      already carrying live DNS records, which shortens the website item below.
-      - [ ] **The Resend free tier caps at 100 emails/DAY** (3,000/month, one
-            domain). One sign-in = one email, so 100/day is fine for the family
-            and thin for a launch spike – and when it is hit, new users cannot
-            get in at all, which is the same failure mode as the default sender
-            just at a higher threshold. Decide before launch whether to move to
-            Pro ($20/mo, 50,000) or launch on Free and watch it.
-- [x] **One contact address, settled 2026-07-28: `hello@prepeat.app`.** All 8
-      references changed and live (privacy-policy.md ×3, privacy.html ×3,
-      support.html, index.html, app-store-listing.md). The app already MAILED
-      from this address; now it is also the one every page tells you to write
-      to, so the GDPR contact, the App Store support channel and the reply-to
-      are a single address on the product's own domain.
-      Why it mattered: the moment that decides whether a stranger trusts you is
-      BEFORE any contact – they get a code from hello@prepeat.app, hit trouble,
-      and the support page used to send them to prepeat@sebell.dk, a domain
-      they had never seen. (Claude first argued the opposite, weighting the
-      reply-from over the inbound direction, and withdrew it.)
-      "Thomas Sebell, Denmark" stays as the named data controller in the policy –
-      that is correct and legally required; only the contact address moved.
-      - [x] **DONE 2026-07-28: Porkbun free email forwarding is live.**
-            `hello@prepeat.app` → `prepeat@sebell.dk`, a mailbox Thomas created
-            for the purpose – so replies go out as prepeat@sebell.dk rather than
-            his personal thomas@, which is a better outcome than the plan
-            assumed. Free, up to 20 forwards, included with the domain.
-            **Deliberately NOT the $24/year hosted mailbox.** Buy that when the
-            reply-from address actually confuses somebody, not before; it is a
-            toggle in the same account.
-            (one.com was ruled out entirely – it does not support .app domains.
-            No loss: GitHub Pages does not care about the TLD.)
-      - [x] **DNS verified after the change, 2026-07-28 – NOTHING BROKE, and
-            the reason is worth keeping.** Enabling forwarding DID create a root
-            SPF record, `v=spf1 include:_spf.porkbun.com ~all` – exactly the
-            thing feared, and contrary to Claude's prediction that a
-            receive-only forward would not add one. It is harmless anyway,
-            because **Resend does not use the root domain for sending**:
-            - `prepeat.app` TXT → `v=spf1 include:_spf.porkbun.com ~all` (new,
-              Porkbun's forwarding)
-            - `send.prepeat.app` TXT → `v=spf1 include:amazonses.com ~all`
-              (Resend's, untouched)
-            - `send.prepeat.app` MX → `feedback-smtp.eu-west-1.amazonses.com`
-            - `prepeat.app` MX → `fwd1/fwd2.porkbun.com` (new)
-            - `resend._domainkey.prepeat.app` → DKIM key, still present
-            - `_dmarc.prepeat.app` → `v=DMARC1; p=none;`
-            **The one-SPF-record rule is per NAME, not per domain.** Resend's
-            envelope return-path is `send.prepeat.app`, so its SPF is checked
-            against that subdomain and never against the root. Two records, two
-            names, no collision. DMARC aligns twice over – by DKIM on the root,
-            and by relaxed SPF alignment from the subdomain.
-            **Keep the rule anyway**: anything that ever adds a second SENDER on
-            the ROOT (a newsletter tool, a hosted mailbox that sends) must go
-            into the root's single record beside Porkbun's include – it cannot
-            have its own. Re-run `dig +short TXT prepeat.app` after any mail
-            change.
-      - **Bonus finding, feeds the residency question above**: that bounce MX is
-            `eu-west-1` – Ireland. Resend is handling this domain's mail in an
-            **EU region**, which is evidence (not proof) that sign-in emails are
-            processed inside the EU rather than the US. Good for the privacy
-            policy's data-location paragraph; still confirm it in Resend's own
-            terms before treating it as settled.
-- [ ] ⚠️ **Keep the Apple reviewer's demo mailbox working**
-      Why: the app signs you in with an emailed code, so a reviewer needs a
-           real mailbox they can open. This is the reviewer's very first
-           action, and the one thing that turns a week in the queue into a
-           rejection plus another week.
-      Status: built, seeded and CONFIRMED WORKING 2026-08-07. Open only
-           because it needs re-checking before each submission – the demo
-           week is dated, so re-run the seed close to submitting.
-      Do not: use the Postgres test-OTP trigger. It writes into Supabase's
-           internal auth schema, is a permanent known-code backdoor, and rots
-           silently. Fallback only if Apple pushes back.
+      (diagnosed 2026-07-27):
+      in the **prep-eat** brand `color/text/contrast-text` aliases
+      `{color.text.primary}` – i.e. the dark ink #4F4230 – where the **sebell**
+      brand has it as a literal near-white #FBFBF9. That asymmetry between the
+      two brand modes is the wiring slip; Figma renders near-white, so the
+      export is what is wrong. `figma-exports/*.tokens.json` are generated FROM
+      Figma, so hand-editing them would be overwritten – the variable has to be
+      repointed in the Figma file, then re-exported and rebuilt.
+      NO EFFECT ON THE APP TODAY: the only contrast-text the app consumes is
+      `error.contrast-text` (#FFFFFF), which is correct in both brands. Nothing
+      uses text/success/warning/info contrast-text. So this is DS hygiene, not
+      a bug in Prep+Eat, and it can wait for the next DS pass.
 
-      `src/lib/auth.tsx:58` uses
-      `signInWithOtp` – a one-time code emailed to you, no password anywhere.
-      A reviewer handed an email address cannot receive that code, and offering
-      to relay it by hand does not pass review.
-      **Researched 2026-07-27: Supabase has NO fixed test-OTP for email.** The
-      feature exists for SMS only (`auth.sms.test_otp` maps a phone number to a
-      fixed code); there is no `auth.email.test_otp`, in the CLI config or the
-      dashboard. The community workaround is a Postgres trigger that overwrites
-      `auth.users.recovery_token` with a SHA224 hash of a known code and
-      backdates `recovery_sent_at` past the 60s rate limit. **Rejected as the
-      plan**: it writes into Supabase's internal `auth` schema, which is
-      undocumented and changes without notice (the discussion thread already
-      has it breaking after an update), it is a permanent known-code backdoor,
-      and it is load-bearing for review while never exercised day to day – so
-      it rots silently and fails at submission, which is the worst place to
-      find out.
-      **Plan instead: a real mailbox the reviewer can open.** A dedicated demo
-      address on sebell.dk with webmail; App Review notes give the address plus
-      the webmail login and one line of instruction. No auth-schema tampering,
-      nothing shipped in the app, nothing to rot. If Apple pushes back, the
-      trigger is the fallback, not the opening move.
-      - [x] **Demo account built and seeded, 2026-07-30.** Mailbox
-            `appreview@sebell.dk` created (webmail, its own password – shared
-            with Apple only, never committed to this public repo). Bootstrapped
-            in the app: signed in, name set, household **"Demo Kitchen"**
-            created. Then seeded server-side with 9 recipes + a planned CURRENT
-            and NEXT week + shopping lists (generator
-            `scratchpad/gen-demo.ts` → the SQL, re-runnable; the weeks are
-            `date_trunc('week', now())` so re-run it close to submission to keep
-            "this week" populated). Verified recipes 9, entries 14. SEPARATE
-            from "The Hanson Kitchen" (Thomas's own account, used only for the
-            App Store screenshots) – the reviewer never sees the real household.
-            **App Review Information ENTERED in App Store Connect 2026-07-31:**
-            sign-in required = yes, username `appreview@sebell.dk`, mailbox
-            password, contact (Thomas Sebell + phone + thomas@sebell.dk) and the
-            §3 Notes (with the real webmail URL + password) all filled and saved.
-            - [x] **THE WHOLE REVIEWER SIGN-IN PATH IS CONFIRMED WORKING,
-                  2026-08-07** (Thomas: *"All mailboxes and access is tested and
-                  passed"*). The `appreview@sebell.dk` mailbox is live, the
-                  webmail credentials Apple holds do sign in, and a one-time code
-                  arrives. This was the last prerequisite on Thomas and the one
-                  thing that could have turned a week in the queue into a
-                  rejection plus another week – the reviewer's very first action
-                  is a sign-in the app cannot complete for them.
-                  Checked ahead of any nudge to Apple deliberately, so that
-                  hurrying the review along could not hurry it into a failure.
-- [x] **Screenshots** – 4 iPhone 6.5"/6.9" screenshots (Weekly plan, Recipes,
-      Shopping list, Household) uploaded to App Store Connect (verified
-      2026-07-31). iPhone-only build confirmed – App Store Connect shows NO iPad
-      screenshot requirement, so the iPad tab is correctly empty. The
-      `app-store-assets/screenshots/` folder stays gitignored (real household
-      data, public repo).
-- [x] **App Privacy card in App Store Connect – ENTERED and PUBLISHED
-      2026-07-31.** Declared as "Data Linked to You": Email Address, Name,
-      Photos or Videos, Other User Content, User ID – every one for App
-      Functionality, none for tracking, so the label has NO "Data Used to Track
-      You" section, matching the listing's "NO ADS. NO TRACKING." promise.
-      Resolved the CONFIRM: **User ID declared** (conservative, adds no tracking
-      disclosure). Added **"Photos or Videos"** beyond the original draft –
-      the app stores user recipe photos, a distinct Apple data type, and
-      under-declaring is what gets labels rejected. Privacy Policy URL
-      (prepeat.app/privacy.html) also set. Original draft:
-      [app-store-connect-answers.md](app-store-connect-answers.md).
-- [x] **The remaining App Store Connect paperwork – ENTERED 2026-07-31.**
-      - **Age rating: 4+** (every content question None/No, "Made for Kids" NOT
-        enrolled). Resolved the alcohol CONFIRM = None. Apple's new 2025
-        social-media/UGC questions (which the draft predated) all answered No.
-        **⚠️ The "User-Generated Content = No" answer MUST be revisited when the
-        public recipe-sharing feature ships (v1.1+)** – that turns on real UGC
-        visible to strangers and needs report/block controls (Guideline 1.2).
-      - **Category: Food & Drink.** Subtitle "prep. cook. eat. repeat."
-        Copyright "2026 Thomas Sebell".
-      - **Territory: EU-27 only** – the UK-tagline call, decided EU-only so both
-        the "Prep Eat Repeat" UK registration and Prepear (US/UK/CA/AU) are
-        sidestepped entirely. Price Free, base country Denmark (DKK), manual
-        release. Revisit territory before any US/UK launch.
-      - **Content Rights: No** (does not contain third-party content) – business
-        call, not legal advice: recipe link-import is user-initiated into a
-        private household with attribution + source link. Thomas has no attorney
-        and may not get one; the EU-only territory is the main trademark
-        de-risk, so the attorney is now an expansion-time concern, not a
-        launch gate.
-- [x] **Build 13 shipped to TestFlight, VALID (2026-08-03).** Carries the
-      pre-build audit fixes: #1 (an imported recipe is no longer lost when its
-      photo can't be fetched, and a failed save shows a real error), #5 (the
-      Recipes tab, recipe detail and the shopping week switch all offer "Try
-      again"; Shopping also gained the loading spinner it never had), and #6
-      (the invite code is legible). #2 is NOT in this build – it is migration
-      0025 and has been live for everyone since it was applied the same day.
-      **The App Store review is untouched**: v1.0 is still bound to build 12
-      and was deliberately left alone (Thomas, 2026-08-03, choosing to ship to
-      testers without disturbing the queue). **So v1.0 will launch WITHOUT
-      these four fixes** – plan a 1.0.1 with build 13 or later once v1.0 is
-      approved and released.
-      SUBMIT WENT CLEANLY THIS TIME – no hang, unlike build 12. But note the
-      submit script's closing line printed "Build 12 is VALID" because Apple
-      had not finished processing 13 yet: **that line names the latest build it
-      can SEE, not the one you just shipped.** If the number is not yours, it
-      has not landed. Polling for build 13 specifically found it VALID after
-      3 minutes – much faster than build 12's ~25.
-- [x] **Build 12 shipped to TestFlight, VALID (2026-07-30).** Supersedes the
-      "ship build 11" item – build 12 carries the Plan-tab retry screen, all
-      the import/parser fixes, migration 0024's behaviour, the ds-check
-      lockdown, and the household-switcher redesign. `autoIncrement` set the
-      number (11 → 12 during the build). Marketing version 1.0.0.
-      NOTE FOR NEXT TIME – the submit CLI hung TWICE (the watchdog killed both
-      local watchers at 600s), yet build 12 landed on App Store Connect anyway
-      ~25 min later: the upload runs on Expo's SERVERS and killing the watcher
-      never stops it. So when a submit stalls, do not rush to retry or to the
-      altool fallback – wait and poll `asc-build-state.mjs` for the specific
-      build number first (a 24-min poll timed out here just before it landed;
-      give it 30-40 min). Apple's VALID is the only truth, exactly as the
-      recurring note says.
-- [x] Export compliance handled – `ITSAppUsesNonExemptEncryption: false` is
-      already in app.json, so submission stops asking every time.
-- [x] In-app account deletion built (guideline 5.1.1(v), required for any app
-      with account creation) – Delete profile, shipped 2026-07-22.
-- [x] **Support address CONFIRMED RECEIVING 2026-08-07** (Thomas: *"All
-      mailboxes and access is tested and passed"*). It is promised in the
-      privacy policy AND the App Store description and is the app's only support
-      channel, so this was a genuine launch gate.
-      **Known and accepted: `hello@prepeat.app` is SLOW to arrive** – Thomas's
-      call that it is not a concern, and the mechanism explains it: the address
-      is a Porkbun FORWARD (MX `fwd1/fwd2.porkbun.com`) rather than a mailbox,
-      so every message takes an extra hop. Worth having written down for two
-      futures: if a user ever reports "I emailed support and heard nothing",
-      slowness is the first thing to rule out rather than a lost message; and if
-      it ever becomes a real problem the fix is a proper mailbox on the domain,
-      not a DNS change.
-- [x] **`prepeat://ds-check` no longer reachable in production (2026-07-30).**
-      The token-debug screen is now development-only: the route redirects to
-      home when `!__DEV__` (a deep link in a Release build goes nowhere) and
-      the hidden tab trigger is only registered under `__DEV__`. Kept for dev
-      use rather than deleted – it is the DS-token verification tool.
-- [ ] **Finish the icon and splash variants**
-      Why: nothing here ships while the app is iOS-only, so this waits for
-           Android and for an iOS 18 appearance pass.
-      Left: no ios-dark / ios-tinted icon variants, and the Android splash
-           still uses Expo's default.
-      Done: the iOS icon, the iOS launch screen, and the Android adaptive icon.
+## Standing – recurring
 
-      iOS app icon + launch screen shipped
-      2026-07-23; the **Android adaptive icon is DONE too** (foreground,
-      background and monochrome art all present in assets/images, contrary to
-      the older note here). Still open: no ios-dark / ios-tinted icon variants
-      (iOS 18+ appearance icons), and the Android splash still uses Expo's
-      splash-icon.png (the Android 12+ centred-icon-in-a-circle system cannot
-      reuse the full-bleed iOS launch image). None of it ships while it is
-      iOS-only.
-
-## Recurring
+Chores with a trigger rather than a finish line. These never get ticked off for good.
 
 - [ ] **After every TestFlight build, sweep the open items and close what shipped**
       Trigger: the build's release notes being written – that is the one moment
@@ -3836,7 +3576,332 @@ missing from it entirely.
            diff `ds-theme.cjs` → walk the affected screens.
       (Agreed 2026-07-12.)
 
-## Decisions log (recent)
+## Record – closed work and decisions
+
+Not work. Kept so a cold thread can pick things up without re-litigating them.
+
+### In flight (built, not yet live)
+
+- [x] **DONE – group a recipe's ingredients under headings like DOUGH and FILLING**
+      Why: imported recipes arrive with those headings as ingredients with no
+           amount, so they land on the shopping list as things to buy.
+      Closed: 2026-08-11, Thomas – *"I'm happy with it."* Built, walked on
+           device 2026-08-07, and shipped to the family in TestFlight builds
+           16 and 17. Migration 0031 is on dev and production.
+      Approved with it: the mid-drag look Claude improvised (the whole dragged
+           section shows the lifted background, since no frame draws a section
+           mid-drag). It was flagged as Claude's call and is now Thomas's.
+      Left behind deliberately: the 16px first-heading spacing, moved to Code
+           debts rather than dropped – see there for why it was not fixed.
+
+      Thomas designed 2026-08-04; Figma `nA8SLN8rhdBov97B1IYxnP` node
+      **121:11255**, "recipe – add recipe". Came out of importing
+      ambitiouskitchen.com's cinnamon rolls.
+      - [x] **Migration 0031 applied to DEV, then PRODUCTION (2026-08-06)** –
+            `recipe_ingredients.is_section`. Backed up first, all 31 migrations
+            replayed onto an empty local database first, and the restore
+            re-verified afterwards (7,249 rows exact). Production came out
+            identical to dev, 0 rows flagged - nothing is backfilled.
+            **SAFE FOR THE PHONES:** additive only, and every installed build
+            selects named columns, so TestFlight build 14 is unaffected.
+      - [x] **⚠️ PRODUCTION HAD NO MIGRATION LEDGER – created 2026-08-06.**
+            Found while applying 0031: `supabase_migrations.schema_migrations`
+            did not exist there, because production's history had been applied
+            by hand through the SQL editor. **`supabase db push` would have
+            treated production as empty and re-run all 31 migrations, including
+            0022, which DROPS columns.** One query to check; not checking would
+            have caused the worst outage this project has had, using a command
+            that looks routine.
+            Fixed rather than worked around. The ledger's 31 rows were derived
+            from the migration FILENAMES, after verifying those were
+            byte-identical to the ledger the CLI itself wrote on the dev project
+            - a copy of a known-good ledger, not a guess. Verified with
+            `db push --dry-run`: *"Remote database is up to date"*, 0 pending.
+            **So production is now pushable like dev**, which ends the
+            hand-application that once half-applied a migration (the SQL editor
+            runs only what is highlighted, 2026-07-30).
+      - [x] **The DATA half works, verified on device 2026-08-06.** Importing
+            ambitiouskitchen's cinnamon rolls now flags DOUGH / FILLING / CREAM
+            CHEESE FROSTING as sections, keeps **"Extra-virgin olive oil"** as a
+            real ingredient (the amountless case that detection could have
+            hidden), and puts **no headings** in the plan snapshot or on the
+            shopping list. Checked in the database, not on the screen.
+      - **⚠️ IT TOOK THREE DEVICE BUILDS, AND THE LESSON IS STRUCTURAL.** The
+            importer was right the whole time; the editor threw the flag away at
+            **six** separate places – the import handoff, the edit load, the
+            sheet's add and edit branches, and BOTH save branches. Each site
+            rebuilt `{ name, quantityText }` by hand, so adding a field to the
+            shared type could not make any of them fail to compile. It passed
+            typecheck, lint, a device build and a careful re-read, twice.
+            **What actually fixed it: making `isSection` REQUIRED on
+            `DraftIngredient` rather than optional.** It found the sixth site
+            within seconds. An optional field is one the compiler cannot help
+            with, and the editor also had a *duplicate local* `DraftIngredient`
+            shadowing the shared one – same name, narrower shape, no complaint.
+            Both are gone; `toDraftIngredients()` is the single conversion.
+            THE RULE: when a shape is built by hand in more than one place, make
+            new fields required and give it one constructor. Vigilance is not a
+            mechanism.
+      - **NAMED "Section", NOT "Category"** (proposed by Claude, agreed by
+            Thomas, corrected in Figma the same day). **"Category" already means
+            the shopping list's aisles** – there is a `CategoryGroup` component,
+            a `Category` type, and draggable category headers on the Shopping
+            screen. Two different "categories", both rendered as a header over a
+            group with a drag handle, with ingredients flowing from one into the
+            other, is a collision users would meet within a minute.
+      - **The four states, all Thomas's calls (2026-08-04):**
+            1. **The first section absorbs what is already there.** It replaces
+               the "Ingredients" header rather than sitting beside it, and the
+               ingredients already listed become part of it.
+            2. **Deleting a section keeps its ingredients** – they become
+               unsectioned rather than being deleted with it.
+            3. **An empty section is allowed** – a heading over nothing is a
+               legitimate state, not something to prevent.
+            4. **Delete every section and the "Ingredients" header comes back.**
+      - **Sheet colour: match the add-meal sheet**, not a DS-wide retune – so
+            no other screens need walking.
+      - **The "Ingredients" header uses the SAME style as a section heading**
+            (`header/display-6`, Montserrat) – Thomas, 2026-08-06, asked because
+            no frame draws "Ingredients" in the new style and guessing would
+            have invented it. It follows from decision 1: the first section
+            *replaces* that line, so they are one slot and it must not change
+            typeface the moment a section appears.
+      - **Reuse, do not rebuild:** `add-meal-sheet.tsx` already has the tab
+            component the design uses (`TabItem`, "Recipes"/…), and section
+            headers want the Shopping screen's drag-handle reorder pattern.
+      - [x] **TRUE SECTION DRAGGING – BUILT 2026-08-07** (deferred 2026-08-06,
+            Thomas: *"for now is fine that every row moves independently"*).
+            A heading now carries its ingredients, and a section can only land
+            on a section boundary.
+            **THE DESIGN QUESTION, decided by Thomas 2026-08-07** from three
+            options. It is not obvious, and the example is why: with
+            DOUGH[flour, water] / FILLING[sugar, cinnamon], dragging FILLING
+            between flour and water would – if a group simply landed where you
+            dropped it – leave **water inside FILLING**, because sections are
+            positional. An ingredient changes section with nobody touching it.
+            So the group **snaps to section boundaries** and that case is
+            unreachable rather than merely unlikely. A single ROW still goes
+            anywhere: dropping an ingredient into another section is how you
+            assign it to one, so that freedom is the feature.
+            **⚠️ THE DEFERRAL'S COST ESTIMATE WAS WRONG, and it is worth knowing
+            why.** The note said groups are variable-height blocks so the drag
+            geometry needed rewriting. Checking the actual Figma numbers
+            (508:13822) says otherwise: a heading is drawn **24 tall with 16 of
+            space either side, so in the body of the list it occupies exactly
+            56 – the same as a row.** The design's rhythm and the code's uniform
+            slots already agreed. A section is not a variable-height block, it is
+            N+1 uniform slots, and the existing integer arithmetic still holds.
+            **LESSON: the estimate was made from the code's shape alone.** Five
+            minutes reading the design's numbers would have shown the geometry
+            was never the problem – and deferring on a cost that was not real is
+            a decision made on a wrong premise, even though deferring to get the
+            DESIGN answer was right.
+            - [x] **The arithmetic is its own module, and it is TESTED BY BEING
+                  RUN.** `src/lib/reorder.ts` has zero runtime imports so
+                  `scripts/check-reorder.mjs` transpiles and imports the REAL
+                  functions – the recipe-import trick from 2026-08-04, and the
+                  answer to the reconciler lesson that a mirror written from the
+                  same wrong model agrees with the bug. 24 checks pass.
+                  **The load-bearing check is not about sections at all:**
+                  *"single-row moves match the old splice exactly, every
+                  from/to"*, brute-forced over every combination. THREE screens
+                  share this sheet – ingredients, instructions and shopping
+                  categories – and the last two have no sections, so the real
+                  risk in this change was regressing them. Also proved: every
+                  legal section move leaves each section owning exactly the rows
+                  it started with, a section can be dropped above loose leading
+                  rows, and an empty section (allowed, decision 3) moves alone.
+            - [x] **One rule, one place.** The "did this actually move anything"
+                  test lives only in `reorder.ts`; the gesture calls back to the
+                  JS thread rather than carrying its own copy. Deliberate – one
+                  shape rebuilt by hand in two places is exactly how the
+                  isSection bug survived three device builds on 2026-08-06.
+            - [x] **WALKED AND PASSED ON DEVICE 2026-08-07.** A heading carries
+                  its ingredients; a section dropped inside another section
+                  snaps out ("works perfectly"); a single ingredient still moves
+                  into another section; and the two sectionless lists –
+                  instructions and shopping categories – behave exactly as
+                  before, which was the real risk in the change.
+            - [x] **⚠️ THE WALK FOUND A FLICKER ON DROP THAT WAS THREE MONTHS
+                  OLD** (Thomas: *"a weird jumping animation when you let go"*,
+                  reported on BOTH a section and a single row – which is the
+                  clue that it was not about sections).
+                  **PRE-EXISTING, proved by `git show 0a7a659^` rather than
+                  assumed:** the idle branch of the animated style returned
+                  `withTiming(0, 140)`, so the moment a drag ended the row you
+                  had just dropped ANIMATED back towards its old position over
+                  140ms while its slot jumped to the new one in the same
+                  instant. Two movements at once. A single row doing it survived
+                  three months and several device walks; a whole section doing it
+                  was impossible to miss. **The group feature did not cause this
+                  bug, it made it visible** – worth remembering as an argument
+                  for building the thing that exercises a path harder.
+                  **IT TOOK THREE GOES, AND THE FIRST TWO WERE THE WRONG KIND OF
+                  FIX.** Removing the 140ms animation helped and left a
+                  one-frame flicker; re-ordering the resets by hand did not fix
+                  that. Both were attempts to win a RACE by guessing, and a race
+                  won by guessing is one that comes back.
+                  **THE REAL CAUSE: a row's position comes from TWO sources** –
+                  React layout picks its slot (`top`), the shared values pick its
+                  offset (`translateY`). On a drop both change, and nothing makes
+                  them land in the same frame. Clear the offset early and it
+                  paints at the old slot; clear it late and it paints at the new
+                  slot still offset.
+                  **THE FIX: `useLayoutEffect`, keyed on the ORDER**, which is
+                  the one place React guarantees to run after the commit that
+                  changed the order and before it is painted – so the new slot
+                  and the cleared offset are painted together BY CONSTRUCTION
+                  rather than by timing. It also degrades well: a slow parent now
+                  leaves the block where it was dropped (where it belongs)
+                  instead of flickering elsewhere.
+                  The no-move drop is the one path it cannot cover, since nothing
+                  reorders and no effect fires, so that path cleans up after
+                  itself – walked separately and passes.
+                  LESSON: when a visual bug survives two timing fixes, stop
+                  adjusting the timing. Ask what two things are disagreeing, and
+                  make one of them wait for the other by construction.
+            - [x] **Cosmetic – MOVED to Code debts 2026-08-11**, so it is
+                  recorded as a known deviation rather than an open task. The
+                  design gives the FIRST heading no space above it, so a real
+                  list is 16px shorter at the top than uniform slots draw.
+            - [x] **Improvisation ACCEPTED by Thomas 2026-08-11** – *"I'm happy
+                  with it."* The whole dragged section shows the lifted look
+                  (the pale background a dragged row already had), rather than
+                  only the heading under the finger. No frame draws a section
+                  mid-drag; this was the minimal consistent extension of an
+                  existing treatment, offered as Claude's call and now signed
+                  off as design.
+      - **Sections are REORDERABLE** – the Figma header carries a drag_handle,
+            and there is one "Add ingredient" button at the end of the list
+            rather than one per section.
+      - [x] **Wording settled and corrected in Figma 2026-08-04.** The sheet
+            **title follows the tab** – "Add ingredient" / "Add section"
+            (`496:5765`), rather than one neutral title for both. And
+            **placeholders all carry "e.g."**: "e.g. Cherry tomatoes" beside
+            the existing "e.g. 250g".
+            The Section field's placeholder is **"e.g. Sauce"** (Thomas, drawn
+            in Figma the same day). Claude proposed "e.g. Dough" from the
+            ingredient field and Thomas rejected it, rightly: it only makes
+            sense to someone who bakes, and it repeated the word the filled
+            frame already used, so the example taught nothing. "Sauce" is a part
+            of the dish in almost any cuisine. **The rule for any future
+            placeholder here: one concrete example, universal rather than
+            domain-locked, and never the same word the filled state shows.**
+
+- [x] **Build 14 shipped to TestFlight, VALID (2026-08-03).** Carries the
+      leftover move and the two checkbox fixes; cut from the code as it stood
+      at 15:39, so the "1 liter / 2 liters" app-side work committed after that
+      is NOT in it. **The App Store review is untouched** – v1.0 stays bound to
+      build 12.
+      **I CALLED THIS WRONG AND IT IS THE LESSON OF THE DAY.** Three submits
+      each sat on "Submitting" and were killed by the watchdog at 600s. I
+      queried App Store Connect after the third, saw build 13 as newest, and
+      concluded "Apple has never received 14" – and wrote it here. Thomas then
+      found version 14 on his phone. A re-query showed build 14 VALID, uploaded
+      17:06 CEST: one of the "stalled" submits HAD succeeded, the CLI hung
+      after the upload rather than during it, and Apple was still processing
+      when I looked.
+      SO THE OLD RULE NEEDED SHARPENING. "Trust App Store Connect, not the
+      CLI spinner" (2026-07-25) is right but incomplete: **ASC's answer is
+      also a point in time.** A build missing right after a stall means "not
+      processed YET", never "never arrived". The upload lands minutes before
+      Apple lists it, so one negative check proves nothing – poll for 10-15
+      minutes before concluding anything, and never write a conclusion into
+      the backlog off a single query.
+      The watchdog is still worth keeping (it stops a genuine 90-minute hang),
+      but its message should say "check ASC in a few minutes" rather than
+      implying failure. Retrying stays free either way – Apple ignores a
+      duplicate upload of a build number it already has.
+      Submission ids, if the server-side logs are ever worth reading:
+      `031c4a16-7106-4a72-b190-a4379a3daeb0`,
+      `59ac675d-75ec-425b-8b8f-be95d71d4908`,
+      `8676ad2c-9c50-4481-925d-222237a502c8`.
+
+- [x] **DONE – move a past week's unbought shopping items to this week**
+      Why: things you did not get round to buying should not be stranded on a
+           week that has ended.
+      Closed: 2026-08-11. Shipped to the family in TestFlight build 15
+           (2026-08-04), and the one thing holding it open – the inherited
+           frozen-week bug – was fixed the same day and walked on device
+           2026-08-07.
+      ⚠️ It stayed open for a week for no reason. Known bug 3's entry says in
+           its own words that it closes this item; nobody carried that back
+           here. The mirror of the stale-fix lesson under Known bugs – **a fix
+           that names what it closes has to go and close it.**
+
+      Thomas 2026-08-03; Figma 434:7148 "transfer items from last week". Built
+      the same day it was designed. A past week whose list still has unchecked
+      items ends in a full-width **"Move all items to this week"**; pressing it
+      empties that week onto the current one and offers the undo toast.
+      Graduated out of Ideas – the decisions that shaped it are in the log below.
+      - [x] **APPLIED 2026-08-03** (`0026_move_week_leftovers.sql`), verifying
+            select returned move_fn and undo_fn both true.
+            **SAFE FOR THE PHONES** (the 0022 lesson): it only ADDS two
+            functions – nothing dropped, no signature changed – so TestFlight
+            build 13 is unaffected by it. Note the asymmetry, the usual one:
+            the server half is live for everybody now, but nothing can reach
+            it until the app half ships in a build, so no phone behaves
+            differently yet.
+      - [x] **VERIFIED ON DEVICE 2026-08-03** – "it worked perfectly"
+            (Thomas, on the dev build installed 14:53). Still only on the dev
+            build: SHIPPED to the family in TestFlight build 15 (2026-08-04).
+      - [x] **The pressed state is the DS's, not an improvisation** (checked
+            2026-08-03 after Thomas pushed back on it being flagged at all,
+            and he was right). `button/solid/fill/*` defines
+            enabled #83E651 / pressed #56C91D with the label unchanged at
+            #4F4230, and that is exactly what is built. The screen's frames
+            not drawing a pressed state is normal – states live on the DS
+            component, not on every frame that uses it. LESSON: before
+            flagging a component state as a design gap, look it up in
+            `ds-theme.cjs` and the DS component; a gap is a state nothing
+            defines anywhere, not a state this particular frame did not draw.
+      - [x] **PINNED above the tab bar** (Thomas, 2026-08-03), resolving the
+            one gap the frames left. They only show short weeks, where the
+            button sits at the bottom of the list area either way – but a week
+            with twenty leftovers would have hidden it below the fold, the
+            same trap the recipe Save button fell into on a long recipe
+            (2026-07-28). So it reuses that footer exactly: top border in
+            `border/subtle`, the screen's own background so rows scroll under
+            rather than through, and the scroll area drops its tab-bar
+            clearance while the footer is there. Note the footer chrome itself
+            is still undrawn in Figma on both screens – worth a frame if a
+            third one ever needs it.
+      - [x] **It inherited known bug 3** (frozen "this week") – **fixed
+            2026-08-04 with bug 3 itself, walked on device 2026-08-07.** The
+            move used to target the current week as computed at app launch, so
+            an app left open across Sunday midnight would push into what was by
+            then last week. It now reads the live week from the shared clock.
+            (The worst case was always a move that did nothing rather than a
+            wrong one – the server refuses to move backwards.)
+
+- [x] **Shopping checkbox sat between the two lines of a row** – found by
+      Thomas on device 2026-08-03, fixed the same day. The checkbox and the
+      text column were centred against each other, so on every row WITH an
+      amount the box landed in the gap between name and amount; single-line
+      rows looked right, which is why it survived. The design's `checkboxField`
+      is `items-start` – box against the name, amount hanging below. The two
+      lines also lacked their designed leadings (label 24, hint 16), so the
+      name's line box was not 24 tall for the 24-tall checkbox slot to centre
+      on, and rows missed the designed 56/72 heights.
+      SHIPPED to the family in TestFlight build 15 (2026-08-04).
+      - [x] **Checkbox now binds the forms/* recipe** (Thomas asked for it the
+            same day): `forms/background/default` + `forms/border/enabled`
+            unchecked, `forms/surface/active` checked – the same group the
+            shared text input already uses. Only the unchecked box changes on
+            screen; the checked fill is the same #56C91D either way, but the
+            right token name is what survives the next DS retune.
+      - [x] **NOT A BUG: the square checkbox is the DEFAULT brand.** I read
+            the Figma output as specifying radius 0 (it emits a radius for the
+            initials badge beside it and none for the checkbox) and flagged
+            the app's `radius/xsmall` as a drift. Thomas, same day: "The
+            square check box is the default brand, not the Prep+Eat brand."
+            The rounded box was right; nothing changed.
+            LESSON, the 2026-07-22 one again in a new coat: geometry resolves
+            per brand just like colour and type, so the ABSENCE of a property
+            in `get_design_context` is as brand-dependent as its value. A
+            missing radius is not evidence of radius 0. `ds-theme.cjs` decides.
+
+### Decisions log (recent)
 
 - **2026-08-07 – NOTHING TO REORDER MEANS NO DRAG HANDLE, and the app was
   drawing one anyway.** Walked and confirmed the same day.

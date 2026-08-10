@@ -21,7 +21,7 @@ const OUT = join(root, 'docs/backlog-view.html')
 
 // Sections that are records rather than work, so they never carry open items
 // worth scanning. Kept as a list rather than a guess about the heading text.
-const SKIP_SECTIONS = new Set(['Decisions log (recent)'])
+const SKIP_SECTIONS = new Set(['Record – closed work and decisions'])
 
 // The waiting-on-Thomas index inside backlog.md is written by this script, so
 // it must not be parsed back in as content.
@@ -58,7 +58,7 @@ for (const line of lines) {
   }
   if (!section) continue
 
-  const h3 = /^### (.+)/.exec(line)
+  const h3 = /^#{3,4} (.+)/.exec(line)
   if (h3) {
     pushItem()
     sub = h3[1].trim()
@@ -107,8 +107,9 @@ for (const line of lines) {
 }
 pushItem()
 
-// Strip the backlog's own how-to-write section – it is guidance, not work.
-const live = sections.filter((s) => !s.title.startsWith('⚠️ HOW TO WRITE'))
+// Strip the file's own guidance sections – they are rules, not work, and the
+// worked example inside them parses as an item.
+const live = sections.filter((s) => !s.title.startsWith('⚠️'))
 
 const esc = (s) =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
