@@ -2045,7 +2045,12 @@ belongs in Figma – logged here, not improvised.
 
 ### Two additions from the code that the panel could not see (Claude, 2026-08-10)
 
-- [ ] **`meal_type` is in the schema but unused, so Henrik is more right than the
+- [x] **CLOSED 2026-08-10, Thomas: *"This is my choice – close it!"*** The flat
+      unlabelled day is a decision taken 2026-07-16 and recorded in
+      `0007_meal_plans.sql`, not an oversight. Henrik's objection stands as a
+      description of the product; the product is deliberate. Reopen only if
+      breakfast/lunch/dinner is ever wanted for its own sake.
+      **`meal_type` is in the schema but unused, so Henrik is more right than the
       report allows.** The report credits the app with "several meals per day",
       which is true – but a day is a flat, unlabelled list (decided 2026-07-16,
       `0007_meal_plans.sql`). A user can put three meals on Tuesday and cannot say
