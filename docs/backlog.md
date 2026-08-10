@@ -48,12 +48,17 @@ invite. Check betaTesters vs Users-and-Access before blaming email or spam.
 
 ## In flight (built, not yet live)
 
-- [ ] **Group a recipe's ingredients under headings like DOUGH and FILLING**
+- [x] **DONE – group a recipe's ingredients under headings like DOUGH and FILLING**
       Why: imported recipes arrive with those headings as ingredients with no
            amount, so they land on the shopping list as things to buy.
-      Left: two cosmetic gaps only – the first heading's spacing, and a
-           mid-drag look Claude invented. Both marked below.
-      Size: built and walked on device; waiting on a build to reach a phone.
+      Closed: 2026-08-11, Thomas – *"I'm happy with it."* Built, walked on
+           device 2026-08-07, and shipped to the family in TestFlight builds
+           16 and 17. Migration 0031 is on dev and production.
+      Approved with it: the mid-drag look Claude improvised (the whole dragged
+           section shows the lifted background, since no frame draws a section
+           mid-drag). It was flagged as Claude's call and is now Thomas's.
+      Left behind deliberately: the 16px first-heading spacing, moved to Code
+           debts rather than dropped – see there for why it was not fixed.
 
       Thomas designed 2026-08-04; Figma `nA8SLN8rhdBov97B1IYxnP` node
       **121:11255**, "recipe – add recipe". Came out of importing
@@ -221,18 +226,17 @@ invite. Check betaTesters vs Users-and-Access before blaming email or spam.
                   LESSON: when a visual bug survives two timing fixes, stop
                   adjusting the timing. Ask what two things are disagreeing, and
                   make one of them wait for the other by construction.
-            - [ ] **Cosmetic, found while measuring and NOT fixed here:** the
+            - [x] **Cosmetic – MOVED to Code debts 2026-08-11**, so it is
+                  recorded as a known deviation rather than an open task. The
                   design gives the FIRST heading no space above it, so a real
-                  list is 16px shorter at the top than uniform slots draw. Every
-                  later heading matches exactly. Too small to justify breaking
-                  the uniform geometry that makes the drag maths sound.
-            - [ ] **Improvisation flagged:** the whole dragged section now shows
-                  the lifted look (the pale background a dragged row already
-                  had), rather than only the heading under the finger. No frame
-                  draws a section mid-drag. It is the minimal consistent
-                  extension of an existing treatment rather than a new one, but
-                  it is Claude's call, not Thomas's – worth a frame if it reads
-                  wrong.
+                  list is 16px shorter at the top than uniform slots draw.
+            - [x] **Improvisation ACCEPTED by Thomas 2026-08-11** – *"I'm happy
+                  with it."* The whole dragged section shows the lifted look
+                  (the pale background a dragged row already had), rather than
+                  only the heading under the finger. No frame draws a section
+                  mid-drag; this was the minimal consistent extension of an
+                  existing treatment, offered as Claude's call and now signed
+                  off as design.
       - **Sections are REORDERABLE** – the Figma header carries a drag_handle,
             and there is one "Add ingredient" button at the end of the list
             rather than one per section.
@@ -1853,6 +1857,16 @@ Closed 2026-07-27:
       choose.
 
 ## Code debts (small, known, deliberate)
+
+- [ ] **The first ingredient heading sits 16px lower than the design draws it**
+      Why not fixed: every LATER heading matches Figma exactly. Only the first
+           one differs, because the design gives it no space above and the code
+           draws every slot the same height.
+      Cost of fixing: the uniform slot height is what makes the section-drag
+           arithmetic provably correct (`src/lib/reorder.ts`, 24 checks). Losing
+           it to win 16px is a bad trade.
+      Status: recorded 2026-08-11 when the sections work closed. Reopen only if
+           it reads wrong on a long recipe.
 
 - [ ] **Clean up recipes imported before 2026-07-29**
       Why: the parser used to leave whole instructions in the ingredient name
