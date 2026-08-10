@@ -8,19 +8,22 @@ export default function AppTabs() {
       backgroundColor={ds.colors.surface.neutral.white}
       tintColor={ds.colors.surface.primary.main}
       labelStyle={{ selected: { color: ds.colors.surface.primary.main } }}>
-      {/* Recipes first, ahead of Plan (Thomas, 2026-08-10). The panel's
-          pre-mortem found that what beat Prep+Eat shared one property above all:
-          NO PLAN HAS TO EXIST FIRST. Opening on an empty week asks for seven
-          decisions; opening on Recipes asks for one thing, and "+ Add meal" is
-          hollow until there is something to add. */}
-      <NativeTabs.Trigger name="(recipes)">
-        <NativeTabs.Trigger.Label>Recipes</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon sf={{ default: 'book', selected: 'book.fill' }} />
-      </NativeTabs.Trigger>
-
-      <NativeTabs.Trigger name="plan">
+      {/* Plan first, and Plan is the "/" index route – which is what decides
+          the tab the app opens on (checked against the Expo docs 2026-08-10:
+          trigger order alone does NOT decide it). Most sessions are "what's for
+          dinner" or "I'm at the shop", so Plan is the right default for a
+          RETURNING user. The first-run case is handled separately – see the
+          empty-cookbook item in the backlog – because a reader with no recipes
+          needs Recipes, and that is a question about their data, not about the
+          tab bar. */}
+      <NativeTabs.Trigger name="(plan)">
         <NativeTabs.Trigger.Label>Plan</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon sf={{ default: 'calendar', selected: 'calendar' }} />
+      </NativeTabs.Trigger>
+
+      <NativeTabs.Trigger name="recipes">
+        <NativeTabs.Trigger.Label>Recipes</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon sf={{ default: 'book', selected: 'book.fill' }} />
       </NativeTabs.Trigger>
 
       <NativeTabs.Trigger name="shopping">

@@ -21,16 +21,12 @@ export default function AppTabs() {
       <TabSlot style={{ height: '100%' }} />
       <TabList asChild>
         <CustomTabList>
-          {/* Recipes first – see the note in app-tabs.tsx. Recipes is the "/"
-              index route now (the (recipes) group), which is what actually
-              decides the opening tab; the plan moved to "/plan". Trigger order
-              alone does NOT decide it – that was checked against the Expo docs
-              on 2026-08-10 after a reorder that changed nothing. */}
-          <TabTrigger name="recipes" href="/" asChild>
-            <TabButton>Recipes</TabButton>
-          </TabTrigger>
-          <TabTrigger name="plan" href="/plan" asChild>
+          {/* Order mirrors app-tabs.tsx – see the note there. */}
+          <TabTrigger name="plan" href="/" asChild>
             <TabButton>Plan</TabButton>
+          </TabTrigger>
+          <TabTrigger name="recipes" href="/recipes" asChild>
+            <TabButton>Recipes</TabButton>
           </TabTrigger>
           <TabTrigger name="shopping" href="/shopping" asChild>
             <TabButton>Shopping</TabButton>
