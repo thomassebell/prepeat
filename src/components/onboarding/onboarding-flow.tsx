@@ -89,7 +89,7 @@ function AuthSteps() {
               </Text>
             </View>
             <Text className="text-center font-paragraph text-paragraph font-default leading-xsmall text-text-default">
-              Plan dinners, collect recipes{'\n'}and shop together – as a family
+              Plan dinners, collect recipes{'\n'}and shop together
             </Text>
           </View>
           <View className="w-full flex-1 items-center justify-end gap-layout-small pb-layout-xsmall">
@@ -167,7 +167,7 @@ function NameStep() {
   return (
     <FormScreen
       title="What’s your first name?"
-      subtitle="Shown to your family when you check things off the list."
+      subtitle="Shown next to anything you tick off, so everyone knows who did what."
       submitLabel="Continue"
       onSubmit={() => saveFirstName(name)}
       canSubmit={name.trim().length > 0}>
@@ -204,23 +204,24 @@ function HouseholdSteps({ onHouseholdReady }: { onHouseholdReady: (h: Household)
           <View className="w-full gap-layout-small rounded-large bg-surface-neutral-white px-layout-small pb-layout-small pt-layout-large">
             <View className="w-full gap-layout-small">
               <Text className="font-header text-display-5 font-emphasized leading-small text-text-subtle">
-                Set up your household
+                Set up your kitchen
               </Text>
               <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-subtle">
-                The shared space where your family plans meals and shops together.
+                Your recipes, weekly plan and shopping list live in a kitchen – shared with
+                whoever you cook with.
               </Text>
             </View>
             <View className="w-full gap-layout-small">
               <ChoiceCard
                 icon="add-home"
-                title="Start a household"
-                body="If you’re the first one here, start your family’s shared space – you’ll get a code to invite the others."
+                title="Create a new kitchen"
+                body="Start fresh. Invite people whenever you like, or keep it to yourself."
                 onPress={() => setStep({ kind: 'create' })}
               />
               <ChoiceCard
                 icon="card-membership"
-                title="Join with a code"
-                body="Got a code from your family? Join them here."
+                title="Join an existing kitchen"
+                body="You’ll share the same recipes, plan and shopping list – anything you add shows up for them too."
                 onPress={() => setStep({ kind: 'join' })}
               />
             </View>
@@ -247,10 +248,11 @@ function HouseholdSteps({ onHouseholdReady }: { onHouseholdReady: (h: Household)
             <View className="w-full gap-layout-small rounded-large bg-surface-neutral-white px-layout-small pb-layout-small pt-layout-large">
               <View className="w-full gap-layout-small">
                 <Text className="font-header text-display-5 font-emphasized leading-small text-text-subtle">
-                  {created.household.name} is ready
+                  Your kitchen is ready
                 </Text>
                 <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-subtle">
-                  Share this code so your family can join.
+                  Share this code and they’ll see the same recipes, plan and list. You can
+                  also do this later from the Kitchen tab.
                 </Text>
               </View>
               <View className="w-full gap-layout-small">
@@ -293,20 +295,20 @@ function HouseholdSteps({ onHouseholdReady }: { onHouseholdReady: (h: Household)
     }
     return (
       <FormScreen
-        title="Name your household"
-        subtitle="Pick something your family will recognise."
+        title="Name your kitchen"
+        subtitle="You can change this any time."
         onBack={() => setStep({ kind: 'choice' })}
-        submitLabel="Create household"
+        submitLabel="Continue"
         onSubmit={async () => {
           setCreated(await createHousehold(name));
         }}
         canSubmit={name.trim().length > 0}>
         {(error) => (
-          <Field label="Household name" error={error}>
+          <Field label="Kitchen name" error={error}>
             <Input
               value={name}
               onChangeText={setName}
-              placeholder="The Hanson Kitchen"
+              placeholder="The Hansens"
               autoFocus
               hasError={error != null}
             />
@@ -323,9 +325,9 @@ function HouseholdSteps({ onHouseholdReady }: { onHouseholdReady: (h: Household)
   return (
     <FormScreen
       title="Enter your invite code"
-      subtitle="Get it from the family member who set up Prep+Eat."
+      subtitle="Ask whoever set up Prep+Eat for the code."
       onBack={() => setStep({ kind: 'choice' })}
-      submitLabel="Join household"
+      submitLabel="Join"
       onSubmit={async () => {
         setJoined(await joinHousehold(code));
       }}
@@ -395,7 +397,7 @@ export function WelcomeScreen({
 async function shareInvite(householdName: string, inviteCode: string) {
   try {
     await Share.share({
-      message: `Join our household "${householdName}" in Prep+Eat with the code ${inviteCode}`,
+      message: `Join our kitchen “${householdName}” in Prep+Eat with the code ${inviteCode}`,
     });
   } catch {
     // Sharing was dismissed – nothing to handle.

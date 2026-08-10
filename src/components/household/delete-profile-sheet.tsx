@@ -66,7 +66,7 @@ function Content({
   return (
     <View className="w-full gap-layout-small">
       <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-default">
-        {`You’re about to delete your profile${who}. Your personal data is deleted; recipes you shared stay with the family, without your name. This cannot be undone.`}
+        {`You’re about to delete your profile${who}. Your personal data is deleted; recipes you shared stay in the kitchen, without your name. This cannot be undone.`}
       </Text>
 
       <View className="w-full gap-layout-xsmall">

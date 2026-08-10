@@ -23,7 +23,7 @@ export function LeaveHouseholdSheet({
   onConfirm: () => Promise<void>;
 }) {
   return (
-    <BottomSheet visible={visible} title="Leave household" onClose={onClose}>
+    <BottomSheet visible={visible} title="Leave kitchen" onClose={onClose}>
       {visible && (
         <Content householdName={householdName} onClose={onClose} onConfirm={onConfirm} />
       )}

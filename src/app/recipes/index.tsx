@@ -213,8 +213,8 @@ function EmptyState({ onAdd }: { onAdd: () => void }) {
             Nothing&apos;s cooking yet
           </Text>
           <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-default">
-            Save the dishes your family loves – one shared cookbook for
-            everyone.
+            Save the dishes you love – one shared cookbook for everyone in
+            your kitchen.
           </Text>
         </View>
         <Pressable

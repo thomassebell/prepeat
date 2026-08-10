@@ -89,7 +89,7 @@ function SheetContent({
     if (code == null) return;
     try {
       await Share.share({
-        message: `Join our household "${householdName}" in Prep+Eat with the code ${code}`,
+        message: `Join our kitchen “${householdName}” in Prep+Eat with the code ${code}`,
       });
     } catch {
       // Sharing cancelled – nothing to do.
@@ -127,7 +127,7 @@ function SheetContent({
       {/* Intro + code + refresh row, 16px apart (Figma content group). */}
       <View className="w-full gap-layout-small">
         <Text className="w-full font-paragraph text-paragraph font-default leading-xsmall text-text-subtle">
-          Invite a family member or a friend or give them the code below.
+          Invite someone, or give them the code below.
         </Text>
 
         {/* Code chip with copy. The left spacer mirrors the icon column so the

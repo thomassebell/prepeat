@@ -24,7 +24,7 @@ export default function AppTabs() {
       </NativeTabs.Trigger>
 
       <NativeTabs.Trigger name="household">
-        <NativeTabs.Trigger.Label>Household</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Label>Kitchen</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon sf={{ default: 'person.2', selected: 'person.2.fill' }} />
       </NativeTabs.Trigger>
 

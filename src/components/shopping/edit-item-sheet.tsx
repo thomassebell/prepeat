@@ -131,7 +131,7 @@ function SheetContent({ item, onClose, onSave, saveRef }: SheetContentProps) {
           Category
         </Text>
         <Text className="font-paragraph text-small font-default text-text-subtle">
-          Your household will remember this.
+          Your kitchen will remember this.
         </Text>
         <Pressable
           onPress={() => {

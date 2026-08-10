@@ -28,7 +28,7 @@ export function DeleteHouseholdSheet({
   onConfirm: () => Promise<void>;
 }) {
   return (
-    <BottomSheet visible={visible} title="Delete household" onClose={onClose}>
+    <BottomSheet visible={visible} title="Delete kitchen" onClose={onClose}>
       {visible && <Content householdName={householdName} onConfirm={onConfirm} />}
     </BottomSheet>
   );
@@ -63,7 +63,7 @@ function Content({
   return (
     <View className="w-full gap-layout-small">
       <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-default">
-        {`You’re about to delete “${householdName}”. All its plans, recipes and shopping lists will be deleted. This cannot be undone.`}
+        {`Everything in “${householdName}” goes: the plans, the recipes and the shopping list. This cannot be undone.`}
       </Text>
 
       <View className="w-full gap-layout-xsmall">

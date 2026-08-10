@@ -77,7 +77,7 @@ export function JoinHouseholdModal({
         <SafeAreaProvider initialMetrics={initialWindowMetrics}>
           <WelcomeScreen
             household={joined}
-            buttonLabel="Take a look around your new household"
+            buttonLabel="Take a look around"
             onContinue={() => {
               const result = joined;
               reset();
@@ -112,7 +112,7 @@ export function JoinHouseholdModal({
                   Enter your invite code
                 </Text>
                 <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-subtle">
-                  Get it from the family member who set up Prep+Eat.
+                  Ask whoever set up Prep+Eat for the code.
                 </Text>
               </View>
               <View className="w-full gap-layout-xsmall">

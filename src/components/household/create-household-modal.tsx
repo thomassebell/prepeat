@@ -79,7 +79,7 @@ export function CreateHouseholdModal({
         <SafeAreaProvider initialMetrics={initialWindowMetrics}>
           <WelcomeScreen
             household={created}
-            buttonLabel="Take a look around your new household"
+            buttonLabel="Take a look around"
             onContinue={() => {
               const result = created;
               reset();
@@ -111,15 +111,15 @@ export function CreateHouseholdModal({
               <View className="w-full gap-layout-small rounded-large bg-surface-neutral-white px-layout-small pb-layout-small pt-layout-large">
                 <View className="w-full gap-layout-small">
                   <Text className="font-header text-display-5 font-emphasized leading-small text-text-subtle">
-                    Name your household
+                    Name your kitchen
                   </Text>
                   <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-subtle">
-                    Pick something your family will recognise.
+                    You can change this any time.
                   </Text>
                 </View>
                 <View className="w-full gap-layout-xsmall">
                   <Text className="font-paragraph text-components-label font-default leading-xxsmall text-text-default">
-                    Household name
+                    Kitchen name
                   </Text>
                   {error != null && (
                     <View className="w-full flex-row items-start gap-comp-large rounded-medium bg-error-lightest px-comp-large py-comp-small">
@@ -132,7 +132,7 @@ export function CreateHouseholdModal({
                   <Input
                     value={name}
                     onChangeText={setName}
-                    placeholder="The Hanson Kitchen"
+                    placeholder="The Hansens"
                     autoFocus
                     hasError={error != null}
                   />

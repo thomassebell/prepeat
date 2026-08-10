@@ -87,11 +87,11 @@ export default function HouseholdScreen() {
       {/* Header + switcher trigger */}
       <View className="w-full flex-row items-center gap-comp-small px-layout-small pb-layout-small">
         <Text className="flex-1 font-header text-display-4 font-emphasized leading-medium text-text-default">
-          Household
+          Kitchen
         </Text>
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel="Switch household"
+          accessibilityLabel="Switch kitchen"
           hitSlop={8}
           onPress={() => setSwitcherOpen(true)}
         >
@@ -120,13 +120,13 @@ export default function HouseholdScreen() {
               <View className="flex-row items-center gap-comp-small">
                 <MaterialIcons name="people-alt" size={16} color={ds.colors.icon.default} />
                 <Text className="font-paragraph text-small font-default leading-xxsmall text-text-default">
-                  {members.length === 1 ? "1 member" : `${members.length} members`}
+                  {members.length === 1 ? "1 person" : `${members.length} people`}
                 </Text>
               </View>
             </View>
             <Pressable
               accessibilityRole="button"
-              accessibilityLabel="Edit household"
+              accessibilityLabel="Edit kitchen"
               hitSlop={8}
               onPress={() => setSheet("household")}
             >
@@ -135,7 +135,7 @@ export default function HouseholdScreen() {
           </View>
           <View className="w-full items-center gap-layout-small p-layout-small">
             <Text className="w-full font-paragraph text-paragraph font-default leading-xsmall text-text-subtle">
-              Invite a family member or a friend to your household.
+              Invite someone to your kitchen.
             </Text>
             <Pressable
               accessibilityRole="button"
@@ -157,7 +157,7 @@ export default function HouseholdScreen() {
         {/* Members */}
         <View className="w-full gap-comp-small">
           <Text className="font-paragraph text-small font-emphasized leading-xxsmall text-text-default">
-            Members
+            People
           </Text>
           <View className="w-full overflow-hidden rounded-large bg-surface-neutral-white">
             {members.map((member, index) => (
@@ -366,7 +366,7 @@ function HouseholdSwitcherMenu({
             >
               <MaterialIcons name="login" size={24} color={ds.colors.icon.default} />
               <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-default">
-                Join a household
+                Join an existing kitchen
               </Text>
             </Pressable>
             <Pressable
@@ -376,7 +376,7 @@ function HouseholdSwitcherMenu({
             >
               <MaterialIcons name="add-home" size={24} color={ds.colors.icon.default} />
               <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-default">
-                Create a new household
+                Create a new kitchen
               </Text>
             </Pressable>
           </Pressable>

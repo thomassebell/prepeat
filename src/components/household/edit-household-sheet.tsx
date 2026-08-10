@@ -30,7 +30,7 @@ export function EditHouseholdSheet({
   onDelete: () => void;
 }) {
   return (
-    <BottomSheet visible={visible} title="Edit household" onClose={onClose}>
+    <BottomSheet visible={visible} title="Edit kitchen" onClose={onClose}>
       {visible && (
         <SheetContent
           household={household}
@@ -83,7 +83,7 @@ function SheetContent({
         <ClearableInput
           value={name}
           onChangeText={setName}
-          accessibilityLabel="Household name"
+          accessibilityLabel="Kitchen name"
           autoCorrect={false}
           returnKeyType="done"
           onSubmitEditing={save}
@@ -104,7 +104,7 @@ function SheetContent({
             (canSave ? "text-button-solid-label-enabled" : "text-text-disabled")
           }
         >
-          {busy ? "Saving…" : "Save household"}
+          {busy ? "Saving…" : "Save"}
         </Text>
       </Pressable>
       {canDelete && (
