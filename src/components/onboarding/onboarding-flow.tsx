@@ -173,10 +173,12 @@ function NameStep() {
       onSubmit={() => saveFirstName(name)}
       validate={() => (name.trim().length > 0 ? null : 'Enter your name to continue.')}>
       {(error) => (
-        <Field label="First name" error={error}>
+        <Field label="Name" error={error}>
           <Input
             value={name}
             onChangeText={setName}
+            // The placeholder is the only thing left signalling first-name-only
+            // now that neither title nor label says "first" (Thomas, 2026-08-10).
             placeholder="Sofia"
             autoFocus
             hasError={error != null}
