@@ -1389,6 +1389,71 @@ Closed 2026-07-27:
       a Dane who prefers the app in English, or the reverse. Not needed for this,
       and adding it later costs little once the strings are extracted.
 
+- [ ] **JOIN A HOUSEHOLD FROM A LINK, NOT A CODE** (Thomas, 2026-08-10;
+      researched by Claude the same day). His reasoning: *"I find it a bit
+      troublesome joining with a code because you first have to create a user
+      and then remember or find a code."* The ask is link → install → account →
+      **already in the household**, with the code never entering the user's
+      awareness.
+      **MOST OF THE PIECES EXIST.** `prepeat.app` is ours and live, `expo-linking`
+      is already a dependency, the scheme `prepeat` is in `app.json`, Apple Team
+      ID is `Z58TG8X9KB` and the App Store ID is `6793690543`. The invite system
+      already mints, expires (14 days), rotates and throttles codes – **a link
+      would only carry the code that already exists**, so no new security model.
+      **WHEN THE APP IS INSTALLED: fully solvable, and not much work.** Host
+      `/.well-known/apple-app-site-association` on `prepeat.app`, add
+      `associatedDomains: ["applinks:prepeat.app"]`, and a link of the form
+      `https://prepeat.app/join/PREP-6A3V` opens the app directly. The app holds
+      the code through sign-in and redeems it the moment the account exists.
+      **⚠️ THE HONEST LIMIT ON THE ASK: the account step cannot be skipped.**
+      Household membership has to attach to a user, so email + OTP still happens.
+      What the link removes is the CODE (never seen, typed or remembered) and the
+      **"Set up your household" fork, which the joiner never reaches at all.**
+      **WHY THAT IS WORTH MORE THAN IT SOUNDS:** the Synthetic User Panel found
+      step 5 to be the heaviest step in the entire first run, with every reader
+      needing to know whether a household of one is supported – and five readers
+      independently feared creating a DUPLICATE household. A link-joiner is never
+      offered the choice, so both findings are sidestepped rather than reworded.
+      See the panel section above.
+      **⚠️ THE PART WITH NO CLEAN ANSWER: the app NOT yet installed.** iOS
+      deliberately severs the link from the fresh install for privacy, so the
+      newly installed app cannot know which link brought the user. This is an
+      Apple constraint, not an Expo one. Four routes, ranked:
+      1. **Tap the link again – RECOMMENDED.** `/join/PREP-6A3V` renders a web
+         page naming the household plus an App Store button; after installing,
+         the user returns to the message and taps the SAME link, which now opens
+         the app. Free, no dependencies, no tracking. **The real gain over today
+         is that a link waits in the message thread, whereas a code has to be
+         remembered.**
+      2. **App Clips – the genuinely seamless option, and a project.** A
+         miniature app launches straight from the link with NOTHING installed,
+         does the join, then hands off to the full app. This is the thing Thomas
+         is imagining. Expo does not support App Clips out of the box: separate
+         native target plus config-plugin work. Keep as its own later item.
+      3. **⛔ Branch.io / AppsFlyer – RULED OUT, and not on technical grounds.**
+         Deferred deep linking works probabilistically via device fingerprinting.
+         But `prepeat.app` says the app has *"no ads, no analytics and no
+         third-party tracking"*, and the App Store privacy label is published on
+         that basis. This would cost a promise already made in public.
+      4. **⛔ Clipboard bridge.** iOS now prompts before any app reads the
+         clipboard – unreliable and reads as creepy. Skip.
+      **⚠️ BLOCKER TO CLEAR FIRST – THE SITE IS ON GITHUB PAGES.** GitHub Pages
+      serves extensionless files as `application/octet-stream`, and Apple
+      requires the association file as `application/json`; GitHub Pages cannot
+      set per-file headers. **Universal links would silently fail to register –
+      it looks like "the link is broken" for days if you do not know.** Fix is to
+      move the static site to Cloudflare Pages / Netlify / Vercel; it is a
+      no-build, no-framework, no-JavaScript site, so the move is small.
+      **This blocks anything universal-link-shaped later** – password reset,
+      recipe sharing – so it is worth doing for its own sake. Interacts with the
+      `github.io` → `prepeat.app` URL item directly below: do that one first, or
+      together.
+      **KEEP THE CODE AS WELL AS THE LINK.** The code still serves reading it
+      aloud to a parent on the phone, and joining from a second device. Do not
+      remove a working path.
+      **SEQUENCE:** move hosting → association file + `associatedDomains` →
+      build the `/join/` page → handle the link in-app. App Clips stays separate.
+
 - [ ] **Swap the App Store Connect URLs from `github.io` to `prepeat.app` –
       AFTER v1.0 is approved** (found 2026-08-04). The custom domain went live
       at some point without the paperwork catching up: `prepeat.app` serves a
