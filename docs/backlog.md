@@ -6,6 +6,29 @@ next and in which order. Completed items are pruned and live in git history;
 the Decisions log below keeps the reasoning that's still worth having close.
 Ideas graduate upward when we commit to them.
 
+## ⚠️ HOW TO WRITE AN ITEM HERE (agreed 2026-08-11)
+
+**The first line is the job, in plain words, and Thomas can stop reading
+there.** Everything under it is indented and labelled, so the eye knows it is
+optional. One rule, because this file serves two readers with one format:
+Claude needs the reasoning, Thomas needs to recognise a task.
+
+```
+- [ ] **Let people put a plain meal on the plan without a recipe**
+      Why: the store page promises this and the app never shows it.
+      Left: …          ← what remains, when some of it has landed
+      Blocked by: …    ← a design gap, a hosting move, a decision
+      Size: …          ← only when it is genuinely known
+```
+
+Labels are free-form – `Why`, `Left`, `Blocked by`, `Decide first`, `Wait
+for`, `Trigger`, `Evidence`, `Note`, `Watch out` – but `Why` earns its place
+almost always, and no label should carry an argument the first line already
+made. Reformatted on 2026-08-11 after Thomas: *"I need to recognize a task."*
+The reasoning was never the problem; leading with it was.
+
+`npm run backlog:view` renders the open items as a scannable page.
+
 Ordering principle (agreed 2026-07-08): things that stand on their own and
 deliver value by themselves come before things that depend on them – and
 when a milestone finishes, the order gets a fresh look before starting the
@@ -25,11 +48,16 @@ invite. Check betaTesters vs Users-and-Access before blaming email or spam.
 
 ## In flight (built, not yet live)
 
-- [ ] **Ingredient SECTIONS in create/edit recipe** (Thomas designed 2026-08-04;
-      Figma `nA8SLN8rhdBov97B1IYxnP` node **121:11255**, "recipe – add recipe").
-      Came out of importing ambitiouskitchen.com's cinnamon rolls, where
-      "DOUGH"/"FILLING"/"CREAM CHEESE FROSTING" arrived as ingredients with no
-      amount – and would have landed on the shopping list.
+- [ ] **Group a recipe's ingredients under headings like DOUGH and FILLING**
+      Why: imported recipes arrive with those headings as ingredients with no
+           amount, so they land on the shopping list as things to buy.
+      Left: two cosmetic gaps only – the first heading's spacing, and a
+           mid-drag look Claude invented. Both marked below.
+      Size: built and walked on device; waiting on a build to reach a phone.
+
+      Thomas designed 2026-08-04; Figma `nA8SLN8rhdBov97B1IYxnP` node
+      **121:11255**, "recipe – add recipe". Came out of importing
+      ambitiouskitchen.com's cinnamon rolls.
       - [x] **Migration 0031 applied to DEV, then PRODUCTION (2026-08-06)** –
             `recipe_ingredients.is_section`. Backed up first, all 31 migrations
             replayed onto an empty local database first, and the restore
@@ -251,12 +279,17 @@ invite. Check betaTesters vs Users-and-Access before blaming email or spam.
       `59ac675d-75ec-425b-8b8f-be95d71d4908`,
       `8676ad2c-9c50-4481-925d-222237a502c8`.
 
-- [ ] **Move a past week's leftovers to this week** (Thomas 2026-08-03; Figma
-      434:7148 "transfer items from last week"). Built the same day it was
-      designed. A past week whose list still has unchecked items ends in a
-      full-width **"Move all items to this week"**; pressing it empties that
-      week onto the current one and offers the undo toast. Graduated out of
-      Ideas – the decisions that shaped it are in the log below.
+- [ ] **Move a past week's unbought shopping items to this week**
+      Why: things you did not get round to buying should not be stranded on a
+           week that has ended.
+      Left: nothing of its own – it only carries known bug 3 with it (below).
+      Size: shipped to the family in TestFlight build 15 (2026-08-04).
+
+      Thomas 2026-08-03; Figma 434:7148 "transfer items from last week". Built
+      the same day it was designed. A past week whose list still has unchecked
+      items ends in a full-width **"Move all items to this week"**; pressing it
+      empties that week onto the current one and offers the undo toast.
+      Graduated out of Ideas – the decisions that shaped it are in the log below.
       - [x] **APPLIED 2026-08-03** (`0026_move_week_leftovers.sql`), verifying
             select returned move_fn and undo_fn both true.
             **SAFE FOR THE PHONES** (the 0022 lesson): it only ADDS two
@@ -528,7 +561,14 @@ invite. Check betaTesters vs Users-and-Access before blaming email or spam.
       ever wanted for the cases 0028 deliberately leaves alone – a decrease, a
       hand-edited line, a pantry unit – it still has to be designed and built.
 
-- [ ] **The same ingredient can still appear twice on the shopping list**
+- [ ] **Stop the same ingredient appearing twice on the shopping list**
+      Why: the store page promises the list "builds itself from the plan", and
+           a shopper seeing garlic twice reads that as broken.
+      Left: only the synonym half – `onion` vs `yellow onion`, `coriander` vs
+           `cilantro`. No mechanical rule settles those, so it is now a product
+           decision, written up as "Teach-a-synonym" under Later.
+      Size: the mechanical causes are all fixed and shipped.
+
       (Thomas, 2026-07-29, looking at the week-32 demo list: *"a lot of item
       are the same, but named differently"*). `item_merge_key` (migration
       0013) originally was `norm_item_name(name) || ' ' || lower(trim(unit))`,
@@ -1332,18 +1372,28 @@ Closed 2026-07-27:
 
 ## Conditional – only if it bites
 
-- [ ] **Import fallback for bot-blocking sites** (madensverden.dk, allrecipes
-      refused non-browser fetches in testing). A hidden-WebView fetch is the
-      known fix; nothing exists in code today (only a comment in
-      recipe-import.ts naming it, and react-native-webview isn't installed).
-      Only build it if a site the family actually uses gets blocked.
-- [ ] **"Continue with Apple"** – not implemented. NOT required by Apple:
-      guideline 4.8 only forces it when you also offer a third-party login
-      (Google/Facebook), and Prep+Eat only offers email-code sign-in. An
-      optional convenience.
+- [ ] **Make recipe import work on sites that block us**
+      Why: madensverden.dk and allrecipes refuse non-browser fetches, so
+           pasting a link from them fails.
+      Trigger: only build it if a site the family actually uses gets blocked.
+      Size: a hidden-WebView fetch is the known fix; nothing exists in code
+           today (a comment in recipe-import.ts names it, and
+           react-native-webview is not installed).
+
+- [ ] **Add "Continue with Apple" sign-in**
+      Why: convenience only.
+      Trigger: not required by Apple – guideline 4.8 only forces it when you
+           also offer a third-party login (Google/Facebook), and Prep+Eat only
+           offers email-code sign-in.
 ## Later (v1.1+)
 
-- [ ] **⭐ IMPORTANT – THE APP SPEAKS DANISH TOO, FOLLOWING THE PHONE'S LANGUAGE**
+- [ ] **⭐ Show the app in Danish when the phone is set to Danish**
+      Why: one app, two languages, iOS picks. Not a Danish edition and not a
+           market decision – English stays the base language.
+      Left: extract ~242 strings, add a Danish file, let anything untranslated
+           fall back to English.
+      Size: incremental – it can ship a screen at a time, and should.
+
       (Thomas, 2026-08-07, correcting a first write-up that had this far bigger
       than it is: *"I don't want to make a danish app, I just want the app to be
       able to use danish as well. I might be set by the OS in the phone."*).
@@ -1389,8 +1439,17 @@ Closed 2026-07-27:
       a Dane who prefers the app in English, or the reverse. Not needed for this,
       and adding it later costs little once the strings are extracted.
 
-- [ ] **JOIN A HOUSEHOLD FROM A LINK, NOT A CODE** (Thomas, 2026-08-10;
-      researched by Claude the same day). His reasoning: *"I find it a bit
+- [ ] **Let someone join a kitchen by tapping a link, not typing a code**
+      Why: today you create an account, then have to find and remember a code.
+           A link waits in the message thread; a code does not.
+      Left: the joiner still has to make an account – that cannot be skipped.
+           What the link removes is the code and the "set up your kitchen"
+           fork, which sidesteps two panel findings outright.
+      Blocked by: the site is on GitHub Pages, which cannot serve Apple's
+           association file as JSON. Move the site first (see the item below);
+           without that the links fail silently and look broken.
+
+      (Thomas, 2026-08-10; researched by Claude the same day). His reasoning: *"I find it a bit
       troublesome joining with a code because you first have to create a user
       and then remember or find a code."* The ask is link → install → account →
       **already in the household**, with the code never entering the user's
@@ -1469,8 +1528,15 @@ Closed 2026-07-27:
       **SEQUENCE:** move hosting → association file + `associatedDomains` →
       build the `/join/` page → handle the link in-app. App Clips stays separate.
 
-- [ ] **Swap the App Store Connect URLs from `github.io` to `prepeat.app` –
-      AFTER v1.0 is approved** (found 2026-08-04). The custom domain went live
+- [ ] **Point the App Store listing at prepeat.app instead of the GitHub URL**
+      Why: the listing shows a github.io address for Privacy Policy and
+           Support. Nothing is broken – those redirect – it just looks
+           borrowed rather than like Thomas's own domain.
+      Wait for: v1.0 to be approved. Changing metadata mid-review invites
+           questions for no benefit.
+      Size: small, and it pairs with the hosting move above.
+
+      (found 2026-08-04). The custom domain went live
       at some point without the paperwork catching up: `prepeat.app` serves a
       valid certificate, `http://` returns 301 to `https://`, and DNS answers
       with all four GitHub Pages apex IPs. App Store Connect still holds the old
@@ -1495,7 +1561,14 @@ Closed 2026-07-27:
         the part that is easy to get wrong, and `.app` being on the HSTS
         preload list makes a mistake unfixable-looking in the browser.
 
-- [ ] **Sign in with Apple (iOS)** – considered 2026-07-30 while setting up the
+- [ ] **Add Sign in with Apple on iOS**
+      Why: a faster way in. Not required by Apple, so this is a product choice.
+      Note: it does NOT replace the demo mailbox – a reviewer signing in with
+           their own Apple ID lands in an empty account.
+      Blocked by: no Figma frame places the Apple button on the welcome
+           screen. Design first.
+
+      Considered 2026-07-30 while setting up the
       App Review demo account, deferred to after v1.0 (Thomas: "Mailbox now,
       Apple later"). Findings worth keeping:
       - **Not required.** Apple's guideline 4.8 only forces a Sign-in-with-Apple
@@ -1520,8 +1593,16 @@ Closed 2026-07-27:
       - **Design gap:** the Apple button glyph/label is Apple-specified (HIG),
         but its PLACEMENT on the welcome screen has no Figma frame – design
         first, per the no-improvised-UI rule.
-- [ ] **Teach-a-synonym: merge two ingredient names the household says are
-      the same.** This is the "advanced ingredient normalization (onion vs
+- [ ] **Let the household teach the app that two ingredient names mean the same thing**
+      Why: a real list showed three un-merged Parmesans and onion split three
+           ways. No parser rule can settle these – `cream cheese` is not
+           `cream` – so the household has to decide.
+      Blocked by: the "same as…" action on the shopping-list edit sheet has no
+           Figma design. Backend and merge logic can be built without it.
+      Open question: is an alias one-directional (B → A) or a group of equal
+           names? One-directional matches how categories already learn.
+
+      This is the "advanced ingredient normalization (onion vs
       yellow onion)" line already in projektgrundlag under Later (v1.1+) –
       written up here 2026-07-30 after it showed on a real list as three
       un-merged Parmesans (`Parmesan`, `Parmesan cheese`, `shaved Parmesan
@@ -1555,8 +1636,16 @@ Closed 2026-07-27:
       Decision needed before any UI work: is an alias one-directional (B → A)
       or a group of equal names? One-directional is simpler and matches the
       category-memory precedent; start there unless Thomas wants groups.
-- [ ] **Drag a meal to another day on the Plan screen** (Thomas asked
-      **⚠️ RAISED AGAIN 2026-08-07, which is a priority signal.** Thomas listed
+- [ ] **Drag a meal to another day on the Plan screen**
+      Why: you can already do this by swiping and picking a day. Drag is a
+           nicer way to do the same thing, not a missing capability.
+      Priority: ⚠️ asked twice (2026-07-30 and again 2026-08-07). Twice-asked
+           is the closest thing to a vote this backlog has – worth putting in
+           front of Thomas next time the order is reviewed.
+      Size: front-end only, but not a tweak – see the scrolling problem below.
+
+      (Thomas asked)
+      **RAISED AGAIN 2026-08-07, which is a priority signal.** Thomas listed
       this among his ideas a second time, apparently without recalling it was
       already filed. Twice-asked is the closest thing to a vote this backlog
       has - worth pulling out of "v1.1+ polish" and putting in front of him as a
@@ -1586,8 +1675,18 @@ Closed 2026-07-27:
       is a sibling drag interaction already designed+built on the shopping list
       (see decisions log ~line 998: rows scroll inside, target slot shown) –
       reuse its visual language rather than inventing a new one.
-- [ ] **Drag a shopping item to another category** (Thomas, 2026-07-30).
-      **⚠️ RAISED AGAIN 2026-08-07, which is a priority signal.** Thomas listed
+- [ ] **Drag a shopping item into another category**
+      Why: you can already recategorize by tapping the item and picking a
+           category. Drag is a nicer way to do the same thing.
+      Priority: ⚠️ asked twice (2026-07-30 and again 2026-08-07), same signal
+           as the meal drag above.
+      Decide first: which regions are valid drop targets – the uncategorized
+           area and the checked-items area both need an answer.
+      Blocked by: no Figma for the item-drag states. Reuse the category-group
+           drag visuals rather than inventing new ones.
+
+      (Thomas, 2026-07-30.)
+      **RAISED AGAIN 2026-08-07, which is a priority signal.** Thomas listed
       this among his ideas a second time, apparently without recalling it was
       already filed. Twice-asked is the closest thing to a vote this backlog
       has - worth pulling out of "v1.1+ polish" and putting in front of him as a
@@ -1618,7 +1717,14 @@ Closed 2026-07-27:
       DESIGN GAP – NO FIGMA for the item-drag states. Reuse the existing
       category-group drag visuals (decisions log ~line 998: rows scroll inside,
       target slot shown) rather than inventing new ones; flag any improvisation.
-- [ ] **Recipe import: ingredient parsing beyond English and Danish**
+- [ ] **Teach the recipe importer languages beyond English and Danish**
+      Why: recipe sites are overwhelmingly local-language, so this hits a new
+           user on their very first import. `2 EL Olivenöl` currently files
+           the unit as part of the ingredient name.
+      When: per territory, as the App Store rollout reaches it.
+      Size: ~30 lines per language – one units list, one participle list, one
+           "to taste" phrase.
+
       (scoped 2026-07-29 – Thomas: *"English and danish is the most
       important. Log other languages as later versions"*). The parser in
       [src/lib/recipe-import.ts](../src/lib/recipe-import.ts) splits an
@@ -1651,7 +1757,17 @@ Closed 2026-07-27:
       and reading the bare `c` as `cup` inflates the amount ~16x. The parser
       now bails out when `c` is followed by `à`/`a`. Any future language work
       needs the same paranoia about collisions with English abbreviations.
-- [ ] **Share a recipe – FIRST ITEM IN v1.1** (Thomas, raised as an idea
+- [ ] **⭐ Share a recipe with someone – FIRST ITEM IN v1.1**
+      Why: Thomas's case is that this is the growth mechanic, not a
+           convenience – *"without 'mouth to mouth' sharing, this app will not
+           be a success. And having a recipe as a carrier will be key."*
+      Decide first: how much a stranger sees – the whole recipe, or a teaser
+           that needs the app. And the copyright question below, which is
+           genuinely unanswered.
+      Size: about a week. It is the project's first web deployment.
+      Do before code: a spec doc, like leave-household.md.
+
+      (Thomas, raised as an idea
       2026-07-25, weighed for v1.0 on 2026-07-27 and deliberately left out of
       it the same day: *"I must think some more over the sharing feature"*).
       The reason it is top of the list rather than one item among many:
@@ -1722,7 +1838,13 @@ Closed 2026-07-27:
       Overlaps the merge item directly below – "copy a recipe to my other
       household" is the same mechanic pointed inward, so they are probably one
       feature and should be designed together.
-- [ ] **Merge two households / "copy a recipe to my other household"** – the
+- [ ] **Let recipes move between two kitchens you belong to**
+      Why: leaving a kitchen when you already have another spawns yet another
+           solo "[Firstname]'s Kitchen" – clutter. And a rejoiner has no way
+           to bring their parked recipes back into the family.
+      Size: this is the deferred merge mechanic from leave-household.md, rule A.
+
+      the
       deferred merge mechanic that later lets a rejoiner bring their parked
       solo-kitchen recipes into the family (leave-household.md, rule A). Also
       covers a UX gripe from 2026-07-22: leaving a household when you ALREADY
@@ -1732,8 +1854,13 @@ Closed 2026-07-27:
 
 ## Code debts (small, known, deliberate)
 
-- [ ] **Recipe import leaves prep instructions in the ingredient NAME, and the
-      shopping list inherits it** (found 2026-07-29 while shooting App Store
+- [ ] **Clean up recipes imported before 2026-07-29**
+      Why: the parser used to leave whole instructions in the ingredient name
+           ("garlic clove, cut in half"), and the shopping list inherited it.
+      Left: the parser itself is FIXED. What remains is the old recipes still
+           holding mangled names – which needs the re-import gap below.
+
+      (found 2026-07-29 while shooting App Store
       screenshots). `parseIngredient` in
       [src/lib/recipe-import.ts](../src/lib/recipe-import.ts) only strips a
       LEADING amount + known unit; everything else stays in the name verbatim.
@@ -1762,7 +1889,13 @@ Closed 2026-07-27:
       item under Later. Recipes imported
       BEFORE that date still hold the old mangled names; see the re-import
       gap below.
-- [ ] **An imported recipe can never be re-imported** – the "paste a link"
+- [ ] **Add "Re-import from source" to the recipe edit screen**
+      Why: every parser improvement only ever benefits NEW recipes. Existing
+           ones can only be fixed ingredient by ingredient by hand.
+      Size: small – `applyImport` already does the right thing to the form and
+           `replaceIngredientsAndSteps` already saves it in place.
+
+      The "paste a link"
       button in [src/app/recipes/new.tsx](../src/app/recipes/new.tsx) is gated
       behind `!editing`, so the edit screen has no import trigger. Found
       2026-07-29 when the parser fix above could not be applied to recipes
@@ -1773,7 +1906,14 @@ Closed 2026-07-27:
       meal-plan snapshots). A "Re-import from source" action on the edit screen
       would fix it; `applyImport` already does exactly the right thing to the
       form, and `replaceIngredientsAndSteps` already saves it in place.
-- [ ] **`meal_plans.pushed_to_list_at` is back, on purpose** – migration 0023,
+- [ ] **Drop the `meal_plans.pushed_to_list_at` column, eventually**
+      Why: it is a compatibility shim kept alive only for TestFlight build 10.
+           Nothing reads or writes it.
+      Wait for: every tester's phone to run build 11 or later, confirmed
+           INSTALLED in App Store Connect – not merely committed here.
+      Size: no hurry. A nullable column nobody touches costs nothing.
+
+      Migration 0023,
       APPLIED 2026-07-27, an always-null compatibility shim so TestFlight
       build 10 keeps working. Nothing reads or writes it. Drop it
       again – a fresh migration, never by editing 0022 or 0023 – only once
@@ -1786,7 +1926,16 @@ Closed 2026-07-27:
       A + rails decision and the only repair path if a contribution ever fails
       mid-write (offline at the wrong moment – nothing retries it). Its doc
       comment and its RPC `push_plan_to_list` both say so.
-- [ ] **DS nit – `text/link` fails contrast on white** (measured 2026-07-28
+- [ ] **Split the `text/link` token in the DS – it is unreadable on white**
+      Why: #56C91D measures 2.15:1 on white, well below the accessibility
+           minimum. The token whose whole job is "this is a link" cannot be
+           legible only on coloured surfaces.
+      Owner: THE DS PROJECT, not this repo (Thomas, 2026-08-02). The app picks
+           it up on the next `npm run sync-ds-tokens`.
+      Meanwhile: the app has one use left – the wordmark – and it is exempt.
+           Any NEW use reintroduces the defect.
+
+      (measured 2026-07-28
       while building the website). `text/link` is **#56C91D**, which is
       **2.15:1** against #FFFFFF – far below the WCAG AA minimum of 4.5:1 for
       body text. It is the token whose whole job is "this is a link", so it
@@ -1826,7 +1975,14 @@ Closed 2026-07-27:
       Until it lands, any NEW use of `text/link` in the app reintroduces the
       defect – the app currently has exactly one, the wordmark, which is
       exempt (see the decided item under the pre-build audit).
-- [ ] **DS nit** (diagnosed 2026-07-27, fix is in FIGMA not in code):
+- [ ] **Repoint `contrast-text` in the prep-eat brand – it is wired to the wrong colour**
+      Why: DS hygiene. It aliases the dark ink where the sebell brand has
+           near-white.
+      Where: in FIGMA, not in code – the token exports are generated, so a
+           hand-edit would be overwritten.
+      Urgency: none. Nothing in the app consumes the affected tokens today.
+
+      (diagnosed 2026-07-27):
       in the **prep-eat** brand `color/text/contrast-text` aliases
       `{color.text.primary}` – i.e. the dark ink #4F4230 – where the **sebell**
       brand has it as a literal near-white #FBFBF9. That asymmetry between the
@@ -1902,7 +2058,14 @@ capability the report claims exists, does:
 | Several households | `households: Household[]` in `household-context.tsx` |
 | Manual shopping items | `addItem`, `src/lib/shopping-list.tsx:491` |
 
-- [ ] **Say what the app can already do, somewhere in first run.** The single
+- [ ] **Tell people what the app can already do, somewhere in first run**
+      Why: it does seven things nobody discovers. The panel called this its
+           biggest reframe – the problem is things unsaid, not things missing.
+      Left: several meals a day, per-meal servings, leftovers and eating out,
+           link import, ingredient search, belonging to more than one kitchen.
+      Done so far: the choice screen now names recipes, plan, list and sharing.
+
+      The single
       orienting sentence (*Your shopping list updates as you plan*, last line of
       screen 9) hides all seven capabilities above.
       (Synthetic User Panel: persona-as-lens, medium-high, all four reviews.)
@@ -1942,10 +2105,16 @@ different nouns between them.
       **DONE 2026-08-10.** The create option now reads *"Start fresh.
       Invite people whenever you like, **or keep it to yourself**."* Reversibility
       is still unstated.
-- [ ] **Answer the duplicate-household fear.** Five readers independently feared
-      that a partner installing the app that evening and also tapping "Start a
-      household" ends in two half-empty ones. Nothing on screens 5 to 7 says
-      whether that is possible, preventable or recoverable.
+- [ ] **Say what happens if both adults start their own kitchen**
+      Why: five readers independently feared ending up with two half-empty
+           kitchens, and nothing says whether that is possible, preventable or
+           recoverable.
+      Done so far: "Join an existing kitchen" is now equally weighted, so the
+           route exists.
+      Left: nothing says *"if someone at home already made one, join theirs."*
+      ⚠️ Do not reuse: the *"Is someone already using Prep+Eat?"* wording was
+           tried and dropped – Thomas: *"The yes and no is not the right way to
+           go."* This needs a different device.
       (Synthetic User Panel: comprehension, high.)
       **⚠️ PARTLY DONE 2026-08-10.** *"Join an existing kitchen"* is now equally
       weighted with create, so the route exists. **But nothing says "if someone at
@@ -1981,9 +2150,18 @@ week, seven rows MON–SUN each carrying **+ Add meal** and nothing else, one
 line *Your shopping list updates as you plan*, four tabs. It is the Plan tab,
 empty, on first launch – the destination, not a step.
 
-- [ ] **⭐ AGREED 2026-08-10 – OPEN ON RECIPES WHILE THE COOKBOOK IS EMPTY, on
-      Plan once it is not.** This is the surviving answer to the empty week, and
-      it replaces the tab-reorder idea below, which was tried and reverted.
+- [ ] **⭐ Open the app on Recipes while the cookbook is empty, on Plan once it is not**
+      Why: an empty week asks people to plan before they have anything to plan
+           with. Agreed 2026-08-10; this is the surviving answer to it.
+      Watch out: the redirect must fire ONCE PER LAUNCH. Otherwise someone who
+           adds their first recipe and taps Plan is bounced back to Recipes.
+      Not: a tab-bar change. Plan stays first. Reordering was tried and
+           reverted – see below.
+      Size: sketched, not built. `RootGate` already waits on a fetch, so the
+           "any recipes?" query is nearly free.
+
+      This
+      replaces the tab-reorder idea below, which was tried and reverted.
       **WHY THE EMPTY COOKBOOK AND NOT "FIRST LAUNCH"** (Thomas): someone who
       onboards and closes the app to do the big task another time *"haven't
       learned any think yet anyways"* – a first-launch flag would assume they
@@ -2034,10 +2212,10 @@ exactly the fix. Precedent exists – the shopping list already carries
 *transfer items from last week*. Does nothing for non-planners, who have no
 previous week to copy, which is the point: the split needs two fixes.
 
-- [ ] **All five personas stopped at step 9, the empty week.** Effort thresholds
-      were crossed earlier and elsewhere – three at step 5, one at step 7, one
-      only at step 9. Four steps of compliance separate "not worth it" from
-      "phone down"; compliance is not engagement.
+- [ ] **Give the empty week something to offer**
+      Why: all five personas put the phone down there. Effort thresholds were
+           crossed four steps earlier – compliance is not engagement.
+      Evidence: three gave up at step 5, one at 7, one only at 9.
       (Synthetic User Panel: walkthrough, medium.)
 - [x] **CLOSED 2026-08-10, Thomas: *"the result of overtesting/overthinking"*.**
       Agreed, and see the caveat above: the personas could not tap, so a label
@@ -2048,9 +2226,16 @@ previous week to copy, which is the point: the split needs two fixes.
       **Answer what happens when you tap "+ Add meal".** Three readers said this
       one unknown decided everything. Nothing answers it. Do users expect to type,
       or to pick? (Synthetic User Panel: walkthrough, medium.)
-- [ ] **DEFERRED to a later version 2026-08-10, Thomas's call – but keep it as a
-      LENS, not a feature.** It is not a thing to build; it is the test to apply
-      to anything built for the empty week. The tab reorder (Recipes first)
+- [ ] **A LENS, NOT A TASK: check every empty-week fix against BOTH halves**
+      Why: planners stopped at the empty week because it asks them to retype a
+           plan they already hold. Non-planners stopped there because they
+           cannot produce one at all. Same screen, opposite fixes.
+      Use it: before building anything for the empty week, ask which half it
+           serves. Opening on Recipes serves non-planners; copying last week
+           serves planners. Neither serves both.
+      Status: deferred as a feature 2026-08-10, Thomas's call.
+
+      The tab reorder (Recipes first)
       serves the non-planners; copy-last-week's-plan serves the planners.
       Neither serves both, and that is the whole point of the finding – so when
       the empty week is picked up, check any fix against BOTH halves before
@@ -2084,21 +2269,21 @@ belongs in Figma – logged here, not improvised.
       (Synthetic User Panel: copy review, high.)
       **DONE 2026-08-10.** The tagline is now *"Plan dinners, collect
       recipes and shop together."*
-- [ ] **⚠️ ROUND 2 CONFIRMS THE UNFIXED HALF (2026-08-10):** `anna@example.com`,
-      `Sofia` and `The Hansens` all still read as someone else's data, five of
-      five, with P07 saying he would think he had signed into the wrong account.
-      The rename fixed the "teaches the wrong task" half only, exactly as this
-      item predicted. It is a placeholder TREATMENT problem.
-- [ ] **`The Hanson Kitchen`** – all five. Teaches the wrong task and marks the
-      reader as a second market. In comprehension four readers took the
-      placeholder as real data, and two briefly thought the app had their name
-      wrong or someone else was signed in. (`create-household-modal.tsx:135`,
-      `onboarding-flow.tsx:318`.) (Synthetic User Panel: copy review, high.)
-      **⚠️ PARTLY DONE 2026-08-10.** Now **"The Hansens"** – which fixes the
-      "teaches the wrong task" half (naming a kitchen "… Kitchen" once kitchen is
-      the type word) and reads Nordic rather than Anglo. **The other half is not a
-      copy problem:** four readers took the placeholder for real data, which is a
-      placeholder TREATMENT issue.
+- [ ] **Make placeholder text look like a placeholder, not like real data**
+      Why: `anna@example.com`, `Sofia` and `The Hansens` read as someone
+           else's account. P07 said he would think he had signed into the
+           wrong one.
+      Evidence: five of five in round 2, four of five in round 1. Both rounds
+           independently, which is why this survived a rename.
+      Note: this is a TREATMENT problem, not a wording one – renaming to "The
+           Hansens" fixed the other half and left this untouched.
+      (`create-household-modal.tsx:135`, `onboarding-flow.tsx:318`.)
+      (Synthetic User Panel: copy review, high; confirmed round 2.)
+
+      Round 1's wording, kept because it names the half that IS fixed:
+      **`The Hanson Kitchen`** taught the wrong task (naming a kitchen
+      "… Kitchen" once kitchen is the type word) and **marked the reader as a
+      second market** – Anglo where the reader is Nordic. Both gone.
 - [x] **CLOSED 2026-08-10, Thomas: *"if they want to share, they will use it"*.**
       Two things support that. **The message is editable before sending** – the
       iOS share sheet drops it into Messages as a draft, so the worst case is
@@ -2113,18 +2298,25 @@ belongs in Figma – logged here, not improvised.
       **The share message** – four of five refused to send it. It is the only
       string the reader publishes under their own name.
       (Synthetic User Panel: copy review, high.)
-- [ ] **`your recipes and lists are safe`** – manufactures the anxiety it soothes,
-      on first launch, when the reader owns nothing. (`_layout.tsx:241`.)
-      (Synthetic User Panel: copy review, high.)
+- [ ] **Stop reassuring people about a loss they never worried about**
+      Why: on first launch the reader owns nothing, so "your recipes and lists
+           are safe" manufactures the anxiety it soothes.
+      Done so far: now *"nothing is lost"* – shorter, and no longer calls the
+           server failure their kitchen.
+      Left: it still reassures, which is the mechanism the panel objected to.
+      (`_layout.tsx:241`.) (Synthetic User Panel: copy review, high.)
       **⚠️ PARTLY DONE 2026-08-10.** Now *"nothing is lost"* – shorter, and no
       longer calls the server failure their kitchen. **But it still reassures about
       a loss nobody raised**, which is the mechanism the panel objected to.
-- [ ] **The expensive ones are the splits, not the misses.** *Your shopping list
-      updates as you plan* is the best line in the deck to Jonas and empty to the
-      other four. *repeat* is accurate to Mette and an insult to Sofie and Rikke.
-      *If you're the first one here* reads sad, presumptuous or nonsensical
-      depending on household shape. (`onboarding-flow.tsx:226`.)
-      (Synthetic User Panel: copy review, high.)
+- [ ] **Two lines land brilliantly for one reader and badly for the rest**
+      Why: a line that splits the audience costs more than one that misses
+           everybody, because it reads as written for someone else.
+      Left: *Your shopping list updates as you plan* (Plan tab) – the best
+           line in the deck to one reader, empty to the other four. And
+           *repeat* in the tagline – accurate to one, an insult to two.
+      Done so far: *If you're the first one here* is gone.
+      Note: the tagline is brand, so changing it is a bigger call than copy.
+      (`onboarding-flow.tsx:226`.) (Synthetic User Panel: copy review, high.)
       **⚠️ PARTLY DONE 2026-08-10.** *"If you're the first one here"* is gone.
       **Untouched:** *Your shopping list updates as you plan* (Plan tab) and
       *repeat* (the brand tagline) – both still split the panel.
@@ -2295,7 +2487,15 @@ says whether any of it costs anything commercially.
 
 ### What round 2 says about round 1's fixes
 
-- [ ] `2.22` **"kitchen" is understood – and every reader paid a beat to decode it.**
+- [ ] `2.22` **Reduce what "kitchen" costs a first-time reader**
+      Why: all five understood it, and all five had to work for it. That is a
+           cost, not a failure – round 1 had seven of seven unable to say what
+           a household was.
+      Strength: ⭐ the round's strongest finding. Nothing in the personas'
+           material pushed them here, so the agreement is real.
+      Note: the structural half of P03's complaint is 2.27 below, and no word
+           can fix it.
+
       All five got there; all five worked for it. P03: *"a thing you name, a
       thing you're in, and a tab. I have a kitchen. It's in Roskilde."*
       (Panel round 2: comprehension, high.)
@@ -2306,17 +2506,17 @@ says whether any of it costs anything commercially.
       **Still a large improvement:** round 1 had seven of seven unable to say
       what a household WAS. Nobody failed to decode kitchen. The residual is
       cost, not failure.
-- [ ] `2.27` **⚠️ The container cannot also be a peer tab.** P03's "and a tab" is the
-      structural half, and renaming could never reach it: Plan, Recipes and
-      Shopping all live INSIDE the kitchen, so a fourth sibling tab called
-      Kitchen sits next to its own contents. **This is a navigation question,
-      not a wording one** – do not try to fix it with a word.
+- [ ] `2.27` **Decide whether Kitchen should be a tab at all**
+      Why: Plan, Recipes and Shopping all live INSIDE the kitchen, so a fourth
+           sibling tab called Kitchen sits next to its own contents.
+      ⚠️ This is navigation work, not wording. Do not try to fix it with a word.
       (Panel round 2: comprehension, high.)
-- [ ] `2.26` **The invented sample data reads as someone else's.**
-      `anna@example.com`, `Sofia`, `The Hansens` – five of five stopped, and P07
-      said he would think he had signed into the wrong account. Confirms the
-      half of the round-1 `The Hanson Kitchen` item that renaming did NOT fix:
-      it is a placeholder TREATMENT problem. (Panel round 2: comprehension, high.)
+- [ ] `2.26` **Make placeholder text look like a placeholder** (same task as the
+      round-1 item above – tracked in both because both rounds found it)
+      Why: `anna@example.com`, `Sofia`, `The Hansens` – five of five stopped,
+           and P07 said he would think he had signed into the wrong account.
+      Note: a TREATMENT problem, not a wording one. Renaming did not touch it.
+      (Panel round 2: comprehension, high.)
 
 ### Screen 6 – what the report numbers 2.1 and 2.2
 
@@ -2327,8 +2527,12 @@ tagging the backlog against the report. Both are in the report.
       In round 1, seven of seven could not say what the thing being created
       *was*. This is the round-1 rewrite holding, and is logged so the win is
       not invisible. (Panel round 2: comprehension, high.)
-- [ ] `2.2` **It reads as naming an empty container, not as starting on food.**
-      Five of five. *"I make an empty box with a name on it, and then I get a
+- [ ] `2.2` **Make setting up a kitchen feel like starting on food, not naming a box**
+      Why: five of five. One reader expected to see a week; another expected to
+           be asked who eats here, and when. Nothing about dinner has happened
+           by the time they have a name and a code.
+
+      *"I make an empty box with a name on it, and then I get a
       code I am supposed to send to Kasper. Nothing about dinner has happened. I
       have named something."* One reader expected to see a week; another
       expected to be asked who eats here, and when.
@@ -2336,9 +2540,17 @@ tagging the backlog against the report. Both are in the report.
 
 ### The precondition problem – the biggest finding, and the most over-readable
 
-- [ ] `2.8` `2.9` **Screen 10 reads as homework, and all five concluded unprompted that the
-      plan and the shopping list do not work until recipes exist.** Nobody told
-      them that. P01: *"an empty cupboard with a note on it saying fill me."*
+- [ ] `2.8` `2.9` **Stop the first screen reading as homework**
+      Why: all five concluded, unprompted, that the plan and the shopping list
+           do not work until recipes exist. Nobody told them that.
+      ⚠️ Half of this is over-readable: *the words communicate a precondition*
+           stands. *This is where people quit* does NOT – four of the five
+           ledgers trace to one source.
+      ⚠️ It judges a change made the same day (`dd7ccdb`, landing an empty
+           kitchen on Recipes). Do not revert on this evidence alone.
+      Related: 2.10 below is the one line that offers a way past it.
+
+      P01: *"an empty cupboard with a note on it saying fill me."*
       P02: *"Skal jeg selv skrive pasta med kødsovs ind? Det kan jeg altså
       udenad."* and *"I had arrived in the wrong room."* P03: it says the job
       begins with building a cookbook, and that is a sit-down job.
@@ -2351,36 +2563,44 @@ tagging the backlog against the report. Both are in the report.
       kitchen on Recipes (commit `dd7ccdb`). It was meant to spare people the
       empty week. It may have swapped "a week you cannot fill" for "homework".
       Do not revert on this evidence alone; the caveat above is why.
-- [ ] `2.7` **"Take a look around" promised a tour and delivered one empty screen.**
-      Two readers. **Caused by a change made the same day** (`5bc480d`) – the
-      label was chosen to avoid promising a destination, and it promises an
-      experience instead. (Panel round 2: comprehension, high.)
+- [ ] `2.7` **Reword "Take a look around" – it promises a tour and delivers one empty screen**
+      Why: two readers expected to be shown something.
+      ⚠️ Self-inflicted, same day (`5bc480d`): the label was chosen to avoid
+           promising a destination, and it promises an experience instead.
+      (Panel round 2: comprehension, high.)
 
 ### Screen 6 – the choice is understood, four things around it are not
 
 The create-or-join fork itself now reads cleanly, which is the round-1 fix
 holding. What remains is information, not wording.
 
-- [ ] `2.3` **What the second person sees on arrival is never stated, and BOTH halves
-      of the household asked.** P01: does he see my plan, or another empty page
-      asking him to add a recipe? P03, from the other side: if she puts nothing
-      in, is this just a list I made for myself? (Panel round 2: information gap.)
-      Note this is exactly why P01 and P03 run as a pair.
-- [ ] `2.4` **Nobody can tell whether create-or-join is reversible.** P05 and P07 both
-      asked what happens if the other adult installs it later and creates their
-      own. P05 read *"join theirs instead of starting another"* as a warning
-      that two kitchens cannot be merged – and flagged that as a guess.
-      (Panel round 2: information gap.) **The round-1 duplicate-kitchen item is
-      therefore only half closed:** the sentence added on 2026-08-10 stops the
-      mistake, and answers nothing about recovering from it.
-- [ ] `2.4` **Whether the creator OWNS the kitchen is left open.** P03: the first
-      person names it and holds the code – does that make them the owner of
-      something? (Panel round 2: information gap.)
-- [ ] `2.4` **"Leave a kitchen and your recipes come with you" does not resolve.**
-      Three readers. Whose recipes, does the other party keep a copy, what if
-      both leave. P05: the closest thing on the page to an answer about his own
-      data, and he cannot tell what it promises. (Panel round 2: comprehension,
-      high.)
+- [ ] `2.3` **Say what the second person sees when they join**
+      Why: both halves of the household asked. P01: does he see my plan, or
+           another empty page asking him to add a recipe? P03, from the other
+           side: if she puts nothing in, is this just a list I made for myself?
+      (Panel round 2: information gap. This is exactly why P01 and P03 run as
+      a pair.)
+
+- [ ] `2.4` **Say whether create-or-join can be undone**
+      Why: P05 and P07 both asked what happens if the other adult installs the
+           app later and creates their own kitchen. P05 read *"join theirs
+           instead of starting another"* as a warning that two kitchens can
+           never be merged – and flagged that as a guess.
+      Note: this half-closes the round-1 duplicate-kitchen item. The sentence
+           added on 2026-08-10 stops the mistake and says nothing about
+           recovering from it.
+      (Panel round 2: information gap.)
+
+- [ ] `2.4` **Say whether the person who made the kitchen owns it**
+      Why: P03 – the first person names it and holds the code. Does that make
+           them the owner of something?
+      (Panel round 2: information gap.)
+
+- [ ] `2.4` **Explain what "leave a kitchen and your recipes come with you" means**
+      Why: three readers. Whose recipes, does the other person keep a copy,
+           what if both leave. P05 called it the closest thing on the page to
+           an answer about his own data, and could not tell what it promises.
+      (Panel round 2: comprehension, high.)
 
 ### The store page – promises the first session does not keep
 
@@ -2388,58 +2608,78 @@ holding. What remains is information, not wording.
 [app-store-listing.md](app-store-listing.md)), so they are the cheapest items
 here. Fix them there, not in a copy of them.
 
-- [ ] `2.10` **⭐ "Not every meal is a recipe – leftovers and eating out belong on the
-      plan too" is the line that mattered most, and nothing confirms it.** Three
-      readers recalled it. P03 liked it best on the whole page and asked why it
-      is buried. **P01 built her entire escape route on it** – put "pasta" on
-      Tuesday, skip the recipe – then had to mark it a guess. **Fix this in the
-      APP, not the listing:** it is the one line that offers a way past the
-      precondition problem above. (Panel round 2: comprehension, high.)
-- [ ] `2.11` **"Keep every recipe in one place" was read as *they are already
-      somewhere*, and screen 10 contradicts it directly.** P02.
-- [ ] `2.12` **"Type them in, or paste a link" sets up two routes; screen 10 offers
-      one.** P05 expected paste-a-link to be equal and found it unmentioned.
-      P01 sat up at the line, then found it does not describe what she has – 40
-      screenshots and saved Instagram posts, no links.
-- [ ] `2.13` **The plan is a week in every reader's head and never a day.** All five
-      inferred a seven-day grid from the repeated "the week" without being shown
-      one. P02 noticed the missing option – *"it never offered me a day"* – and
-      asked whether it can tell her what to make right now. **Strong constraint
-      behind this one:** deciding shortly before cooking is the majority Danish
-      pattern.
-- [ ] `2.14` **"What can I make with aubergine?" was read as searching only your own
-      typed-in recipes.** Nothing confirms or denies the scope. P02: it can
-      answer that once she has done a lot of typing.
-- [ ] `2.15` **"The app learns your corrections" – nobody knows whose.** Three readers.
-      P05: if I move something to Dairy, has my wife's list changed?
-- [ ] `2.16` **Deletion is answered; EXPORT is not.** P05 separated two things the
-      privacy block conflates: *"Data i EU. Det er pænt. Men hvor får jeg dem ud
-      henne?"* (Panel round 2: information gap.)
-- [ ] `2.20` **No price anywhere, and three readers filled the gap by assuming free.**
-      P05: *"Ti skærme, og ingen pris"* – and if a paywall appeared after screen
-      10 he would call the store page misleading by omission. **Recorded as a
-      gap in the copy, not as anything about willingness to pay.** ⚠️ Partly
-      reopens the round-1 money item, which was closed on the grounds that the
-      store answers it – it answers it in the PRICE FIELD, not in the words.
-- [ ] `2.17` **"Cooking for three on Tuesday and eight on Saturday" teaches one number
-      per meal, and one household cannot use that number.** P07 derived the
-      model correctly and found nowhere for his real case: one pot producing a
-      meat-free portion at 18:00, a large cold one at 20:45, one under
-      clingfilm, one boxed for tomorrow. Confirms the round-1 portions finding
-      that was CLOSED as out of scope – closing it stands, but the store page
-      now teaches the limitation explicitly.
-- [ ] `2.18` **Nothing addresses one person in the house eating differently.** P07 for
-      a vegetarian daughter, P01 for a child who will not eat sauce. Both found
-      silence and assumed it cannot be done. (Panel round 2: information gap.)
-- [ ] `2.19` **The shopping half describes walking round a physical shop, and one
-      reader read the absence as a fact.** P05, on *"whoever is closest to the
-      shop"* and *"two people in two aisles"*: not one word about ordering
-      online, so he read the whole shopping half as not describing how he buys
-      food. **Underlying evidence solid.**
-- [ ] `2.21` **⚠️ BRAND-LEVEL: "Prep" was read as Sunday meal-prep with plastic tubs.**
-      P02 filed the product as not-for-her **off the name, before reading the
-      page**. One reader, no ledger, and the only finding in either round that
-      touches the name itself. (Panel round 2: comprehension, high.)
+- [ ] `2.10` **⭐ Show IN THE APP that a meal can go on the plan without a recipe**
+      Why: it is the one line that offers a way past the precondition problem
+           above, and nothing in the app confirms it. P01 built her whole
+           escape route on it – "pasta" on Tuesday, no recipe – then had to
+           mark it a guess.
+      ⚠️ This one is an APP change, unlike the rest of this section. Three
+           readers recalled the line; P03 liked it best on the page and asked
+           why it is buried.
+      (Panel round 2: comprehension, high.)
+
+- [ ] `2.11` **Reword "Keep every recipe in one place"**
+      Why: P02 read it as *they are already somewhere*, and the empty recipes
+           screen contradicts it directly.
+
+- [ ] `2.12` **Make "paste a link" real, or stop promising it equally**
+      Why: the listing sets up two routes and the app offers one. P05 expected
+           them to be equal. P01 sat up at the line, then found it does not
+           describe what she has – 40 screenshots and saved Instagram posts,
+           no links.
+
+- [ ] `2.13` **Say whether you can plan a single day, not just a week**
+      Why: all five inferred a seven-day grid from the repeated "the week"
+           without being shown one. P02 noticed the missing option – *"it
+           never offered me a day"* – and asked whether it can tell her what
+           to make right now.
+      Constraint: deciding shortly before cooking is the majority Danish
+           pattern, so this is more than a wording gap.
+
+- [ ] `2.14` **Say what "What can I make with aubergine?" actually searches**
+      Why: read as searching only your own typed-in recipes, and nothing
+           confirms or denies it. P02: it can answer that once she has done a
+           lot of typing.
+
+- [ ] `2.15` **Say whose list changes when the app learns a correction**
+      Why: three readers. P05: if I move something to Dairy, has my wife's
+           list changed?
+
+- [ ] `2.16` **Say how to get your data OUT**
+      Why: the privacy block answers deletion and conflates it with export.
+           P05: *"Data i EU. Det er pænt. Men hvor får jeg dem ud henne?"*
+      (Panel round 2: information gap.)
+
+- [ ] `2.20` **Say somewhere in words that the app is free**
+      Why: three readers filled the silence by assuming free. P05 – *"Ti
+           skærme, og ingen pris"* – said a paywall after screen 10 would make
+           the store page misleading by omission.
+      Note: this is about the copy, not about willingness to pay. ⚠️ It partly
+           reopens the round-1 money item, closed on the grounds that the store
+           answers it – it answers it in the PRICE FIELD, not in the words.
+- [ ] `2.17` **Stop the store page teaching a portions model the app cannot honour**
+      Why: "cooking for three on Tuesday and eight on Saturday" teaches one
+           number per meal. P07 derived it correctly and found nowhere for his
+           real case – one pot, four sittings across an evening.
+      Note: the round-1 portions finding was closed as out of scope and stays
+           closed. What changed is that the page now advertises the limit.
+
+- [ ] `2.18` **Say something about one person in the house eating differently**
+      Why: P07 has a vegetarian daughter, P01 a child who will not eat sauce.
+           Both found silence and assumed it cannot be done.
+      (Panel round 2: information gap.)
+
+- [ ] `2.19` **Stop the shopping copy assuming a physical shop**
+      Why: P05 read *"whoever is closest to the shop"* and *"two people in two
+           aisles"*, found not one word about ordering online, and concluded
+           the app does not describe how he buys food.
+
+- [ ] `2.21` **⚠️ BRAND-LEVEL: decide whether "Prep" is costing us readers**
+      Why: P02 read it as Sunday meal-prep with plastic tubs and filed the
+           product as not-for-her off the NAME, before reading the page.
+      Weight: one reader, no supporting ledger – and the only finding in
+           either round that touches the name itself.
+      (Panel round 2: comprehension, high.)
 
 ### Sentences nobody could parse
 
@@ -2449,25 +2689,34 @@ stopped on each, which is what makes them the cheapest items in the round.
 the invented sample data) because they are bigger than a sentence. These three
 are just sentences, and were missed on the first pass through these findings.
 
-- [ ] `2.23` **"on your phone only" – nobody could tell whether it is a reassurance or
-      a limitation.** Five of five. From the store page: *"Cooking mode ticks off
-      ingredients and steps as you go, on your phone only."* It is meant as
-      privacy; it reads equally as a restriction. (Panel round 2: comprehension,
-      high.)
-- [ ] `2.24` **"everything downstream keeps up" stopped all five.** Store page, the
-      plan section. No reader could say what "downstream" referred to.
+- [ ] `2.23` **Rewrite "on your phone only"**
+      Why: five of five could not tell whether it is a reassurance or a
+           limitation. It is meant as privacy and reads equally as a
+           restriction.
       (Panel round 2: comprehension, high.)
-- [ ] `2.25` **The rescale sentence about ticked items is decodable, and costs.**
-      *"…remove it and its share comes back off – without touching anything you
-      have already ticked or edited by hand."* Five of five stopped; **three got
-      to the right meaning while saying they were not sure they had.** That is a
-      sentence doing correct work badly, not a wrong sentence.
+
+- [ ] `2.24` **Rewrite "everything downstream keeps up"**
+      Why: stopped all five. No reader could say what "downstream" referred to.
+      (Panel round 2: comprehension, high.)
+
+- [ ] `2.25` **Rewrite the sentence about ticked items surviving a rescale**
+      The sentence: *"…remove it and its share comes back off – without
+           touching anything you have already ticked or edited by hand."*
+      Why: five of five stopped, and three reached the right meaning while
+           saying they were not sure they had. A sentence doing correct work
+           badly, not a wrong sentence.
       (Panel round 2: comprehension, high.)
 
 ### One sentence that did opposite jobs
 
-- [ ] `2.6` **"You can also do this later from the Kitchen tab" reassured one reader
-      and gave another permission to skip.** P05 took it as *the code persists*.
+- [ ] `2.6` **Reassure people the invite code persists without telling them to skip it**
+      Why: the same sentence did both jobs. P05 read *the code persists*. P01
+           read *I need not do this now* – *"Jeg deler den kode i morgen"* –
+           which she said she would not otherwise have done.
+      ⚠️ Self-inflicted, same day (`d6e0367`): added to stop the invite step
+           reading as compulsory. It worked, and that is the problem.
+
+      P05 took it as *the code persists*.
       P01 took it as *I need not do this now* – *"Jeg deler den kode i morgen,"*
       which she said she would not otherwise have done. **Caused by a change
       made the same day** (`d6e0367`), added to stop the invite step reading as
@@ -2497,9 +2746,14 @@ are just sentences, and were missed on the first pass through these findings.
 
 ## Ideas – not yet committed
 
-- [ ] **🌙 MOONSHOT: import a recipe from an Instagram video** (Thomas,
-      2026-08-07, confirming he means the recipe is IN THE VIDEO - spoken aloud
-      or shown as on-screen text - not in the caption).
+- [ ] **🌙 MOONSHOT: import a recipe from an Instagram video**
+      Why: the recipe is IN the video – spoken aloud or on-screen – not in the
+           caption (Thomas, 2026-08-07).
+      ⚠️ Settle first: getting the video file at all is a LEGAL question, not
+           a technical one. Instagram blocks it and it is against their terms.
+           If the answer is no, everything else is moot.
+      Note: reading the content is the easy half – Apple ships on-device
+           transcription and OCR.
       **⚠️ THE HARD PART IS NOT THE AI. IT IS GETTING THE VIDEO.** Ranked by
       actual difficulty, which is the reverse of how it feels:
       1. **Obtaining the file - the real blocker, and it is legal rather than
@@ -2539,8 +2793,18 @@ are just sentences, and were missed on the first pass through these findings.
       one notch easier, and would be the natural place to learn whether this
       approach is viable at all.
 
-- [ ] **🌙 MOONSHOT: pull the ingredient and the amount out of a messy line, and
-      nothing else** (Thomas, 2026-08-07). His examples, one per language:
+- [ ] **🌙 MOONSHOT: pull just the ingredient and the amount out of a messy line**
+      Why: prep text left in the name splits a shopping row – "long beans, cut
+           into short pieces" and "long beans" are two things to buy. Same
+           wound as the duplicate-items bug and Teach-a-synonym.
+      Why it is hard: the boundary between a name and a modifier is semantic.
+           `beans, black` and `long beans, chopped` have the same shape and
+           opposite answers.
+      ⚠️ Less risky than it sounds: the human reviews every import before it
+           saves, so this is assistive, not autonomous. A wrong guess costs one
+           edit – which moves the bar from "near perfect" to "usefully better".
+
+      (Thomas, 2026-08-07.) His examples, one per language:
       - `½ cup long beans, cut into short pieces` → **long beans, ½ cup**
       - `æg, sammenpisket til pensling, 1` → **æg, 1**
       **WHY IT IS A MOONSHOT AND NOT A PARSER TWEAK.** The boundary between a
@@ -2593,10 +2857,17 @@ are just sentences, and were missed on the first pass through these findings.
       any of this. Note also that fixing the importer does NOT repair recipes
       already imported: there is still no re-import action.
 
-- [ ] **Keep the screen awake on a recipe's detail screen** (Thomas,
-      2026-08-07). Cooking with sticky hands and a phone that dims every 30
-      seconds is the problem; this is the one screen where the phone is propped
-      up and read from across a worktop.
+- [ ] **Stop the screen dimming while you cook from a recipe**
+      Why: sticky hands and a phone that dims every 30 seconds. This is the one
+           screen propped up and read from across a worktop.
+      Decide first (none of it technical): the whole recipe or a deliberate
+           "cook mode"? The steps only, or the ingredients too? And should the
+           user be able to see it is on – an unexplained always-on screen reads
+           as a bug.
+      Size: tiny to build – `useKeepAwake()` is roughly the whole change.
+      Blocked by: no design exists for any of the three decisions.
+
+      (Thomas, 2026-08-07.)
       Cheap: `expo-keep-awake` ships with the SDK, and `useKeepAwake()` in
       [src/app/recipes/[id].tsx](../src/app/recipes/[id].tsx) is roughly the
       whole build - it activates on mount and releases on unmount, so leaving
@@ -2612,8 +2883,21 @@ are just sentences, and were missed on the first pass through these findings.
          for and cannot see the reason for reads as a bug, not a feature.
       No design exists for any of that.
 
-- [ ] **⚠️ NINE SHEETS STILL HAVE NO HEIGHT CAP** (found 2026-08-07 while fixing
-      the ingredient sheet, which was the tenth). A `BottomSheet` without the
+- [ ] **⚠️ Put a height cap on the nine sheets that still lack one**
+      Why: an uncapped sheet grows with its content until the close button goes
+           off the top of the screen and the sheet cannot be dismissed. That
+           already happened to the ingredient sheet the moment it gained one
+           more button.
+      Watch: import-recipe (keyboard is up) and edit-profile (three buttons).
+           Neither is tall enough to break TODAY – which is exactly what was
+           true of the ingredient sheet until it wasn't.
+      Size: its own sitting, each sheet walked. Adding the cap also wraps the
+           contents in a spacing container, so it can shift layout subtly, and
+           nine screens changed without walking any is how a fix becomes a bug
+           round.
+
+      (Found 2026-08-07 while fixing
+      the ingredient sheet, which was the tenth.) A `BottomSheet` without the
       `scroll` prop has no maxHeight at all: it simply grows with its body, and
       the title-and-close row sits ABOVE the scroll area, so once content plus
       keyboard exceeds the screen the close button goes off the top and the sheet
@@ -2632,7 +2916,16 @@ are just sentences, and were missed on the first pass through these findings.
       screens changed without walking any of them is how a fix becomes a bug
       round. Worth its own sitting, each one walked.
 
-- [ ] **Leave a household from the SWITCHER** (Thomas, 2026-08-07, walking the
+- [ ] **Let people leave a kitchen from the switcher**
+      Why: Thomas went looking there and could not find it. Leaving lives
+           inside Edit profile, which is about your name and your account –
+           the switcher is where the kitchen itself is the subject.
+      Weigh first: leaving is irreversible-ish, so it should not sit one tap
+           from a routine switch.
+      Blocked by: no frame draws a leave affordance in the switcher.
+      Note: leaving DOES exist today – Kitchen tab → your name → Edit profile.
+
+      (Thomas, 2026-08-07, walking the
       0032/0033 device list: *"it is not possible to leave a household from the
       switcher, but maybe it should be"*).
       **Leaving does exist** – Household tab → tap your own name → Edit profile →
@@ -2652,7 +2945,19 @@ are just sentences, and were missed on the first pass through these findings.
       is a small surface that already carries create and join.
       **Needs a design**, per the no-improvised-UI rule – no frame draws a leave
       affordance in the switcher today.
-      hurts** (found 2026-08-03 by Thomas testing the retry screens).
+
+- [ ] **Show the shopping list when the phone has no signal**
+      Why: the list is the one screen used standing in a shop, which is exactly
+           where signal is worst – and today you get an error and nothing else.
+      Not a defect: every error path behaves as designed. It is a product
+           assumption (the app assumes it is online) with no fallback.
+      Cheap first step: cache the CURRENT week's list and show it read-only
+           when the load fails. Covers the in-the-shop case without touching
+           the sync model.
+      Decide: before the family relies on it weekly.
+
+      (Found 2026-08-03 by Thomas testing the retry screens. The item's opening
+      line was lost at some point before 2026-08-11 and is restored here.)
       Force-quit the app, lose signal, reopen: you get "Can't reach your
       kitchen" and nothing else – no plan, no recipes, and no shopping list.
       Confirmed in code: `AsyncStorage` holds only the auth session, the
@@ -2673,23 +2978,41 @@ are just sentences, and were missed on the first pass through these findings.
       bites: cache just the CURRENT week's list and show it read-only when the
       load fails, which covers the in-the-shop case without touching sync.
       Worth a decision before the family relies on it weekly.
-- [ ] **Invite code as a filled brand chip** (measured 2026-08-02, not
-      committed to). White on #378112 clears AA at 4.87:1 and would make the
+- [ ] **Show the invite code as a filled brand chip**
+      Why: it would make the code look like a thing to be copied, while keeping
+           the brand green.
+      Note: purely an enhancement. The accessibility defect is already fixed
+           and both invite surfaces agree – there is nothing wrong to repair.
+      Only if: Thomas wants to design it.
+
+      (Measured 2026-08-02, not
+      committed to.) White on #378112 clears AA at 4.87:1 and would make the
       code look like a thing to be copied while keeping the brand green. Purely
       an enhancement – the accessibility defect is already fixed with
       `text/default` (9.12:1) and both invite surfaces now agree, so there is
       nothing wrong to repair. Only worth doing if Thomas wants to design it.
-- [ ] **Per-store category layouts** (Thomas, 2026-07-06): save the category
-      order per named store ("Netto", "Bilka"…), so entering a store sorts
-      the list to that store's layout. Simple version: pick the store when
-      you start shopping. Stretch: auto-switch by location. Needs a small
-      `store_layouts` table (household_id, name, category_order) on top of
-      the existing single order.
-- [ ] AI first-guess for categories, in front of the learned memory
-      (decision #7 names this as the natural v1.1 upgrade).
-- [ ] Smart quantity parsing when adding items ("Milk 2L" → name + quantity).
-- [ ] **Statistics on the plan – the app learns your habits** (Thomas,
-      2026-07-25): the household has been building a real history in
+- [ ] **Sort the shopping list to the layout of the shop you are in**
+      Why: aisle order differs per shop, and the list currently has one order.
+      Simple version: pick the store ("Netto", "Bilka"…) when you start
+           shopping. Stretch: auto-switch by location.
+      Size: a small `store_layouts` table (household_id, name, category_order)
+           on top of the existing single order.
+      (Thomas, 2026-07-06.)
+
+- [ ] **Have AI guess a category before the learned memory takes over**
+      Why: decision #7 names this as the natural v1.1 upgrade.
+
+- [ ] **Parse quantities typed into the add-item field** ("Milk 2L" → name + quantity)
+
+- [ ] **Show the household what it actually cooks**
+      Why: the plan has been collecting real history since July and nothing
+           reads it back. It could suggest a week from your own rotation
+           rather than a blank slate – which is the empty week's problem.
+      Decide: how much is a screen you visit versus quiet suggestions inside
+           the existing flow.
+      Size: cheap to try – no new data collection needed for a first version.
+
+      (Thomas, 2026-07-25): the household has been building a real history in
       `meal_plan_entries` since July (every meal, its day and its servings),
       and today nothing reads it back except the "recently planned" ordering
       in the picker. Ideas it could support: what you actually cook most; what
@@ -2703,9 +3026,19 @@ are just sentences, and were missed on the first pass through these findings.
 
 ## Pre-launch checklist (v1 ship)
 
-- [ ] **⏳ The Mac belongs to the employer, and Thomas is job-hunting**
-      (2026-08-04). Not *if* the machine goes but *when*, so everything held
-      only there has a deadline. **Full checklist:
+- [ ] **⏳ Get everything off the work Mac before it goes back**
+      Why: the machine belongs to the employer and Thomas is job-hunting. Not
+           *if* it goes but *when*.
+      Must be copied off: `~/Prepeat-backups/` (58 MB, nothing else holds it),
+           `app-store-assets/` (10 MB), Claude's memory folder, the two env
+           files.
+      Travels by itself: all four accounts are personal, and the signing key is
+           already in Apple Passwords on a personal Apple ID.
+      ⚖️ Worth a professional, not Claude: a commercial product built on
+           employer hardware. IP clauses sometimes reach further than people
+           expect, and it is cheaper to check early.
+
+      (2026-08-04.) **Full checklist:
       [backups-and-local-db.md](backups-and-local-db.md) → "Leaving the company
       Mac"**, audited the same day. Headlines:
       - **Travels by itself:** all four accounts are personal (GitHub, Apple
@@ -2752,7 +3085,21 @@ are just sentences, and were missed on the first pass through these findings.
       files (re-derivable from the Supabase dashboard). The other single-copy
       item is `~/Prepeat-backups/` itself.
 
-- [ ] **Supabase Pro is MONITORED, not scheduled** (Thomas, 2026-08-04, after
+- [ ] **Watch for the moment Supabase Pro becomes necessary** (a standing check, not a task to do)
+      Upgrade when ANY one of these is true:
+        1. real users who cannot be phoned – ~30+ monthly actives, or the first
+           support email from a stranger. Today's 18 are family and testers;
+        2. more than a few days away from the Mac – turn it on BEFORE
+           travelling;
+        3. egress or database past half the free limit. At 162 MB / 31 MB
+           today, so distant.
+      Why not now: Pro only adds two things – it runs when the Mac does not,
+           and it sits somewhere other than the desk. On retention it is
+           WORSE than what we have, and its backups have never been restored.
+      Do together with: the dev-environment decision. Trigger 1 is the same
+           moment for both.
+
+      (Thomas, 2026-08-04, after
       asking whether he had to upgrade or could watch – the honest answer
       changed once the local backup was proven to restore).
       **What Pro would actually add, given what now exists:** only two things –
@@ -3074,7 +3421,19 @@ missing from it entirely.
             processed inside the EU rather than the US. Good for the privacy
             policy's data-location paragraph; still confirm it in Resend's own
             terms before treating it as settled.
-- [ ] ⚠️ **The Apple reviewer cannot sign in.** `src/lib/auth.tsx:58` uses
+- [ ] ⚠️ **Keep the Apple reviewer's demo mailbox working**
+      Why: the app signs you in with an emailed code, so a reviewer needs a
+           real mailbox they can open. This is the reviewer's very first
+           action, and the one thing that turns a week in the queue into a
+           rejection plus another week.
+      Status: built, seeded and CONFIRMED WORKING 2026-08-07. Open only
+           because it needs re-checking before each submission – the demo
+           week is dated, so re-run the seed close to submitting.
+      Do not: use the Postgres test-OTP trigger. It writes into Supabase's
+           internal auth schema, is a permanent known-code backdoor, and rots
+           silently. Fallback only if Apple pushes back.
+
+      `src/lib/auth.tsx:58` uses
       `signInWithOtp` – a one-time code emailed to you, no password anywhere.
       A reviewer handed an email address cannot receive that code, and offering
       to relay it by hand does not pass review.
@@ -3208,7 +3567,14 @@ missing from it entirely.
       home when `!__DEV__` (a deep link in a Release build goes nowhere) and
       the hidden tab trigger is only registered under `__DEV__`. Kept for dev
       use rather than deleted – it is the DS-token verification tool.
-- [ ] Icon/splash follow-ups – iOS app icon + launch screen shipped
+- [ ] **Finish the icon and splash variants**
+      Why: nothing here ships while the app is iOS-only, so this waits for
+           Android and for an iOS 18 appearance pass.
+      Left: no ios-dark / ios-tinted icon variants, and the Android splash
+           still uses Expo's default.
+      Done: the iOS icon, the iOS launch screen, and the Android adaptive icon.
+
+      iOS app icon + launch screen shipped
       2026-07-23; the **Android adaptive icon is DONE too** (foreground,
       background and monochrome art all present in assets/images, contrary to
       the older note here). Still open: no ios-dark / ios-tinted icon variants
@@ -3329,7 +3695,15 @@ missing from it entirely.
   `scratchpad/gen-bulk.ts` from that session – it drives the app's own
   `importRecipeFromUrl` + `parseQuantity` offline, so seeded data goes through
   exactly the same parser as a real import.
-- [ ] **Renew the free signing every ~7 days.** BOTH phones now run the dev
+- [ ] **Rebuild the dev app when it stops opening** (probably obsolete – see below)
+      When: if the dev app refuses to open on either phone, run
+           `./scripts/build-iphone.sh` and re-trust it if prompted.
+      ⚠️ Probably not needed at all: measured 2026-07-27, the signing is a PAID
+           team, so the profile runs to 2027 – a year, not seven days. Kept as
+           a safety net. If the app is still opening fine, delete this item.
+      Note: TestFlight is separate and unaffected.
+
+      BOTH phones now run the dev
       app ("Prep+Eat Dev", bundle app.prepeat.dev) from
       `./scripts/build-iphone.sh <UDID>` – no arg defaults to Thomas's. The
       2026-07-25 builds expire around **2026-08-01**; when the app stops
@@ -3350,9 +3724,11 @@ missing from it entirely.
       2027-07-06 – a year each, not seven days. The "expires 2026-08-01" date
       above is fiction. Kept as a safety net until mid-August; if the app is
       still opening fine then, delete this item.
-- [ ] After every DS publish/retune (Thomas says "DS published"): rebuild
-      tokens in the DS repo, `npm run sync-ds-tokens` here, diff
-      ds-theme.cjs and walk the affected screens (agreed 2026-07-12).
+- [ ] **After every DS publish, re-sync the tokens**
+      Trigger: Thomas says "DS published".
+      Steps: rebuild tokens in the DS repo → `npm run sync-ds-tokens` here →
+           diff `ds-theme.cjs` → walk the affected screens.
+      (Agreed 2026-07-12.)
 
 ## Decisions log (recent)
 

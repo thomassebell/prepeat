@@ -62,7 +62,8 @@
     "backup": "./scripts/backup-supabase.sh --force",
     "backup:install": "./scripts/install-backup-job.sh",
     "hooks:install": "./scripts/install-git-hooks.sh",
-    "backup:verify": "./scripts/verify-backup-restore.sh"
+    "backup:verify": "./scripts/verify-backup-restore.sh",
+    "backlog:view": "node ./scripts/backlog-view.mjs && open docs/backlog-view.html"
   },
   "private": true
 }
