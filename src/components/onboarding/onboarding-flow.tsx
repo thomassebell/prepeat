@@ -362,7 +362,10 @@ const stackedWordmark = ['prep', 'cook', 'eat', 'repeat'];
 export function WelcomeScreen({
   household,
   onContinue,
-  buttonLabel = 'Start planning',
+  // Never name a destination here: a creator's kitchen is empty and opens on
+  // Recipes, a joiner's usually has recipes and opens on Plan. "Start planning"
+  // promised one of those and delivered the other (Thomas, 2026-08-10).
+  buttonLabel = 'Take a look around',
 }: {
   household: Household;
   onContinue: () => void;

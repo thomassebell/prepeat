@@ -79,7 +79,6 @@ export function CreateHouseholdModal({
         <SafeAreaProvider initialMetrics={initialWindowMetrics}>
           <WelcomeScreen
             household={created}
-            buttonLabel="Take a look around"
             onContinue={() => {
               const result = created;
               reset();

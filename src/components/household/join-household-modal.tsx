@@ -77,7 +77,6 @@ export function JoinHouseholdModal({
         <SafeAreaProvider initialMetrics={initialWindowMetrics}>
           <WelcomeScreen
             household={joined}
-            buttonLabel="Take a look around"
             onContinue={() => {
               const result = joined;
               reset();
