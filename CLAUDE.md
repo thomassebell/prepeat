@@ -60,6 +60,16 @@ Eat. Repeat." The old working name "Madapp" may linger in docs/projektgrundlag.
   `npm run backup:install` is re-run** – the scheduled job runs an installed
   copy, because macOS forbids background jobs from reading `~/Documents`.
 
+- `npm run hooks:install` – install the git hooks from `scripts/git-hooks/`.
+  Currently one: **every commit on `main` pushes to GitHub automatically**, in
+  the background, never forced. Added 2026-08-10 after pushing silently stopped
+  on 08-07 and 43 commits – including the household-boundary security work – sat
+  on one Mac for three days while a version was in review.
+  **Editing `scripts/git-hooks/post-commit` does nothing until this is re-run**,
+  because git reads `.git/hooks/`, which is not version controlled – the same
+  gotcha as the backup job. A failed push prints a warning and logs to
+  `.git/autopush.log`; silence means it worked.
+
 **These commands are yours to run, not Thomas's** (agreed 2026-08-04 – he is
 not a developer and should not have to remember them). Standing rules:
 1. **`npm run backup` before applying anything destructive** to the live

@@ -61,6 +61,7 @@
     "db:status": "supabase status",
     "backup": "./scripts/backup-supabase.sh --force",
     "backup:install": "./scripts/install-backup-job.sh",
+    "hooks:install": "./scripts/install-git-hooks.sh",
     "backup:verify": "./scripts/verify-backup-restore.sh"
   },
   "private": true
