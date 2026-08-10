@@ -101,8 +101,16 @@ the machine leaves the building**.
 
 ### 1. 🤖 Push everything
 
-Ask Claude: *"check every repo for unpushed commits"*. The prepeat repo pushes
-itself after every commit; the others do not.
+Ask Claude: *"check every repo for unpushed commits"*.
+
+**prepeat** and **design-system** push themselves after every commit on `main`
+(a git hook – see `scripts/git-hooks/post-commit` in either). **claude-config**
+is pushed by the snapshot script. **prepeat-web** and **synthetic-user-panel**
+have no hook, so check those by hand.
+
+That list is worth trusting only as far as its date: design-system got its hook
+on 2026-08-11, after a commit was found four days unpushed – the same failure
+Prep+Eat had, moving to the repo that had not been fixed.
 
 ### 2. 🤖 Copy off the four things
 
