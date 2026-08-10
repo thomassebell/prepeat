@@ -1,4 +1,4 @@
-import { Redirect, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 import {
@@ -32,10 +32,9 @@ import { DAY_LABELS, DAY_NAMES, weekDates } from "@/lib/week";
 // week; "Add all to shopping list" links the week to the list, after which
 // plan edits reconcile automatically (A + rails).
 
-// Which kitchens have already had their launch decision made. ONCE PER LAUNCH,
-// not once per render: without this, adding your first recipe and tapping Plan
-// would bounce you straight back to Recipes (Thomas, 2026-08-10).
-const launchDecided = new Set<string>();
+// Which kitchens have already had their launch nudge. ONCE PER LAUNCH – the
+// nudge moves you off an empty week; it must never PIN you to Recipes.
+const launchNudged = new Set<string>();
 
 /**
  * An empty cookbook opens on Recipes instead of on an empty week.
@@ -46,40 +45,41 @@ const launchDecided = new Set<string>();
  * (Thomas, 2026-08-10). Self-correcting: the moment a recipe exists, Plan opens
  * for good.
  *
+ * ⚠️ NAVIGATES, rather than rendering <Redirect>, and that is the whole trick.
+ * A tab screen stays MOUNTED while you are on another tab, so a redirect held
+ * in render state fires again on every visit – which locked people out of the
+ * plan entirely until they saved a recipe (found on device 2026-08-10). A
+ * one-shot navigation in an effect cannot do that: it happens once and leaves
+ * no state behind to repeat itself.
+ *
  * Deliberately NOT blocking. Everyone with recipes – nearly every launch – gets
- * the plan with no delay; only the empty case pays, and it pays by being moved
- * somewhere more useful.
+ * the plan with no delay; only the empty case is moved.
  */
-function useEmptyCookbookRedirect(): boolean {
+function useEmptyCookbookNudge(): void {
   const household = useHousehold();
-  const [leave, setLeave] = useState(false);
+  const router = useRouter();
   useEffect(() => {
-    if (launchDecided.has(household.id)) return;
+    if (launchNudged.has(household.id)) return;
     let cancelled = false;
     hasAnyRecipe(household.id)
       .then((has) => {
         if (cancelled) return;
-        launchDecided.add(household.id);
-        if (!has) setLeave(true);
+        launchNudged.add(household.id);
+        if (!has) router.replace("/recipes");
       })
       .catch((error) => {
         // Never strand someone on an empty week because a query failed.
         console.warn("[plan] cookbook check failed", error);
-        if (!cancelled) launchDecided.add(household.id);
+        if (!cancelled) launchNudged.add(household.id);
       });
     return () => {
       cancelled = true;
     };
-  }, [household.id]);
-  return leave;
+  }, [household.id, router]);
 }
 
 export default function PlanScreen() {
-  // Checked before MealPlanProvider mounts, so a kitchen we are about to leave
-  // never loads a week it will not show.
-  if (useEmptyCookbookRedirect()) {
-    return <Redirect href="/recipes" />;
-  }
+  useEmptyCookbookNudge();
   return (
     <MealPlanProvider>
       <PlanContent />
