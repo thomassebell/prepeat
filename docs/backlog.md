@@ -1872,6 +1872,14 @@ stronger finding.
 **NONE OF THIS IS A BUG.** Verified 2026-08-10: `tsc --noEmit` exit 0, ESLint
 clean. Nothing below is a code fault.
 
+**WHERE THIS STANDS AFTER THE 2026-08-10 COPY ROUND: 8 solved, 5 partly, 9
+untouched**, plus the 7 verify-with-humans items, which no amount of copy can
+close. What landed was the first-run and household wording; what did not is the
+empty week (screen 9), the capability gaps and money. **⚠️ NOTHING HAS BEEN
+RE-TESTED** – "solved" means the mechanism was addressed, not that the fix was
+shown to work. Re-running the comprehension study on the new screen 5 is the
+cheapest way to find out, and is owed.
+
 ### The reframe that decides how much work this is
 
 Run against the product's real capabilities rather than the screens alone, most
@@ -1898,32 +1906,58 @@ capability the report claims exists, does:
       orienting sentence (*Your shopping list updates as you plan*, last line of
       screen 9) hides all seven capabilities above.
       (Synthetic User Panel: persona-as-lens, medium-high, all four reviews.)
+      **⚠️ PARTLY DONE 2026-08-10.** The choice screen now names recipes, plan,
+      list and the sharing. **Still unsaid:** several meals a day, per-meal
+      servings, leftovers and eating out, link import, ingredient search,
+      belonging to more than one kitchen. This was the panel's biggest reframe and
+      is mostly still open.
 
 ### "household" – the one word that failed in all five modes
 
 Seven readers out of seven could not say what a household *is*, proposing eleven
 different nouns between them.
 
-- [ ] **Fix the referential instability.** Screen 5 calls it "the shared space",
+- [x] **Fix the referential instability.** Screen 5 calls it "the shared space",
       screen 7 says it "is ready", screen 8 says "Welcome to" it – a space, then
       an object, then a place, on three consecutive screens. (Comprehension,
       high.) Across four screens it is also a thing you configure, found, name
       and join. (Synthetic User Panel: comprehension, high + copy review, high.)
-- [ ] **It is a kommune word.** All five copy readers said so.
+      **DONE 2026-08-10.** One metaphor now, held throughout: *Set up your
+      kitchen* → *Your kitchen is ready* → *Welcome to The Sebells*. A place you
+      make, then enter. This was the panel's central mechanism.
+- [x] **It is a kommune word.** All five copy readers said so.
       (Synthetic User Panel: copy review, high.)
-- [ ] **Answer whether a household of one is supported or broken.** Step 5 was
+      **DONE 2026-08-10.** Replaced with **kitchen** everywhere.
+      ⚠️ Note the "kommune" label was a DANISH artefact – the personas mapped
+      "household" onto *husstand*. Thomas queried it and was right to. The word
+      changed anyway, on the stronger grounds below (second-person register).
+- [x] **Answer whether a household of one is supported or broken.** Step 5 was
       the heaviest step in the flow; every reader needed this, and three needed
       to know whether the choice is reversible.
       (Synthetic User Panel: walkthrough, medium.)
+      **DONE 2026-08-10.** The create option now reads *"Start fresh.
+      Invite people whenever you like, **or keep it to yourself**."* Reversibility
+      is still unstated.
 - [ ] **Answer the duplicate-household fear.** Five readers independently feared
       that a partner installing the app that evening and also tapping "Start a
       household" ends in two half-empty ones. Nothing on screens 5 to 7 says
       whether that is possible, preventable or recoverable.
       (Synthetic User Panel: comprehension, high.)
-- [ ] **Stop asserting a permanent multi-person family.** Steps 1 to 7 assert one
+      **⚠️ PARTLY DONE 2026-08-10.** *"Join an existing kitchen"* is now equally
+      weighted with create, so the route exists. **But nothing says "if someone at
+      home already made one, join theirs instead."** The wording that addressed
+      this head-on (*"Is someone already using Prep+Eat?"*) was tried and dropped
+      2026-08-10 – Thomas: *"The yes and no is not the right way to go."* If this
+      matters, it needs a different device, not that one back.
+- [x] **Stop asserting a permanent multi-person family.** Steps 1 to 7 assert one
       five to seven times, which is factually untrue of three of the four
       households reviewed. **Tier A** – Danish population statistics, not
       assumption. (Synthetic User Panel: persona-as-lens, medium-high.)
+      **DONE 2026-08-10.** Every assertion gone, grep-verified in both
+      Figma and the code: the tagline no longer ends *"– as a family"*, the name
+      step no longer promises to show your name *"to your family"*, the recipes
+      empty state no longer assumes a family loves the dishes, and the invite and
+      delete-profile lines were rewritten. This was the Tier A break.
 
 ### Screen 9 is where it ends
 
@@ -1946,33 +1980,52 @@ different nouns between them.
 Reactions, not recommended replacements. Rewriting these is design work and
 belongs in Figma – logged here, not improvised.
 
-- [ ] **`Can't reach your kitchen`** – the study's strongest single finding. All
+- [x] **`Can't reach your kitchen`** – the study's strongest single finding. All
       five misparsed it; two thought something was wrong at home. The server
       failed and the copy called it their kitchen.
       (`src/app/_layout.tsx:240`.) (Synthetic User Panel: copy review, high.)
-- [ ] **`Already cooking?`** – unanimous. A joke where a function label belongs.
+      **DONE 2026-08-10.** Now *"Can't load your recipes / We couldn't
+      reach Prep+Eat… nothing is lost."* **The rule this establishes: never name
+      the container when the network breaks.** Renaming to "kitchen" made this
+      compulsory rather than optional.
+- [x] **`Already cooking?`** – unanimous. A joke where a function label belongs.
       (`onboarding-flow.tsx:106`.) (Synthetic User Panel: copy review, high.)
-- [ ] **`as a family`** – all five. Three read it as an instruction about who they
+      **DONE 2026-08-10.** Deleted outright with the second button – the
+      one-entrance change closed it rather than rewording it.
+- [x] **`as a family`** – all five. Three read it as an instruction about who they
       ought to live with. Breaks **Tier A** constraints for the
       alternating-custody and no-children households. (`onboarding-flow.tsx:92`.)
       (Synthetic User Panel: copy review, high.)
+      **DONE 2026-08-10.** The tagline is now *"Plan dinners, collect
+      recipes and shop together."*
 - [ ] **`The Hanson Kitchen`** – all five. Teaches the wrong task and marks the
       reader as a second market. In comprehension four readers took the
       placeholder as real data, and two briefly thought the app had their name
       wrong or someone else was signed in. (`create-household-modal.tsx:135`,
       `onboarding-flow.tsx:318`.) (Synthetic User Panel: copy review, high.)
+      **⚠️ PARTLY DONE 2026-08-10.** Now **"The Hansens"** – which fixes the
+      "teaches the wrong task" half (naming a kitchen "… Kitchen" once kitchen is
+      the type word) and reads Nordic rather than Anglo. **The other half is not a
+      copy problem:** four readers took the placeholder for real data, which is a
+      placeholder TREATMENT issue.
 - [ ] **The share message** – four of five refused to send it. It is the only
       string the reader publishes under their own name.
       (Synthetic User Panel: copy review, high.)
 - [ ] **`your recipes and lists are safe`** – manufactures the anxiety it soothes,
       on first launch, when the reader owns nothing. (`_layout.tsx:241`.)
       (Synthetic User Panel: copy review, high.)
+      **⚠️ PARTLY DONE 2026-08-10.** Now *"nothing is lost"* – shorter, and no
+      longer calls the server failure their kitchen. **But it still reassures about
+      a loss nobody raised**, which is the mechanism the panel objected to.
 - [ ] **The expensive ones are the splits, not the misses.** *Your shopping list
       updates as you plan* is the best line in the deck to Jonas and empty to the
       other four. *repeat* is accurate to Mette and an insult to Sofie and Rikke.
       *If you're the first one here* reads sad, presumptuous or nonsensical
       depending on household shape. (`onboarding-flow.tsx:226`.)
       (Synthetic User Panel: copy review, high.)
+      **⚠️ PARTLY DONE 2026-08-10.** *"If you're the first one here"* is gone.
+      **Untouched:** *Your shopping list updates as you plan* (Plan tab) and
+      *repeat* (the brand tagline) – both still split the panel.
 - [ ] **Money is never mentioned** – no price, "free", trial or cancellation
       language anywhere. Two readers went looking; one stopped at the email screen
       over the silence. The product genuinely has no paid tier, **so this is a
@@ -1999,7 +2052,7 @@ belongs in Figma – logged here, not improvised.
       which is lunch and which is dinner.
       (NOT a panel finding – code check by Claude, 2026-08-10, sharpening a claim
       the Synthetic User Panel got only half right.)
-- [ ] **"Sign in" goes nowhere different, and this finding survived by accident.**
+- [x] **"Sign in" goes nowhere different, and this finding survived by accident.**
       The walkthrough struck two findings because the brief stated "Get started"
       and "Sign in" lead to the same place. The brief was **factually correct** –
       `onboarding-flow.tsx:98` and `:110` both call `setStep({ kind: 'email' })`.
@@ -2008,6 +2061,9 @@ belongs in Figma – logged here, not improvised.
       route and delivers the identical screen.
       (NOT a panel finding as it stands – the Synthetic User Panel walkthrough
       STRUCK this one; reinstated by code check, Claude, 2026-08-10.)
+      **DONE 2026-08-10.** One entrance: a single **Continue with email**
+      button. The fork now happens after the code, where the server actually knows
+      whether you are new or returning.
 
 ### What the pre-mortem added (objection harvest, ceiling high)
 
