@@ -63,7 +63,8 @@
     "backup:install": "./scripts/install-backup-job.sh",
     "hooks:install": "./scripts/install-git-hooks.sh",
     "backup:verify": "./scripts/verify-backup-restore.sh",
-    "backlog:view": "node ./scripts/backlog-view.mjs && open docs/backlog-view.html"
+    "backlog:view": "node ./scripts/backlog-view.mjs && open docs/backlog-view.html",
+    "claude:snapshot": "./scripts/snapshot-claude-config.sh"
   },
   "private": true
 }

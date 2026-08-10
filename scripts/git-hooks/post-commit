@@ -5,9 +5,16 @@
 # days. Forty-three commits sat on one Mac, unbacked – including the household
 # boundary security work – while a version was in App Store review.
 #
-# ⚠️ THIS IS THE SOURCE. The copy git actually runs lives in .git/hooks/, which
-# is NOT version controlled. Editing this file does nothing until you re-run
-# `npm run hooks:install` – the same gotcha as the backup job.
+# ⚠️ THIS IS THE SOURCE: scripts/git-hooks/post-commit. The copy git actually
+# runs lives in .git/hooks/, which is NOT version controlled. Editing this file
+# does nothing until you re-run `npm run hooks:install` – the same gotcha as the
+# backup job.
+#
+# That path is also load-bearing: install-git-hooks.sh decides whether a hook is
+# ITS OWN by grepping the installed copy for "scripts/git-hooks". This file did
+# not contain that string until 2026-08-11, so the installer had been refusing
+# to update its own hook with "a hook is already there and this script did not
+# write it" – silently declining every change since the hook was written.
 #
 # Deliberately conservative:
 #   - main only. Other branches are yours to push when you mean to.
@@ -32,5 +39,12 @@ log="$(git rev-parse --git-dir)/autopush.log"
       "$(printf '%s' "$out" | grep -v '^$' | tail -1)" >&2
   fi
 ) &
+
+# Refresh the off-machine copy of Claude's memory and the global CLAUDE.md.
+# Cheap (88 KB of small files), silent, and never allowed to fail a commit.
+# It lives here rather than in the scheduled backup because launchd cannot
+# write inside iCloud Drive - see scripts/snapshot-claude-config.sh.
+snapshot="$(git rev-parse --show-toplevel)/scripts/snapshot-claude-config.sh"
+[ -x "$snapshot" ] && ( "$snapshot" >/dev/null 2>&1 || true ) &
 
 exit 0
