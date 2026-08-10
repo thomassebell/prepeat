@@ -59,7 +59,7 @@ function Content({
   return (
     <View className="w-full gap-layout-small">
       <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-subtle">
-        {`You’re about to leave "${householdName}". You’ll keep your own copy of the recipes, and you can be invited back later.`}
+        {`You’re about to leave “${householdName}”. You’ll keep your own copy of the recipes, and you can be invited back later.`}
       </Text>
 
       {error != null && (
