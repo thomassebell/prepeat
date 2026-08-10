@@ -1759,6 +1759,244 @@ Closed 2026-07-27:
       uses text/success/warning/info contrast-text. So this is DS hygiene, not
       a bug in Prep+Eat, and it can wait for the next DS pass.
 
+## Synthetic User Panel findings (round 1, 2026-08-10)
+
+**Every item below is tagged `(Synthetic User Panel: …)` as well as sitting under
+this heading.** That is deliberate belt-and-braces: if an item is promoted into
+Known bugs, Later or In flight, the tag travels with it and the source stays
+obvious. The few items that are **not** panel findings are tagged
+`(NOT a panel finding …)` so the two never blur.
+
+Findings from the Synthetic User Panel Thomas built (project
+`~/Documents/Claude/Projects/Synthetic User Panel`). Five studies, twenty-four
+isolated sessions, all seven personas. Source report:
+`studies/2026-08-10-prepeat-combined-report.md` **in that project, not this
+repo** – the per-study syntheses sit beside it and hold the detail.
+
+**⚠️ READ THE THREE LIMITS BEFORE QUOTING ANY OF THIS.**
+1. **No human was interviewed.** This is what the panel raised, not user
+   research. No prevalence, no preference, no willingness to pay.
+2. **Not one of the twenty-four sessions saw a screen.** Nothing here may be
+   restated as a usability or visual finding.
+3. **It is the worst possible instrument for the English-only question.** Every
+   mode had readers notice the app carries no Danish; a fluent model registers
+   the fact and feels none of the friction. Their implicit verdict that it is
+   survivable is worth nothing – do not quote it as reassurance. (Bears on the
+   Danish localisation item under Later.)
+
+Each finding carries the mode and ceiling that earned it, and they are not
+merged – a finding separated from its mode loses the confidence bound. Where
+two modes found the same thing, that is two findings agreeing, not one
+stronger finding.
+
+**NONE OF THIS IS A BUG.** Verified 2026-08-10: `tsc --noEmit` exit 0, ESLint
+clean. Nothing below is a code fault.
+
+### The reframe that decides how much work this is
+
+Run against the product's real capabilities rather than the screens alone, most
+findings turned out to be things **unsaid**, not things **missing**. First run
+communicates none of: several meals per day, per-meal servings, leftovers and
+eating out as meals, link import, ingredient search, belonging to more than one
+household, manually added shopping-list items. So Henrik reading that the
+product thinks a week is one dinner per day is *wrong about the product and
+right about the screen*. That is a copy job, not a build job.
+
+**Checked against the code 2026-08-10 so this is not re-litigated** – every
+capability the report claims exists, does:
+
+| Claim | Evidence |
+|---|---|
+| Several meals per day | no unique constraint on (plan, date) in `0007` |
+| Per-meal servings | `meal_plan_entries.servings` |
+| Leftovers / eating out | `0009_manual_meal_entries` |
+| Link import | `importRecipeFromUrl` in `src/lib/recipe-import.ts` |
+| Several households | `households: Household[]` in `household-context.tsx` |
+| Manual shopping items | `addItem`, `src/lib/shopping-list.tsx:491` |
+
+- [ ] **Say what the app can already do, somewhere in first run.** The single
+      orienting sentence (*Your shopping list updates as you plan*, last line of
+      screen 9) hides all seven capabilities above.
+      (Synthetic User Panel: persona-as-lens, medium-high, all four reviews.)
+
+### "household" – the one word that failed in all five modes
+
+Seven readers out of seven could not say what a household *is*, proposing eleven
+different nouns between them.
+
+- [ ] **Fix the referential instability.** Screen 5 calls it "the shared space",
+      screen 7 says it "is ready", screen 8 says "Welcome to" it – a space, then
+      an object, then a place, on three consecutive screens. (Comprehension,
+      high.) Across four screens it is also a thing you configure, found, name
+      and join. (Synthetic User Panel: comprehension, high + copy review, high.)
+- [ ] **It is a kommune word.** All five copy readers said so.
+      (Synthetic User Panel: copy review, high.)
+- [ ] **Answer whether a household of one is supported or broken.** Step 5 was
+      the heaviest step in the flow; every reader needed this, and three needed
+      to know whether the choice is reversible.
+      (Synthetic User Panel: walkthrough, medium.)
+- [ ] **Answer the duplicate-household fear.** Five readers independently feared
+      that a partner installing the app that evening and also tapping "Start a
+      household" ends in two half-empty ones. Nothing on screens 5 to 7 says
+      whether that is possible, preventable or recoverable.
+      (Synthetic User Panel: comprehension, high.)
+- [ ] **Stop asserting a permanent multi-person family.** Steps 1 to 7 assert one
+      five to seven times, which is factually untrue of three of the four
+      households reviewed. **Tier A** – Danish population statistics, not
+      assumption. (Synthetic User Panel: persona-as-lens, medium-high.)
+
+### Screen 9 is where it ends
+
+- [ ] **All five personas stopped at step 9, the empty week.** Effort thresholds
+      were crossed earlier and elsewhere – three at step 5, one at step 7, one
+      only at step 9. Four steps of compliance separate "not worth it" from
+      "phone down"; compliance is not engagement.
+      (Synthetic User Panel: walkthrough, medium.)
+- [ ] **Answer what happens when you tap "+ Add meal".** Three readers said this
+      one unknown decided everything. Nothing answers it. Do users expect to type,
+      or to pick? (Synthetic User Panel: walkthrough, medium.)
+- [ ] **⚠️ The most design-relevant split in the set, and it has opposite fixes.**
+      Planners stopped at step 9 because it asks them to duplicate a plan they
+      already hold. Non-planners stopped at the same step because they cannot
+      produce that artefact at all. Same step, unrelated failures. Do not fix it
+      as one thing. (Synthetic User Panel: walkthrough, medium.)
+
+### The strings that failed (copy review, ceiling high)
+
+Reactions, not recommended replacements. Rewriting these is design work and
+belongs in Figma – logged here, not improvised.
+
+- [ ] **`Can't reach your kitchen`** – the study's strongest single finding. All
+      five misparsed it; two thought something was wrong at home. The server
+      failed and the copy called it their kitchen.
+      (`src/app/_layout.tsx:240`.) (Synthetic User Panel: copy review, high.)
+- [ ] **`Already cooking?`** – unanimous. A joke where a function label belongs.
+      (`onboarding-flow.tsx:106`.) (Synthetic User Panel: copy review, high.)
+- [ ] **`as a family`** – all five. Three read it as an instruction about who they
+      ought to live with. Breaks **Tier A** constraints for the
+      alternating-custody and no-children households. (`onboarding-flow.tsx:92`.)
+      (Synthetic User Panel: copy review, high.)
+- [ ] **`The Hanson Kitchen`** – all five. Teaches the wrong task and marks the
+      reader as a second market. In comprehension four readers took the
+      placeholder as real data, and two briefly thought the app had their name
+      wrong or someone else was signed in. (`create-household-modal.tsx:135`,
+      `onboarding-flow.tsx:318`.) (Synthetic User Panel: copy review, high.)
+- [ ] **The share message** – four of five refused to send it. It is the only
+      string the reader publishes under their own name.
+      (Synthetic User Panel: copy review, high.)
+- [ ] **`your recipes and lists are safe`** – manufactures the anxiety it soothes,
+      on first launch, when the reader owns nothing. (`_layout.tsx:241`.)
+      (Synthetic User Panel: copy review, high.)
+- [ ] **The expensive ones are the splits, not the misses.** *Your shopping list
+      updates as you plan* is the best line in the deck to Jonas and empty to the
+      other four. *repeat* is accurate to Mette and an insult to Sofie and Rikke.
+      *If you're the first one here* reads sad, presumptuous or nonsensical
+      depending on household shape. (`onboarding-flow.tsx:226`.)
+      (Synthetic User Panel: copy review, high.)
+- [ ] **Money is never mentioned** – no price, "free", trial or cancellation
+      language anywhere. Two readers went looking; one stopped at the email screen
+      over the silence. The product genuinely has no paid tier, **so this is a
+      sentence, not a decision.** (Synthetic User Panel: copy review, high.)
+
+### Genuine capability gaps, as opposed to things merely unsaid
+
+- [ ] **Portion arithmetic is one scalar per meal**, where P07's household eats
+      one pot in four sittings. Tier A on the timing facts. Confirmed in code:
+      `servings` is a single integer per entry.
+      (Synthetic User Panel: persona-as-lens, medium-high.)
+- [ ] **No per-day non-food logistics field.** Tier B.
+      (Synthetic User Panel: persona-as-lens, medium-high.)
+- [ ] **Nothing anywhere touches price or offers**, which is P04's entire
+      practice. Tier A – but a product-scope decision, not a first-run defect.
+      (Synthetic User Panel: persona-as-lens, medium-high.)
+
+### Two additions from the code that the panel could not see (Claude, 2026-08-10)
+
+- [ ] **`meal_type` is in the schema but unused, so Henrik is more right than the
+      report allows.** The report credits the app with "several meals per day",
+      which is true – but a day is a flat, unlabelled list (decided 2026-07-16,
+      `0007_meal_plans.sql`). A user can put three meals on Tuesday and cannot say
+      which is lunch and which is dinner.
+      (NOT a panel finding – code check by Claude, 2026-08-10, sharpening a claim
+      the Synthetic User Panel got only half right.)
+- [ ] **"Sign in" goes nowhere different, and this finding survived by accident.**
+      The walkthrough struck two findings because the brief stated "Get started"
+      and "Sign in" lead to the same place. The brief was **factually correct** –
+      `onboarding-flow.tsx:98` and `:110` both call `setStep({ kind: 'email' })`.
+      Striking them as leaked knowledge was right; the underlying design fact
+      stands on its own. *"Already cooking? Sign in"* promises a returning-user
+      route and delivers the identical screen.
+      (NOT a panel finding as it stands – the Synthetic User Panel walkthrough
+      STRUCK this one; reinstated by code check, Claude, 2026-08-10.)
+
+### What the pre-mortem added (objection harvest, ceiling high)
+
+Seven distinct failure mechanisms, no two alike. Objections are claims about
+mechanisms, which is why they are cheap to go and check – they are not market
+evidence, and they arrive equally loud regardless of whether they cost a
+download.
+
+- **Sofie** – the plan still started in her head; her partner had the live list
+  and texted from the shop anyway. Access was granted; the decision never moved.
+- **Mette** – the architecture hangs off a week she cannot predict.
+- **Anders** – everything he got depended on someone else filling it in. An empty
+  shared app is worse than no app.
+- **Camilla** – it runs backwards. She starts from offers; it starts from recipes.
+- **Jonas** – the pipeline stops one step before his shop. He retyped the list
+  into a laptop.
+- **Rikke** – it solved storage; she arrived with a retrieval problem.
+- **Henrik** – servings is one number; his Tuesday is one pot becoming four
+  eatings.
+
+**Nobody went to a competing meal-planning app.** They went back to memory, paper
+on the fridge, Notes, shared Reminders, a text to a partner, the retailers' own
+offer apps, a screenshots folder, and the chest freezer. Three properties recur
+in what beat it: **no plan has to exist first, no second adult has to be
+recruited, and nothing is lost when the week goes wrong.**
+
+**⚠️ The sharpest line in the set, worth sitting with:** Prep+Eat ships the
+feature Danish reviewers ask for more than any other – shared access – and the
+panel raised that shipping it did not move the problem the request was about.
+
+### What to verify with real humans (ranked across all five studies)
+
+- [ ] 1. **Show screen 5 cold and ask what they are about to create.** Every mode
+      failed on this word. (Synthetic User Panel: all five modes.)
+- [ ] 2. **Watch two people in one home set it up independently.** Do they make
+      two households? Observable in an afternoon.
+      (Synthetic User Panel: comprehension, high.)
+- [ ] 3. **Does the second adult actually get in, and does anything change when
+      they do?** The pre-mortem's central claim is that access was granted and the
+      load did not move. That is the product's premise, testable with one
+      household. (Synthetic User Panel: objection harvest, high.)
+- [ ] 4. **Watch someone retrieve a recipe they saved six months ago.** Rikke's
+      mechanism is Tier D and load-bearing for the whole recipe leg.
+      (Synthetic User Panel: objection harvest, high + persona-as-lens.)
+- [ ] 5. **What does a real household expect after "+ Add meal"** – to type, or to
+      pick? (Synthetic User Panel: walkthrough, medium.)
+- [ ] 6. **How do separated parents plan across a custody rota?** Still unasked,
+      still changes the data model.
+      (Synthetic User Panel: persona-as-lens, medium-high.)
+- [ ] 7. **Does the English copy cost anything real** in a Danish household.
+      (Synthetic User Panel: raised in every mode – and see limit 3 above, the
+      panel cannot size this one.)
+
+### Panel health, for weighing the above
+
+- **Held.** Twenty-four responses, all distinguishable with names removed. No
+  persona invented a history with the product outside the pre-mortem, where the
+  brief assigns one. All seven pre-mortem mechanisms were different.
+- **One inflated agreement, marked.** Three personas cite the same Tier B line for
+  the blank-week trait behind the walkthrough's strongest convergence – one piece
+  of evidence wearing three faces.
+- **Two panel-selection errors and one briefing leak**, logged in the panel's own
+  `BACKLOG.md` with two re-runs owed: P07 left out of a walkthrough he is named
+  for, P03 left out of a copy review whose most-rejected string only he would
+  receive.
+- **Still unanswered: "when did this panel last say no?"** A pre-mortem instructs
+  rejection and comprehension never asks, so after five studies the panel has not
+  yet had a fair chance to approve of anything. Weigh the findings accordingly.
+
 ## Ideas – not yet committed
 
 - [ ] **🌙 MOONSHOT: import a recipe from an Instagram video** (Thomas,
