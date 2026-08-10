@@ -72,7 +72,7 @@ export default function RecipeDetailScreen() {
   const router = useRouter();
   // This screen is mounted in two stacks (2026-07-18): /recipes/[id] on
   // the Recipes tab and /recipe/[id] inside the Plan tab.
-  const inPlanTab = usePathname().startsWith("/recipe/");
+  const inPlanTab = usePathname().startsWith("/plan/recipe/");
   const insets = useSafeAreaInsets();
 
   const [recipe, setRecipe] = useState<Recipe | null>(null);
@@ -186,7 +186,7 @@ export default function RecipeDetailScreen() {
   // Recipes tab, /recipe/[id] when opened from the Plan tab (2026-07-18) – so
   // saving lands back on this detail via back().
   const openEdit = () =>
-    router.push(`${inPlanTab ? "/recipe" : "/recipes"}/new?id=${recipe.id}`);
+    router.push(`${inPlanTab ? "/plan/recipe/new" : "/new"}?id=${recipe.id}`);
 
   // Undo a swipe-delete: re-insert the snapshot (ingredient by sort order,
   // step at its old position), then reload from the server truth.

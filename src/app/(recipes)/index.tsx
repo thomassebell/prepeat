@@ -88,7 +88,7 @@ export default function RecipesListScreen() {
           Recipes
         </Text>
         <Pressable
-          onPress={() => router.push("/recipes/new")}
+          onPress={() => router.push("/new")}
           accessibilityRole="button"
           accessibilityLabel="Add a recipe"
           hitSlop={8}
@@ -131,7 +131,7 @@ export default function RecipesListScreen() {
           <ActivityIndicator color={ds.colors.surface.primary.main} />
         </View>
       ) : recipes.length === 0 ? (
-        <EmptyState onAdd={() => router.push("/recipes/new")} />
+        <EmptyState onAdd={() => router.push("/new")} />
       ) : (
         <FlatList
           data={visible}
@@ -147,7 +147,7 @@ export default function RecipesListScreen() {
           renderItem={({ item }) => (
             <RecipeCard
               recipe={item}
-              onPress={() => router.push(`/recipes/${item.id}`)}
+              onPress={() => router.push(`/${item.id}`)}
               onToggleFavorite={() => toggleFavorite(item)}
             />
           )}

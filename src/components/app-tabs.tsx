@@ -13,12 +13,12 @@ export default function AppTabs() {
           NO PLAN HAS TO EXIST FIRST. Opening on an empty week asks for seven
           decisions; opening on Recipes asks for one thing, and "+ Add meal" is
           hollow until there is something to add. */}
-      <NativeTabs.Trigger name="recipes">
+      <NativeTabs.Trigger name="(recipes)">
         <NativeTabs.Trigger.Label>Recipes</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon sf={{ default: 'book', selected: 'book.fill' }} />
       </NativeTabs.Trigger>
 
-      <NativeTabs.Trigger name="(plan)">
+      <NativeTabs.Trigger name="plan">
         <NativeTabs.Trigger.Label>Plan</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon sf={{ default: 'calendar', selected: 'calendar' }} />
       </NativeTabs.Trigger>

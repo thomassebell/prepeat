@@ -229,7 +229,7 @@ export default function AddRecipeScreen() {
             steps,
           },
         );
-        router.replace(`/recipes/${recipeId}`);
+        router.replace(`/${recipeId}`);
       }
     } catch (error) {
       // Never fail silently: the form keeps everything the user typed (or

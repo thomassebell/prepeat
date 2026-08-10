@@ -360,7 +360,7 @@ function SheetContent({
   const addRecipe = () => {
     onClose();
     router.push({
-      pathname: "/recipes/new",
+      pathname: "/new",
       params: query.trim() ? { title: query.trim() } : undefined,
     });
   };

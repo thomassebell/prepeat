@@ -133,7 +133,7 @@ function PlanContent() {
                 // detail opens in THIS tab's stack (/recipe/…), so back
                 // returns to the plan (2026-07-18).
                 if (entry.recipeId != null)
-                  router.push(`/recipe/${entry.recipeId}`);
+                  router.push(`/plan/recipe/${entry.recipeId}`);
               }}
               onMove={(entry) => setSheet({ kind: "move", entry })}
               onSwap={(entry) => setSheet({ kind: "swap", entry })}
