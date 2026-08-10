@@ -124,7 +124,9 @@ function AuthSteps() {
           setCode('');
           setStep({ kind: 'code', email });
         }}
-        canSubmit={/.+@.+\..+/.test(email.trim())}>
+        validate={() =>
+          /.+@.+\..+/.test(email.trim()) ? null : 'Enter your email to continue.'
+        }>
         {(error) => (
           <Field label="Email" error={error}>
             <Input
@@ -169,7 +171,7 @@ function NameStep() {
       title="What’s your name?"
       submitLabel="Continue"
       onSubmit={() => saveFirstName(name)}
-      canSubmit={name.trim().length > 0}>
+      validate={() => (name.trim().length > 0 ? null : 'Enter your name to continue.')}>
       {(error) => (
         <Field label="First name" error={error}>
           <Input
@@ -301,7 +303,9 @@ function HouseholdSteps({ onHouseholdReady }: { onHouseholdReady: (h: Household)
         onSubmit={async () => {
           setCreated(await createHousehold(name));
         }}
-        canSubmit={name.trim().length > 0}>
+        validate={() =>
+          name.trim().length > 0 ? null : 'Give your kitchen a name to continue.'
+        }>
         {(error) => (
           <Field label="Kitchen name" error={error}>
             <Input
@@ -330,7 +334,7 @@ function HouseholdSteps({ onHouseholdReady }: { onHouseholdReady: (h: Household)
       onSubmit={async () => {
         setJoined(await joinHousehold(code));
       }}
-      canSubmit={code.trim().length >= 4}>
+      validate={() => (code.trim().length >= 4 ? null : 'Enter an invite code to continue.')}>
       {(error) => (
         <Field label="Invite code" error={error}>
           <Input
@@ -473,7 +477,20 @@ interface FormScreenProps {
   subtitle?: string;
   submitLabel: string;
   onSubmit: () => Promise<unknown> | void;
-  canSubmit: boolean;
+  /**
+   * Returns the designed "…to continue." message when the field is not ready,
+   * or null when it is. When given, the button stays PRESSABLE and the message
+   * appears on press. A disabled button explains nothing – the reader is stuck
+   * with no idea what is wrong (Thomas, 2026-08-10). Figma has these four:
+   * signin error 2, signin 6, household set up error 2, join a household error 2.
+   */
+  validate?: () => string | null;
+  /**
+   * Fallback for the one step Figma designs NO message for: the sign-in code,
+   * where the six empty boxes already show what is missing. Ignored when
+   * `validate` is given.
+   */
+  canSubmit?: boolean;
   onBack?: () => void;
   footer?: ReactNode;
   children: (error: string | null) => ReactNode;
@@ -484,6 +501,7 @@ function FormScreen({
   subtitle,
   submitLabel,
   onSubmit,
+  validate,
   canSubmit,
   onBack,
   footer,
@@ -494,6 +512,15 @@ function FormScreen({
   const scrollRef = useRef<ScrollView>(null);
 
   const submit = async () => {
+    // Say what is missing rather than going quiet: the button is pressable,
+    // so pressing it teaches the reader what the form still wants.
+    if (validate != null) {
+      const missing = validate();
+      if (missing != null) {
+        setError(missing);
+        return;
+      }
+    }
     setBusy(true);
     setError(null);
     try {
@@ -547,7 +574,12 @@ function FormScreen({
           </View>
         </ScrollView>
         <View className="w-full px-layout-small pb-layout-medium">
-          <PrimaryButton label={submitLabel} onPress={submit} disabled={!canSubmit} busy={busy} />
+          <PrimaryButton
+            label={submitLabel}
+            onPress={submit}
+            disabled={validate == null && !canSubmit}
+            busy={busy}
+          />
         </View>
       </KeyboardAvoidingView>
     </Screen>
