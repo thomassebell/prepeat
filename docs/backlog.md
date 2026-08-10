@@ -1961,6 +1961,16 @@ different nouns between them.
 
 ### Screen 9 is where it ends
 
+**⚠️ STANDING CAVEAT ON WALKTHROUGH FINDINGS (Thomas, 2026-08-10:
+*"overtesting/overthinking"*).** The walkthrough personas READ a description of
+each screen; they could not tap. That converts every unknown into a blocker,
+because the only way to resolve an unknown by tapping is unavailable to them.
+A real user resolves *"what does + Add meal do?"* in half a second at the cost
+of one tap. **So discount walkthrough findings whose whole content is "I could
+not tell what would happen"** – the mode manufactures that. Findings about
+EFFORT and MOTIVATION from the same mode are not affected, because those do not
+depend on being able to act.
+
 **⚠️ "Step 9" IS NOT AN ONBOARDING SCREEN – it is the app.** The walkthrough
 brief describes it exactly: heading *Weekly plan*, arrows either side of the
 week, seven rows MON–SUN each carrying **+ Add meal** and nothing else, one
@@ -1994,10 +2004,23 @@ previous week to copy, which is the point: the split needs two fixes.
       only at step 9. Four steps of compliance separate "not worth it" from
       "phone down"; compliance is not engagement.
       (Synthetic User Panel: walkthrough, medium.)
-- [ ] **Answer what happens when you tap "+ Add meal".** Three readers said this
+- [x] **CLOSED 2026-08-10, Thomas: *"the result of overtesting/overthinking"*.**
+      Agreed, and see the caveat above: the personas could not tap, so a label
+      they could not resolve reads as a decision point. A real user taps it.
+      **⚠️ WORTH KEEPING AS A QUESTION, NOT A FINDING:** *"what does a real
+      household expect after + Add meal – to type, or to pick?"* is on the
+      verify-with-humans list and costs one question to a real person.
+      **Answer what happens when you tap "+ Add meal".** Three readers said this
       one unknown decided everything. Nothing answers it. Do users expect to type,
       or to pick? (Synthetic User Panel: walkthrough, medium.)
-- [ ] **⚠️ The most design-relevant split in the set, and it has opposite fixes.**
+- [ ] **DEFERRED to a later version 2026-08-10, Thomas's call – but keep it as a
+      LENS, not a feature.** It is not a thing to build; it is the test to apply
+      to anything built for the empty week. The tab reorder (Recipes first)
+      serves the non-planners; copy-last-week's-plan serves the planners.
+      Neither serves both, and that is the whole point of the finding – so when
+      the empty week is picked up, check any fix against BOTH halves before
+      building it.
+      **⚠️ The most design-relevant split in the set, and it has opposite fixes.**
       Planners stopped at step 9 because it asks them to duplicate a plan they
       already hold. Non-planners stopped at the same step because they cannot
       produce that artefact at all. Same step, unrelated failures. Do not fix it
@@ -2036,7 +2059,18 @@ belongs in Figma – logged here, not improvised.
       the type word) and reads Nordic rather than Anglo. **The other half is not a
       copy problem:** four readers took the placeholder for real data, which is a
       placeholder TREATMENT issue.
-- [ ] **The share message** – four of five refused to send it. It is the only
+- [x] **CLOSED 2026-08-10, Thomas: *"if they want to share, they will use it"*.**
+      Two things support that. **The message is editable before sending** – the
+      iOS share sheet drops it into Messages as a draft, so the worst case is
+      the user rewrites it, which is exactly what P02 said she would do. And the
+      readers were reacting to a string in isolation, not at a moment when they
+      actually wanted someone in the app; motivation moves tolerance a long way.
+      **The panel's own caveat applies:** objections *"arrive equally loud"*
+      regardless of whether they cost a download.
+      **The residual, small:** whoever RECEIVES an unedited message sees
+      something that reads like spam, and they are the one deciding whether to
+      install. Cheap to improve whenever the share link lands.
+      **The share message** – four of five refused to send it. It is the only
       string the reader publishes under their own name.
       (Synthetic User Panel: copy review, high.)
 - [ ] **`your recipes and lists are safe`** – manufactures the anxiety it soothes,
