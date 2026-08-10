@@ -182,7 +182,7 @@ Audited 2026-08-04. Everything below is what does NOT come back from a
 | EAS build config and secrets | Expo's servers – `eas login` | fine |
 | `.env` (Supabase URL + publishable key) | Supabase dashboard | 2 minutes to redo |
 | `~/.prepeat-backup.env` (db password) | resettable in the dashboard | 2 minutes to redo |
-| **`credentials/*.p8`** (Apple API key) | **nowhere else** | **see below** |
+| `credentials/*.p8` (Apple API key) | **Apple Passwords** since 2026-08-04 | fine – see below |
 | **`~/Prepeat-backups/`** | **nowhere else** | **all backups gone** |
 | `app-store-assets/` | nowhere else | regenerable, tedious |
 
@@ -193,8 +193,18 @@ downloaded at the moment it is created**. It is gitignored on purpose (it
 signs releases). If the Mac is lost it cannot be recovered – only revoked and
 replaced, which you would discover at the moment you needed to ship a fix.
 
-**Keep a copy in a password manager.** It is a 257-byte file and 1Password and
-similar take attachments.
+**DONE 2026-08-04 – it is in Apple Passwords**, stored as a password entry
+(Apple Passwords takes no attachments, and the key is 257 bytes of ASCII), with
+the Key ID and Issuer ID in the notes. Thomas confirmed it visible on his
+iPhone, which is the check that matters: an unsynced entry looks like
+protection and is not.
+
+⚠️ **This row said "nowhere else" for a week after it stopped being true**
+(corrected 2026-08-11, when Thomas asked whether the Mac could be stolen today
+without stopping work). The answer was yes, and this table said otherwise – so
+the audit read scarier than the facts. Same failure as the backlog's stale
+cross-references: the fix was recorded where it was done and never carried back
+to the page that describes the risk.
 
 ### ⚠️ Losing the Mac means losing every backup
 
