@@ -23,8 +23,19 @@ const OUT = join(root, 'docs/backlog-view.html')
 // worth scanning. Kept as a list rather than a guess about the heading text.
 const SKIP_SECTIONS = new Set(['Decisions log (recent)'])
 
+// The waiting-on-Thomas index inside backlog.md is written by this script, so
+// it must not be parsed back in as content.
+const START = '<!-- WAITING-ON-THOMAS:START'
+const END = '<!-- WAITING-ON-THOMAS:END -->'
+
 const raw = await readFile(SRC, 'utf8')
-const lines = raw.split('\n')
+const stripIndex = (text) => {
+  const a = text.indexOf(START)
+  const b = text.indexOf(END)
+  if (a < 0 || b < 0) return text
+  return text.slice(0, text.indexOf('\n', a) + 1) + text.slice(b)
+}
+const lines = stripIndex(raw).split('\n')
 
 const sections = []
 let section = null
@@ -300,6 +311,35 @@ const html = `<!doctype html>
 </body>
 </html>
 `
+
+// Write the same list back into backlog.md, between its markers, so the file
+// itself shows what is parked on Thomas. Derived, never hand-maintained.
+const indexBlock = waiting.length
+  ? [
+      `## ⏸ Waiting on you (${waiting.length})`,
+      '',
+      'Nothing moves on these until Thomas decides or draws something.',
+      'Everything else in this file is Claude\'s to get on with.',
+      '',
+      ...waiting.map((it) => {
+        const need = it.details.find((d) => d.label === 'Needs').text
+        const ref = it.refs.length ? '`' + it.refs.join('` `') + '` ' : ''
+        const title = it.title.replace(/\*\*/g, '')
+        return `- ${ref}**${title}** – ${need.replace(/^Thomas – /, '')}\n  <sub>${it.from}</sub>`
+      }),
+    ].join('\n')
+  : '## ⏸ Waiting on you\n\nNothing. Everything open is Claude\'s to get on with.'
+
+const a = raw.indexOf(START)
+const b = raw.indexOf(END)
+if (a >= 0 && b >= 0) {
+  const head = raw.slice(0, raw.indexOf('\n', a) + 1)
+  const updated = head + '\n' + indexBlock + '\n\n' + raw.slice(b)
+  if (updated !== raw) {
+    await writeFile(SRC, updated)
+    console.log(`Updated the waiting-on-you index in ${SRC}.`)
+  }
+}
 
 await writeFile(OUT, html)
 console.log(`Wrote ${OUT} – ${total} open items across ${live.filter((s) => s.items.length).length} sections.`)
