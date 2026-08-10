@@ -122,8 +122,8 @@ export default function RecipesListScreen() {
         // refocus that fails keeps the recipes already on screen instead –
         // stale rows beat an error block over content that is still good.
         <LoadError
-          title="Can't load your recipes"
-          message="We couldn't load your cookbook. Check your connection and try again – none of your recipes are lost."
+          title="Can’t load your recipes"
+          message="We couldn’t load your cookbook. Check your connection and try again – none of your recipes are lost."
           onRetry={load}
         />
       ) : recipes == null ? (

@@ -51,7 +51,7 @@ export async function importRecipeFromUrl(
     html = await response.text();
   } catch {
     throw new ImportError(
-      "Couldn't reach that page – check the link, or the site may be blocking apps.",
+      "Couldn’t reach that page – check the link, or the site may be blocking apps.",
       "fetch",
     );
   }
@@ -59,7 +59,7 @@ export async function importRecipeFromUrl(
   const recipe = extractJsonLdRecipe(html) ?? extractMicrodataRecipe(html);
   if (recipe == null) {
     throw new ImportError(
-      "No recipe found on that page – it may not be a recipe page, or the site doesn't share recipe data.",
+      "No recipe found on that page – it may not be a recipe page, or the site doesn’t share recipe data.",
       "no-recipe",
     );
   }

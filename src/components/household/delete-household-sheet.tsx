@@ -63,7 +63,7 @@ function Content({
   return (
     <View className="w-full gap-layout-small">
       <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-default">
-        {`You're about to delete “${householdName}”. All its plans, recipes and shopping lists will be deleted. This cannot be undone.`}
+        {`You’re about to delete “${householdName}”. All its plans, recipes and shopping lists will be deleted. This cannot be undone.`}
       </Text>
 
       <View className="w-full gap-layout-xsmall">

@@ -115,8 +115,8 @@ function AuthSteps() {
   if (step.kind === 'email') {
     return (
       <FormScreen
-        title="What's your email?"
-        subtitle="New here or coming back, it's the same – we'll send you a code. No password to remember."
+        title="What’s your email?"
+        subtitle="New here or coming back, it’s the same – we’ll send you a code. No password to remember."
         onBack={() => setStep({ kind: 'welcome' })}
         submitLabel="Send code"
         onSubmit={async () => {
@@ -146,7 +146,7 @@ function AuthSteps() {
   return (
     <FormScreen
       title="Check your email"
-      subtitle={`We sent a code to ${step.email}.\nCan't find it? Check your spam folder.`}
+      subtitle={`We sent a code to ${step.email}.\nCan’t find it? Check your spam folder.`}
       onBack={() => setStep({ kind: 'email' })}
       submitLabel="Continue"
       onSubmit={() => verifyCode(step.email, code)}
@@ -166,7 +166,7 @@ function NameStep() {
   const [name, setName] = useState('');
   return (
     <FormScreen
-      title="What's your first name?"
+      title="What’s your first name?"
       subtitle="Shown to your family when you check things off the list."
       submitLabel="Continue"
       onSubmit={() => saveFirstName(name)}
@@ -214,7 +214,7 @@ function HouseholdSteps({ onHouseholdReady }: { onHouseholdReady: (h: Household)
               <ChoiceCard
                 icon="add-home"
                 title="Start a household"
-                body="If you're the first one here, start your family's shared space – you'll get a code to invite the others."
+                body="If you’re the first one here, start your family’s shared space – you’ll get a code to invite the others."
                 onPress={() => setStep({ kind: 'create' })}
               />
               <ChoiceCard
@@ -733,7 +733,7 @@ function ResendLink({ email, onSent }: { email: string; onSent: () => void }) {
   }
   return (
     <LinkButton
-      label={status === 'failed' ? "Couldn't send – tap to retry" : 'Send a new code'}
+      label={status === 'failed' ? "Couldn’t send – tap to retry" : 'Send a new code'}
       onPress={send}
     />
   );

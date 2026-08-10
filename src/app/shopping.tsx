@@ -161,8 +161,8 @@ function ShoppingListScreen() {
           // Outside the ScrollView so the block can centre itself in the list
           // area, as designed.
           <LoadError
-            title="Can't load your list"
-            message="We couldn't load your shopping list. Check your connection and try again – nothing on your list is lost."
+            title="Can’t load your list"
+            message="We couldn’t load your shopping list. Check your connection and try again – nothing on your list is lost."
             onRetry={retry}
           />
         ) : loading && items.length === 0 ? (

@@ -237,8 +237,8 @@ function HouseholdLoadError({ onRetry }: { onRetry: () => void }) {
   return (
     <SafeAreaView edges={['top', 'bottom']} className="flex-1 bg-surface-neutral-lightest">
       <LoadError
-        title="Can't reach your kitchen"
-        message="We couldn't load your household. Check your connection and try again – your recipes and lists are safe."
+        title="Can’t reach your kitchen"
+        message="We couldn’t load your household. Check your connection and try again – your recipes and lists are safe."
         onRetry={onRetry}
       />
     </SafeAreaView>

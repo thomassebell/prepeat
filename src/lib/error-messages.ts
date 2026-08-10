@@ -41,7 +41,7 @@ export function friendlyError(err: unknown): string {
 
   // Supabase rate-limits code requests (once per 60s) and verify attempts.
   if (/for security purposes|once every|rate limit|too many requests/.test(text)) {
-    return "You're going a little fast. Wait a minute, then try again.";
+    return "You’re going a little fast. Wait a minute, then try again.";
   }
 
   return raw.trim().length === 0 ? GENERIC : raw;

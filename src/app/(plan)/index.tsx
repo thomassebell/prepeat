@@ -102,8 +102,8 @@ function PlanContent() {
           // spinner that never stops – the tab also retries itself on
           // foreground once the connection is back.
           <LoadError
-            title="Can't load your plan"
-            message="We couldn't load your weekly plan. Check your connection and try again – nothing in your plan is lost."
+            title="Can’t load your plan"
+            message="We couldn’t load your weekly plan. Check your connection and try again – nothing in your plan is lost."
             onRetry={plan.retry}
           />
         ) : (
