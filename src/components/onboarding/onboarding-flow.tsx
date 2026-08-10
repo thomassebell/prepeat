@@ -166,8 +166,7 @@ function NameStep() {
   const [name, setName] = useState('');
   return (
     <FormScreen
-      title="What’s your first name?"
-      subtitle="Shown next to anything you tick off, so everyone knows who did what."
+      title="What’s your name?"
       submitLabel="Continue"
       onSubmit={() => saveFirstName(name)}
       canSubmit={name.trim().length > 0}>
@@ -469,7 +468,9 @@ function Wordmark({ size }: { size: 'small' | 'large' }) {
 
 interface FormScreenProps {
   title: string;
-  subtitle: string;
+  // Optional: the name step deliberately has none. Its old subtitle explained
+  // ticking things off a list the reader has not met yet (Thomas, 2026-08-10).
+  subtitle?: string;
   submitLabel: string;
   onSubmit: () => Promise<unknown> | void;
   canSubmit: boolean;
@@ -532,9 +533,11 @@ function FormScreen({
                 <Text className="font-header text-display-5 font-emphasized leading-small text-text-subtle">
                   {title}
                 </Text>
-                <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-subtle">
-                  {subtitle}
-                </Text>
+                {subtitle != null && (
+                  <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-subtle">
+                    {subtitle}
+                  </Text>
+                )}
               </View>
               <View className="w-full gap-layout-small">
                 {children(error)}
