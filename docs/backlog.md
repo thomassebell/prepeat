@@ -27,6 +27,24 @@ almost always, and no label should carry an argument the first line already
 made. Reformatted on 2026-08-11 after Thomas: *"I need to recognize a task."*
 The reasoning was never the problem; leading with it was.
 
+**⚠️ CLOSING IS A SEPARATE JOB FROM DOING, and it does not happen by itself**
+(agreed 2026-08-11, Thomas: *"we need to be better at getting items closed.
+Otherwise we will drown in unfinished work"*). Two items had been finished for
+days that morning – one for a week. Three mechanisms, because willpower is not
+one:
+
+- **`Needs: Thomas – <what>` marks anything parked on him**, and the scan view
+  pulls those to the top under "Waiting on you". Work waiting on a decision
+  reads as in-progress otherwise, which is exactly how the ingredient-sections
+  item sat open on a design verdict nobody could see.
+- **Sweep after every TestFlight build.** Release notes are written per build,
+  so that is the one moment what-shipped exists in writing – walk the open
+  items against them and close what landed. Under Recurring.
+- **A detector was TRIED AND DOES NOT WORK, so do not build it again.** Both
+  stale items said what was left; one pointed at a bug since fixed, the other
+  at scraps awaiting a verdict. No text-matching finds that. The signal is
+  human.
+
 **⚠️ A FIX THAT NAMES WHAT IT CLOSES HAS TO GO AND CLOSE IT.** Both directions
 of this have now cost real time: a bug entry proposing a fix went on asking for
 a decision made three days earlier (the duplicate-ingredients item), and a fix
@@ -1581,6 +1599,7 @@ Closed 2026-07-27:
         preload list makes a mistake unfixable-looking in the browser.
 
 - [ ] **Add Sign in with Apple on iOS**
+      Needs: Thomas – a frame placing the Apple button on the welcome screen.
       Why: a faster way in. Not required by Apple, so this is a product choice.
       Note: it does NOT replace the demo mailbox – a reviewer signing in with
            their own Apple ID lands in an empty account.
@@ -1613,6 +1632,7 @@ Closed 2026-07-27:
         but its PLACEMENT on the welcome screen has no Figma frame – design
         first, per the no-improvised-UI rule.
 - [ ] **Let the household teach the app that two ingredient names mean the same thing**
+      Needs: Thomas – design the "same as…" action, and settle whether an alias is one-directional.
       Why: a real list showed three un-merged Parmesans and onion split three
            ways. No parser rule can settle these – `cream cheese` is not
            `cream` – so the household has to decide.
@@ -1656,6 +1676,7 @@ Closed 2026-07-27:
       or a group of equal names? One-directional is simpler and matches the
       category-memory precedent; start there unless Thomas wants groups.
 - [ ] **Drag a meal to another day on the Plan screen**
+      Needs: Thomas – the drag states (lifted card, drop highlight), and a yes/no on promoting it.
       Why: you can already do this by swiping and picking a day. Drag is a
            nicer way to do the same thing, not a missing capability.
       Priority: ⚠️ asked twice (2026-07-30 and again 2026-08-07). Twice-asked
@@ -1695,6 +1716,7 @@ Closed 2026-07-27:
       (see decisions log ~line 998: rows scroll inside, target slot shown) –
       reuse its visual language rather than inventing a new one.
 - [ ] **Drag a shopping item into another category**
+      Needs: Thomas – the item-drag states, and which regions are valid drop targets.
       Why: you can already recategorize by tapping the item and picking a
            category. Drag is a nicer way to do the same thing.
       Priority: ⚠️ asked twice (2026-07-30 and again 2026-08-07), same signal
@@ -1777,6 +1799,7 @@ Closed 2026-07-27:
       now bails out when `c` is followed by `à`/`a`. Any future language work
       needs the same paranoia about collisions with English abbreviations.
 - [ ] **⭐ Share a recipe with someone – FIRST ITEM IN v1.1**
+      Needs: Thomas – how much of a recipe a stranger sees before installing.
       Why: Thomas's case is that this is the growth mechanic, not a
            convenience – *"without 'mouth to mouth' sharing, this app will not
            be a success. And having a recipe as a carrier will be key."*
@@ -2536,6 +2559,7 @@ says whether any of it costs anything commercially.
       what a household WAS. Nobody failed to decode kitchen. The residual is
       cost, not failure.
 - [ ] `2.27` **Decide whether Kitchen should be a tab at all**
+      Needs: Thomas – a navigation call, not a wording one.
       Why: Plan, Recipes and Shopping all live INSIDE the kitchen, so a fourth
            sibling tab called Kitchen sits next to its own contents.
       ⚠️ This is navigation work, not wording. Do not try to fix it with a word.
@@ -2704,6 +2728,7 @@ here. Fix them there, not in a copy of them.
            the app does not describe how he buys food.
 
 - [ ] `2.21` **⚠️ BRAND-LEVEL: decide whether "Prep" is costing us readers**
+      Needs: Thomas – a brand call, on one reader's evidence.
       Why: P02 read it as Sunday meal-prep with plastic tubs and filed the
            product as not-for-her off the NAME, before reading the page.
       Weight: one reader, no supporting ledger – and the only finding in
@@ -2887,6 +2912,7 @@ are just sentences, and were missed on the first pass through these findings.
       already imported: there is still no re-import action.
 
 - [ ] **Stop the screen dimming while you cook from a recipe**
+      Needs: Thomas – whole recipe or a cook mode, steps or everything, visible or silent.
       Why: sticky hands and a phone that dims every 30 seconds. This is the one
            screen propped up and read from across a worktop.
       Decide first (none of it technical): the whole recipe or a deliberate
@@ -2946,6 +2972,7 @@ are just sentences, and were missed on the first pass through these findings.
       round. Worth its own sitting, each one walked.
 
 - [ ] **Let people leave a kitchen from the switcher**
+      Needs: Thomas – a frame for the leave affordance, and whether it belongs there at all.
       Why: Thomas went looking there and could not find it. Leaving lives
            inside Edit profile, which is about your name and your account –
            the switcher is where the kitchen itself is the subject.
@@ -3008,6 +3035,7 @@ are just sentences, and were missed on the first pass through these findings.
       load fails, which covers the in-the-shop case without touching sync.
       Worth a decision before the family relies on it weekly.
 - [ ] **Show the invite code as a filled brand chip**
+      Needs: Thomas – only happens if he wants to design it.
       Why: it would make the code look like a thing to be copied, while keeping
            the brand green.
       Note: purely an enhancement. The accessibility defect is already fixed
@@ -3613,6 +3641,16 @@ missing from it entirely.
       iOS-only.
 
 ## Recurring
+
+- [ ] **After every TestFlight build, sweep the open items and close what shipped**
+      Trigger: the build's release notes being written – that is the one moment
+           what-shipped exists in writing.
+      Steps: read the new release-notes entry, find the open items it
+           describes, tick them. Then check whether any `Blocked by` or
+           `Wait for` line names something that has since landed.
+      Why: added 2026-08-11 after two items were found finished – one of them
+           for a week, unblocked by a fix whose own entry said it closed them.
+           Closing is a separate job from doing and does not happen by itself.
 
 - **Before changing the plan → shopping reconciler, run
   `node scripts/check-shopping-reconciler.mjs`** and read every row (agreed

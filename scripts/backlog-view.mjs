@@ -112,6 +112,15 @@ const md = (s) =>
 
 const total = live.reduce((n, s) => n + s.items.length, 0)
 
+// Anything parked on a Thomas decision is pulled to the top. Work waiting on
+// him is invisible otherwise: it reads as in-progress when nothing is moving.
+// This is the state the ingredient-sections item sat in for four days.
+const waiting = live.flatMap((s) =>
+  s.items
+    .filter((it) => it.details.some((d) => d.label === 'Needs'))
+    .map((it) => ({ ...it, from: s.title }))
+)
+
 const itemHtml = (it) => {
   const flag = /^(⚠️|⭐|🌙|⏳)/.exec(it.title)
   const title = md(it.title.replace(/^(⚠️|⭐|🌙|⏳)\s*/, ''))
@@ -232,6 +241,11 @@ const html = `<!doctype html>
   summary { cursor: pointer; color: var(--brand); }
   details p { margin: .5rem 0 0; }
   code { font-size: .85em; background: var(--line); padding: 0 .25em; border-radius: .2em; }
+  .waiting { border: 1px solid var(--brand); border-radius: .7rem; padding: 1rem 1rem .4rem; margin-bottom: 2.5rem; }
+  .waiting h2 { color: var(--brand); }
+  .lede { margin: -.25rem 0 .9rem; font-size: .8125rem; color: var(--subtle); }
+  .waiting .item { border-color: var(--line); }
+  .from { margin: .5rem 0 0; font-size: .75rem; color: var(--subtle); text-transform: uppercase; letter-spacing: .05em; }
   .hidden { display: none; }
 </style>
 </head>
@@ -242,6 +256,27 @@ const html = `<!doctype html>
     <p class="meta">${total} open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
   </header>
   <div class="filter"><input id="q" type="search" placeholder="Filter tasks…" autocomplete="off"></div>
+  ${
+    waiting.length
+      ? `<section class="waiting">
+      <h2>Waiting on you <span class="count" data-total="${waiting.length}">${waiting.length}</span></h2>
+      <p class="lede">Nothing moves on these until you decide or draw something. Everything else is mine.</p>
+      ${waiting
+        .map(
+          (it) => `<article class="item">
+        <h3>${it.refs.map((r) => `<span class="ref">${esc(r)}</span>`).join('')}<span>${md(
+            it.title.replace(/^(⚠️|⭐|🌙|⏳)\s*/, '')
+          )}</span></h3>
+        <dl><dt>Needs</dt><dd>${md(
+          it.details.find((d) => d.label === 'Needs').text
+        )}</dd></dl>
+        <p class="from">${md(it.from)}</p>
+      </article>`
+        )
+        .join('')}
+    </section>`
+      : ''
+  }
   <div id="list">${live.filter((s) => s.items.length).map(sectionHtml).join('')}</div>
 </main>
 <script>
