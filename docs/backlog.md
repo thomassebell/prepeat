@@ -1961,6 +1961,34 @@ different nouns between them.
 
 ### Screen 9 is where it ends
 
+**⚠️ "Step 9" IS NOT AN ONBOARDING SCREEN – it is the app.** The walkthrough
+brief describes it exactly: heading *Weekly plan*, arrows either side of the
+week, seven rows MON–SUN each carrying **+ Add meal** and nothing else, one
+line *Your shopping list updates as you plan*, four tabs. It is the Plan tab,
+empty, on first launch – the destination, not a step.
+
+**THOMAS'S PROPOSAL, 2026-08-10 – REORDER THE TAB BAR to Recipes · Plan ·
+Shopping · Kitchen, so the app opens on Recipes** and asks for one recipe
+instead of a week. Worth taking seriously because it matches the pre-mortem's
+sharpest observation: what beat Prep+Eat shared three properties, the first
+being **no plan has to exist first**. Opening on Recipes means none does.
+It also fixes a dependency the current order hides – *+ Add meal* is hollow
+with an empty cookbook, so Plan-first sends people to the one screen that
+cannot yet work. Cheap: the tab order IS the default route
+(`src/components/app-tabs.tsx`, first trigger wins).
+**What it does NOT fix:** *+ Add meal* is still an unknown when they get there,
+and the planner half of the split is unhelped – a planner with a week in their
+head still has to build a cookbook before they can enter it.
+**Weigh against:** Plan is the product's headline promise and the App Store
+screenshots lead on it; demoting it is a positioning call, not just a reorder.
+
+**THOMAS'S SECOND PROPOSAL – COPY LAST WEEK'S PLAN.** Aimed at the planner
+half, and it is the right shape for it: the planners stopped because the screen
+asks them to retype a plan they already hold, so making entry near-free is
+exactly the fix. Precedent exists – the shopping list already carries
+*transfer items from last week*. Does nothing for non-planners, who have no
+previous week to copy, which is the point: the split needs two fixes.
+
 - [ ] **All five personas stopped at step 9, the empty week.** Effort thresholds
       were crossed earlier and elsewhere – three at step 5, one at step 7, one
       only at step 9. Four steps of compliance separate "not worth it" from
@@ -2026,20 +2054,41 @@ belongs in Figma – logged here, not improvised.
       **⚠️ PARTLY DONE 2026-08-10.** *"If you're the first one here"* is gone.
       **Untouched:** *Your shopping list updates as you plan* (Plan tab) and
       *repeat* (the brand tagline) – both still split the panel.
-- [ ] **Money is never mentioned** – no price, "free", trial or cancellation
+- [x] **CLOSED 2026-08-10, Thomas: the App Store answers it before install.**
+      The listing is free with no in-app purchases, so the question is settled
+      on the store page – which **the panel never saw**, because only in-app
+      screens were in the test. A scope artefact of the instrument, not a
+      finding about the product. Reopen only if a paid tier ever exists.
+      **Money is never mentioned** – no price, "free", trial or cancellation
       language anywhere. Two readers went looking; one stopped at the email screen
       over the silence. The product genuinely has no paid tier, **so this is a
       sentence, not a decision.** (Synthetic User Panel: copy review, high.)
 
 ### Genuine capability gaps, as opposed to things merely unsaid
 
-- [ ] **Portion arithmetic is one scalar per meal**, where P07's household eats
+- [x] **Portion arithmetic is one scalar per meal**, where P07's household eats
       one pot in four sittings. Tier A on the timing facts. Confirmed in code:
       `servings` is a single integer per entry.
       (Synthetic User Panel: persona-as-lens, medium-high.)
-- [ ] **No per-day non-food logistics field.** Tier B.
+      **CLOSED 2026-08-10, Thomas's call.** Partly mitigated already, which the
+      panel did not credit: manual meals exist, so *Leftovers* can go on
+      Wednesday (`0009_manual_meal_entries`). What is missing is the
+      ARITHMETIC – the app does not know Wednesday's leftovers came from
+      Tuesday's pot, so it cannot say how much is left. That is a hard
+      modelling problem for one persona, and declining it is legitimate.
+- [x] **OUT OF SCOPE 2026-08-10, Thomas's call.** It is a per-day note field
+      (*"Tue: football 17:30, eat early"*) – P07 holds the week as a shape,
+      which night is training, which night the other adult is late, and that is
+      what decides what he cooks. Real, but it is scope creep toward a family
+      organiser; Prep+Eat is a meal planner and Cozi is the other thing.
+      **No per-day non-food logistics field.** Tier B.
       (Synthetic User Panel: persona-as-lens, medium-high.)
-- [ ] **Nothing anywhere touches price or offers**, which is P04's entire
+- [x] **OUT OF SCOPE 2026-08-10, Thomas: *"the app may not be for them"*.**
+      The app never claimed to do this, and the panel's own synthesis files it
+      under *"not a 1.0 or 1.1 decision – needs evidence first"*. P04's whole
+      practice is shopping from offers, so she is outside the product rather
+      than badly served by it. A strategy question, not a defect.
+      **Nothing anywhere touches price or offers**, which is P04's entire
       practice. Tier A – but a product-scope decision, not a first-run defect.
       (Synthetic User Panel: persona-as-lens, medium-high.)
 
