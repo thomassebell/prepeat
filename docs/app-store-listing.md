@@ -188,6 +188,19 @@ evening.
 Sign in with your email – there is no password to forget.
 ```
 
+### ⚠️ This draft was tested on 2026-08-10 and several lines drew contradictions
+
+Read **Synthetic User Panel findings, round 2** in
+[backlog.md](backlog.md) before editing this text. The findings are recorded
+there and deliberately NOT copied here – two copies drift apart.
+
+The short version: recall was accurate, readers quoted real lines back, and the
+problem is not that the page is unclear but that the **first session does not
+keep several of its promises** – *"keep every recipe in one place"*, *"type them
+in, or paste a link"*, and above all *"leftovers and eating out belong on the
+plan too"*, which was the line that mattered most to three readers and which
+nothing in the app confirms. **That last one is an app fix, not a copy fix.**
+
 ### What changed, and why
 
 1. **`household` → `kitchen` throughout**, and the heading *BUILT FOR A

@@ -1926,6 +1926,10 @@ different nouns between them.
       kitchen* → *Your kitchen is ready* → *Welcome to The Sebells*. A place you
       make, then enter. This was the panel's central mechanism.
 - [x] **It is a kommune word.** All five copy readers said so.
+      **⚠️ ROUND 2 QUALIFIES THIS TICK (2026-08-10):** the replacement is
+      understood by all five, and cost all five a beat to decode – *"a thing you
+      name, a thing you're in, and a tab"*. The word failure is fixed; a smaller
+      cost replaced it, and the "and a tab" half is structural. See round 2.
       (Synthetic User Panel: copy review, high.)
       **DONE 2026-08-10.** Replaced with **kitchen** everywhere.
       ⚠️ Note the "kommune" label was a DANISH artefact – the personas mapped
@@ -2080,6 +2084,11 @@ belongs in Figma – logged here, not improvised.
       (Synthetic User Panel: copy review, high.)
       **DONE 2026-08-10.** The tagline is now *"Plan dinners, collect
       recipes and shop together."*
+- [ ] **⚠️ ROUND 2 CONFIRMS THE UNFIXED HALF (2026-08-10):** `anna@example.com`,
+      `Sofia` and `The Hansens` all still read as someone else's data, five of
+      five, with P07 saying he would think he had signed into the wrong account.
+      The rename fixed the "teaches the wrong task" half only, exactly as this
+      item predicted. It is a placeholder TREATMENT problem.
 - [ ] **`The Hanson Kitchen`** – all five. Teaches the wrong task and marks the
       reader as a second market. In comprehension four readers took the
       placeholder as real data, and two briefly thought the app had their name
@@ -2251,6 +2260,194 @@ panel raised that shipping it did not move the problem the request was about.
 - **Still unanswered: "when did this panel last say no?"** A pre-mortem instructs
   rejection and comprehension never asks, so after five studies the panel has not
   yet had a fair chance to approve of anything. Weigh the findings accordingly.
+
+## Synthetic User Panel findings, round 2 (2026-08-10)
+
+Second round, run the same day as round 1 and against the REWRITTEN screens.
+Source: `~/Documents/Claude/Projects/Synthetic User Panel`, study
+`2026-08-10-prepeat-store-to-first-run`. Mode **comprehension**, ceiling
+**high**. Panel P01, P02, P03, P05, P07 – baseline P02/P05, plus P01 and P07 for
+first run, plus P01 and P03 together because sharing is involved. P04 and P06
+deliberately out.
+
+**⚠️ WHAT MAKES THIS ROUND DIFFERENT: THE APP STORE PAGE WAS IN THE ARTEFACT.**
+Every earlier finding of the form *"the app never says X"* came from readers who
+had never been told X anywhere, because only in-app screens were ever shown.
+Here they read the store listing, then installed, then went through first run –
+so they could compare a promise against what followed. **Recall was accurate
+throughout; they quoted real lines.** This was Thomas's idea (2026-08-10).
+
+**How the screens are numbered below**, because the numbers are the study's and
+mean nothing on their own: **6** = *Set up your kitchen* (create or join), **7**
+= *Name your kitchen*, **8** = *Your kitchen is ready* + invite code, **9** =
+*Welcome to …* + Take a look around, **10** = the EMPTY RECIPES TAB, which is
+where a new kitchen now lands.
+
+**Standing limits, both still true:** nothing here is visual, and nothing here
+says whether any of it costs anything commercially.
+
+### What round 2 says about round 1's fixes
+
+- [ ] **"kitchen" is understood – and every reader paid a beat to decode it.**
+      All five got there; all five worked for it. P03: *"a thing you name, a
+      thing you're in, and a tab. I have a kitchen. It's in Roskilde."*
+      (Panel round 2: comprehension, high.)
+      **⭐ RESTS ON NO SHARED SOURCE** – nothing in the personas' material pushed
+      them here, so this agreement is real. That makes it the strongest finding
+      in the round, despite being a smaller complaint than the round-1 one it
+      replaces.
+      **Still a large improvement:** round 1 had seven of seven unable to say
+      what a household WAS. Nobody failed to decode kitchen. The residual is
+      cost, not failure.
+- [ ] **⚠️ The container cannot also be a peer tab.** P03's "and a tab" is the
+      structural half, and renaming could never reach it: Plan, Recipes and
+      Shopping all live INSIDE the kitchen, so a fourth sibling tab called
+      Kitchen sits next to its own contents. **This is a navigation question,
+      not a wording one** – do not try to fix it with a word.
+      (Panel round 2: comprehension, high.)
+- [ ] **The invented sample data reads as someone else's.**
+      `anna@example.com`, `Sofia`, `The Hansens` – five of five stopped, and P07
+      said he would think he had signed into the wrong account. Confirms the
+      half of the round-1 `The Hanson Kitchen` item that renaming did NOT fix:
+      it is a placeholder TREATMENT problem. (Panel round 2: comprehension, high.)
+
+### The precondition problem – the biggest finding, and the most over-readable
+
+- [ ] **Screen 10 reads as homework, and all five concluded unprompted that the
+      plan and the shopping list do not work until recipes exist.** Nobody told
+      them that. P01: *"an empty cupboard with a note on it saying fill me."*
+      P02: *"Skal jeg selv skrive pasta med kødsovs ind? Det kan jeg altså
+      udenad."* and *"I had arrived in the wrong room."* P03: it says the job
+      begins with building a cookbook, and that is a sit-down job.
+      (Panel round 2: comprehension, high.)
+      **⚠️ NOT FIVE INDEPENDENT READERS.** Four ledgers trace to the same source
+      – Danish reviewers resenting setup burden – and P01's version is the
+      invented assumption her character was built on. ***The words communicate a
+      precondition* STANDS. *This is where people quit* DOES NOT.**
+      **⚠️ THIS IS A VERDICT ON A CHANGE MADE THE SAME DAY** – landing an empty
+      kitchen on Recipes (commit `dd7ccdb`). It was meant to spare people the
+      empty week. It may have swapped "a week you cannot fill" for "homework".
+      Do not revert on this evidence alone; the caveat above is why.
+- [ ] **"Take a look around" promised a tour and delivered one empty screen.**
+      Two readers. **Caused by a change made the same day** (`5bc480d`) – the
+      label was chosen to avoid promising a destination, and it promises an
+      experience instead. (Panel round 2: comprehension, high.)
+
+### Screen 6 – the choice is understood, four things around it are not
+
+The create-or-join fork itself now reads cleanly, which is the round-1 fix
+holding. What remains is information, not wording.
+
+- [ ] **What the second person sees on arrival is never stated, and BOTH halves
+      of the household asked.** P01: does he see my plan, or another empty page
+      asking him to add a recipe? P03, from the other side: if she puts nothing
+      in, is this just a list I made for myself? (Panel round 2: information gap.)
+      Note this is exactly why P01 and P03 run as a pair.
+- [ ] **Nobody can tell whether create-or-join is reversible.** P05 and P07 both
+      asked what happens if the other adult installs it later and creates their
+      own. P05 read *"join theirs instead of starting another"* as a warning
+      that two kitchens cannot be merged – and flagged that as a guess.
+      (Panel round 2: information gap.) **The round-1 duplicate-kitchen item is
+      therefore only half closed:** the sentence added on 2026-08-10 stops the
+      mistake, and answers nothing about recovering from it.
+- [ ] **Whether the creator OWNS the kitchen is left open.** P03: the first
+      person names it and holds the code – does that make them the owner of
+      something? (Panel round 2: information gap.)
+- [ ] **"Leave a kitchen and your recipes come with you" does not resolve.**
+      Three readers. Whose recipes, does the other party keep a copy, what if
+      both leave. P05: the closest thing on the page to an answer about his own
+      data, and he cannot tell what it promises. (Panel round 2: comprehension,
+      high.)
+
+### The store page – promises the first session does not keep
+
+**These are edits to text that has NOT shipped** (the v1.1 draft in
+[app-store-listing.md](app-store-listing.md)), so they are the cheapest items
+here. Fix them there, not in a copy of them.
+
+- [ ] **⭐ "Not every meal is a recipe – leftovers and eating out belong on the
+      plan too" is the line that mattered most, and nothing confirms it.** Three
+      readers recalled it. P03 liked it best on the whole page and asked why it
+      is buried. **P01 built her entire escape route on it** – put "pasta" on
+      Tuesday, skip the recipe – then had to mark it a guess. **Fix this in the
+      APP, not the listing:** it is the one line that offers a way past the
+      precondition problem above. (Panel round 2: comprehension, high.)
+- [ ] **"Keep every recipe in one place" was read as *they are already
+      somewhere*, and screen 10 contradicts it directly.** P02.
+- [ ] **"Type them in, or paste a link" sets up two routes; screen 10 offers
+      one.** P05 expected paste-a-link to be equal and found it unmentioned.
+      P01 sat up at the line, then found it does not describe what she has – 40
+      screenshots and saved Instagram posts, no links.
+- [ ] **The plan is a week in every reader's head and never a day.** All five
+      inferred a seven-day grid from the repeated "the week" without being shown
+      one. P02 noticed the missing option – *"it never offered me a day"* – and
+      asked whether it can tell her what to make right now. **Strong constraint
+      behind this one:** deciding shortly before cooking is the majority Danish
+      pattern.
+- [ ] **"What can I make with aubergine?" was read as searching only your own
+      typed-in recipes.** Nothing confirms or denies the scope. P02: it can
+      answer that once she has done a lot of typing.
+- [ ] **"The app learns your corrections" – nobody knows whose.** Three readers.
+      P05: if I move something to Dairy, has my wife's list changed?
+- [ ] **Deletion is answered; EXPORT is not.** P05 separated two things the
+      privacy block conflates: *"Data i EU. Det er pænt. Men hvor får jeg dem ud
+      henne?"* (Panel round 2: information gap.)
+- [ ] **No price anywhere, and three readers filled the gap by assuming free.**
+      P05: *"Ti skærme, og ingen pris"* – and if a paywall appeared after screen
+      10 he would call the store page misleading by omission. **Recorded as a
+      gap in the copy, not as anything about willingness to pay.** ⚠️ Partly
+      reopens the round-1 money item, which was closed on the grounds that the
+      store answers it – it answers it in the PRICE FIELD, not in the words.
+- [ ] **"Cooking for three on Tuesday and eight on Saturday" teaches one number
+      per meal, and one household cannot use that number.** P07 derived the
+      model correctly and found nowhere for his real case: one pot producing a
+      meat-free portion at 18:00, a large cold one at 20:45, one under
+      clingfilm, one boxed for tomorrow. Confirms the round-1 portions finding
+      that was CLOSED as out of scope – closing it stands, but the store page
+      now teaches the limitation explicitly.
+- [ ] **Nothing addresses one person in the house eating differently.** P07 for
+      a vegetarian daughter, P01 for a child who will not eat sauce. Both found
+      silence and assumed it cannot be done. (Panel round 2: information gap.)
+- [ ] **The shopping half describes walking round a physical shop, and one
+      reader read the absence as a fact.** P05, on *"whoever is closest to the
+      shop"* and *"two people in two aisles"*: not one word about ordering
+      online, so he read the whole shopping half as not describing how he buys
+      food. **Underlying evidence solid.**
+- [ ] **⚠️ BRAND-LEVEL: "Prep" was read as Sunday meal-prep with plastic tubs.**
+      P02 filed the product as not-for-her **off the name, before reading the
+      page**. One reader, no ledger, and the only finding in either round that
+      touches the name itself. (Panel round 2: comprehension, high.)
+
+### One sentence that did opposite jobs
+
+- [ ] **"You can also do this later from the Kitchen tab" reassured one reader
+      and gave another permission to skip.** P05 took it as *the code persists*.
+      P01 took it as *I need not do this now* – *"Jeg deler den kode i morgen,"*
+      which she said she would not otherwise have done. **Caused by a change
+      made the same day** (`d6e0367`), added to stop the invite step reading as
+      compulsory. It worked, and that is the problem.
+      (Panel round 2: comprehension, high.)
+
+### What WORKS – logged before anyone changes it
+
+- [x] **The invite code is understood perfectly.** All five read `PREP-6A3V`
+      correctly: the other person installs the app and types it in. **Nobody
+      misread it.** (Panel round 2: comprehension, high.)
+      **⚠️ READ THIS BEFORE BUILDING LINK-JOINING** (see the item under Later):
+      the mechanism being replaced currently tests clean. Whatever replaces it
+      has to clear this bar, and the case for the link is convenience, NOT
+      comprehension.
+
+### What to verify with real humans (the panel's own three)
+
+- [ ] 1. **Show a real person screen 10 cold and ask what has to happen before
+      the plan works.** Directly tests the precondition finding, and the caveat
+      above means only a human can settle it.
+- [ ] 2. **Ask what a "kitchen" is, in their words.**
+- [ ] 3. **⭐ Give the store page to one person in a household and the invite
+      code to the other, then watch what actually happens.** The sharpest
+      research idea in either round – it tests the product's actual premise,
+      which is that the second person's arrival changes something.
 
 ## Ideas – not yet committed
 
