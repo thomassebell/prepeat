@@ -1451,6 +1451,21 @@ Closed 2026-07-27:
       **KEEP THE CODE AS WELL AS THE LINK.** The code still serves reading it
       aloud to a parent on the phone, and joining from a second device. Do not
       remove a working path.
+      **⚠️ THE ONBOARDING COPY WAS ALREADY MADE CODE-AGNOSTIC FOR THIS**
+      (Thomas, 2026-08-10, giving the reason after the fact: *"I plan to also
+      introducing a link as a joining methode"*). The choice screen's join option
+      dropped its "Got an invite code?" opener and now reads **"Join an existing
+      kitchen / You'll share the same recipes, plan and shopping list – anything
+      you add shows up for them too."** It names the DESTINATION, not the
+      mechanism, so it survives whichever way people arrive. Same for the
+      switcher item. **Do not "helpfully" put the code hint back** – its absence
+      is deliberate.
+      **WHAT STILL NAMES THE MECHANISM, and so changes when links land:** the
+      GIVING side, not the joining side – *"Share this code and they'll see the
+      same recipes, plan and list"* on the kitchen-is-ready screen, *"Invite
+      someone, or give them the code below"* in the invite sheet, and the
+      **Share the code** button. Note a link-joiner skips the choice screen
+      entirely, so screen 5 needs nothing further.
       **SEQUENCE:** move hosting → association file + `associatedDomains` →
       build the `/join/` page → handle the link in-app. App Clips stays separate.
 
