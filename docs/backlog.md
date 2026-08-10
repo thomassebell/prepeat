@@ -1977,6 +1977,37 @@ week, seven rows MON–SUN each carrying **+ Add meal** and nothing else, one
 line *Your shopping list updates as you plan*, four tabs. It is the Plan tab,
 empty, on first launch – the destination, not a step.
 
+- [ ] **⭐ AGREED 2026-08-10 – OPEN ON RECIPES WHILE THE COOKBOOK IS EMPTY, on
+      Plan once it is not.** This is the surviving answer to the empty week, and
+      it replaces the tab-reorder idea below, which was tried and reverted.
+      **WHY THE EMPTY COOKBOOK AND NOT "FIRST LAUNCH"** (Thomas): someone who
+      onboards and closes the app to do the big task another time *"haven't
+      learned any think yet anyways"* – a first-launch flag would assume they
+      had, and drop them on the empty week the next morning. The cookbook being
+      empty is the honest signal, and it is self-correcting: the moment there is
+      a recipe, the app opens on Plan forever after.
+      **⚠️ NOT A TAB-BAR CHANGE.** Plan stays first and stays the `/` index
+      route, because most sessions are *"what's for dinner"* or *"I'm at the
+      shop"*. This is a redirect on launch, not a reordering.
+      **THE EDGE CASE THAT DECIDES THE IMPLEMENTATION:** the redirect must fire
+      ONCE PER LAUNCH, not whenever the plan renders. Otherwise a user who adds
+      their first recipe and then taps Plan is bounced straight back to Recipes.
+      **SKETCH, not built:** `RootGate` already awaits a fetch before rendering
+      anything, so a parallel "does this household have ≥1 recipe" query costs
+      almost nothing and avoids a flash; pass it down, and have the plan's index
+      return `<Redirect href="/recipes" />` on first mount only. Alternative is
+      a cached AsyncStorage flag per household – no query, but it needs
+      invalidating and gets existing users one odd launch.
+
+**⚠️ THE TAB-REORDER IDEA BELOW WAS TRIED AND REVERTED on 2026-08-10.** Two
+things were learned and are worth not rediscovering. **Trigger order does NOT
+decide the opening tab** – the INDEX route does (*"the tab file named index.tsx
+is the default tab when the app loads"*), so the first reorder changed the
+visual order and nothing else, leaving Plan demoted but still opening. Making
+Recipes the index then worked, but **it serves first-timers at the cost of every
+returning user**, which is the wrong trade: most sessions start at the plan or
+the shop. Kept only as the record of a dead end.
+
 **THOMAS'S PROPOSAL, 2026-08-10 – REORDER THE TAB BAR to Recipes · Plan ·
 Shopping · Kitchen, so the app opens on Recipes** and asks for one recipe
 instead of a week. Worth taking seriously because it matches the pre-mortem's
