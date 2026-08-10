@@ -61,7 +61,37 @@ a feature makes it MINOR. It stays unnumbered in `app.json` until it is
 actually being prepared for submission, and v1.0.0 has to be approved and
 released first either way.
 
-_(nothing yet – build 17 took everything below)_
+**Version re-checked 2026-08-10 against the rule above: still 1.1.0.** Today is
+copy and polish plus one small capability (forms now say what is missing), and
+neither outranks the MINOR already set by leftovers and ingredient sections.
+
+### Dev builds, 2026-08-10 – the wording round
+
+Came out of a synthetic user panel run against the first-run screens: seven
+readers out of seven could not say what a "household" was in the product.
+
+- **It is called a kitchen now, not a household.** The tab, the switcher, every
+  sheet, and the whole set-up flow. The app used to use both words for the same
+  thing – one error even said "Can't reach your kitchen" directly above "We
+  couldn't load your household" – so there was no way to work out what the thing
+  actually was. One word throughout, and the set-up screen now says what a
+  kitchen holds: your recipes, the weekly plan and the shopping list.
+- **One way in, instead of two.** The welcome screen offered "Get started" and
+  "Already cooking? Sign in", which both led to the same screen – there is no
+  password, so signing up and signing in are the same step. It is one button
+  now, and the email screen says so: *new here or coming back, it's the same.*
+- **Buttons tell you what is missing instead of doing nothing.** Pressing
+  Continue with an empty field used to be silently ignored, leaving you to guess
+  why nothing happened. Now the form says what it still wants.
+- **The app no longer assumes who you live with.** Several screens told you what
+  your family does or would recognise. Prep+Eat works the same whether you cook
+  for six, for two, or for yourself – and a kitchen of one is still a kitchen.
+- **Setting up asks for less.** Naming your kitchen no longer explains itself at
+  length, the name step just asks your name, and the sign-in screens no longer
+  describe things you have not seen yet.
+- **When something will not load, the message says what.** "Can't reach your
+  kitchen" became "Can't load your recipes" – the old one made two readers think
+  something was wrong at home rather than with the connection.
 
 ## Build 17 – TestFlight 2026-08-07 (VALID, not in review)
 
