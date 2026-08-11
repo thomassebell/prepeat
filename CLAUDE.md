@@ -61,10 +61,12 @@ Eat. Repeat." The old working name "Madapp" may linger in docs/projektgrundlag.
   copy, because macOS forbids background jobs from reading `~/Documents`.
 
 - `npm run hooks:install` – install the git hooks from `scripts/git-hooks/`.
-  **The DESIGN-SYSTEM repo has the same hook and the same command** (added
-  2026-08-11, after a commit was found four days unpushed there – fixing only
-  the repo that got caught just moves the failure to the next one).
-  `prepeat-web` and `synthetic-user-panel` still have none.
+  **ALL FOUR REPOS NOW CARRY THIS HOOK** – prepeat, design-system, prepeat-web
+  and synthetic-user-panel (swept 2026-08-11, after a commit was found four
+  days unpushed in design-system: fixing only the repo that got caught moves
+  the failure to the next one). The three others have no package.json wrapper,
+  so there it is `./scripts/install-git-hooks.sh` directly.
+  ⚠️ A fresh clone has NO hooks – `.git/hooks/` is not version controlled.
   Currently one: **every commit on `main` pushes to GitHub automatically**, in
   the background, never forced. Added 2026-08-10 after pushing silently stopped
   on 08-07 and 43 commits – including the household-boundary security work – sat

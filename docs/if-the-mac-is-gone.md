@@ -103,14 +103,23 @@ the machine leaves the building**.
 
 Ask Claude: *"check every repo for unpushed commits"*.
 
-**prepeat** and **design-system** push themselves after every commit on `main`
-(a git hook – see `scripts/git-hooks/post-commit` in either). **claude-config**
-is pushed by the snapshot script. **prepeat-web** and **synthetic-user-panel**
-have no hook, so check those by hand.
+**Every repo pushes itself** after a commit on `main` – prepeat, design-system,
+prepeat-web and synthetic-user-panel each carry the hook at
+`scripts/git-hooks/post-commit`, and claude-config is pushed by the snapshot
+script. So the honest answer is that unpushed work should not happen.
 
-That list is worth trusting only as far as its date: design-system got its hook
-on 2026-08-11, after a commit was found four days unpushed – the same failure
-Prep+Eat had, moving to the repo that had not been fixed.
+Check anyway. A hook only fires on `main`, so anything committed on a branch is
+still local, and a failed push prints a warning that is easy to scroll past –
+`.git/autopush.log` in each repo is the record.
+
+**After cloning any repo onto a new Mac, install its hook:**
+
+```bash
+./scripts/install-git-hooks.sh
+```
+
+Git never runs the tracked copy – `.git/hooks/` is not version controlled, so a
+fresh clone has no hooks at all until that command is run.
 
 ### 2. 🤖 Copy off the four things
 
