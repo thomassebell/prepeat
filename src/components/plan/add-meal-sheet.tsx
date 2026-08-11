@@ -147,7 +147,12 @@ function SheetTabs({
         onPress={() => onChange("recipes")}
       />
       <TabItem
-        label="Manual"
+        // "Anything else", not "Manual" (Thomas, 2026-08-11, panel finding
+        // 2.10 – update the Figma copy too). "Manual" named the MECHANISM,
+        // you type it yourself; nobody scanning for "can I just put pasta on
+        // Tuesday" reads that as yes. Paired with "Recipes" it now reads as a
+        // complete set: a meal is one of your recipes, or it is anything else.
+        label="Anything else"
         active={tab === "manual"}
         onPress={() => onChange("manual")}
       />

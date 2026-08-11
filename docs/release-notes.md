@@ -65,6 +65,14 @@ released first either way.
 copy and polish plus one small capability (forms now say what is missing), and
 neither outranks the MINOR already set by leftovers and ingredient sections.
 
+### Dev builds, 2026-08-11
+
+- **Not every meal has to be a recipe, and the app finally says so.** When you
+  add a meal, the second tab is now called **"Anything else"** instead of
+  "Manual" – so leftovers, takeaway or a night at your mother's go on the plan
+  by typing a name. Nothing changed about how it works; it was there all along
+  and called something nobody read as permission.
+
 ### Dev builds, 2026-08-10 – the wording round
 
 Came out of a synthetic user panel run against the first-run screens: seven

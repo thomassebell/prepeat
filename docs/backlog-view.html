@@ -83,7 +83,7 @@
   </header>
   <div class="filter"><input id="q" type="search" placeholder="Filter tasks…" autocomplete="off"></div>
   <section class="waiting">
-      <h2>Waiting on you <span class="count" data-total="7">7</span></h2>
+      <h2>Waiting on you <span class="count" data-total="8">8</span></h2>
       <p class="lede">Nothing moves on these until you decide or draw something. Everything else is mine.</p>
       <article class="item">
         <h3><span><strong>Let the household teach the app that two ingredient names mean the same thing</strong></span></h3>
@@ -96,6 +96,10 @@
       </article><article class="item">
         <h3><span class="ref">2.27</span><span><strong>Rename the Kitchen tab to Settings, and nest the kitchen inside it</strong></span></h3>
         <dl><dt>Needs</dt><dd>Thomas – a frame for the Settings tab and its three groups, including a PLACEHOLDER ROW in App (agreed 2026-08-11). The group is empty today and it is the reason for the rename, so without one the tab reads mislabelled on day one.</dd></dl>
+        <p class="from">Next – v1.1</p>
+      </article><article class="item">
+        <h3><span class="ref">2.10</span><span><strong>⭐ Show IN THE APP that a meal can go on the plan without a recipe</strong></span></h3>
+        <dl><dt>Needs</dt><dd>Thomas – a frame for a line on the EMPTY PLAN saying a meal need not be a recipe. That is the half that reaches someone still deciding whether the app is for them, and no frame draws it.</dd></dl>
         <p class="from">Next – v1.1</p>
       </article><article class="item">
         <h3><span class="ref">2.21</span><span><strong>⚠️ BRAND-LEVEL: decide whether "Prep" is costing us readers</strong></span></h3>
@@ -444,8 +448,8 @@
         <span class="ref">2.10</span>
         <span><strong>⭐ Show IN THE APP that a meal can go on the plan without a recipe</strong></span>
       </h3>
-      <dl><dt>Why</dt><dd>it is the one line that offers a way past the precondition problem above, and nothing in the app confirms it. P01 built her whole escape route on it – "pasta" on Tuesday, no recipe – then had to mark it a guess.</dd></dl>
-      <details><summary>Full note</summary><p>⚠️ This one is an APP change, unlike the rest of this section. Three readers recalled the line; P03 liked it best on the page and asked why it is buried. (Panel round 2: comprehension, high.)</p></details>
+      <dl><dt>Needs</dt><dd>Thomas – a frame for a line on the EMPTY PLAN saying a meal need not be a recipe. That is the half that reaches someone still deciding whether the app is for them, and no frame draws it.</dd></dl>
+      <details><summary>Full note</summary><p>Done 2026-08-11: **the add-meal tab is renamed "Manual" → "Anything else"** (Thomas chose it from four). ⚠️ Update the Figma copy – the code is ahead of the frame. Why: it is the one line that offers a way past the precondition problem above, and nothing in the app confirms it. P01 built her whole escape route on it – "pasta" on Tuesday, no recipe – then had to mark it a guess. ⚠️ THE CAPABILITY WAS NEVER MISSING. <code>0009_manual_meal_entries</code> shipped long ago and the sheet has always had the tab, with the placeholder <em>"E.g. leftovers"</em>. The word "Manual" named the MECHANISM – you type it yourself – rather than the job, so nobody scanning for "can I just put pasta on Tuesday" read it as yes. Same mistake as "household": the system's concept where the user's belongs. Watch when the frame lands: the tabs are equal halves with no <code>numberOfLines</code>, so a label too long WRAPS to two lines rather than truncating. "Anything else" measures ~90pt in ~160pt, so it fits – but any future label needs the same check. ⚠️ This one is an APP change, unlike the rest of this section. Three readers recalled the line; P03 liked it best on the page and asked why it is buried. (Panel round 2: comprehension, high.)</p></details>
     </article>
     <article class="item">
       <h3>
