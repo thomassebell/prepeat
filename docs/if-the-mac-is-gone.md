@@ -17,7 +17,7 @@ somewhere else. What is at risk is a few folders and a bit of time.
 
 | | Where it really is | Gone with the Mac? |
 |---|---|---|
-| All the code, migrations, docs | GitHub – 4 repos | no |
+| All the code, migrations, docs | GitHub – 5 repos | no |
 | The live app and its database | Supabase | no |
 | Recipes, photos, users | Supabase | no |
 | Apple signing key | Apple Passwords (personal Apple ID) | no |
@@ -163,7 +163,8 @@ Hand Claude this list and it will work through it:
 
 ```
 Set up this Mac for Prep+Eat: install Homebrew, node, git and libpq; clone
-prepeat, prepeat-web, design-system and claude-config from GitHub; restore
+prepeat, prepeat-web, design-system, synthetic-user-panel and claude-config
+from GitHub, and run ./scripts/install-git-hooks.sh in each; restore
 Claude's memory from claude-config; recreate .env and ~/.prepeat-backup.env
 from the Supabase dashboard; run npm install, npm run hooks:install and
 npm run backup:install; then verify with npm run backup and npx tsc --noEmit.
