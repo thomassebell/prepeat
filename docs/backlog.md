@@ -112,7 +112,7 @@ Everything else in this file is Claude's to get on with.
   <sub>Next – v1.1</sub>
 - **⭐ Share a recipe with someone – FIRST ITEM IN v1.1** – how much of a recipe a stranger sees before installing.
   <sub>Next – v1.1</sub>
-- `2.27` **Rename the Kitchen tab to Settings, and nest the kitchen inside it** – a frame for the Settings tab and its three groups.
+- `2.27` **Rename the Kitchen tab to Settings, and nest the kitchen inside it** – a frame for the Settings tab and its three groups, including a PLACEHOLDER ROW in App (agreed 2026-08-11). The group is empty today and it is the reason for the rename, so without one the tab reads mislabelled on day one.
   <sub>Next – v1.1</sub>
 - `2.21` **⚠️ BRAND-LEVEL: decide whether "Prep" is costing us readers** – a brand call, on one reader's evidence.
   <sub>Next – v1.1</sub>
@@ -2562,7 +2562,10 @@ says whether any of it costs anything commercially.
       what a household WAS. Nobody failed to decode kitchen. The residual is
       cost, not failure.
 - [ ] `2.27` **Rename the Kitchen tab to Settings, and nest the kitchen inside it**
-      Needs: Thomas – a frame for the Settings tab and its three groups.
+      Needs: Thomas – a frame for the Settings tab and its three groups,
+           including a PLACEHOLDER ROW in App (agreed 2026-08-11). The group is
+           empty today and it is the reason for the rename, so without one the
+           tab reads mislabelled on day one.
       Why: Plan, Recipes and Shopping all live INSIDE the kitchen, so a fourth
            sibling tab called Kitchen sits next to its own contents. Settings
            does not claim to BE the kitchen, so the clash disappears.
