@@ -79,17 +79,13 @@
 <main>
   <header>
     <h1>Prep+Eat – open backlog</h1>
-    <p class="meta">81 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
+    <p class="meta">79 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
   </header>
   <div class="filter"><input id="q" type="search" placeholder="Filter tasks…" autocomplete="off"></div>
   <section class="waiting">
-      <h2>Waiting on you <span class="count" data-total="10">10</span></h2>
+      <h2>Waiting on you <span class="count" data-total="9">9</span></h2>
       <p class="lede">Nothing moves on these until you decide or draw something. Everything else is mine.</p>
       <article class="item">
-        <h3><span><strong>Add Sign in with Apple on iOS</strong></span></h3>
-        <dl><dt>Needs</dt><dd>Thomas – a frame placing the Apple button on the welcome screen.</dd></dl>
-        <p class="from">Next – v1.1</p>
-      </article><article class="item">
         <h3><span><strong>Let the household teach the app that two ingredient names mean the same thing</strong></span></h3>
         <dl><dt>Needs</dt><dd>Thomas – design the "same as…" action, and settle whether an alias is one-directional.</dd></dl>
         <p class="from">Next – v1.1</p>
@@ -151,7 +147,7 @@
     </article>
     </section>
     <section>
-      <h2>Next – v1.1 <span class="count" data-total="55">55</span></h2>
+      <h2>Next – v1.1 <span class="count" data-total="54">54</span></h2>
       <h4>Known bugs (open)</h4>
     <article class="item">
       <h3>
@@ -188,15 +184,6 @@
       </h3>
       <dl><dt>Why</dt><dd>the listing shows a github.io address for Privacy Policy and Support. Nothing is broken – those redirect – it just looks borrowed rather than like Thomas's own domain.</dd><dt>Wait for</dt><dd>v1.0 to be approved. Changing metadata mid-review invites questions for no benefit.</dd><dt>Size</dt><dd>small, and it pairs with the hosting move above.</dd></dl>
       <details><summary>Full note</summary><p>(found 2026-08-04). The custom domain went live at some point without the paperwork catching up: <code>prepeat.app</code> serves a valid certificate, <code>http://</code> returns 301 to <code>https://</code>, and DNS answers with all four GitHub Pages apex IPs. App Store Connect still holds the old <code>thomassebell.github.io/prepeat-web/…</code> links for Privacy Policy and Support. <strong>NOT URGENT, AND DELIBERATELY NOT DONE NOW.</strong> Setting a custom domain makes the <code>github.io</code> URLs redirect to it – verified: the privacy policy link Apple holds ends at <code>https://prepeat.app/privacy</code> with a 200. So nothing is broken, and changing metadata while a version is IN REVIEW invites questions for no benefit. Do it once v1.0 is approved, so the listing shows Thomas's own domain rather than a GitHub URL. Two things checked at the same time, both fine, both worth not re-investigating: - <strong>The mail path is intact.</strong> Resend's records live on the **<code>send.</code> subdomain** (SPF via <code>amazonses.com</code>, DKIM key, bounce MX), which is why the ROOT SPF mentions Porkbun instead. **That reads like a fault and is not** – "fixing" it would break the record carrying every user's sign-in code. Now written into <code>prepeat-web</code>'s README as a verified table. - <strong><code>prepeat-web</code>'s README described the domain move as a future plan</strong> for a job already finished; rewritten as a record. The step ORDER is kept, because claiming the domain in the repo before pointing DNS is the part that is easy to get wrong, and <code>.app</code> being on the HSTS preload list makes a mistake unfixable-looking in the browser.</p></details>
-    </article>
-    <article class="item">
-      <h3>
-        
-        
-        <span><strong>Add Sign in with Apple on iOS</strong></span>
-      </h3>
-      <dl><dt>Needs</dt><dd>Thomas – a frame placing the Apple button on the welcome screen.</dd><dt>Why</dt><dd>a faster way in. Not required by Apple, so this is a product choice.</dd><dt>Note</dt><dd>it does NOT replace the demo mailbox – a reviewer signing in with their own Apple ID lands in an empty account.</dd><dt>Blocked by</dt><dd>no Figma frame places the Apple button on the welcome screen. Design first.</dd></dl>
-      <details><summary>Full note</summary><p>Considered 2026-07-30 while setting up the App Review demo account, deferred to after v1.0 (Thomas: "Mailbox now, Apple later"). Findings worth keeping: - <strong>Not required.</strong> Apple's guideline 4.8 only forces a Sign-in-with-Apple option for apps using a THIRD-PARTY social login (Google/Facebook/…). Prep+Eat uses first-party email OTP, so it is exempt. This is a product choice, not compliance. - <strong>It does NOT remove the demo-account work.</strong> A reviewer signing in with their own Apple ID lands in a brand-new EMPTY account – the "reviews badly" risk. You cannot pre-seed the reviewer's Apple-ID account. The demo mailbox is what lets you hand over a full, seeded account, so it is still wanted even with SIWA. - <strong>An addition, not a replacement.</strong> Email OTP stays for Android (SIWA is effectively iOS-only) and for users without an Apple ID. - <strong>Cost:</strong> <code>expo-apple-authentication</code> (Expo SDK 56 supports it) → <code>supabase.auth.signInWithIdToken({provider:'apple'})</code>; Apple Developer portal (enable the capability, a Services ID + a key); Supabase Apple provider configured with those; capture Apple's name (given only on the FIRST authorization – feeds the onboarding first-name step); handle private-relay <code>@privaterelay.appleid.com</code> emails (they become the stored identity / the address shown on the Household screen); decide identity-linking if the same person later uses OTP with the same email. - <strong>Design gap:</strong> the Apple button glyph/label is Apple-specified (HIG), but its PLACEMENT on the welcome screen has no Figma frame – design first, per the no-improvised-UI rule.</p></details>
     </article>
     <article class="item">
       <h3>
@@ -650,7 +637,7 @@
     </article>
     </section>
     <section>
-      <h2>Someday – not committed <span class="count" data-total="20">20</span></h2>
+      <h2>Someday – not committed <span class="count" data-total="19">19</span></h2>
       <h4>Ideas – not yet committed</h4>
     <article class="item">
       <h3>
@@ -767,15 +754,6 @@
         <span><strong>Make recipe import work on sites that block us</strong></span>
       </h3>
       <dl><dt>Why</dt><dd>madensverden.dk and allrecipes refuse non-browser fetches, so pasting a link from them fails.</dd><dt>Trigger</dt><dd>only build it if a site the family actually uses gets blocked.</dd><dt>Size</dt><dd>a hidden-WebView fetch is the known fix; nothing exists in code today (a comment in recipe-import.ts names it, and react-native-webview is not installed).</dd></dl>
-      
-    </article>
-    <article class="item">
-      <h3>
-        
-        
-        <span><strong>Add "Continue with Apple" sign-in</strong></span>
-      </h3>
-      <dl><dt>Why</dt><dd>convenience only.</dd><dt>Trigger</dt><dd>not required by Apple – guideline 4.8 only forces it when you also offer a third-party login (Google/Facebook), and Prep+Eat only offers email-code sign-in.</dd></dl>
       
     </article><h4>Code debts (small, known, deliberate)</h4>
     <article class="item">
