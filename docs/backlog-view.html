@@ -83,19 +83,11 @@
   </header>
   <div class="filter"><input id="q" type="search" placeholder="Filter tasks…" autocomplete="off"></div>
   <section class="waiting">
-      <h2>Waiting on you <span class="count" data-total="9">9</span></h2>
+      <h2>Waiting on you <span class="count" data-total="7">7</span></h2>
       <p class="lede">Nothing moves on these until you decide or draw something. Everything else is mine.</p>
       <article class="item">
         <h3><span><strong>Let the household teach the app that two ingredient names mean the same thing</strong></span></h3>
         <dl><dt>Needs</dt><dd>Thomas – design the "same as…" action, and settle whether an alias is one-directional.</dd></dl>
-        <p class="from">Next – v1.1</p>
-      </article><article class="item">
-        <h3><span><strong>Drag a meal to another day on the Plan screen</strong></span></h3>
-        <dl><dt>Needs</dt><dd>Thomas – the drag states (lifted card, drop highlight), and a yes/no on promoting it.</dd></dl>
-        <p class="from">Next – v1.1</p>
-      </article><article class="item">
-        <h3><span><strong>Drag a shopping item into another category</strong></span></h3>
-        <dl><dt>Needs</dt><dd>Thomas – the item-drag states, and which regions are valid drop targets.</dd></dl>
         <p class="from">Next – v1.1</p>
       </article><article class="item">
         <h3><span><strong>⭐ Share a recipe with someone – FIRST ITEM IN v1.1</strong></span></h3>
@@ -147,7 +139,7 @@
     </article>
     </section>
     <section>
-      <h2>Next – v1.1 <span class="count" data-total="54">54</span></h2>
+      <h2>Next – v1.1 <span class="count" data-total="52">52</span></h2>
       <h4>Known bugs (open)</h4>
     <article class="item">
       <h3>
@@ -193,24 +185,6 @@
       </h3>
       <dl><dt>Needs</dt><dd>Thomas – design the "same as…" action, and settle whether an alias is one-directional.</dd><dt>Why</dt><dd>a real list showed three un-merged Parmesans and onion split three ways. No parser rule can settle these – <code>cream cheese</code> is not <code>cream</code> – so the household has to decide.</dd><dt>Blocked by</dt><dd>the "same as…" action on the shopping-list edit sheet has no Figma design. Backend and merge logic can be built without it.</dd><dt>Open question</dt><dd>is an alias one-directional (B → A) or a group of equal names? One-directional matches how categories already learn.</dd></dl>
       <details><summary>Full note</summary><p>This is the "advanced ingredient normalization (onion vs yellow onion)" line already in projektgrundlag under Later (v1.1+) – written up here 2026-07-30 after it showed on a real list as three un-merged Parmesans (<code>Parmesan</code>, <code>Parmesan cheese</code>, `shaved Parmesan cheese<code>) and onion split three ways (</code>onion<code> / </code>small onion` / <code>yellow onion</code>). See also the synonym note under Known bugs, which this supersedes. WHY IT CANNOT BE A PARSER RULE: these are genuinely different strings, and no mechanical rule settles them without breaking real distinctions – you cannot strip "cheese" (<code>cream cheese</code> ≠ <code>cream</code>), and <code>small onion</code> may be a deliberate distinction. The household has to decide. SHAPE (mirrors the learned-category pattern, decision #7, which is the precedent Thomas keeps pointing at): - A new per-household table, e.g. `item_name_alias(household_id, alias_name normalized, canonical_name normalized, primary key (household_id, alias_name))<code>, RLS </code>is_household_member` like <code>item_category_memory</code>. New numbered migration; never edit an applied one. - Fold the alias into the merge key: <code>norm_item_name</code> (or the merge step) resolves an alias to its canonical name BEFORE <code>item_merge_key</code>, so aliased rows merge and the canonical display name wins. Touches migration 0013's reconciler – needs care and re-test. - Teaching UI: on the shopping-list edit sheet, a "same as…" action that points item B at an existing item A. This is the ONLY genuinely new surface. NO FIGMA DESIGN EXISTS – must be designed before it is built (the multi-day-sheets rule: build Thomas's design, never an improvisation). Backend + merge logic can be built design-free; the sheet cannot. - Realtime: like categories, no realtime on the alias table itself – the visible effect is the shopping_list_items rows merging, already a realtime surface. Decision needed before any UI work: is an alias one-directional (B → A) or a group of equal names? One-directional is simpler and matches the category-memory precedent; start there unless Thomas wants groups.</p></details>
-    </article>
-    <article class="item">
-      <h3>
-        
-        
-        <span><strong>Drag a meal to another day on the Plan screen</strong></span>
-      </h3>
-      <dl><dt>Needs</dt><dd>Thomas – the drag states (lifted card, drop highlight), and a yes/no on promoting it.</dd><dt>Why</dt><dd>you can already do this by swiping and picking a day. Drag is a nicer way to do the same thing, not a missing capability.</dd><dt>Priority</dt><dd>⚠️ asked twice (2026-07-30 and again 2026-08-07). Twice-asked is the closest thing to a vote this backlog has – worth putting in front of Thomas next time the order is reviewed.</dd><dt>Size</dt><dd>front-end only, but not a tweak – see the scrolling problem below.</dd></dl>
-      <details><summary>Full note</summary><p>(Thomas asked) <strong>RAISED AGAIN 2026-08-07, which is a priority signal.</strong> Thomas listed this among his ideas a second time, apparently without recalling it was already filed. Twice-asked is the closest thing to a vote this backlog has - worth pulling out of "v1.1+ polish" and putting in front of him as a real candidate next time the order is reviewed, rather than leaving it to surface a third time. 2026-07-30: *"is it possible to drag a meal to another day in Plan? It has the slide to edit already"*). Answer: yes, and the data side is already done – the swipe "Move to another day" action already calls <code>plan.moveEntry(id, date)</code> in src/lib/meal-plan.tsx, so a drag gesture would reuse that exact function. This is therefore a pure front-end gesture/animation build, not a data-model change. Filed as v1.1+ polish, NOT a missing capability: moving a meal between days already ships today via swipe → day-picker sheet (MoveDaySheet). Drag is a nicer way to do the same thing. WHAT MAKES IT MORE THAN A TWEAK: the Plan screen stacks all 7 days in a vertical ScrollView (src/app/(plan)/index.tsx/index.tsx)), and each meal row already owns a horizontal swipe-to-edit gesture (ReanimatedSwipeable in src/components/plan/meal-row.tsx). Three things need care: (1) gesture disambiguation between swipe-to-edit, vertical scroll and pick-up – the standard fix is long-press-to-lift; (2) auto-scroll while dragging so off-screen days are reachable; (3) per-day drop-target highlighting. Standard pattern (reanimated + a draggable-list approach), a few days of build-and-polish. DESIGN GAP – NO FIGMA EXISTS for the drag states (lifted card, drop highlight, drag handle). Per the build-the-design rule, these must be designed before the build, or the improvisation flagged here. Note there is a sibling drag interaction already designed+built on the shopping list (see decisions log ~line 998: rows scroll inside, target slot shown) – reuse its visual language rather than inventing a new one.</p></details>
-    </article>
-    <article class="item">
-      <h3>
-        
-        
-        <span><strong>Drag a shopping item into another category</strong></span>
-      </h3>
-      <dl><dt>Needs</dt><dd>Thomas – the item-drag states, and which regions are valid drop targets.</dd><dt>Why</dt><dd>you can already recategorize by tapping the item and picking a category. Drag is a nicer way to do the same thing.</dd><dt>Priority</dt><dd>⚠️ asked twice (2026-07-30 and again 2026-08-07), same signal as the meal drag above.</dd><dt>Decide first</dt><dd>which regions are valid drop targets – the uncategorized area and the checked-items area both need an answer.</dd><dt>Blocked by</dt><dd>no Figma for the item-drag states. Reuse the category-group drag visuals rather than inventing new ones.</dd></dl>
-      <details><summary>Full note</summary><p>(Thomas, 2026-07-30.) <strong>RAISED AGAIN 2026-08-07, which is a priority signal.</strong> Thomas listed this among his ideas a second time, apparently without recalling it was already filed. Twice-asked is the closest thing to a vote this backlog has - worth pulling out of "v1.1+ polish" and putting in front of him as a real candidate next time the order is reviewed, rather than leaving it to surface a third time. Pick up a single item and drop it on a different category group to recategorize it. Like the meal-drag item above, the data side already exists: <code>editItem(id, { ...aisle })</code> in src/lib/shopping-list.tsx (~line 771) already sets an item's aisle AND teaches <code>item_category_memory</code> so future items of that name auto-file to the same category. A drag-drop would call that same function with the drop target's category, getting the "learn it once" behaviour for free. Pure front-end gesture build. Filed as v1.1+ polish, NOT a missing capability: recategorizing already ships today via tap item → edit sheet → pick a category (src/components/shopping/edit-item-sheet.tsx). DISTINCT from the drag that already exists here – the shopping list already lets you drag category GROUPS to reorder them (inline drag, src/app/shopping.tsx ~line 55, overlay in src/components/shopping/inline-reorder-overlay.tsx). This new item is dragging one ITEM between groups, a different gesture. WHAT MAKES IT MORE THAN A TWEAK: same three concerns as the meal drag – long-press-to-lift so it doesn't fight the row's swipe-to-edit and the list scroll, auto-scroll to reach off-screen categories, and drop-target highlighting on each group. Extra wrinkle: an item can also be dropped on the uncategorized/top region, and checked items sit in their own settled area – decide which regions are valid drop targets before building. DESIGN GAP – NO FIGMA for the item-drag states. Reuse the existing category-group drag visuals (decisions log ~line 998: rows scroll inside, target slot shown) rather than inventing new ones; flag any improvisation.</p></details>
     </article>
     <article class="item">
       <h3>
@@ -637,8 +611,26 @@
     </article>
     </section>
     <section>
-      <h2>Someday – not committed <span class="count" data-total="19">19</span></h2>
+      <h2>Someday – not committed <span class="count" data-total="21">21</span></h2>
       <h4>Ideas – not yet committed</h4>
+    <article class="item">
+      <h3>
+        
+        
+        <span><strong>Drag a meal to another day on the Plan screen</strong></span>
+      </h3>
+      <dl><dt>Why</dt><dd>you can already do this by swiping and picking a day. Drag is a nicer way to do the same thing, not a missing capability.</dd></dl>
+      <details><summary>Full note</summary><p>Moved to Someday: 2026-08-11, Thomas's call – demoted despite the signal below, which is recorded rather than overruled quietly. Priority if revived: ⚠️ asked twice (2026-07-30 and again 2026-08-07). Twice-asked is the closest thing to a vote this backlog has – worth putting in front of Thomas next time the order is reviewed. Size: front-end only, but not a tweak – see the scrolling problem below. (Thomas asked) <strong>RAISED AGAIN 2026-08-07, which is a priority signal.</strong> Thomas listed this among his ideas a second time, apparently without recalling it was already filed. Twice-asked is the closest thing to a vote this backlog has - worth pulling out of "v1.1+ polish" and putting in front of him as a real candidate next time the order is reviewed, rather than leaving it to surface a third time. 2026-07-30: *"is it possible to drag a meal to another day in Plan? It has the slide to edit already"*). Answer: yes, and the data side is already done – the swipe "Move to another day" action already calls <code>plan.moveEntry(id, date)</code> in src/lib/meal-plan.tsx, so a drag gesture would reuse that exact function. This is therefore a pure front-end gesture/animation build, not a data-model change. Filed as v1.1+ polish, NOT a missing capability: moving a meal between days already ships today via swipe → day-picker sheet (MoveDaySheet). Drag is a nicer way to do the same thing. WHAT MAKES IT MORE THAN A TWEAK: the Plan screen stacks all 7 days in a vertical ScrollView (src/app/(plan)/index.tsx/index.tsx)), and each meal row already owns a horizontal swipe-to-edit gesture (ReanimatedSwipeable in src/components/plan/meal-row.tsx). Three things need care: (1) gesture disambiguation between swipe-to-edit, vertical scroll and pick-up – the standard fix is long-press-to-lift; (2) auto-scroll while dragging so off-screen days are reachable; (3) per-day drop-target highlighting. Standard pattern (reanimated + a draggable-list approach), a few days of build-and-polish. DESIGN GAP – NO FIGMA EXISTS for the drag states (lifted card, drop highlight, drag handle). Per the build-the-design rule, these must be designed before the build, or the improvisation flagged here. Note there is a sibling drag interaction already designed+built on the shopping list (see decisions log ~line 998: rows scroll inside, target slot shown) – reuse its visual language rather than inventing a new one.</p></details>
+    </article>
+    <article class="item">
+      <h3>
+        
+        
+        <span><strong>Drag a shopping item into another category</strong></span>
+      </h3>
+      <dl><dt>Why</dt><dd>you can already recategorize by tapping the item and picking a category. Drag is a nicer way to do the same thing.</dd></dl>
+      <details><summary>Full note</summary><p>Moved to Someday: 2026-08-11, Thomas's call – demoted despite the signal below, which is recorded rather than overruled quietly. Priority if revived: ⚠️ asked twice (2026-07-30 and again 2026-08-07), same signal as the meal drag above. Decide first: which regions are valid drop targets – the uncategorized area and the checked-items area both need an answer. Blocked by: no Figma for the item-drag states. Reuse the category-group drag visuals rather than inventing new ones. (Thomas, 2026-07-30.) <strong>RAISED AGAIN 2026-08-07, which is a priority signal.</strong> Thomas listed this among his ideas a second time, apparently without recalling it was already filed. Twice-asked is the closest thing to a vote this backlog has - worth pulling out of "v1.1+ polish" and putting in front of him as a real candidate next time the order is reviewed, rather than leaving it to surface a third time. Pick up a single item and drop it on a different category group to recategorize it. Like the meal-drag item above, the data side already exists: <code>editItem(id, { ...aisle })</code> in src/lib/shopping-list.tsx (~line 771) already sets an item's aisle AND teaches <code>item_category_memory</code> so future items of that name auto-file to the same category. A drag-drop would call that same function with the drop target's category, getting the "learn it once" behaviour for free. Pure front-end gesture build. Filed as v1.1+ polish, NOT a missing capability: recategorizing already ships today via tap item → edit sheet → pick a category (src/components/shopping/edit-item-sheet.tsx). DISTINCT from the drag that already exists here – the shopping list already lets you drag category GROUPS to reorder them (inline drag, src/app/shopping.tsx ~line 55, overlay in src/components/shopping/inline-reorder-overlay.tsx). This new item is dragging one ITEM between groups, a different gesture. WHAT MAKES IT MORE THAN A TWEAK: same three concerns as the meal drag – long-press-to-lift so it doesn't fight the row's swipe-to-edit and the list scroll, auto-scroll to reach off-screen categories, and drop-target highlighting on each group. Extra wrinkle: an item can also be dropped on the uncategorized/top region, and checked items sit in their own settled area – decide which regions are valid drop targets before building. DESIGN GAP – NO FIGMA for the item-drag states. Reuse the existing category-group drag visuals (decisions log ~line 998: rows scroll inside, target slot shown) rather than inventing new ones; flag any improvisation.</p></details>
+    </article>
     <article class="item">
       <h3>
         
