@@ -2703,8 +2703,12 @@ here. Fix them there, not in a copy of them.
            not be a recipe. That is the half that reaches someone still
            deciding whether the app is for them, and no frame draws it.
       Done 2026-08-11: **the add-meal tab is renamed "Manual" → "Anything
-           else"** (Thomas chose it from four). ⚠️ Update the Figma copy –
-           the code is ahead of the frame.
+           else"** (Thomas chose it from four), in the code AND in Figma – all
+           four "plan – add recipe" frames on the Plan page, set through the
+           tabs component's `label#213:13` property rather than by overriding
+           the text node, so the component contract is intact. Installed on
+           the phone the same day. Figma measures the label 77pt in a 185pt
+           tab, one line, which independently confirms it cannot wrap.
       Why: it is the one line that offers a way past the precondition problem
            above, and nothing in the app confirms it. P01 built her whole
            escape route on it – "pasta" on Tuesday, no recipe – then had to
