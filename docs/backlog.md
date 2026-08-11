@@ -2850,10 +2850,27 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
       Decide first: convert on DISPLAY or on SAVE? Display keeps the recipe as
            written, which matters for attribution and re-import. Save rewrites
            the household's data and cannot be undone.
-      Note: `src/lib/quantity.ts` already knows 13 units across both systems
-           for PARSING. Converting is a different job from recognising. The
-           shopping list merges on the STORED unit, so display-only conversion
-           leaves merging untouched – another argument for display.
+      Cheapest first slice (worked through with Thomas, 2026-08-11): **cups →
+           dl is volume-to-volume, so it needs no density.** 1 US cup = 236.6 ml
+           = 2.37 dl. And **spsk/tbsp (15 ml) and tsk/tsp (5 ml) are the same
+           spoon with two names** – that half is relabelling, not conversion.
+      ⚠️ Rounding is the real difficulty in the EASY half, not the arithmetic.
+           2.4 dl is +1.4% and reads clinical; 2½ dl is +5.7% and is what a
+           Danish cook would write. 5.7% is invisible in a stew and wrong in a
+           cake – and baking is exactly where cup recipes come from, since
+           volume measurement is an American baking habit. Proposal: show the
+           tidy number and keep the original beside it – *"2½ dl (1 cup)"* –
+           which lets the cook judge and keeps the recipe saying what its
+           source said.
+      Also decide: WHICH CUP. US customary 236.6 ml, US legal 240 ml, metric
+           (AU/NZ) 250 ml. English recipes overwhelmingly mean US, so that is
+           the default – but state it rather than absorb it silently.
+      Note: `src/lib/quantity.ts` recognises ~30 unit names across both
+           languages but holds NO conversion factors – it only maps plurals and
+           Danish↔English names. Converting is new code; the volume table is
+           about ten lines. The shopping list merges on the STORED unit, so
+           display-only conversion leaves merging untouched – another argument
+           for display.
 
 - [ ] **Drag a meal to another day on the Plan screen**
       Why: you can already do this by swiping and picking a day. Drag is a
