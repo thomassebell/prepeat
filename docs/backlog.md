@@ -112,7 +112,7 @@ Everything else in this file is Claude's to get on with.
   <sub>Next – v1.1</sub>
 - **⭐ Share a recipe with someone – FIRST ITEM IN v1.1** – how much of a recipe a stranger sees before installing.
   <sub>Next – v1.1</sub>
-- `2.27` **Decide whether Kitchen should be a tab at all** – a navigation call, not a wording one.
+- `2.27` **Rename the Kitchen tab to Settings, and nest the kitchen inside it** – a frame for the Settings tab and its three groups.
   <sub>Next – v1.1</sub>
 - `2.21` **⚠️ BRAND-LEVEL: decide whether "Prep" is costing us readers** – a brand call, on one reader's evidence.
   <sub>Next – v1.1</sub>
@@ -2561,11 +2561,40 @@ says whether any of it costs anything commercially.
       **Still a large improvement:** round 1 had seven of seven unable to say
       what a household WAS. Nobody failed to decode kitchen. The residual is
       cost, not failure.
-- [ ] `2.27` **Decide whether Kitchen should be a tab at all**
-      Needs: Thomas – a navigation call, not a wording one.
+- [ ] `2.27` **Rename the Kitchen tab to Settings, and nest the kitchen inside it**
+      Needs: Thomas – a frame for the Settings tab and its three groups.
       Why: Plan, Recipes and Shopping all live INSIDE the kitchen, so a fourth
-           sibling tab called Kitchen sits next to its own contents.
-      ⚠️ This is navigation work, not wording. Do not try to fix it with a word.
+           sibling tab called Kitchen sits next to its own contents. Settings
+           does not claim to BE the kitchen, so the clash disappears.
+      Decided: 2026-08-11, Thomas – *"settings seems like a better match"* –
+           after scoring every job a user might arrive with (below). Placement
+           in the tab bar was never in question: an avatar in a header is not
+           always available, and this is where people go when lost.
+      Shape:
+           **Your kitchens** – the active one, members, invite, rename, leave;
+           switch or join another.
+           **You** – your name, sign out, delete account.
+           **App** – empty today. Danish, notifications, export, help, privacy
+           and unit conversion land here.
+      Watch: Invite scores only "maybe" under Settings, and it is the growth
+           mechanic. Surface it in the empty Plan and Recipes states too – that
+           also chips at 2.3.
+
+      **THE ARGUMENT, because it is not the obvious one.** Of ~18 jobs a user
+      could bring to this tab, Settings wins 15 outright against Kitchen's 5,
+      People's 2 and Profile's 4. But the decisive block is the seven jobs the
+      app CANNOT DO YET – notifications, Danish, data export (2.16), help,
+      privacy, version, imperial/metric – every one of them conventionally a
+      settings item. Today the tab is ~60% kitchen-and-me; with the roadmap it
+      becomes majority settings. **Kitchen and People get worse over time;
+      Settings gets better.** Name it for where it is going.
+      Also decisive: a user can belong to MORE THAN ONE kitchen, so "Kitchen"
+      as a label is ambiguous about which. "You" and "Settings" stay true
+      whatever the count.
+      Rejected: an avatar in the header (not always available – Thomas);
+      "People" (loses kitchen rename and delete, and Claude's idea rather than
+      a designed one); "Profile" (too narrow, and it collides with the "Edit
+      profile" action already inside the screen).
       (Panel round 2: comprehension, high.)
 - [ ] `2.26` **Make placeholder text look like a placeholder** (same task as the
       round-1 item above – tracked in both because both rounds found it)
@@ -2806,6 +2835,25 @@ are just sentences, and were missed on the first pass through these findings.
 Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attached to it.
 
 ### Ideas – not yet committed
+
+- [ ] **Show amounts in the units the household actually uses**
+      Why: recipes arrive in whatever the source used – a Danish site gives dl
+           and spsk, a US one cups and oz – so one cookbook ends up mixing
+           systems and the shopping list inherits the mix.
+      Source: Thomas, 2026-08-11, while deciding what the Settings tab holds.
+           Belongs in Settings → App.
+      ⚠️ Two different jobs, and only one is easy. Volume→volume (ml↔fl oz) and
+           weight→weight (g↔oz) are arithmetic. **Volume→weight is not**: a cup
+           of flour and a cup of sugar weigh different amounts, so cups→grams
+           needs per-ingredient density, which the app has no data for. Decide
+           early whether it converts only within a system or promises more.
+      Decide first: convert on DISPLAY or on SAVE? Display keeps the recipe as
+           written, which matters for attribution and re-import. Save rewrites
+           the household's data and cannot be undone.
+      Note: `src/lib/quantity.ts` already knows 13 units across both systems
+           for PARSING. Converting is a different job from recognising. The
+           shopping list merges on the STORED unit, so display-only conversion
+           leaves merging untouched – another argument for display.
 
 - [ ] **Drag a meal to another day on the Plan screen**
       Why: you can already do this by swiping and picking a day. Drag is a
@@ -3933,6 +3981,36 @@ Not work. Kept so a cold thread can pick things up without re-litigating them.
             missing radius is not evidence of radius 0. `ds-theme.cjs` decides.
 
 ### Decisions log (recent)
+
+- **2026-08-11 – THE FOURTH TAB IS `SETTINGS`, and the kitchen nests inside
+  it.** Thomas: *"settings seems like a better match."* Closes panel finding
+  2.27, where P03 read "kitchen" as *"a thing you name, a thing you're in, and
+  a tab"* – the tab sitting beside its own contents.
+  **PLACEMENT WAS NEVER THE PROBLEM.** An avatar in a screen header was
+  proposed and rejected by Thomas on good grounds: it disappears inside sheets
+  and detail screens, so the place people go when lost is not always reachable.
+  The tab bar stays; only the label and the internal structure change.
+  **THE ARGUMENT IS ABOUT THE FUTURE, NOT THE PRESENT**, which is why the first
+  two attempts at it were wrong. Scoring ~18 jobs a user might arrive with,
+  Settings wins 15 against Kitchen 5, People 2, Profile 4 – but the decisive
+  block is the SEVEN JOBS THE APP CANNOT DO YET: notifications, Danish, data
+  export, help, privacy, version, and imperial/metric conversion (Thomas added
+  that one in the same conversation). Every one is conventionally a settings
+  item. Today the tab is ~60% kitchen-and-me; with the roadmap it is majority
+  settings. **Kitchen and People get worse over time; Settings gets better.**
+  **SECOND ARGUMENT: a user can belong to MORE THAN ONE KITCHEN.** "Kitchen" as
+  a tab label is therefore ambiguous about which one, while "Settings" stays
+  true whatever the count – and kitchens nest under it naturally, one level
+  down, which is the belonging relationship P03 could not find.
+  **REJECTED, and why, so they are not re-proposed:** "People" – Claude's
+  suggestion, loses rename and delete, and was never a designed option;
+  "Profile" – too narrow, and it collides with the "Edit profile" action
+  already inside the screen.
+  **THE ONE COST, carried forward:** Invite scores only "maybe" under Settings
+  and it is the growth mechanic, so it wants surfacing in the empty Plan and
+  Recipes states regardless. That also chips at finding 2.3.
+  **Needs a frame before anything is built** – the three groups (Your kitchens
+  / You / App) are a proposal, not a design.
 
 - **2026-08-07 – NOTHING TO REORDER MEANS NO DRAG HANDLE, and the app was
   drawing one anyway.** Walked and confirmed the same day.
