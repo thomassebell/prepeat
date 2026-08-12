@@ -55,6 +55,15 @@ Two more rules this file exists to keep straight:
 More goes in before this ships, so this section grows. On the dev build only:
 not on TestFlight, not in review, and it needs a build to reach anyone.
 
+> **⏸ BUILD 18 EXISTS AND IS PARKED** (2026-08-11). Built on EAS, signed, and
+> deliberately NOT submitted – `./scripts/eas-submit-ios.sh` ships it with no
+> rebuild. Held at Thomas's call until the Kitchen→Settings tab (panel finding
+> 2.27) is in, so the family gets one update instead of seeing "Kitchen" this
+> week and "Settings" the next. It carries everything below.
+> Build: https://expo.dev/accounts/sebell/projects/prepeat/builds/0d78f007-d584-4288-a35a-b221fa1925ea
+> **If more changes land before Settings does, rebuild rather than shipping
+> this one** – it is a snapshot of 2026-08-11, not a moving target.
+
 **This will be 1.1.0** under the rule above – a new capability (moving
 leftovers between weeks, and now ingredient sections) alongside the fixes, and
 a feature makes it MINOR. It stays unnumbered in `app.json` until it is

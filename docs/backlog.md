@@ -2568,6 +2568,11 @@ says whether any of it costs anything commercially.
            including a PLACEHOLDER ROW in App (agreed 2026-08-11). The group is
            empty today and it is the reason for the rename, so without one the
            tab reads mislabelled on day one.
+      ⚠️ BUILD 18 IS PARKED WAITING ON THIS (2026-08-11, Thomas's call). It is
+           built, signed and sitting on Expo's servers, NOT submitted – ship it
+           with `./scripts/eas-submit-ios.sh`, no rebuild needed. Held so the
+           family gets one update rather than seeing "Kitchen" this week and
+           "Settings" the next. Nothing expires; the .ipa keeps.
       Why: Plan, Recipes and Shopping all live INSIDE the kitchen, so a fourth
            sibling tab called Kitchen sits next to its own contents. Settings
            does not claim to BE the kitchen, so the clash disappears.
