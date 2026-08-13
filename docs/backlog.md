@@ -232,6 +232,37 @@ Everything the App Store release is actually waiting on. If it is not blocking l
       files (re-derivable from the Supabase dashboard). The other single-copy
       item is `~/Prepeat-backups/` itself.
 
+- [x] **🎉 LIVE ON THE APP STORE 2026-08-13.** v1.0 (build 12) is
+      `READY_FOR_SALE` in the EU-27, free, 4+, iPhone-only. Approved on day 13
+      of the queue; Thomas pressed **Release This Version** the same day.
+      **What users actually have is build 12, frozen 2026-07-30** – builds
+      13–17 exist only on TestFlight. Closing the gap is the next job (see
+      "Ship 1.0.1" below).
+      Checked before releasing, not after: every migration applied while the
+      build sat in review (0025–0033) documents build-12 compatibility, and
+      none drops, renames or re-signatures anything build 12 calls – so the
+      two-week-old binary did not meet a database it could not read.
+- [ ] 🚢 **Ship 1.0.1 – close the gap between the store and the repo**
+      Needs: Thomas – one decision, described below. Nothing else is blocked.
+      Why: the store is two weeks behind the code. Users on build 12 are
+           missing every fix in builds 13–17, including the shopping-list
+           reconciler work and the household-boundary hardening. The second
+           review is normally far quicker than the first, and v1.0 stays live
+           throughout – so this costs nothing but the decision.
+      **The decision: what goes in it?**
+           **(a) Ship build 17 as 1.0.1 now** – the fixes reach users this
+           week; the Kitchen→Settings rename waits for 1.1.0. Build 18 stays
+           parked exactly as agreed on 08-11.
+           **(b) Wait, and ship build 18 as 1.1.0** – one bigger update, but it
+           is blocked on a Figma frame that has not been drawn, so the fixes
+           sit unshipped for as long as that takes.
+      Claude's read: **(a)**. The 08-11 "one update, not two" reasoning was
+           sound when the only audience was the family on TestFlight, who could
+           see everything anyway – it is weaker now that real users are stuck
+           on a 30 July binary. Shipping fixes is not something a user has to
+           re-learn, so it does not need the same coordination a rename does.
+      Then: bump `expo.version` to 1.0.1, write the What's New from
+           [release-notes.md](release-notes.md), submit.
 - [x] **🚀 SUBMITTED FOR REVIEW 2026-07-31.** All App Store Connect metadata
       entered and the version sent to Apple ("Add for Review" → Submit). Build
       12, EU-27 only, Free, 4+, privacy label published, manual release – so
@@ -241,8 +272,14 @@ Everything the App Store release is actually waiting on. If it is not blocking l
       for Apple's review result; if the demo mailbox OTP is the sticking point,
       the Supabase test-OTP trigger is the documented fallback (see the demo
       account item).
-      - [ ] **⏳ STILL WAITING ON DAY 13 (re-checked 2026-08-13).** Unchanged
-            since day 7: version 1.0 `WAITING_FOR_REVIEW`, review submission
+      - [x] **RESOLVED – approved on day 13 (2026-08-13), a few hours after
+            Apple's "just keep waiting" reply arrived.** The wait ended on its
+            own; nothing we did shortened it, and nothing we did lengthened it
+            either. Kept below as the record of a 13-day queue, because the
+            useful lesson is that `WAITING_FOR_REVIEW` really can mean nothing
+            more than "not picked up yet".
+            The day-13 reading, before approval: version 1.0
+            `WAITING_FOR_REVIEW`, review submission
             `WAITING_FOR_REVIEW` submitted `2026-07-31T11:30Z`, item
             `READY_FOR_REVIEW`. Queried through the ASC API again, not the
             dashboard. The attached build is **12**, uploaded 2026-07-30,
@@ -260,8 +297,8 @@ Everything the App Store release is actually waiting on. If it is not blocking l
                   **Decision: keep waiting, do not resubmit, do not cancel.**
                   Cancelling to attach a newer build would put us at the BACK of
                   the queue and lose 13 days for nothing.
-            - [ ] Next check-in: **2026-08-20** (day 20). If still queued then,
-                  reply to the existing case rather than opening a new one.
+            - [x] ~~Next check-in 2026-08-20~~ – overtaken by the approval.
+                  The case (`20000130860237`) can simply be left to close.
             The day-7 reading, for the record (checked 2026-08-07 08:45 CEST):
             App Store Connect reported the version `WAITING_FOR_REVIEW` and the
             review submission `submitted 2026-07-31T11:30Z`, item state
@@ -2594,6 +2631,13 @@ says whether any of it costs anything commercially.
            with `./scripts/eas-submit-ios.sh`, no rebuild needed. Held so the
            family gets one update rather than seeing "Kitchen" this week and
            "Settings" the next. Nothing expires; the .ipa keeps.
+      ⚠️ **RE-EXAMINE THE PARKING NOW THAT v1.0 IS LIVE (2026-08-13).** The
+           decision above was made when the only users were the family on
+           TestFlight, so "one update instead of two" cost nothing. It reads
+           differently now: **App Store users are on build 12** and have never
+           seen builds 13–17, so parking 18 also parks two weeks of shipped
+           fixes behind an unstarted design task. Thomas's call, not Claude's –
+           see the "Ship 1.0.1" item near the top.
       Why: Plan, Recipes and Shopping all live INSIDE the kitchen, so a fourth
            sibling tab called Kitchen sits next to its own contents. Settings
            does not claim to BE the kitchen, so the clash disappears.

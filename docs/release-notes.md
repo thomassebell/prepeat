@@ -4,8 +4,13 @@ What shipped in each build, in the App Store's "What's New" voice, so there
 is always something ready to post. Started 2026-08-03 – earlier builds are
 reconstructed from the backlog and git history.
 
-> **IN REVIEW: 1.0.0** (build 12) · **NEXT VERSION: 1.1.0** · `app.json` still
-> says 1.0.0, correctly – it is bumped at submission, not now.
+> **🎉 LIVE ON THE APP STORE: 1.0.0** (build 12), released 2026-08-13 ·
+> **NEXT VERSION: 1.1.0** · `app.json` still says 1.0.0, correctly – it is
+> bumped at submission, not now.
+>
+> From here the first rule below stops being theoretical: **real users are on
+> build 12**, which was frozen on 2026-07-30. Everything in builds 13–17 is
+> written but NOT in anyone's hands.
 >
 > Thomas does not track the number; keeping these two lines true is Claude's
 > job (agreed 2026-08-03). The rule below decides the next number, so this is
