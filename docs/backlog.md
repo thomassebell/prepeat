@@ -241,8 +241,29 @@ Everything the App Store release is actually waiting on. If it is not blocking l
       for Apple's review result; if the demo mailbox OTP is the sticking point,
       the Supabase test-OTP trigger is the documented fallback (see the demo
       account item).
-      - [ ] **⏳ STILL WAITING ON DAY 7 (checked 2026-08-07 08:45 CEST).** App
-            Store Connect reports the version `WAITING_FOR_REVIEW` and the
+      - [ ] **⏳ STILL WAITING ON DAY 13 (re-checked 2026-08-13).** Unchanged
+            since day 7: version 1.0 `WAITING_FOR_REVIEW`, review submission
+            `WAITING_FOR_REVIEW` submitted `2026-07-31T11:30Z`, item
+            `READY_FOR_REVIEW`. Queried through the ASC API again, not the
+            dashboard. The attached build is **12**, uploaded 2026-07-30,
+            processingState VALID, **expires 2026-10-28** – so the queue wait
+            is nowhere near costing us the build, and builds 13–17 sitting on
+            TestFlight change nothing about what is under review.
+            - [x] **APPLE ANSWERED THE ENQUIRY 2026-08-13** (case
+                  `20000130860237`, Katie, Developer Support). The reply is the
+                  standard no-information one: the app *"wasn't forgotten"*, it
+                  is proceeding, review times vary, no estimate possible, **"You
+                  don't need to do anything else"** – Apple emails when review
+                  completes. So: not rejected, not stuck on anything we can fix,
+                  and **no second nudge is worth sending** – the case stays open
+                  and can be replied to if the wait keeps growing.
+                  **Decision: keep waiting, do not resubmit, do not cancel.**
+                  Cancelling to attach a newer build would put us at the BACK of
+                  the queue and lose 13 days for nothing.
+            - [ ] Next check-in: **2026-08-20** (day 20). If still queued then,
+                  reply to the existing case rather than opening a new one.
+            The day-7 reading, for the record (checked 2026-08-07 08:45 CEST):
+            App Store Connect reported the version `WAITING_FOR_REVIEW` and the
             review submission `submitted 2026-07-31T11:30Z`, item state
             `READY_FOR_REVIEW`, not cancelled. So it is correctly queued and has
             NOT been rejected – Apple simply has not picked it up. Apple's own
