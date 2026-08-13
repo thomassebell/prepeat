@@ -242,27 +242,19 @@ Everything the App Store release is actually waiting on. If it is not blocking l
       build sat in review (0025–0033) documents build-12 compatibility, and
       none drops, renames or re-signatures anything build 12 calls – so the
       two-week-old binary did not meet a database it could not read.
-- [ ] 🚢 **Ship 1.0.1 – close the gap between the store and the repo**
-      Needs: Thomas – one decision, described below. Nothing else is blocked.
-      Why: the store is two weeks behind the code. Users on build 12 are
-           missing every fix in builds 13–17, including the shopping-list
-           reconciler work and the household-boundary hardening. The second
-           review is normally far quicker than the first, and v1.0 stays live
-           throughout – so this costs nothing but the decision.
-      **The decision: what goes in it?**
-           **(a) Ship build 17 as 1.0.1 now** – the fixes reach users this
-           week; the Kitchen→Settings rename waits for 1.1.0. Build 18 stays
-           parked exactly as agreed on 08-11.
-           **(b) Wait, and ship build 18 as 1.1.0** – one bigger update, but it
-           is blocked on a Figma frame that has not been drawn, so the fixes
-           sit unshipped for as long as that takes.
-      Claude's read: **(a)**. The 08-11 "one update, not two" reasoning was
-           sound when the only audience was the family on TestFlight, who could
-           see everything anyway – it is weaker now that real users are stuck
-           on a 30 July binary. Shipping fixes is not something a user has to
-           re-learn, so it does not need the same coordination a rename does.
-      Then: bump `expo.version` to 1.0.1, write the What's New from
-           [release-notes.md](release-notes.md), submit.
+- [x] 🚢 **DECIDED 2026-08-13, Thomas: no 1.0.1. The next release is 1.1.0,
+      with the Settings tab in it.** – *"I think I like to have the setting tab
+      in next version."*
+      So the store stays on build 12 until the Settings design lands, and the
+      fixes in builds 13–17 ship together with the rename rather than ahead of
+      it. Claude argued for shipping the fixes first as 1.0.1 (real users are
+      on a 30 July binary, and second reviews are quick); Thomas's call stands
+      and the reasoning is not to be re-opened without a new reason. The one
+      thing that WOULD be a new reason: a bug bad enough to be worth an
+      out-of-band patch. Nothing known qualifies today.
+      **This makes `2.27` (the Settings tab) the critical path to the next
+      release – it is now the only thing between users and two weeks of
+      shipped fixes.** Everything else in 1.1.0 is optional cargo.
 - [x] **🚀 SUBMITTED FOR REVIEW 2026-07-31.** All App Store Connect metadata
       entered and the version sent to Apple ("Add for Review" → Submit). Build
       12, EU-27 only, Free, 4+, privacy label published, manual release – so
@@ -2631,13 +2623,48 @@ says whether any of it costs anything commercially.
            with `./scripts/eas-submit-ios.sh`, no rebuild needed. Held so the
            family gets one update rather than seeing "Kitchen" this week and
            "Settings" the next. Nothing expires; the .ipa keeps.
-      ⚠️ **RE-EXAMINE THE PARKING NOW THAT v1.0 IS LIVE (2026-08-13).** The
-           decision above was made when the only users were the family on
-           TestFlight, so "one update instead of two" cost nothing. It reads
-           differently now: **App Store users are on build 12** and have never
-           seen builds 13–17, so parking 18 also parks two weeks of shipped
-           fixes behind an unstarted design task. Thomas's call, not Claude's –
-           see the "Ship 1.0.1" item near the top.
+      ✅ **PARKING CONFIRMED 2026-08-13, after v1.0 went live.** Claude flagged
+           that parking build 18 now also parks two weeks of shipped fixes
+           behind an unstarted design task; Thomas re-affirmed – the Settings
+           tab goes in the next version. **So this item is the critical path to
+           1.1.0**, not a nice-to-have.
+
+      **DESIGN BRIEF – every row the frame needs** (inventoried from the live
+      code 2026-08-13, so nothing silently disappears in the rename). The
+      Kitchen tab today is `src/app/household.tsx`; everything below already
+      exists and works, and this is a re-organisation, not new function.
+
+      *Header:* today "Kitchen" + a `expand-more` chevron that opens the
+      kitchen switcher. Under the rename the title becomes "Settings" – so
+      **the switcher needs a new home**, because a chevron next to "Settings"
+      would promise to switch settings, not kitchens. Simplest answer: it
+      becomes a row inside "Your kitchens". Worth drawing deliberately.
+
+      **Your kitchens**
+      - the active kitchen: name + member count ("3 people")
+      - edit kitchen → existing `Edit kitchen` sheet (rename / delete)
+      - invite someone → existing `Invite someone` sheet ← *growth mechanic,
+        keep it prominent; see Watch below*
+      - the member list, one row each, with your own row marked
+      - leave kitchen → existing `Leave kitchen` sheet
+      - switch to / join / create another kitchen (today inside the switcher)
+
+      **You**
+      - your name → existing `Edit profile` sheet
+      - sign out (today a full-width outline button at the bottom)
+      - delete account → existing `Delete profile` sheet
+
+      **App** – empty today. Needs the PLACEHOLDER ROW agreed on 08-11.
+
+      *Reusable as-is, no need to redraw:* the five bottom sheets
+      (`Edit kitchen`, `Invite someone`, `Edit profile`, `Leave kitchen`,
+      `Delete profile`) in `src/components/household/`. What the frame has to
+      decide is the **list-row style and the grouping**, not the sheets.
+
+      *States to draw, per the DS rule that states are part of the design:*
+      one kitchen vs several (does "Your kitchens" become a list?), a
+      single-member kitchen (leave and delete behave differently), and the row
+      pressed state.
       Why: Plan, Recipes and Shopping all live INSIDE the kitchen, so a fourth
            sibling tab called Kitchen sits next to its own contents. Settings
            does not claim to BE the kitchen, so the clash disappears.
