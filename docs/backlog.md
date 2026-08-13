@@ -112,7 +112,7 @@ Everything else in this file is Claude's to get on with.
   <sub>Next – v1.1</sub>
 - **⭐ Share a recipe with someone – FIRST ITEM IN v1.1** – how much of a recipe a stranger sees before installing.
   <sub>Next – v1.1</sub>
-- `2.27` **Rename the Kitchen tab to Settings, and nest the kitchen inside it** – a frame for the Settings tab and its three groups, including a PLACEHOLDER ROW in App (agreed 2026-08-11). The group is empty today and it is the reason for the rename, so without one the tab reads mislabelled on day one.
+- `2.27` **Rename the Kitchen tab to Settings, and nest the kitchen inside it** – DESIGN SETTLED 2026-08-13 and ready to build; it is the critical path to 1.1.0, which is the only thing between App Store users and two weeks of shipped fixes. Still undrawn, but not blocking: the kitchen row's `⋮` menu and the Edit kitchen sheet's delete state.
   <sub>Next – v1.1</sub>
 - `2.10` **⭐ Show IN THE APP that a meal can go on the plan without a recipe** – a frame for a line on the EMPTY PLAN saying a meal need not be a recipe. That is the half that reaches someone still deciding whether the app is for them, and no frame draws it.
   <sub>Next – v1.1</sub>
@@ -2614,10 +2614,12 @@ says whether any of it costs anything commercially.
       what a household WAS. Nobody failed to decode kitchen. The residual is
       cost, not failure.
 - [ ] `2.27` **Rename the Kitchen tab to Settings, and nest the kitchen inside it**
-      Needs: Thomas – a frame for the Settings tab and its three groups,
-           including a PLACEHOLDER ROW in App (agreed 2026-08-11). The group is
-           empty today and it is the reason for the rename, so without one the
-           tab reads mislabelled on day one.
+      Needs: **nothing from Thomas to start** – the design is settled and drawn
+           (see below). Two pieces are still undrawn (the kitchen row's `⋮`
+           menu and the Edit kitchen sheet's delete state), but neither blocks
+           building the screen itself.
+      Status: **ready to build, 2026-08-13.** Thomas builds "when I get home or
+           tomorrow".
       ⚠️ BUILD 18 IS PARKED WAITING ON THIS (2026-08-11, Thomas's call). It is
            built, signed and sitting on Expo's servers, NOT submitted – ship it
            with `./scripts/eas-submit-ios.sh`, no rebuild needed. Held so the
@@ -2629,42 +2631,88 @@ says whether any of it costs anything commercially.
            tab goes in the next version. **So this item is the critical path to
            1.1.0**, not a nice-to-have.
 
-      **DESIGN BRIEF – every row the frame needs** (inventoried from the live
-      code 2026-08-13, so nothing silently disappears in the rename). The
-      Kitchen tab today is `src/app/household.tsx`; everything below already
-      exists and works, and this is a re-organisation, not new function.
+      ✅ **DESIGN SETTLED 2026-08-13** – three rounds with Thomas in Figma,
+      file `nA8SLN8rhdBov97B1IYxnP`, page **Settings**, section
+      **`Settings – default`** (`261:68548`). Two frames, both drawn:
+      `default 1` (`649:9860`, one member) and `default 2` (`271:11251`,
+      several). Ready to build; nothing below is guesswork.
 
-      *Header:* today "Kitchen" + a `expand-more` chevron that opens the
-      kitchen switcher. Under the rename the title becomes "Settings" – so
-      **the switcher needs a new home**, because a chevron next to "Settings"
-      would promise to switch settings, not kitchens. Simplest answer: it
-      becomes a row inside "Your kitchens". Worth drawing deliberately.
+      **THE SCREEN – three groups, all rows, no cards.**
 
-      **Your kitchens**
-      - the active kitchen: name + member count ("3 people")
-      - edit kitchen → existing `Edit kitchen` sheet (rename / delete)
-      - invite someone → existing `Invite someone` sheet ← *growth mechanic,
-        keep it prominent; see Watch below*
-      - the member list, one row each, with your own row marked
-      - leave kitchen → existing `Leave kitchen` sheet
-      - switch to / join / create another kitchen (today inside the switcher)
+      **Kitchens** – one row per kitchen the user belongs to, the active one
+           check-marked, `⋮` at the right. Tapping a row switches to it.
+           Then two action rows: **Join an existing kitchen**, **Create a new
+           kitchen**.
+      **People** – members of the ACTIVE kitchen. Your own row shows your
+           email and a `⋮`; other members show neither, because you can only
+           edit yourself and an affordance on their row would promise
+           otherwise. Then the invite affordance – see the rule below.
+      **App** – **Help** and **Privacy policy**, each with an `open_in_new`
+           icon, opening the pages already live at prepeat.app. This replaces
+           the placeholder row agreed on 08-11: real rows, near-zero code, and
+           they make the tab honest about being called Settings on day one.
+      Then **Sign out**, the existing full-width outline button, unchanged.
 
-      **You**
-      - your name → existing `Edit profile` sheet
-      - sign out (today a full-width outline button at the bottom)
-      - delete account → existing `Delete profile` sheet
+      **⭐ THE INVITE RULE (decided 2026-08-13, Thomas: "the rule is solid"):**
+      > **1 member → the banner. 2 or more → the green row.**
 
-      **App** – empty today. Needs the PLACEHOLDER ROW agreed on 08-11.
+      The banner (`emptyStateBanner`) is icon + "Invite someone" + a reason +
+      a solid button. The row is a single accent-green line, label and icon in
+      `text-brand` / `icon-brand`, sitting last in People.
+      **Why two states rather than one compromise:** a person alone in a
+      kitchen is not hesitating because the button is hard to find – they do
+      not know what a second person gets them, so that state has to argue.
+      Once Pia and Vigga are in, re-pitching the concept every time Settings
+      opens is noise, and a quiet green row is correct. A single treatment is
+      either too loud for a full kitchen or too quiet for an empty one.
+      **Copy is aimed at the shopping list, not the recipes** – "Everyone sees
+      the same plan and the same shopping list…". An earlier draft sold a
+      shared cookbook; rejected because a cookbook is something you already
+      have alone, so it is not a reason to add anyone.
+
+      **HOW THE SWITCHER DIED, since it is the biggest change.** The old
+      screen put a `expand-more` chevron beside the title "Kitchen", opening a
+      modal list. Renaming the title to "Settings" broke it – a chevron there
+      promises to expand *settings*. Rather than rehome the modal, the list
+      moved into the screen. A Settings screen IS a list; a list of kitchens
+      in a modal on top of it is the same content twice. Confirmed by the
+      file itself: the kitchen row already carried a hidden check state, so it
+      had been built as a switcher row all along.
+      **The `HouseholdSwitcher` component goes away entirely.**
+
+      **STILL TO DRAW before this can be finished:**
+      - [ ] **The kitchen row's `⋮` menu.** The list created this: the menu now
+            has to answer *edit / leave / delete* for a kitchen the user may
+            not currently be standing in, and leaving a kitchen you are not in
+            is a different confirmation from leaving the one you are using.
+            This is the real gap.
+      - [ ] **The Edit kitchen sheet's second state.** `canDelete` is
+            `members.length === 1 && households.length > 1`
+            ([household.tsx:193](../src/app/household.tsx:193)), so the red
+            Delete kitchen button plus its warning line only appear when you
+            are alone in one of several kitchens. Thomas has never seen it,
+            which is why the first redraw looked complete without it. It is
+            about to appear MORE often, because the new list makes joining and
+            creating kitchens visible on the main screen.
+      - [ ] **Row pressed state** – React Native has no hover/focus, so every
+            state is built by hand (DS rule 3).
+
+      **OPEN COPY QUESTION:** the banner says "…as you **both** change it",
+      which is right for a kitchen of two and wrong for the three-person
+      kitchen in the other frame. "…as everyone changes it" holds at any size.
 
       *Reusable as-is, no need to redraw:* the five bottom sheets
       (`Edit kitchen`, `Invite someone`, `Edit profile`, `Leave kitchen`,
-      `Delete profile`) in `src/components/household/`. What the frame has to
-      decide is the **list-row style and the grouping**, not the sheets.
+      `Delete profile`) in `src/components/household/`.
 
-      *States to draw, per the DS rule that states are part of the design:*
-      one kitchen vs several (does "Your kitchens" become a list?), a
-      single-member kitchen (leave and delete behave differently), and the row
-      pressed state.
+      *Tidied in Figma 2026-08-13 (Claude, at Thomas's request):* "3 persons" →
+      "3 people" (the app already said people), the invite row shortened to
+      "Invite someone" to match the banner, and 16 layer names – `menbers` →
+      `members`, one generic `join` name that was doing five different jobs,
+      `produce` on two unrelated groups, and an unnamed `Frame 1`.
+      ⚠️ **`initicial` is misspelled on a DS COMPONENT** (4 instances here).
+      Deliberately NOT renamed on the instances – that would make them
+      disagree with their main component. Fix it in the DS file and republish.
       Why: Plan, Recipes and Shopping all live INSIDE the kitchen, so a fourth
            sibling tab called Kitchen sits next to its own contents. Settings
            does not claim to BE the kitchen, so the clash disappears.
