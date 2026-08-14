@@ -1,6 +1,6 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { useCallback, useEffect, useState } from "react";
-import { Modal, Pressable, ScrollView, Text, View } from "react-native";
+import { Linking, Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { DeleteHouseholdSheet } from "@/components/household/delete-household-sheet";
@@ -22,17 +22,34 @@ import {
   getOrCreateInvite,
   leaveHousehold,
   regenerateInvite,
-  type Household,
   type HouseholdMember,
   type Invite,
 } from "@/lib/household";
 
-// The Household tab (Figma "Household" page, reworked 2026-07-22): the
-// "Household ▾" title opens a switcher over every household the user belongs
-// to plus "Join a household"; the card carries the member directory and an
-// "Invite someone" action; sign out at the bottom. Built on the app's current
-// tokens – the sage/Noto DS retune the mock references is a separate job.
-export default function HouseholdScreen() {
+// Where Help and Privacy policy point. Both are live on Thomas's own domain
+// (checked 2026-08-13, 200 each) rather than the github.io addresses the App
+// Store listing still holds – see the "point the listing at prepeat.app" item.
+const SUPPORT_URL = "https://prepeat.app/support.html";
+const PRIVACY_URL = "https://prepeat.app/privacy.html";
+
+/**
+ * The Settings tab (Figma `Settings – default`, 261:68548, built 2026-08-13).
+ *
+ * Renamed from "Kitchen" because Plan, Recipes and Shopping all live INSIDE
+ * the kitchen, so a fourth sibling tab called Kitchen sat next to its own
+ * contents. Three groups of rows, no cards:
+ *
+ *   Kitchens – every kitchen you belong to, the active one check-marked;
+ *              tapping a row switches. Then join / create.
+ *   People   – members of the ACTIVE kitchen, then the invite affordance.
+ *   App      – Help and Privacy policy, opening the live web pages.
+ *
+ * The old "Household ▾" chevron and its modal switcher are GONE: renaming the
+ * title to Settings made a chevron beside it promise to expand settings, and a
+ * list of kitchens in a modal on top of a list screen is the same content
+ * twice. The kitchen rows had been drawn with a selection state all along.
+ */
+export default function SettingsScreen() {
   const { session, firstName, signOut } = useAuth();
   const insets = useSafeAreaInsets();
   const myUserId = session?.user?.id ?? null;
@@ -56,14 +73,13 @@ export default function HouseholdScreen() {
     | "deleteProfile"
     | "deleteHousehold"
   >("none");
-  const [switcherOpen, setSwitcherOpen] = useState(false);
   const [joinOpen, setJoinOpen] = useState(false);
   const [createOpen, setCreateOpen] = useState(false);
 
   const loadMembers = useCallback((householdId: string) => {
     fetchHouseholdMembers(householdId)
       .then(setMembers)
-      .catch((error) => console.warn("[household] members load failed", error));
+      .catch((error) => console.warn("[settings] members load failed", error));
   }, []);
 
   // Load the directory and invite code for the active household. Switching
@@ -76,27 +92,24 @@ export default function HouseholdScreen() {
       .then((next) => {
         if (!cancelled) setInvite(next);
       })
-      .catch((error) => console.warn("[household] invite failed", error));
+      .catch((error) => console.warn("[settings] invite failed", error));
     return () => {
       cancelled = true;
     };
   }, [household.id, loadMembers]);
 
+  // THE INVITE RULE (Thomas, 2026-08-13): one member gets the banner, which
+  // has to argue why a second person is worth having; two or more get the
+  // quiet green row, because they have already understood the concept and
+  // re-pitching it every time Settings opens is noise.
+  const isAlone = members.length <= 1;
+
   return (
     <SafeAreaView edges={["top"]} className="flex-1 bg-surface-neutral-lightest">
-      {/* Header + switcher trigger */}
-      <View className="w-full flex-row items-center gap-comp-small px-layout-small pb-layout-small">
+      <View className="w-full flex-row items-center px-layout-small pb-layout-small">
         <Text className="flex-1 font-header text-display-4 font-emphasized leading-medium text-text-default">
-          Kitchen
+          Settings
         </Text>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Switch kitchen"
-          hitSlop={8}
-          onPress={() => setSwitcherOpen(true)}
-        >
-          <MaterialIcons name="expand-more" size={40} color={ds.colors.surface.primary.main} />
-        </Pressable>
       </View>
 
       <ScrollView
@@ -107,76 +120,80 @@ export default function HouseholdScreen() {
           paddingBottom: tabBarClearance(insets, Spacing.four),
         }}
       >
-        {/* Household card + invite */}
-        <View className="w-full overflow-hidden rounded-large bg-surface-neutral-white">
-          <View className="w-full flex-row items-center gap-layout-small border-b border-border-subtle p-layout-small">
-            <View className="min-w-0 flex-1">
-              <Text
-                numberOfLines={1}
-                className="font-header text-display-6 font-emphasized leading-xsmall text-text-accent"
-              >
-                {household.name}
-              </Text>
-              <View className="flex-row items-center gap-comp-small">
-                <MaterialIcons name="people-alt" size={16} color={ds.colors.icon.default} />
-                <Text className="font-paragraph text-small font-default leading-xxsmall text-text-default">
-                  {members.length === 1 ? "1 person" : `${members.length} people`}
-                </Text>
-              </View>
-            </View>
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel="Edit kitchen"
-              hitSlop={8}
-              onPress={() => setSheet("household")}
-            >
-              <MaterialIcons name="more-vert" size={24} color={ds.colors.icon.default} />
-            </Pressable>
-          </View>
-          <View className="w-full items-center gap-layout-small p-layout-small">
-            <Text className="w-full font-paragraph text-paragraph font-default leading-xsmall text-text-subtle">
-              Invite someone to your kitchen.
-            </Text>
-            <Pressable
-              accessibilityRole="button"
+        <SettingsGroup title="Kitchens">
+          {households.map((h) => (
+            <KitchenRow
+              key={h.id}
+              name={h.name}
+              memberCount={h.id === household.id ? members.length : null}
+              selected={h.id === household.id}
+              onPress={() => {
+                if (h.id !== household.id) setActiveHousehold(h.id);
+              }}
+              // Only the active kitchen carries the overflow control. The
+              // frame draws it on every row, but the MENU behind it is not
+              // designed yet – it has to answer edit/leave/delete for a
+              // kitchen you may not be standing in, and leaving one you are
+              // not in is a different confirmation. Rendering a dead control
+              // on the other rows would be worse than leaving it off.
+              onMore={h.id === household.id ? () => setSheet("household") : null}
+            />
+          ))}
+          <ActionRow
+            icon="login"
+            label="Join an existing kitchen"
+            onPress={() => setJoinOpen(true)}
+          />
+          <ActionRow
+            icon="add-home"
+            label="Create a new kitchen"
+            isLast
+            onPress={() => setCreateOpen(true)}
+          />
+        </SettingsGroup>
+
+        <SettingsGroup title="People">
+          {members.map((member) => (
+            <MemberRow
+              key={member.userId}
+              member={member}
+              isMe={member.userId === myUserId}
+              onEdit={() => setSheet("profile")}
+            />
+          ))}
+          {isAlone ? (
+            <InviteBanner onPress={() => setSheet("invite")} />
+          ) : (
+            <ActionRow
+              icon="person-add-alt-1"
+              label="Invite someone"
+              accent
+              isLast
               onPress={() => setSheet("invite")}
-              className="w-full flex-row items-center justify-center gap-comp-xsmall rounded-medium bg-button-solid-fill-enabled px-comp-xlarge py-comp-large"
-            >
-              <MaterialIcons
-                name="person-add-alt-1"
-                size={24}
-                color={ds.colors.button.solid.label.enabled}
-              />
-              <Text className="font-paragraph text-components-button-label font-default text-button-solid-label-enabled">
-                Invite someone
-              </Text>
-            </Pressable>
-          </View>
-        </View>
+            />
+          )}
+        </SettingsGroup>
 
-        {/* Members */}
-        <View className="w-full gap-comp-small">
-          <Text className="font-paragraph text-small font-emphasized leading-xxsmall text-text-default">
-            People
-          </Text>
-          <View className="w-full overflow-hidden rounded-large bg-surface-neutral-white">
-            {members.map((member, index) => (
-              <MemberRow
-                key={member.userId}
-                member={member}
-                isMe={member.userId === myUserId}
-                isLast={index === members.length - 1}
-                onEdit={() => setSheet("profile")}
-              />
-            ))}
-          </View>
-        </View>
+        <SettingsGroup title="App">
+          <ActionRow
+            icon="help"
+            label="Help"
+            trailing="open-in-new"
+            onPress={() => openExternal(SUPPORT_URL)}
+          />
+          <ActionRow
+            icon="policy"
+            label="Privacy policy"
+            trailing="open-in-new"
+            isLast
+            onPress={() => openExternal(PRIVACY_URL)}
+          />
+        </SettingsGroup>
 
-        {/* Sign out */}
         <Pressable
           accessibilityRole="button"
           onPress={() =>
-            signOut().catch((error) => console.warn("[household] sign out failed", error))
+            signOut().catch((error) => console.warn("[settings] sign out failed", error))
           }
           className="w-full flex-row items-center justify-center gap-comp-xsmall rounded-medium border-2 border-button-outline-border-enabled py-comp-large"
         >
@@ -255,26 +272,6 @@ export default function HouseholdScreen() {
         }}
       />
 
-      <HouseholdSwitcherMenu
-        visible={switcherOpen}
-        households={households}
-        activeId={household.id}
-        topInset={insets.top}
-        onSelect={(id) => {
-          setSwitcherOpen(false);
-          if (id !== household.id) setActiveHousehold(id);
-        }}
-        onJoin={() => {
-          setSwitcherOpen(false);
-          setJoinOpen(true);
-        }}
-        onCreate={() => {
-          setSwitcherOpen(false);
-          setCreateOpen(true);
-        }}
-        onClose={() => setSwitcherOpen(false)}
-      />
-
       <JoinHouseholdModal
         visible={joinOpen}
         onClose={() => setJoinOpen(false)}
@@ -296,123 +293,175 @@ export default function HouseholdScreen() {
   );
 }
 
+function openExternal(url: string) {
+  Linking.openURL(url).catch((error) => console.warn("[settings] link failed", url, error));
+}
+
 /**
- * The household switcher, opened from the "Household ▾" title. Lists every
- * household the user belongs to (checkmark on the active one), then
- * "Join a household" and "Create a new household", as a dropdown card below the
- * header over a dim backdrop (Figma "change household", 2026-07-30).
+ * A titled group: a small bold label, then a white rounded container the rows
+ * sit inside. Rows draw their own bottom border, so the container clips.
  */
-function HouseholdSwitcherMenu({
-  visible,
-  households,
-  activeId,
-  topInset,
-  onSelect,
-  onJoin,
-  onCreate,
-  onClose,
+function SettingsGroup({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <View className="w-full gap-layout-xsmall">
+      <Text className="font-paragraph text-small font-emphasized leading-xxsmall text-text-default">
+        {title}
+      </Text>
+      <View className="w-full overflow-hidden rounded-large bg-surface-neutral-white">
+        {children}
+      </View>
+    </View>
+  );
+}
+
+// Rows share one pressed treatment. The frame does not draw a pressed state
+// (logged as still-to-draw in backlog 2.27) – IMPROVISED here rather than
+// shipping tappable rows with no feedback at all, using the page background
+// token so it is a DS value and not an invented one.
+const rowBase = "w-full flex-row items-center gap-layout-small p-layout-small";
+const rowFill = (pressed: boolean) =>
+  pressed ? "bg-surface-neutral-lightest" : "bg-surface-neutral-white";
+const rowBorder = (isLast: boolean) => (isLast ? "" : "border-b border-border-subtle");
+
+/**
+ * One kitchen. The indicator is the switcher's old checkmark, now living in
+ * the list: filled green with a check when active, an empty ring otherwise.
+ */
+function KitchenRow({
+  name,
+  memberCount,
+  selected,
+  onPress,
+  onMore,
 }: {
-  visible: boolean;
-  households: Household[];
-  activeId: string;
-  topInset: number;
-  onSelect: (id: string) => void;
-  onJoin: () => void;
-  onCreate: () => void;
-  onClose: () => void;
+  name: string;
+  memberCount: number | null;
+  selected: boolean;
+  onPress: () => void;
+  onMore: (() => void) | null;
 }) {
   return (
-    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
-      <Pressable
-        className="flex-1"
-        style={{ backgroundColor: "rgba(0,0,0,0.15)" }}
-        onPress={onClose}
-      >
-        <View style={{ paddingTop: topInset + 52, paddingHorizontal: 16 }}>
-          <Pressable
-            onPress={() => {}}
-            className="w-full overflow-hidden rounded-large bg-surface-neutral-white"
-            style={{
-              shadowColor: "#000",
-              shadowOpacity: 0.12,
-              shadowRadius: 12,
-              shadowOffset: { width: 0, height: 4 },
-              elevation: 6,
-            }}
+    <Pressable
+      accessibilityRole="button"
+      accessibilityState={{ selected }}
+      accessibilityLabel={selected ? `${name}, current kitchen` : `Switch to ${name}`}
+      onPress={onPress}
+    >
+      {({ pressed }) => (
+        <View className={`${rowBase} ${rowFill(pressed)} ${rowBorder(false)}`}>
+          <View
+            className={
+              "h-[24px] w-[24px] items-center justify-center rounded-large " +
+              (selected ? "bg-surface-primary-light" : "border border-border-default")
+            }
           >
-            {households.map((h) => (
-              <Pressable
-                key={h.id}
-                accessibilityRole="button"
-                onPress={() => onSelect(h.id)}
-                className="w-full flex-row items-center gap-layout-small border-b border-border-subtle p-layout-small"
-              >
-                <MaterialIcons name="home" size={24} color={ds.colors.icon.default} />
-                <Text
-                  numberOfLines={1}
-                  className="min-w-0 flex-1 font-paragraph text-paragraph font-default leading-xsmall text-text-default"
-                >
-                  {h.name}
+            {selected && (
+              <MaterialIcons
+                name="check"
+                size={16}
+                color={ds.colors.button.solid.label.enabled}
+              />
+            )}
+          </View>
+          <View className="min-w-0 flex-1">
+            <Text
+              numberOfLines={1}
+              className="font-paragraph text-paragraph font-default leading-xsmall text-text-default"
+            >
+              {name}
+            </Text>
+            {memberCount !== null && (
+              <View className="flex-row items-center gap-comp-small">
+                <MaterialIcons name="people-alt" size={16} color={ds.colors.icon.default} />
+                <Text className="font-paragraph text-small font-default leading-xxsmall text-text-default">
+                  {memberCount === 1 ? "1 person" : `${memberCount} people`}
                 </Text>
-                {h.id === activeId && (
-                  <MaterialIcons name="check" size={24} color={ds.colors.text.brand} />
-                )}
-              </Pressable>
-            ))}
+              </View>
+            )}
+          </View>
+          {onMore && (
             <Pressable
               accessibilityRole="button"
-              onPress={onJoin}
-              className="w-full flex-row items-center gap-layout-small border-b border-border-subtle p-layout-small"
+              accessibilityLabel="Edit kitchen"
+              hitSlop={8}
+              onPress={onMore}
             >
-              <MaterialIcons name="login" size={24} color={ds.colors.icon.default} />
-              <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-default">
-                Join an existing kitchen
-              </Text>
+              <MaterialIcons name="more-vert" size={24} color={ds.colors.icon.default} />
             </Pressable>
-            <Pressable
-              accessibilityRole="button"
-              onPress={onCreate}
-              className="w-full flex-row items-center gap-layout-small p-layout-small"
-            >
-              <MaterialIcons name="add-home" size={24} color={ds.colors.icon.default} />
-              <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-default">
-                Create a new kitchen
-              </Text>
-            </Pressable>
-          </Pressable>
+          )}
         </View>
-      </Pressable>
-    </Modal>
+      )}
+    </Pressable>
+  );
+}
+
+/**
+ * A plain action row: leading icon, label, optional trailing icon. `accent`
+ * turns it green – used only for Invite someone, so it reads as an action
+ * rather than a fact without breaking the list rhythm.
+ */
+function ActionRow({
+  icon,
+  label,
+  trailing,
+  accent = false,
+  isLast = false,
+  onPress,
+}: {
+  icon: keyof typeof MaterialIcons.glyphMap;
+  label: string;
+  trailing?: keyof typeof MaterialIcons.glyphMap;
+  accent?: boolean;
+  isLast?: boolean;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable accessibilityRole="button" accessibilityLabel={label} onPress={onPress}>
+      {({ pressed }) => (
+        <View className={`${rowBase} ${rowFill(pressed)} ${rowBorder(isLast)}`}>
+          <MaterialIcons
+            name={icon}
+            size={24}
+            color={accent ? ds.colors.icon.brand : ds.colors.icon.default}
+          />
+          <Text
+            className={
+              "min-w-0 flex-1 font-paragraph text-paragraph font-default leading-xsmall " +
+              (accent ? "text-text-brand" : "text-text-default")
+            }
+          >
+            {label}
+          </Text>
+          {trailing && (
+            <MaterialIcons name={trailing} size={24} color={ds.colors.icon.default} />
+          )}
+        </View>
+      )}
+    </Pressable>
   );
 }
 
 /**
  * A member row. The phone owner's avatar is outlined, everyone else's is
- * solid (avatar rule, Thomas 2026-07-18) – and only your own row carries
- * the edit pencil (you can only edit yourself; everyone is equal).
+ * solid (avatar rule, Thomas 2026-07-18) – and only your own row carries the
+ * email and the overflow control, because you can only edit yourself and an
+ * affordance on someone else's row would promise otherwise.
  */
 function MemberRow({
   member,
   isMe,
-  isLast,
   onEdit,
 }: {
   member: HouseholdMember;
   isMe: boolean;
-  isLast: boolean;
   onEdit: () => void;
 }) {
   const initial = (member.firstName ?? member.email ?? "?").charAt(0).toUpperCase();
   return (
-    <View
-      className={
-        "w-full flex-row items-center gap-layout-small p-layout-small " +
-        (isLast ? "" : "border-b border-border-subtle")
-      }
-    >
+    <View className={`${rowBase} bg-surface-neutral-white ${rowBorder(false)}`}>
       <View
         className={
-          "h-[40px] w-[40px] items-center justify-center rounded-full " +
+          "h-[24px] w-[24px] items-center justify-center rounded-large " +
           (isMe
             ? "border border-border-strong bg-surface-neutral-lighter"
             : "bg-surface-secondary-main")
@@ -430,19 +479,21 @@ function MemberRow({
       <View className="min-w-0 flex-1">
         <Text
           numberOfLines={1}
-          className="font-header text-display-6 font-emphasized leading-xsmall text-text-accent"
+          className="font-paragraph text-paragraph font-default leading-xsmall text-text-default"
         >
           {member.firstName ?? "…"}
         </Text>
-        <View className="flex-row items-center gap-comp-small">
-          <MaterialIcons name="mail" size={16} color={ds.colors.icon.default} />
-          <Text
-            numberOfLines={1}
-            className="min-w-0 flex-1 font-paragraph text-small font-default leading-xxsmall text-text-default"
-          >
-            {member.email ?? ""}
-          </Text>
-        </View>
+        {isMe && member.email && (
+          <View className="flex-row items-center gap-comp-small">
+            <MaterialIcons name="mail" size={16} color={ds.colors.icon.default} />
+            <Text
+              numberOfLines={1}
+              className="min-w-0 flex-1 font-paragraph text-small font-default leading-xxsmall text-text-default"
+            >
+              {member.email}
+            </Text>
+          </View>
+        )}
       </View>
       {isMe && (
         <Pressable
@@ -454,6 +505,44 @@ function MemberRow({
           <MaterialIcons name="more-vert" size={24} color={ds.colors.icon.default} />
         </Pressable>
       )}
+    </View>
+  );
+}
+
+/**
+ * Shown instead of the invite row when you are alone in a kitchen. It argues
+ * rather than labels: someone by themselves is not hesitating because the
+ * button is hard to find, they do not know what a second person gets them.
+ * The copy points at the shopping list, because a shared cookbook is
+ * something you already have on your own.
+ */
+function InviteBanner({ onPress }: { onPress: () => void }) {
+  return (
+    <View className="w-full gap-layout-small bg-surface-neutral-white px-layout-small pb-layout-medium pt-layout-small">
+      <MaterialIcons name="person-add-alt-1" size={40} color={ds.colors.icon.brand} />
+      <View className="w-full">
+        <Text className="font-header text-display-5 font-emphasized leading-small text-text-accent">
+          Invite someone
+        </Text>
+        <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-default">
+          Everyone sees the same plan and the same shopping list – and it updates as you both
+          change it.
+        </Text>
+      </View>
+      <Pressable
+        accessibilityRole="button"
+        onPress={onPress}
+        className="w-full flex-row items-center justify-center gap-comp-xsmall rounded-medium bg-button-solid-fill-enabled px-comp-xlarge py-comp-large"
+      >
+        <MaterialIcons
+          name="person-add-alt-1"
+          size={24}
+          color={ds.colors.button.solid.label.enabled}
+        />
+        <Text className="font-paragraph text-components-button-label font-default text-button-solid-label-enabled">
+          Invite someone
+        </Text>
+      </Pressable>
     </View>
   );
 }

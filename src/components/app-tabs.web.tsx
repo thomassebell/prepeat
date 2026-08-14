@@ -32,7 +32,7 @@ export default function AppTabs() {
             <TabButton>Shopping</TabButton>
           </TabTrigger>
           <TabTrigger name="household" href="/household" asChild>
-            <TabButton>Kitchen</TabButton>
+            <TabButton>Settings</TabButton>
           </TabTrigger>
         </CustomTabList>
       </TabList>

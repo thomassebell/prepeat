@@ -31,9 +31,13 @@ export default function AppTabs() {
         <NativeTabs.Trigger.Icon sf={{ default: 'bag', selected: 'bag.fill' }} />
       </NativeTabs.Trigger>
 
+      {/* Renamed from "Kitchen" 2026-08-13: Plan, Recipes and Shopping all
+          live INSIDE the kitchen, so a fourth sibling tab called Kitchen sat
+          next to its own contents. The ROUTE stays `household` – only the
+          label and icon change, so nothing that links here breaks. */}
       <NativeTabs.Trigger name="household">
-        <NativeTabs.Trigger.Label>Kitchen</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon sf={{ default: 'person.2', selected: 'person.2.fill' }} />
+        <NativeTabs.Trigger.Label>Settings</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon sf={{ default: 'gearshape', selected: 'gearshape.fill' }} />
       </NativeTabs.Trigger>
 
       {/* DS token verification screen – development builds only. The route
