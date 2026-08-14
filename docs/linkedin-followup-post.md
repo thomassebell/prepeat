@@ -1,143 +1,105 @@
-# LinkedIn follow-up post – what went wrong
+# LinkedIn follow-up post – the second half of the story
 
-*Written 2026-08-14, alongside [the launch post](linkedin-launch-post.md).*
+*Final, 2026-08-14. Follows [the launch post](linkedin-launch-post.md).*
 
-The second of two. The launch post is about the method working; this one is
-the honest counterweight, and Thomas's steer is what makes it more than a
-mea culpa:
+## The brief
 
-- **The spine is lenses, not errors.** The work between Thomas and Claude made
-  him see the product through lenses he hadn't been using. Every mishap ended
-  up expanding his UX practice rather than just costing a round.
-- **The engine is the loop** – think, build, test, learn, go back in. Not a
-  handoff. Early drafts stated a tidy lesson ("a design is a contract"); Thomas
-  corrected that: the loop getting cheap enough to run many times is the point.
-- **Vulnerability is the strength.** The admissions stay unhedged on purpose.
-- **The instruction files are the LAST LENS, pointed at the collaboration**
-  rather than at the product (Thomas, 2026-08-14: *"why is the instruction
-  files not a lens?"* – an earlier draft had them as a mere habit sitting
-  underneath the lenses, which undersold them). They are the only lens that
-  makes the others permanent, and they carry the post's biggest claim: he ended
-  up designing the collaboration, not only the app. **Do not demote this back
-  to a habit.** In version one it comes AFTER the four-lens summary, so the
-  summary covers the product lenses and this one turns the camera around.
+Written after four drafts drifted, which is what happens without one.
 
-Sources: [lessons-from-building-prepeat.md](lessons-from-building-prepeat.md)
-for the two root causes, [release-notes.md](release-notes.md) for the panel
-round, and the rules that were written into the CLAUDE.md files as each
-incident happened.
+- **Why:** the launch post did the announcing. This one positions Thomas as
+  someone with a working method for building products with AI, and it holds up
+  because it is specific and self-critical where most posts on this subject are
+  neither.
+- **Primary reader:** product people, broadly (Thomas, 2026-08-14).
+- **Topic:** how working this way changed what his practice covers. **NOT
+  "what went wrong"** – that framing pulled three drafts into a confessional.
+  Mistakes are the evidence, not the subject, and each earns its place only by
+  showing the reach changing.
+- **Message:** he could always see the whole product; what changed is that he
+  can now reach all of it himself, and it is better and more robust for it.
+- **Filter for any paragraph:** does this show the reach changing? The privacy
+  policy beat and an abstract paragraph about the loop both died to this.
 
-**The panel was SYNTHETIC, not real users** (Thomas, 2026-08-14) – AI personas,
-from the Synthetic User Panel he built at
-`~/Documents/Claude/Projects/Synthetic User Panel`, and running it was an
-experiment in its own right on top of building the app. The post names that
-limitation itself rather than letting a reader find it.
+## The post
 
----
+Last week I wrote about what worked while building Prep+Eat, a meal planner for families. This is the other half.
 
-## Version one – the full cut
+I've always known the job goes well past Figma. What changed is that I could finally reach the rest of it myself – and every mistake I made was somewhere in that new reach.
 
-Four beats. ~3,700 characters.
+Early on, a set of sheets came back with a switch, a header and a row style that were never mine. Not gaps I'd left: all three already existed in my design system. They'd been invented instead of looked up, and they were plausible enough that I didn't catch them for a while.
 
-Last week I wrote about what worked while building Prep+Eat. This is the other half – and it turned out to be the half that made me better at my actual job.
+That's the failure mode worth knowing about, and it isn't the one people warn you about. It doesn't come back wrong, it comes back plausible. Wrong you spot in a second. Plausible sits in your product for a week, looking like something you decided.
 
-Things went wrong. Not dramatically, but repeatedly. What I didn't see until afterwards is that they weren't separate mistakes. Each one handed me a lens I hadn't been using to look at my own product.
+Then the plan screen hung on every phone in the family: a change on the server had removed something the already-installed app still needed. Both halves were finished, they just weren't the same version. That a live system and whatever build sits on someone's phone move at different speeds was never news to me. The difference now is that it's mine to decide rather than mine to be told about afterwards.
 
-The first came from the loop itself.
+Later I ran my first screens past a panel of AI personas I'd built. I treat that first round as directional at best – it ran before I'd settled the rules I now hold these studies to, and nothing from it should be quoted as a finding. What it did do was send me back to read my own screens, and that was enough. The app used two different words for the same thing: one error said it couldn't reach your kitchen, directly above another saying it couldn't load your household. Nothing was broken. Every state was built. It just didn't mean anything to someone arriving cold.
 
-Early on I'd describe a screen, get something close enough back, and spend the next round correcting it. What replaced that was a much tighter cycle: think, build, try it on the phone, learn what the design hadn't answered, go straight back in. Not a handoff. A loop, run over and over.
+The part I'd hand to anyone working this way is duller than it sounds. Every time something went wrong between Claude and me, we wrote the correction into the instruction files the work itself runs from. Fetch the real spec before building, and never improvise a component that already exists. Say when something is missing instead of quietly filling it. Check what's actually live before deciding something is broken.
 
-That loop is the whole thing. Working this way made it cheap enough to actually run, and a cycle you can go round ten times teaches you what one you go round twice never will. Every pass, the build asked a question my design hadn't answered. What does this look like while it's loading. When it fails. When there's nothing here yet. Those weren't oversights I'd have caught by staring at the file longer – they only surface when something real is in your hand and you're already thinking about the next turn.
+Those files are read at the start of every session, by both of us, so nobody has to remember anything. A mistake got made once and then became a rule. And designing how the two of us work turned out to be the genuinely new part. It didn't exist in the old arrangement at all.
 
-Then the Plan tab spun forever on every phone we had. A change on the server had removed something the app already in our hands still needed. Both halves were finished. They just weren't the same version.
+None of this made me a developer. It took execution out of the way, and once execution isn't the limit, the limit becomes how much of the product you can hold in your head at once. "Designer" doesn't quite cover that anymore.
 
-I could have filed that under someone else's problem. It isn't. What a person experiences is the live system plus whatever version is on their phone, and the two move at different speeds. I now ask what someone still on last month's build sees, and that question alone has changed what I ask for.
-
-Then I found a privacy policy of mine live on the internet, out of date, next to a newer one. A product isn't only its screens. It's the email that arrives, the page someone reads before downloading, the words in the listing. All of it is the experience, and I'd been treating some of it as paperwork.
-
-And the one I think about most came out of something I built on the side: a synthetic user panel. AI personas reading my screens with no context, in studies run against the first-run flow. That was an experiment in its own right, sitting on top of building the app – I wanted to know whether a panel like that could tell me anything real.
-
-It could. Seven readers out of seven could not say what a "household" was in my app. They aren't real users and I wouldn't pretend otherwise, but you don't need a real user to notice that a word means nothing. Nothing was broken. Every state built, every colour correct. It just didn't mean anything to someone arriving cold. Language is the interface, and I'd been designing everything except the words.
-
-None of those is really a mistake in the ordinary sense. Each added a lens. The build's, which asks what the design hasn't answered. The release's, which asks what someone on an older version sees. The whole product's, which counts the email and the listing as experience. And the cold reader's – a lens I had to build before I could look through it.
-
-The last lens points the other way.
-
-Every time something went wrong between us, we wrote the correction into the instruction files the work itself runs on. Fetch the real spec before building. Never quietly fill a gap. Check what's actually live before deciding something is missing.
-
-The other lenses show me the product. This one shows me how we work – and it's the one that makes the rest hold, because nobody has to remember any of it. The files are read at the start of every session, by both of us. A mistake got made once and then became a rule. Somewhere in there I stopped only designing the app and started designing the collaboration too.
-
-That's what working this way did. It didn't make me a developer. It took execution out of the way, and once execution isn't the limit, the limit becomes how much of the system you genuinely see. Design, frontend, backend, architecture: I'm not doing all of those. But the distance between them got much shorter, and the product is better on every count for it.
-
-I'd rather write this post than the one where everything went smoothly. That one wouldn't have taught me anything.
+I'm not looking for a new title. I'm curious whether this is happening to other people too – if you've been working this way, I'd like to hear what it changed about your job.
 
 ---
 
-## Version two – the two shipping beats cut
+~2,450 characters. Post it after the launch post, which its first line refers to.
 
-Thomas judged both the Plan tab beat and the privacy-policy beat weak (they
-make the same move, and the second makes it less viscerally). Both are gone
-here, leaving the loop, the panel, and the habit that turned mistakes into
-rules. ~2,600 characters, matching the launch post.
+## Corrections that shaped it – do not undo these
 
-Not a straight deletion: with two lenses instead of four, the closing summary
-paragraph became redundant, so each lens is now introduced where it happens.
+Each of these came from Thomas after a draft got it wrong. They are the reason
+the post reads the way it does.
 
-Last week I wrote about what worked while building Prep+Eat. This is the other half – and it turned out to be the half that made me better at my actual job.
+1. **He has ALWAYS known the job goes past Figma.** Earlier drafts had him
+   *learning* that the product is bigger than the screen, which is condescending
+   and false. What changed is **reach**, not understanding: work he always knew
+   was his became work he could actually do. Every beat is an instance of
+   reaching, never of discovering.
+2. **The invented sheet components were NOT gaps he left.** All three existed in
+   the design system; they were invented instead of looked up. This produced the
+   post's most quotable line – the failure mode is *plausible*, not wrong – and
+   it ties beat one to the rules at the end. Never write this as
+   under-specification.
+3. **No durations anywhere.** He asked twice to downplay time (DS build, then
+   app build – "a month tops"). A speed claim also invites the "shipped fast
+   with AI" reading, which works against the quality argument.
+4. **He does NOT want a name for the new role.** He wants to hear from people
+   with the same experience. The close states the observation once and asks what
+   changed for others – it must not turn into a hunt for a job title.
+5. **Round one of the panel is directional, not data.** Never quote its result
+   as a finding. The wording rests on his own account of that round, not on
+   anything provable from the repo – see the open question below.
 
-Things went wrong. Not dramatically, but repeatedly. What I didn't see until afterwards is that they weren't separate mistakes. Each one handed me a lens I hadn't been using to look at my own product.
+## What earlier drafts got wrong, so it isn't repeated
 
-The first came from the loop itself.
+- **"Lenses" as an organising idea.** Worked as scaffolding, but appeared in
+  later drafts as a term the reader had never been given. Cut entirely.
+- **"Between us" with no antecedent.** Claude is now named once, early, so the
+  later "we" and "the two of us" have something to refer to.
+- **A flat "Things went wrong" opener.** It announced a confession and didn't
+  connect to the sentence after it.
+- **Leading with the panel finding.** Rejected: you don't open with the result
+  of your least rigorous round.
+- **Patching prose instead of re-reading whole drafts.** How defects 1 and 2
+  above got in – setup sentences were casualties of compression nobody re-read.
 
-Early on I'd describe a screen, get something close enough back, and spend the next round correcting it. What replaced that was a much tighter cycle: think, build, try it on the phone, learn what the design hadn't answered, go straight back in. Not a handoff. A loop, run over and over.
+## Open
 
-That loop is the whole thing. Working this way made it cheap enough to actually run, and a cycle you can go round ten times teaches you what one you go round twice never will. Every pass, the build asked a question my design hadn't answered. What does this look like while it's loading. When it fails. When there's nothing here yet. Those weren't oversights I'd have caught by staring at the file longer – they only surface when something real is in your hand and you're already thinking about the next turn.
-
-The second lens I had to build before I could look through it.
-
-Late on I made a synthetic user panel: AI personas reading my screens with no context, in studies run against the first-run flow. That was an experiment in its own right, sitting on top of building the app – I wanted to know whether a panel like that could tell me anything real.
-
-It could. Seven readers out of seven could not say what a "household" was in my app. They aren't real users and I wouldn't pretend otherwise, but you don't need a real user to notice that a word means nothing. Nothing was broken. Every state built, every colour correct. It just didn't mean anything to someone arriving cold. Language is the interface, and I'd been designing everything except the words.
-
-The last lens points the other way.
-
-Every time something went wrong between us, we wrote the correction into the instruction files the work itself runs on. Fetch the real spec before building. Never quietly fill a gap. Check what's actually live before deciding something is missing.
-
-The other lenses show me the product. This one shows me how we work – and it's the one that makes the rest hold, because nobody has to remember any of it. The files are read at the start of every session, by both of us. A mistake got made once and then became a rule. Somewhere in there I stopped only designing the app and started designing the collaboration too.
-
-That's what working this way did. It didn't make me a developer. It took execution out of the way, and once execution isn't the limit, the limit becomes how much of the system you genuinely see. Design, frontend, backend, architecture: I'm not doing all of those. But the distance between them got much shorter, and the product is better on every count for it.
-
-I'd rather write this post than the one where everything went smoothly. That one wouldn't have taught me anything.
-
----
-
-## Before posting
-
-- **~3,700 characters**, noticeably longer than the launch post's 2,600. It
-  reads, but it asks more of the scroll.
-- **Post it after the launch post**, which it opens by referring to.
-- No link needed – this one isn't an announcement.
-
-## Considered and rejected
-
-- **Which version to post.** Both are kept above rather than one being deleted.
-  Version two is tighter and every beat in it earns its place; version one
-  covers more ground and is the only one that shows the release lens – the
-  beat that reaches furthest outside design, and so the one that evidences the
-  closing claim about the distance between disciplines closing. In version two
-  that line is asserted rather than shown. That is the trade, and it is the
-  only real argument for version one.
-- **Naming Claude explicitly.** The post says "AI" and "we" throughout. Thomas
-  says "Claude and I" in conversation, so naming it is available if a later
-  draft wants the concreteness.
-- **Cutting the panel's "they aren't real users" line.** Keep it. Synthetic
-  research attracts sceptics and naming the limit first is what makes the beat
-  unattackable.
+- **Whether round one's brief was written before or after the responses.** The
+  first-run study (`studies/2026-08-08-prepeat-first-run/`) DOES have a brief,
+  a thorough one, and `protocol/running-a-session.md` §2 already requires one –
+  so the rule Thomas asked to add already exists and was not added. Git cannot
+  settle the ordering: the whole panel arrived in one commit on 2026-08-10, two
+  days after that study ran.
+- **The panel project has no `CLAUDE.md`**, so none of its protocol is loaded at
+  the start of a session – it is only read if something points at it. Every
+  other repo in this family has one. That is the exact mechanism this post
+  celebrates, missing from the project the post uses as its example.
 
 ## The third post, if wanted
 
-The synthetic user panel is its own story and got compressed into two
-paragraphs here: a research instrument built with AI and pointed at his own
-work, five studies, and findings that renamed the product's core vocabulary
-(household → kitchen). Enough material for a standalone post rather than a
-beat inside this one.
+The synthetic user panel: a research instrument built with AI and pointed at his
+own work, five studies, twenty-four sessions, findings that renamed the
+product's core vocabulary. Compressed to one paragraph here; enough for a post
+of its own, with the round-one caveat handled honestly.
