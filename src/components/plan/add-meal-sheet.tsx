@@ -517,7 +517,7 @@ function PickerRow({
       <View className="min-w-0 flex-1">
         <Text
           numberOfLines={1}
-          className="font-header text-display-6 font-emphasized leading-xsmall text-text-accent"
+          className="font-header text-display-6 font-emphasized leading-xsmall text-text-subtle"
         >
           {recipe.title}
         </Text>

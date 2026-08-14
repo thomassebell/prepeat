@@ -377,9 +377,13 @@ function KitchenRow({
             )}
           </View>
           <View className="min-w-0 flex-1">
+            {/* Card header: Montserrat Bold 16/24 on `text/subtle`, the same
+                as a recipe card's title and a meal row. Built first as IBM
+                Plex paragraph, which is not the DS style for a card header
+                (Thomas, 2026-08-13). */}
             <Text
               numberOfLines={1}
-              className="font-paragraph text-paragraph font-default leading-xsmall text-text-default"
+              className="font-header text-display-6 font-emphasized leading-xsmall text-text-subtle"
             >
               {name}
             </Text>
@@ -490,9 +494,10 @@ function MemberRow({
         </Text>
       </View>
       <View className="min-w-0 flex-1">
+        {/* Card header, same as the kitchen row above. */}
         <Text
           numberOfLines={1}
-          className="font-paragraph text-paragraph font-default leading-xsmall text-text-default"
+          className="font-header text-display-6 font-emphasized leading-xsmall text-text-subtle"
         >
           {member.firstName ?? "…"}
         </Text>
