@@ -30,7 +30,11 @@ Early on, a set of sheets came back with a switch, a header and a row style that
 
 That's the failure mode worth knowing about, and it isn't the one people warn you about. It doesn't come back wrong, it comes back plausible. Wrong you spot in a second. Plausible sits in your product for a week, looking like something you decided.
 
-It kept happening in places I'd never had my hands on: the server, the release, the words on the screen. None of it was going to be caught by anyone but me.
+Later, a change went out to the database that removed something the app hadn't used in weeks. Tidying up. Within the hour the plan screen was dead on every phone – not in the version I was building, in the version people already had. Those are two different products, and only one of them was talking to my server.
+
+I ran the repair myself, the same day: no new build, nobody updating anything. Then we rebuilt the setup so it can't reach anyone that way again – there's a full copy of everything to break first now, and nothing goes live until it's survived there.
+
+It kept happening in places I'd never had my hands on: the release, the words on the screen. None of it was going to be caught by anyone but me.
 
 And none of it got fixed by being more careful. Every time something went wrong between Claude and me, we wrote the correction into the files the work itself runs from, so neither of us had to remember it. The same mistakes stopped coming round twice. We got better together, which isn't something I expected to be able to say about working with a tool.
 
@@ -48,7 +52,7 @@ If you've been working this way too, I'd like to hear what it changed about your
 
 ---
 
-~2,250 characters. Post it after the launch post, which its first line refers to.
+~2,800 characters. Post it after the launch post, which its first line refers to.
 
 ## Corrections that shaped it – do not undo these
 
@@ -97,6 +101,10 @@ the way it does.
      territory: *the server, the release, the words on the screen*. Two
      incidents in a row ran the same shape, so the second taught the reader
      nothing structurally.
+     **The plan-screen half of this was reversed the same day – see correction
+     8.** Cutting it was right for pace and wrong for evidence: it took out the
+     post's only example from the new reach. The word-for-the-same-thing
+     anecdote stays cut.
    - **The list of written rules** went. That section must be about **getting
      better together**, not about what the rules say.
    - **The closing** must focus on **what he has become** – range, holding a
@@ -104,6 +112,40 @@ the way it does.
 7. **The synthetic panel is no longer in the post at all**, which was the
    cleanest way to lose the detail he didn't want. Its round-one caveat now
    lives where it actually matters: `CLAUDE.md` in the panel project.
+8. **The plan-tab outage is back, as the post's second anecdote** (2026-08-14,
+   after two independent reads – one with the project background, one cold –
+   both landed on the same defect). The post's claim is that *every mistake was
+   somewhere in that new reach*, and the only evidence left was the invented
+   sheets: a design-system miss, on the turf Thomas could always reach. The
+   outage is the server, which he could not. Four things about how it is
+   written, all load-bearing:
+   - **THOMAS DID NOT MAKE THE DELETION** (his correction, on the first draft of
+     this paragraph, which had him say *"I deleted something from the
+     database"*). Migration 0022 dropped `meal_plans.pushed_to_list_at` on
+     recorded reasoning that was Claude's, not his. The grammar therefore
+     matches the sheets anecdote – *a change went out* – where the act is the
+     collaborator's and the miss is his. Never rewrite this as his act; it
+     would be the only first-person piece of engineering in either post.
+   - **The repair IS his**, and that is what makes it a reach beat rather than a
+     confession: he ran migration 0023 himself the same day (see the decisions
+     log, 2026-07-27) and it fixed every phone with no build and no Apple.
+   - **The database rebuild is his addition** (Thomas, 2026-08-14: *"we set up a
+     new DB structure where we can get the bugs before it reaches production"*)
+     – the three environments of 2026-08-04. It is one clause, not a paragraph,
+     and it is deliberately non-technical: naming dev/local/production would
+     turn a post for product people into a post for engineers. It also gives
+     the paragraph after it ("none of it got fixed by being more careful") the
+     concrete antecedent it never had.
+   - **The structural lesson must stay different from the sheets one**, which is
+     why correction 6 cut a second anecdote in the first place. The sheets teach
+     *detection* – it comes back plausible. This teaches a distinction that does
+     not exist in design work at all: the thing you are building and the thing
+     people are holding are two products, and only one is talking to the server.
+   **"Within the hour" is a deliberate exception to correction 3.** That rule
+   bans durations because a speed claim invites the "shipped fast with AI"
+   reading; this one measures blast radius, not productivity, and it is the
+   sentence's whole force. The territory line lost *the server* to avoid saying
+   twice what the anecdote now shows.
 
 One thing is still dropped and recoverable if ever wanted: the panel, which
 costs a clause. The other casualty of that pass, *"Designer" doesn't quite

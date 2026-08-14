@@ -77,3 +77,9 @@ building an approximation, and not knowing what was live – plus the Plan tab
 outage, the two live privacy policies, and the synthetic-user-panel round that
 renamed household to kitchen. All good material, all cut to keep the post on
 one idea. They are the obvious source for a follow-up post.
+
+The [follow-up](linkedin-followup-post.md) has since taken two of them: the
+approximation root cause (the invented sheet components) and the Plan tab
+outage. Still unused: the two live privacy policies, the missing data
+processor, and the synthetic-user-panel round – the last of which is the
+candidate for a third post.
