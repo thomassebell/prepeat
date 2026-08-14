@@ -2643,13 +2643,23 @@ says whether any of it costs anything commercially.
             padding 0/16, Montserrat Bold 32/40, left-aligned) and the title
             colour is **#5F503A everywhere**. The code had been #4F4230 since
             those screens were built, so every page title was a shade too dark.
-            - [ ] **The other three frames still express it as
-                  `color/text/light`** – a raw colour token aliasing a grey
-                  primitive – rather than the semantic `text/subtle`. Same
-                  value, so nothing looks different; worth rebinding because a
-                  raw `color/*` token on a screen frame is what drifts silently
-                  when the DS is retuned. The Settings frames are already on
-                  `text/subtle`.
+            - [x] **DONE 2026-08-13 – 200 headers rebound across Plan,
+                  Shopping, Recipes and Settings**, at Thomas's request, from
+                  the raw `color/text/*` tokens to their semantic equivalents:
+                  `color/text/primary` → `text/default` (134) and
+                  `color/text/light` → `text/subtle` (66). **Value-preserving
+                  by construction** – the semantic tokens are aliases OF the
+                  raw ones – so nothing looks different anywhere; it just stops
+                  the frames drifting silently when the DS is retuned.
+                  Scoped deliberately to those four pages: the same scan found
+                  278 candidates file-wide, but the rest are app icons, the
+                  Sign in screens and the `sketches` page, which are not app
+                  screens and were left alone.
+            - [ ] ⚠️ **29 section headers on the SHOPPING frames are unbound
+                  pure black `#000000`** (16px Bold), not a DS colour at all.
+                  Left untouched because binding them WOULD change how they
+                  look – #000000 against `text/default` #4F4230 is a visible
+                  difference, so it is Thomas's call, not a hygiene sweep.
             ⚠️ **THREE ROUND TRIPS TO GET HERE, AND THE LESSON IS ABOUT
             PROCESS, NOT COLOUR.** Claude matched the value (`204da80`), then
             read "it should be `text/default`" as being about the page title
