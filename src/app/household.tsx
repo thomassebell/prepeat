@@ -107,7 +107,10 @@ export default function SettingsScreen() {
   return (
     <SafeAreaView edges={["top"]} className="flex-1 bg-surface-neutral-lightest">
       <View className="w-full flex-row items-center px-layout-small pb-layout-small">
-        <Text className="flex-1 font-header text-display-4 font-emphasized leading-medium text-text-default">
+        {/* Page titles are `text/subtle` (#5F503A), not `text/default` – every
+            screen frame in Figma binds them to `color/text/light`, which is the
+            same value. Corrected on all four screens 2026-08-13. */}
+        <Text className="flex-1 font-header text-display-4 font-emphasized leading-medium text-text-subtle">
           Settings
         </Text>
       </View>
