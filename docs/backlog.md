@@ -2636,6 +2636,23 @@ says whether any of it costs anything commercially.
             frame does not draw one, and tappable rows with no feedback are
             broken – so this is a DS value, not an invented one, but it is
             Claude's choice and not Thomas's design.
+      - [ ] ⚠️ **PAGE TITLES ARE MIS-BOUND ON THE OTHER THREE SCREEN FRAMES.**
+            Found 2026-08-13. The Settings frames bound the "Settings" title to
+            **`color/text/light`** – a raw colour token that aliases a grey
+            primitive – instead of the semantic **`text/default`**. Thomas:
+            *"it is not correct in figma either"*. Both Settings frames were
+            rebound; **`Weekly plan`, `Shopping list` and `Recipes` still carry
+            the same mis-binding** and want the same fix.
+            No visual change in the app either way, so this is hygiene, not a
+            bug – but a raw `color/*` token on a screen frame is exactly what
+            drifts silently when the DS is retuned, because it is not the
+            designer surface.
+            **The detour worth not repeating:** Claude read the mis-binding as
+            a spec, changed all four screens to `text-subtle` to match it, and
+            reverted an hour later. LESSON: when a screen frame disagrees with
+            what every screen in code already does, ASK before sweeping – the
+            frame is Thomas's work in progress and can be the thing that is
+            wrong. Commits `204da80` then `34edf14`.
       - [ ] **Token gap found while building: `text/secondary` is not in the
             bridge.** The DS `check` and `more_vert` components bind their
             glyphs to it (`#00000099`), and `src/constants/ds-theme.cjs` has no
