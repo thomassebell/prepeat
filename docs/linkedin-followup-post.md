@@ -36,13 +36,13 @@ And none of it got fixed by being more careful. Every time something went wrong 
 
 I didn't come out of this a developer. What I came out with is range: I can hold a whole product now – what it is, how it behaves, how it ships, how it reads, and how the work itself gets done – instead of only the part I could draw.
 
-"Designer" doesn't quite cover that anymore. That's the biggest thing I've taken from building this, and I'm not looking for a new word for it.
+"Designer" doesn't quite cover that anymore.
 
 If you've been working this way too, I'd like to hear what it changed about your job.
 
 ---
 
-~1,800 characters. Post it after the launch post, which its first line refers to.
+~1,750 characters. Post it after the launch post, which its first line refers to.
 
 ## Corrections that shaped it – do not undo these
 
@@ -63,12 +63,15 @@ the way it does.
    app build – "a month tops"). A speed claim also invites the "shipped fast
    with AI" reading, which works against the quality argument.
 4. **"Designer" no longer covering it IS the big learning** (Thomas, 2026-08-14,
-   restoring the line after a cut removed it). It must be in the post, and it
-   must come **after** the range sentence, with *"I'm not looking for a new word
-   for it"* **after** it – with the disclaimer in front, the observation arrives
-   pre-deflated. He does not want a name for the role and does want to hear from
-   people who have had the same experience, so the close must never turn into a
-   hunt for a job title.
+   restoring the line after a cut removed it). It must be in the post, it comes
+   **after** the range sentence, and it stands **completely bare** – on its own
+   line, with nothing before or after it in the paragraph.
+   **Do not append a disclaimer to it.** Two were tried and both came off: *"I'm
+   not looking for a new word for it"* (Thomas: already implied by the line
+   itself) and *"that's the biggest thing I've taken from building this"*
+   (telling the reader it matters is weaker than letting it sit). He does not
+   want a name for the role – but the line says that on its own, and every hedge
+   added to it takes weight off it.
 5. **Cut for pace, at his call (final round).** The post was boring in the
    middle and over-informative at the end. Three deletions:
    - **The two middle anecdotes** (the plan screen dying on every phone, and the
