@@ -112,7 +112,7 @@ Everything else in this file is Claude's to get on with.
   <sub>Next – v1.1</sub>
 - **⭐ Share a recipe with someone – FIRST ITEM IN v1.1** – how much of a recipe a stranger sees before installing.
   <sub>Next – v1.1</sub>
-- `2.27` **Rename the Kitchen tab to Settings, and nest the kitchen inside it** – DESIGN SETTLED 2026-08-13 and ready to build; it is the critical path to 1.1.0, which is the only thing between App Store users and two weeks of shipped fixes. Still undrawn, but not blocking: the kitchen row's `⋮` menu and the Edit kitchen sheet's delete state.
+- `2.27` **Rename the Kitchen tab to Settings, and nest the kitchen inside it** – BUILT AND ON THE PHONE 2026-08-13, and it carries the app-wide HEADER RULE (screen `text/subtle`, section `text/default`, card `text/subtle`, all Montserrat). Four things still need drawing: the kitchen row's `⋮` menu, the Edit kitchen sheet's delete state, the row pressed state, and the banner copy that says "you both".
   <sub>Next – v1.1</sub>
 - `2.10` **⭐ Show IN THE APP that a meal can go on the plan without a recipe** – a frame for a line on the EMPTY PLAN saying a meal need not be a recipe. That is the half that reaches someone still deciding whether the app is for them, and no frame draws it.
   <sub>Next – v1.1</sub>
@@ -2618,8 +2618,35 @@ says whether any of it costs anything commercially.
            (see below). Two pieces are still undrawn (the kitchen row's `⋮`
            menu and the Edit kitchen sheet's delete state), but neither blocks
            building the screen itself.
-      Status: **BUILT IN CODE 2026-08-13** (`8a76305`), typecheck and lint
-           clean. **NOT YET SEEN ON A PHONE** – see the verification note.
+      Status: **BUILT AND ON THE PHONE 2026-08-13.** Seven dev builds through
+           the afternoon; Thomas checked the tab, the kitchen list, the App
+           rows and scrolling, all pass.
+
+      ⭐ **THE HEADER RULE (Thomas, 2026-08-13) – applies to the WHOLE app, not
+      just this screen. Do not re-derive it from a frame.**
+      | header | token | type |
+      |---|---|---|
+      | **Screen** header (the page title) | `text/subtle` | Montserrat Bold 32/40 |
+      | **Section** header ("Kitchens", "Produce", "Ingredients") | `text/default` | Montserrat Bold 16/24 |
+      | **Card** header (recipe title, meal row, kitchen name, member name) | `text/subtle` | Montserrat Bold 16/24 |
+      **All three are Montserrat.** *"If you build them as IBM plex you are not
+      following the DS."* Applied in Figma and in code on 2026-08-13; the week
+      picker's value follows Figma at `text/subtle` too.
+
+      **WHAT IS STILL OPEN ON THIS ITEM** (everything else below is done):
+      1. **The kitchen row's `⋮` menu** – undrawn. Renders on the ACTIVE
+         kitchen only until it exists.
+      2. **The Edit kitchen sheet's delete state** – undrawn (the `canDelete`
+         one Thomas has never seen).
+      3. **The row pressed state** – undrawn; Claude's improvisation is live.
+      4. **The banner copy says "as you both change it"** – wrong for a kitchen
+         of three.
+      5. **`text/secondary` is missing from the token bridge** – DS `check` and
+         `more_vert` bind their glyphs to it. Fix in the DS repo and re-sync.
+      6. **`initicial` is misspelled on a DS component** – fix in the DS file,
+         not on the instances.
+      7. **Annotations left unbound on purpose** – see the sweep note below;
+         confirm that is right.
       - [ ] ⚠️ **NOBODY HAS LOOKED AT THIS RUNNING YET.** The web preview
             cannot reach it: every deep route sits behind the auth gate, and
             signing in needs a code emailed to Thomas. So the screen is
@@ -2655,11 +2682,21 @@ says whether any of it costs anything commercially.
                   278 candidates file-wide, but the rest are app icons, the
                   Sign in screens and the `sketches` page, which are not app
                   screens and were left alone.
-            - [ ] ⚠️ **29 section headers on the SHOPPING frames are unbound
-                  pure black `#000000`** (16px Bold), not a DS colour at all.
-                  Left untouched because binding them WOULD change how they
-                  look – #000000 against `text/default` #4F4230 is a visible
-                  difference, so it is Thomas's call, not a hygiene sweep.
+            - [x] **UNBOUND TEXT SWEPT 2026-08-13 – 446 nodes bound in total.**
+                  Thomas: *"Nothing can be unbound, if it is, it's a mistake."*
+                  - 29 pure-black section headers (shopping) → `text/default`
+                  - 4 Montserrat card headers (Sign in) → `text/subtle`
+                  - **413 pure-black body and label nodes → `text/default`**
+                    (Plan 383, shopping 12, Settings 11, Sign in 4, Recipes 3).
+                    This one IS a visible change – black → #4F4230 – and was
+                    Thomas's explicit call.
+                  **One node deliberately skipped:** a `Noto Sans` sticky note
+                  on the shopping frames reading "Drag handle does'n work".
+                  Non-DS font ⇒ an annotation, not UI. Same reasoning left the
+                  two red `#990000` spec labels ("16 px", "8 px") and an SF Pro
+                  glyph inside a keyboard mock alone. **If annotations should
+                  also be bound, say so – the rule as written would catch
+                  them.**
             ⚠️ **THREE ROUND TRIPS TO GET HERE, AND THE LESSON IS ABOUT
             PROCESS, NOT COLOUR.** Claude matched the value (`204da80`), then
             read "it should be `text/default`" as being about the page title
