@@ -312,7 +312,12 @@ function openExternal(url: string) {
 function SettingsGroup({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <View className="w-full gap-layout-xsmall">
-      <Text className="font-paragraph text-small font-emphasized leading-xxsmall text-text-default">
+      {/* Section headers are Montserrat Bold 16/24 (`header/display 6`), the
+          same as the shopping list's categories and a recipe's Ingredients /
+          Instructions – see category-group.tsx:70. Built first as IBM Plex
+          Bold 12/16, which is what "match the other pages" was about
+          (Thomas, 2026-08-13). */}
+      <Text className="font-header text-display-6 font-emphasized leading-xsmall text-text-default">
         {title}
       </Text>
       <View className="w-full overflow-hidden rounded-large bg-surface-neutral-white">
