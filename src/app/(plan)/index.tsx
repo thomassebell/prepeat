@@ -129,7 +129,7 @@ function PlanContent() {
           212:59962, 2026-07-18) – same display-4 header as the sibling
           tabs. */}
       <View className="w-full px-layout-small pb-layout-medium">
-        <Text className="font-header text-display-4 font-emphasized leading-medium text-text-default">
+        <Text className="font-header text-display-4 font-emphasized leading-medium text-text-subtle">
           Weekly plan
         </Text>
       </View>

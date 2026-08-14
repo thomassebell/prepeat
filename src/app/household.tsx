@@ -107,12 +107,15 @@ export default function SettingsScreen() {
   return (
     <SafeAreaView edges={["top"]} className="flex-1 bg-surface-neutral-lightest">
       <View className="w-full flex-row items-center px-layout-small pb-layout-small">
-        {/* `text/default`, like every other page title. The frames briefly
-            bound this to `color/text/light` – a raw colour token aliasing a
-            grey primitive rather than a semantic text one – and it was wrong
-            in Figma too (Thomas, 2026-08-13). Both Settings frames rebound;
-            the other screens' frames still need the same (backlog 2.27). */}
-        <Text className="flex-1 font-header text-display-4 font-emphasized leading-medium text-text-default">
+        {/* `text/subtle` (#5F503A) – the value every page title uses in Figma.
+            The frames express it as `color/text/light`, a raw colour token
+            aliasing a grey primitive; `text/subtle` is the semantic token with
+            the same value, so the Settings frames are bound to that instead.
+            Structure matches the other screens exactly: `top` 402x40, padding
+            0/16, Montserrat Bold 32/40, left-aligned (read off Figma
+            2026-08-13). The other three frames still say `color/text/light` –
+            same colour, looser binding – see backlog 2.27. */}
+        <Text className="flex-1 font-header text-display-4 font-emphasized leading-medium text-text-subtle">
           Settings
         </Text>
       </View>
