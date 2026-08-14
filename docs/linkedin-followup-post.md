@@ -34,13 +34,15 @@ It kept happening in places I'd never had my hands on: the server, the release, 
 
 And none of it got fixed by being more careful. Every time something went wrong between Claude and me, we wrote the correction into the files the work itself runs from, so neither of us had to remember it. The same mistakes stopped coming round twice. We got better together, which isn't something I expected to be able to say about working with a tool.
 
-I didn't come out of this a developer, and I'm not after a new title. What I came out with is range: I can hold a whole product now – what it is, how it behaves, how it ships, how it reads, and how the work itself gets done – instead of only the part I could draw.
+I didn't come out of this a developer. What I came out with is range: I can hold a whole product now – what it is, how it behaves, how it ships, how it reads, and how the work itself gets done – instead of only the part I could draw.
+
+"Designer" doesn't quite cover that anymore. That's the biggest thing I've taken from building this, and I'm not looking for a new word for it.
 
 If you've been working this way too, I'd like to hear what it changed about your job.
 
 ---
 
-~1,700 characters. Post it after the launch post, which its first line refers to.
+~1,800 characters. Post it after the launch post, which its first line refers to.
 
 ## Corrections that shaped it – do not undo these
 
@@ -60,9 +62,13 @@ the way it does.
 3. **No durations anywhere.** He asked twice to downplay time (DS build, then
    app build – "a month tops"). A speed claim also invites the "shipped fast
    with AI" reading, which works against the quality argument.
-4. **He does NOT want a name for the new role.** He wants to hear from people
-   with the same experience. The close states what he can now do and asks what
-   changed for others – it must not turn into a hunt for a job title.
+4. **"Designer" no longer covering it IS the big learning** (Thomas, 2026-08-14,
+   restoring the line after a cut removed it). It must be in the post, and it
+   must come **after** the range sentence, with *"I'm not looking for a new word
+   for it"* **after** it – with the disclaimer in front, the observation arrives
+   pre-deflated. He does not want a name for the role and does want to hear from
+   people who have had the same experience, so the close must never turn into a
+   hunt for a job title.
 5. **Cut for pace, at his call (final round).** The post was boring in the
    middle and over-informative at the end. Three deletions:
    - **The two middle anecdotes** (the plan screen dying on every phone, and the
@@ -78,10 +84,11 @@ the way it does.
    cleanest way to lose the detail he didn't want. Its round-one caveat now
    lives where it actually matters: `CLAUDE.md` in the panel project.
 
-Two things dropped in that final pass, recoverable if ever wanted: the panel
-(one clause), and the line *"Designer" doesn't quite cover that anymore* (it
-would sit at the end of the range sentence). Both were his own material, not
-padding.
+One thing is still dropped and recoverable if ever wanted: the panel, which
+costs a clause. The other casualty of that pass, *"Designer" doesn't quite
+cover that anymore*, was restored the same day – see correction 4. Cutting it
+took the post's biggest learning out with the padding, which is the risk every
+time this file gets shortened.
 
 ## What earlier drafts got wrong, so it isn't repeated
 
