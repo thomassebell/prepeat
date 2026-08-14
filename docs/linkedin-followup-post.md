@@ -34,7 +34,13 @@ It kept happening in places I'd never had my hands on: the server, the release, 
 
 And none of it got fixed by being more careful. Every time something went wrong between Claude and me, we wrote the correction into the files the work itself runs from, so neither of us had to remember it. The same mistakes stopped coming round twice. We got better together, which isn't something I expected to be able to say about working with a tool.
 
-I didn't come out of this a developer. What I came out with is range: I can hold a whole product now – what it is, how it behaves, how it ships, how it reads, and how the work itself gets done – instead of only the part I could draw.
+I didn't come out of this a developer. I came out with range.
+
+I can hold a whole product now: what it is, how it behaves, how it ships, how it reads, and how the work itself gets done. Not just the part I could draw.
+
+That sounds like doing more jobs. It isn't. Every one of those was always part of designing the thing – they were just on the other side of a handover, where they became someone else's decision and came back to me as a constraint. Take the handover out and they're one thought again. A change to the wording, a change to what the app stores, and a decision about who gets it and when stop being three separate conversations.
+
+What limits me now isn't what I can make. It's how much of the product I can hold in my head at once. That's a harder limit than the old one, and a better one.
 
 "Designer" doesn't quite cover that anymore.
 
@@ -42,7 +48,7 @@ If you've been working this way too, I'd like to hear what it changed about your
 
 ---
 
-~1,750 characters. Post it after the launch post, which its first line refers to.
+~2,250 characters. Post it after the launch post, which its first line refers to.
 
 ## Corrections that shaped it – do not undo these
 
@@ -72,8 +78,20 @@ the way it does.
    (telling the reader it matters is weaker than letting it sit). He does not
    want a name for the role – but the line says that on its own, and every hedge
    added to it takes weight off it.
-5. **Cut for pace, at his call (final round).** The post was boring in the
-   middle and over-informative at the end. Three deletions:
+5. **RANGE IS THE POINT OF THE POST** (Thomas, 2026-08-14: *"this is great and
+   the reason for the post"*, asking for it to be elaborated). Four paragraphs
+   at the end carry it, and they are the last thing to cut, not the first:
+   - **What range means** – holding what a product is, how it behaves, how it
+     ships, how it reads, and how the work gets done.
+   - **What it is NOT** – doing more jobs. Those parts were always part of
+     designing the thing; they sat on the far side of a handover, where they
+     became someone else's decision and returned as a constraint. Product
+     people will otherwise read "range" as "he's full-stack now", which is
+     exactly the misreading correction 1 exists to prevent.
+   - **What it costs** – the limit stops being what he can make and becomes how
+     much of the product he can hold in his head. Harder, and better.
+6. **Cut for pace, at his call.** The post was boring in the middle and
+   over-informative at the end. Three deletions:
    - **The two middle anecdotes** (the plan screen dying on every phone, and the
      app using two words for the same thing) became one line naming the
      territory: *the server, the release, the words on the screen*. Two
@@ -83,7 +101,7 @@ the way it does.
      better together**, not about what the rules say.
    - **The closing** must focus on **what he has become** – range, holding a
      whole product – not on what the work did to him.
-6. **The synthetic panel is no longer in the post at all**, which was the
+7. **The synthetic panel is no longer in the post at all**, which was the
    cleanest way to lose the detail he didn't want. Its round-one caveat now
    lives where it actually matters: `CLAUDE.md` in the panel project.
 
