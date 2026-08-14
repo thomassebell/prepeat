@@ -68,6 +68,8 @@ not on TestFlight, not in review, and it needs a build to reach anyone.
 > Build: https://expo.dev/accounts/sebell/projects/prepeat/builds/0d78f007-d584-4288-a35a-b221fa1925ea
 > **If more changes land before Settings does, rebuild rather than shipping
 > this one** – it is a snapshot of 2026-08-11, not a moving target.
+> ⚠️ **THAT HAS NOW HAPPENED: the Settings tab landed in code 2026-08-13, so
+> build 18 IS STALE and must be rebuilt, not submitted.**
 
 **This will be 1.1.0** under the rule above – a new capability (moving
 leftovers between weeks, and now ingredient sections) alongside the fixes, and
@@ -78,6 +80,22 @@ released first either way.
 **Version re-checked 2026-08-10 against the rule above: still 1.1.0.** Today is
 copy and polish plus one small capability (forms now say what is missing), and
 neither outranks the MINOR already set by leftovers and ingredient sections.
+
+### Dev builds, 2026-08-13
+
+- **The Kitchen tab is now Settings, and it holds more.** Plan, Recipes and
+  Shopping all live inside your kitchen, so a fourth tab called Kitchen sat
+  next to its own contents. It is now **Settings**, with three groups:
+  **Kitchens**, **People** and **App**.
+- **Switching kitchen no longer hides in a menu.** Every kitchen you belong to
+  is a row on the screen, with a tick on the one you are in – tap to switch.
+  Joining and creating another sit right underneath, instead of behind the
+  little arrow next to the title.
+- **Help and the privacy policy are in the app.** Two new rows under **App**
+  open the pages on prepeat.app.
+- **Inviting someone gets out of the way once your kitchen is full.** On your
+  own you get a proper prompt explaining what a second person gets you; once
+  somebody else has joined, it settles down into a single quiet line.
 
 ### Dev builds, 2026-08-11
 

@@ -2618,8 +2618,33 @@ says whether any of it costs anything commercially.
            (see below). Two pieces are still undrawn (the kitchen row's `⋮`
            menu and the Edit kitchen sheet's delete state), but neither blocks
            building the screen itself.
-      Status: **ready to build, 2026-08-13.** Thomas builds "when I get home or
-           tomorrow".
+      Status: **BUILT IN CODE 2026-08-13** (`8a76305`), typecheck and lint
+           clean. **NOT YET SEEN ON A PHONE** – see the verification note.
+      - [ ] ⚠️ **NOBODY HAS LOOKED AT THIS RUNNING YET.** The web preview
+            cannot reach it: every deep route sits behind the auth gate, and
+            signing in needs a code emailed to Thomas. So the screen is
+            verified only as far as "it compiles and Metro bundles it". Run
+            `./scripts/build-iphone.sh` with the phone to hand before treating
+            it as done, and check the two states – alone in a kitchen, and one
+            with several members.
+      - [ ] **Two improvisations, flagged rather than hidden:**
+            **1. The `⋮` renders on the ACTIVE kitchen only**, though the frame
+            draws it on every row – because the menu behind it is not designed
+            (see below). It opens the existing Edit kitchen sheet, exactly as
+            today. A control on the other rows would have nothing to open.
+            **2. The row pressed state** uses `surface-neutral-lightest`. The
+            frame does not draw one, and tappable rows with no feedback are
+            broken – so this is a DS value, not an invented one, but it is
+            Claude's choice and not Thomas's design.
+      - [ ] **Token gap found while building: `text/secondary` is not in the
+            bridge.** The DS `check` and `more_vert` components bind their
+            glyphs to it (`#00000099`), and `src/constants/ds-theme.cjs` has no
+            `text.secondary`. Used `icon/default` and
+            `button/solid/label/enabled` instead – both correct semantically
+            and visually near-identical. Proper fix per the DS rule: add the
+            token to the export list in the DS repo and re-sync.
+            Everything else matched exactly – all 13 colours, all radii, both
+            font families – so the token sync is otherwise current.
       ⚠️ BUILD 18 IS PARKED WAITING ON THIS (2026-08-11, Thomas's call). It is
            built, signed and sitting on Expo's servers, NOT submitted – ship it
            with `./scripts/eas-submit-ios.sh`, no rebuild needed. Held so the
