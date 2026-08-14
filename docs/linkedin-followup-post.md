@@ -22,13 +22,15 @@ Written after four drafts drifted, which is what happens without one.
 
 ## The post
 
+Working with AI, the failure mode nobody warns you about isn't that the work comes back wrong. It's that it comes back plausible.
+
+Wrong you spot in a second. Plausible sits in your product for a week, looking like something you decided.
+
 Last week I wrote about what worked while building Prep+Eat, a meal planner for families. This is the other half.
 
 I've always known the job goes well past Figma. What changed is that I could finally reach the rest of it myself – and every mistake I made was somewhere in that new reach.
 
 Early on, a set of sheets came back with a switch, a header and a row style that were never mine. Not gaps I'd left: all three already existed in my design system. They'd been invented instead of looked up, and they were plausible enough that I didn't catch them for a while.
-
-That's the failure mode worth knowing about, and it isn't the one people warn you about. It doesn't come back wrong, it comes back plausible. Wrong you spot in a second. Plausible sits in your product for a week, looking like something you decided.
 
 Later, a change went out to the database that removed something the app hadn't used in weeks. Tidying up. Within the hour the plan screen was dead on every phone – not in the version I was building, in the version people already had. Those are two different products, and only one of them was talking to my server.
 
@@ -146,6 +148,25 @@ the way it does.
    reading; this one measures blast radius, not productivity, and it is the
    sentence's whole force. The territory line lost *the server* to avoid saying
    twice what the anecdote now shows.
+9. **The post opens on the plausible line now** (2026-08-14, Thomas's call,
+   from the same cold read as correction 8 – both posts warmed up, and their
+   two scroll-stopping sentences sat in the middle). LinkedIn truncates at
+   roughly 140 characters on mobile; the old opening spent all of it on
+   housekeeping (*"Last week I wrote… this is the other half"*), so nothing a
+   scroller saw gave them a reason to open it.
+   - **The old fourth paragraph was PROMOTED, not written fresh.** *"That's the
+     failure mode worth knowing about…"* is now the first two paragraphs, so
+     **do not restore it in the middle** – the sheets anecdote is deliberately
+     left to pay it off from below, ending on *plausible enough that I didn't
+     catch them for a while*.
+   - **The callback moved to third**, unchanged. It still has to precede the
+     Figma line, which assumes the reader knows this is a sequel.
+   - **"Working with AI" opens the post for two reasons**: it tells a scroller
+     what the subject is, which a bare aphorism does not, and it puts the
+     collaborator on stage before the passive *comes back* – the antecedent
+     defect that earlier drafts kept reintroducing (see below).
+   The hook is 130 characters, so it clears the fold whole. Post 1 got the same
+   treatment the same day and its note records it.
 
 One thing is still dropped and recoverable if ever wanted: the panel, which
 costs a clause. The other casualty of that pass, *"Designer" doesn't quite

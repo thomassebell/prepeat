@@ -22,9 +22,9 @@ a duration on the DS work; Thomas asked for that downplayed.
 
 ## The post
 
-Prep+Eat is on the App Store. It's a meal planner for families: your recipes, a weekly plan, and a shopping list that builds itself and stays in sync with everyone else in the kitchen.
+I'm a designer. I don't write code. I just put an app on the App Store.
 
-I'm a designer. I don't write code. The app was built as a collaboration with AI – and so was the design system underneath it. The app was the second of the two, and getting that order right is most of what I have to say.
+Prep+Eat is a meal planner for families: your recipes, a weekly plan, and a shopping list that builds itself and stays in sync with everyone else in the kitchen. It was built as a collaboration with AI – and so was the design system underneath it. The app was the second of the two, and getting that order right is most of what I have to say.
 
 The system came first, made the same way: me designing, AI building. And it isn't a Figma library. It's a bridge between design work and running code – colour, type, spacing and components defined once, generated out of the design file and pulled straight into the codebase, so the two can't quietly drift apart. For a while there was no product to point it at. It looked like procrastination. It was the opposite.
 
@@ -53,8 +53,15 @@ Prep+Eat is free on the App Store. [link]
 - **Replace `[link]`** with the App Store URL.
 - **Consider flagging EU-only.** v1.0 ships to EU-27 only, so most non-EU
   readers cannot open the link – "(EU for now)" saves them the dead end.
-- ~2,600 characters, so it sits behind LinkedIn's "see more" fold. The first
-  two lines carry it, and they say what the app is by design.
+- ~2,800 characters, so most of it sits behind LinkedIn's "see more" fold.
+  **The opening was rebuilt for that fold on 2026-08-14** (Thomas's call, after
+  a cold reader filed the old first line as promo). *"I'm a designer. I don't
+  write code"* is the most clickable sentence in the post and was sitting in
+  line 3, behind an App Store announcement. It now opens, in 71 characters, so
+  the whole hook survives the mobile truncation at ~140.
+  **The announcement did not get cut, it moved** – Prep+Eat and what it does
+  are the next sentence, and the link still closes. Both things the post
+  promotes are intact; only the order changed.
 
 ## Sourced claims, if anyone asks
 
