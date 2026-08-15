@@ -32,11 +32,11 @@ I've always known the job goes well past Figma. What changed is that I could fin
 
 Early on, a set of sheets came back with a switch, a header and a row style that were never mine. Not gaps I'd left: all three already existed in my design system. They'd been invented instead of looked up, and they were plausible enough that I didn't catch them for a while.
 
-Later, a change went out to the database that removed something the app hadn't used in weeks. Tidying up. Within the hour the plan screen was dead on every phone – not in the version I was building, in the version people already had. Those are two different products, and only one of them was talking to my server.
+Then it happened again, further out. Claude deleted something from the database that the app hadn't used in weeks – housekeeping, and correct for the version I was building. Within the hour the plan screen was dead on every phone, in the version people already had. Those are two different products, and only one of them was talking to my server.
 
-I ran the repair myself, the same day: no new build, nobody updating anything. Then we rebuilt the setup so it can't reach anyone that way again – there's a full copy of everything to break first now, and nothing goes live until it's survived there.
+I ran the repair myself, the same day: no new build, nobody updating anything. Breaking everyone at once and repairing everyone at once turn out to be the same lever, and it was mine to pull either way. Then we rebuilt the setup so it can't reach anyone that way again – there's a full copy of everything to break first now, and nothing goes live until it's survived there.
 
-It kept happening in places I'd never had my hands on: the release, the words on the screen. None of it was going to be caught by anyone but me.
+The release and the words on the screen are the same story. None of it was going to be caught by anyone but me.
 
 And none of it got fixed by being more careful. Every time something went wrong between Claude and me, we wrote the correction into the files the work itself runs from, so neither of us had to remember it. The same mistakes stopped coming round twice. We got better together, which isn't something I expected to be able to say about working with a tool.
 
@@ -54,7 +54,9 @@ If you've been working this way too, I'd like to hear what it changed about your
 
 ---
 
-~2,800 characters. Post it after the launch post, which its first line refers to.
+~2,950 characters – close to LinkedIn's 3,000 limit, so anything added from
+here has to trade against something already in. Post it after the launch post,
+which the third paragraph refers to.
 
 ## Corrections that shaped it – do not undo these
 
@@ -124,10 +126,13 @@ the way it does.
    - **THOMAS DID NOT MAKE THE DELETION** (his correction, on the first draft of
      this paragraph, which had him say *"I deleted something from the
      database"*). Migration 0022 dropped `meal_plans.pushed_to_list_at` on
-     recorded reasoning that was Claude's, not his. The grammar therefore
-     matches the sheets anecdote – *a change went out* – where the act is the
-     collaborator's and the miss is his. Never rewrite this as his act; it
-     would be the only first-person piece of engineering in either post.
+     recorded reasoning that was Claude's, not his. Never rewrite this as his
+     act; it would be the only first-person piece of engineering in either post.
+     **The fix is to NAME Claude, not to go passive** – see correction 10. The
+     first attempt matched the sheets anecdote's grammar (*a change went out*)
+     and that failed: the paragraph above it says *every mistake I made*, so an
+     agentless sentence still lands on Thomas, and loses the real story on the
+     way.
    - **The repair IS his**, and that is what makes it a reach beat rather than a
      confession: he ran migration 0023 himself the same day (see the decisions
      log, 2026-07-27) and it fixed every phone with no build and no Apple.
@@ -138,11 +143,15 @@ the way it does.
      turn a post for product people into a post for engineers. It also gives
      the paragraph after it ("none of it got fixed by being more careful") the
      concrete antecedent it never had.
-   - **The structural lesson must stay different from the sheets one**, which is
-     why correction 6 cut a second anecdote in the first place. The sheets teach
-     *detection* – it comes back plausible. This teaches a distinction that does
-     not exist in design work at all: the thing you are building and the thing
-     people are holding are two products, and only one is talking to the server.
+   - **It is the SAME failure mode as the sheets, escalated** – which is what
+     correction 6 missed when it cut this for running "the same shape". Deleting
+     data the app has not touched in weeks is housekeeping, and it was correct
+     for the version being built: a plausible act, not a wrong one. So the two
+     anecdotes are one idea at two blast radii – something nobody catches for a
+     week, then production down in an hour. It also carries a distinction that
+     does not exist in design work at all: the thing you are building and the
+     thing people are holding are two products, and only one is talking to the
+     server.
    **"Within the hour" is a deliberate exception to correction 3.** That rule
    bans durations because a speed claim invites the "shipped fast with AI"
    reading; this one measures blast radius, not productivity, and it is the
@@ -167,6 +176,33 @@ the way it does.
      defect that earlier drafts kept reintroducing (see below).
    The hook is 130 characters, so it clears the fold whole. Post 1 got the same
    treatment the same day and its note records it.
+10. **Claude is named as the one who deleted it, and the ownership lands in the
+    next breath** (2026-08-14, from a cold read, after Thomas corrected the
+    reader's own first note: *"the fact was that Claude deleted something and
+    the system broke"*). Three parts, and the paragraph fails if any one goes:
+    - **Name the act.** *Claude deleted something from the database.* Passive
+      was tried first and quietly reassigned it to Thomas – see correction 8.
+    - **Say why it was reasonable.** *Housekeeping, and correct for the version
+      I was building.* This is what makes it the plausible failure mode rather
+      than carelessness, and it is what links the anecdote to the opening.
+    - **THE LEVER LINE IS THE OWNERSHIP, AND IT IS NOT OPTIONAL.** *Breaking
+      everyone at once and repairing everyone at once turn out to be the same
+      lever, and it was mine to pull either way.* It was cut once for length and
+      that was wrong: naming Claude reads as blame-shifting unless ownership
+      arrives immediately, and this is the only sentence in either post that
+      says what the new reach actually feels like – not his hand on it, still
+      his lever, still his repair, still nobody else to notice.
+    Sequence to preserve: **Claude did it, he owned it, he fixed it within the
+    hour, then they rebuilt it so it cannot happen.** The first beat was missing
+    for one draft and the other three did not hold without it.
+    The territory line stopped claiming a pattern it only shows twice – *it kept
+    happening in places I'd never had my hands on* became *the release and the
+    words on the screen are the same story*. Those two still have no example;
+    that is the post's remaining soft spot and it is accepted, not overlooked.
+    **The sheets anecdote deliberately does NOT name Claude**, because *"a switch,
+    a header and a row style that were never mine"* already disowns the
+    authorship. Only the outage needs the name, because only there does the
+    reader otherwise default to Thomas.
 
 One thing is still dropped and recoverable if ever wanted: the panel, which
 costs a clause. The other casualty of that pass, *"Designer" doesn't quite
