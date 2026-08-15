@@ -54,9 +54,22 @@ If you've been working this way too, I'd like to hear what it changed about your
 
 ---
 
-~2,950 characters – close to LinkedIn's 3,000 limit, so anything added from
+~2,940 characters – close to LinkedIn's 3,000 limit, so anything added from
 here has to trade against something already in. Post it after the launch post,
 which the third paragraph refers to.
+
+⚠️ **THE PUBLISHING VERSION IS NOT THIS FILE.** It is
+`Documents/Claude/Projects/LinkedIn 2026/Post 4 - Prep+Eat the other half.md`,
+created 2026-08-14, which carries the proposed slot (Tuesday 25 August), the
+fold treatment and the checklist. This file is the reasoning: the brief, the
+corrections, what earlier drafts got wrong. Change one, change the other – the
+launch post had already diverged from its publishing copy once, and both sides
+had edited the same opening on the same day.
+
+Two things the publishing copy adds that are not in the text above: **lines 1
+and 2 run with NO blank line between them** (the series' fold trick, so both
+halves of the plausible/wrong pair clear the preview), and **taking the 25
+August slot renumbers the business-side post to #5**.
 
 ## Corrections that shaped it – do not undo these
 
@@ -160,7 +173,9 @@ the way it does.
 9. **The post opens on the plausible line now** (2026-08-14, Thomas's call,
    from the same cold read as correction 8 – both posts warmed up, and their
    two scroll-stopping sentences sat in the middle). LinkedIn truncates at
-   roughly 140 characters on mobile; the old opening spent all of it on
+   roughly 140–210 characters on mobile (this file worked to the conservative
+   140; the rest of the series uses 210, and the hook clears both); the old
+   opening spent all of it on
    housekeeping (*"Last week I wrote… this is the other half"*), so nothing a
    scroller saw gave them a reason to open it.
    - **The old fourth paragraph was PROMOTED, not written fresh.** *"That's the
