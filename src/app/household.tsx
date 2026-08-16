@@ -146,14 +146,19 @@ export default function SettingsScreen() {
               onMore={h.id === household.id ? () => setSheet("household") : null}
             />
           ))}
+          {/* Both are `text/brand` + `icon/brand` in the frames, like Invite
+              someone below: green marks a row that DOES something, against
+              rows that state a fact. */}
           <ActionRow
             icon="login"
             label="Join an existing kitchen"
+            accent
             onPress={() => setJoinOpen(true)}
           />
           <ActionRow
             icon="add-home"
             label="Create a new kitchen"
+            accent
             isLast
             onPress={() => setCreateOpen(true)}
           />
@@ -337,10 +342,12 @@ const rowBorder = (isLast: boolean) => (isLast ? "" : "border-b border-border-su
 
 /**
  * One kitchen. The active one carries a filled `surface/secondary/main`
- * indicator with a check; the others carry an EMPTY slot – the frame draws no
- * ring there (`unselected` has a radius and padding but no fill and no
- * stroke), so the gutter is deliberately blank. Flagged in the review as
- * reading like an absence rather than a state; built as drawn.
+ * indicator with a white check; the others carry a light
+ * `surface/neutral/lightest` circle, so the left gutter is never empty
+ * (Thomas, 2026-08-16, after the first build shipped the blank version).
+ *
+ * The 24px box takes `radius/large` (16), which clamps to a full circle at
+ * this size – the same value the frame uses.
  */
 function KitchenRow({
   name,
@@ -365,7 +372,7 @@ function KitchenRow({
           <View
             className={
               "h-[24px] w-[24px] items-center justify-center rounded-large " +
-              (selected ? "bg-surface-secondary-main" : "")
+              (selected ? "bg-surface-secondary-main" : "bg-surface-neutral-lightest")
             }
           >
             {selected && (

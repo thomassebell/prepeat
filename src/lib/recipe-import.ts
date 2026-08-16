@@ -248,8 +248,15 @@ export function resolveCookMinutes(
   cook: number | null,
   total: number | null,
 ): number | null {
-  if (cook != null) return cook;
-  if (total == null) return null;
+  // A published cookTime of ZERO means "not stated", not "cooks instantly".
+  // arla.dk writes `cookTime PT00M` beside `totalTime PT2H` and `prepTime
+  // PT40M`, and trusting the zero showed their lasagne as 40 minutes total –
+  // the two hours of simmering simply vanished (2026-08-16). Falling through
+  // derives 80 minutes from the total, so Total reads 2 h as the site says.
+  // A GENUINE no-cook recipe still lands on zero, one line further down:
+  // prep 5 with total 5 gives cook 0, and Total stays correct at 5.
+  if (cook != null && cook > 0) return cook;
+  if (total == null) return cook;
   if (prep != null) return Math.max(0, total - prep);
   return total;
 }
@@ -659,6 +666,17 @@ const PREP_CLAUSE_ENDINGS = new Set([
   "blødgjort", "pisket", "vasket", "renset", "udstenet", "flået",
 ]);
 
+// An adverb that only ever modified the prep word. Once "chopped" is cut from
+// "onion finely chopped", "finely" is left holding nothing and rides onto the
+// shopping list as "onion finely" (BBC Good Food, found 2026-08-16 – also
+// "garlic cloves finely" and "ball mozzarella roughly"). Stripped only from
+// the END, so "freshly grated parmesan" – where the adverb sits in front of a
+// noun and is part of what you buy – is untouched.
+const TRAILING_ADVERBS = new Set([
+  "finely", "roughly", "thinly", "coarsely", "freshly", "lightly", "well",
+  "very", "fint", "groft", "grofthakket", "fintsnittet", "let", "godt",
+]);
+
 // Same idea without the comma – "Jasmine rice for serving".
 const TRAILING_QUALIFIERS =
   /\s+(for serving|for garnish|to serve|to taste|as needed|if desired|optional|til servering|til pynt|til drys|efter smag|efter behov|efter ønske|om ønsket|valgfrit)\.?$/i;
@@ -737,13 +755,29 @@ function tidyIngredientName(raw: string): string {
   // instead, the participle is part of the product – "can crushed tomato",
   // "shredded cheese" – and cutting there would throw away what you buy.
   if (!name.includes(",")) {
-    const words = name.split(/\s+/);
+    // TRIM FIRST. Stripping "(optional)" off "basil leaves torn (optional)"
+    // leaves a trailing space, so splitting produced an empty final token –
+    // and the "is this the last word" test below compares against `undefined`,
+    // which "" is not. So "torn" read as mid-string, no cut happened, and the
+    // shopping list said "large handful basil leaves torn" (2026-08-16).
+    const words = name.trim().split(/\s+/);
     const at = words.findIndex((w, i) => {
       if (i < 1 || !PREP_CLAUSE_ENDINGS.has(w.toLowerCase())) return false;
       const next = words[i + 1]?.toLowerCase();
       return next === undefined || next === "and" || next === "og";
     });
     if (at > 0) name = words.slice(0, at).join(" ");
+  }
+
+  // Whatever the cuts above left, an adverb must not END the name. Repeated,
+  // because "finely and thinly sliced" leaves two.
+  for (let i = 0; i < 3; i++) {
+    const words = name.trim().split(/\s+/);
+    const last = words[words.length - 1]?.toLowerCase().replace(/[.,]$/, "");
+    // Never strip the only word – an ingredient called just "well" is not
+    // something we can improve by emptying it.
+    if (words.length < 2 || !last || !TRAILING_ADVERBS.has(last)) break;
+    name = words.slice(0, -1).join(" ");
   }
 
   // Dashes join the trailing punctuation strip (2026-08-04). Sites write

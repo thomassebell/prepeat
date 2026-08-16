@@ -2754,9 +2754,16 @@ says whether any of it costs anything commercially.
       4. **The email is gone from the member row.** No member row shows one,
          including your own. Retires the 08-13 rule that your row shows your
          email.
-      5. **The inactive kitchen slot is EMPTY** – `unselected` has a radius and
-         padding but no fill and no stroke, so there is no ring. Flagged in the
-         review as reading like an absence rather than a state; built as drawn.
+      5. ✅ **The inactive kitchen slot – FIXED BY THOMAS 2026-08-16.** It was
+         drawn empty (no fill, no stroke), the review flagged it as reading
+         like an absence rather than a state, and it shipped blank in the first
+         build. It is now a light `surface/neutral/lightest` circle.
+         ⚠️ **BUT `default 4` IN `Settings – default` IS THE ONE FRAME THAT
+         STILL HAS THE EMPTY VERSION.** Twelve `unselected` badges across the
+         other sections carry the circle; the two in the canonical frame do
+         not. **That frame is the one anything gets built from**, so it is
+         worth updating – otherwise the next person to read the spec rebuilds
+         the blank version. The code follows the twelve, not the two.
       6. **The active indicator changed colour** – `surface/secondary/main`
          (brown) with a white check, not the green it had been.
       7. **All non-brand icons are `icon/subtle`**, not `icon/default`.
