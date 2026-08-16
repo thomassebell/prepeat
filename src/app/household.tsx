@@ -133,7 +133,6 @@ export default function SettingsScreen() {
             <KitchenRow
               key={h.id}
               name={h.name}
-              memberCount={h.id === household.id ? members.length : null}
               selected={h.id === household.id}
               onPress={() => {
                 if (h.id !== household.id) setActiveHousehold(h.id);
@@ -203,7 +202,7 @@ export default function SettingsScreen() {
           onPress={() =>
             signOut().catch((error) => console.warn("[settings] sign out failed", error))
           }
-          className="w-full flex-row items-center justify-center gap-comp-xsmall rounded-medium border-2 border-button-outline-border-enabled py-comp-large"
+          className="w-full flex-row items-center justify-center gap-comp-xsmall rounded-medium border-2 border-button-outline-border-enabled px-comp-xlarge py-comp-large"
         >
           <MaterialIcons name="logout" size={24} color={ds.colors.button.outline.label.enabled} />
           <Text className="font-paragraph text-components-button-label font-default text-button-outline-label-enabled">
@@ -337,18 +336,19 @@ const rowFill = (pressed: boolean) =>
 const rowBorder = (isLast: boolean) => (isLast ? "" : "border-b border-border-subtle");
 
 /**
- * One kitchen. The indicator is the switcher's old checkmark, now living in
- * the list: filled green with a check when active, an empty ring otherwise.
+ * One kitchen. The active one carries a filled `surface/secondary/main`
+ * indicator with a check; the others carry an EMPTY slot – the frame draws no
+ * ring there (`unselected` has a radius and padding but no fill and no
+ * stroke), so the gutter is deliberately blank. Flagged in the review as
+ * reading like an absence rather than a state; built as drawn.
  */
 function KitchenRow({
   name,
-  memberCount,
   selected,
   onPress,
   onMore,
 }: {
   name: string;
-  memberCount: number | null;
   selected: boolean;
   onPress: () => void;
   onMore: (() => void) | null;
@@ -365,36 +365,25 @@ function KitchenRow({
           <View
             className={
               "h-[24px] w-[24px] items-center justify-center rounded-large " +
-              (selected ? "bg-surface-primary-light" : "border border-border-default")
+              (selected ? "bg-surface-secondary-main" : "")
             }
           >
             {selected && (
-              <MaterialIcons
-                name="check"
-                size={16}
-                color={ds.colors.button.solid.label.enabled}
-              />
+              <MaterialIcons name="check" size={16} color={ds.colors.text.inverse} />
             )}
           </View>
           <View className="min-w-0 flex-1">
-            {/* Card header: Montserrat Bold 16/24 on `text/subtle`, the same
-                as a recipe card's title and a meal row. Built first as IBM
-                Plex paragraph, which is not the DS style for a card header
-                (Thomas, 2026-08-13). */}
+            {/* Row label: IBM Plex Regular 16/24 on `text/default`. The 08-13
+                design had this as a Montserrat card header on `text/subtle`;
+                the 08-16 redesign makes every row label body text, which is
+                what makes the list read as a list. It contradicts the header
+                rule's "card header" line – see the backlog. */}
             <Text
               numberOfLines={1}
-              className="font-header text-display-6 font-emphasized leading-xsmall text-text-subtle"
+              className="font-paragraph text-paragraph font-default leading-xsmall text-text-default"
             >
               {name}
             </Text>
-            {memberCount !== null && (
-              <View className="flex-row items-center gap-comp-small">
-                <MaterialIcons name="people-alt" size={16} color={ds.colors.icon.default} />
-                <Text className="font-paragraph text-small font-default leading-xxsmall text-text-default">
-                  {memberCount === 1 ? "1 person" : `${memberCount} people`}
-                </Text>
-              </View>
-            )}
           </View>
           {onMore && (
             <Pressable
@@ -403,7 +392,7 @@ function KitchenRow({
               hitSlop={8}
               onPress={onMore}
             >
-              <MaterialIcons name="more-vert" size={24} color={ds.colors.icon.default} />
+              <MaterialIcons name="more-vert" size={24} color={ds.colors.icon.subtle} />
             </Pressable>
           )}
         </View>
@@ -439,7 +428,7 @@ function ActionRow({
           <MaterialIcons
             name={icon}
             size={24}
-            color={accent ? ds.colors.icon.brand : ds.colors.icon.default}
+            color={accent ? ds.colors.icon.brand : ds.colors.icon.subtle}
           />
           <Text
             className={
@@ -450,7 +439,7 @@ function ActionRow({
             {label}
           </Text>
           {trailing && (
-            <MaterialIcons name={trailing} size={24} color={ds.colors.icon.default} />
+            <MaterialIcons name={trailing} size={24} color={ds.colors.icon.subtle} />
           )}
         </View>
       )}
@@ -459,10 +448,19 @@ function ActionRow({
 }
 
 /**
- * A member row. The phone owner's avatar is outlined, everyone else's is
- * solid (avatar rule, Thomas 2026-07-18) – and only your own row carries the
- * email and the overflow control, because you can only edit yourself and an
- * affordance on someone else's row would promise otherwise.
+ * A member row: a 64px row (the only fixed height on the screen – every other
+ * row is padding-driven at 56), an avatar, a name, and the overflow control on
+ * your own row only, because you can only edit yourself.
+ *
+ * ⚠️ THE AVATAR RULE IS INVERTED FROM 2026-07-18. That rule was "the phone
+ * owner's avatar is outlined, everyone else's is solid". The 08-16 frames draw
+ * the opposite: YOUR avatar is solid `surface/secondary/main`, everyone else's
+ * is `surface/neutral/light`. Built as drawn and flagged in the backlog – it
+ * now reads as "you are the emphasised one", which is consistent with your row
+ * sorting to the top, so it may well be deliberate.
+ *
+ * The email line is gone: the frames give every member row a single label, and
+ * no email node is visible on any of them.
  */
 function MemberRow({
   member,
@@ -475,43 +473,29 @@ function MemberRow({
 }) {
   const initial = (member.firstName ?? member.email ?? "?").charAt(0).toUpperCase();
   return (
-    <View className={`${rowBase} bg-surface-neutral-white ${rowBorder(false)}`}>
+    <View className={`${rowBase} h-[64px] bg-surface-neutral-white ${rowBorder(false)}`}>
       <View
         className={
-          "h-[24px] w-[24px] items-center justify-center rounded-large " +
-          (isMe
-            ? "border border-border-strong bg-surface-neutral-lighter"
-            : "bg-surface-secondary-main")
+          "h-[24px] w-[24px] items-center justify-center rounded-xlarge " +
+          (isMe ? "bg-surface-secondary-main" : "bg-surface-neutral-light")
         }
       >
         <Text
           className={
             "font-header text-display-6 font-emphasized leading-xsmall " +
-            (isMe ? "text-text-subtle" : "text-text-inverse")
+            (isMe ? "text-text-inverse" : "text-text-default")
           }
         >
           {initial}
         </Text>
       </View>
       <View className="min-w-0 flex-1">
-        {/* Card header, same as the kitchen row above. */}
         <Text
           numberOfLines={1}
-          className="font-header text-display-6 font-emphasized leading-xsmall text-text-subtle"
+          className="font-paragraph text-paragraph font-default leading-xsmall text-text-default"
         >
           {member.firstName ?? "…"}
         </Text>
-        {isMe && member.email && (
-          <View className="flex-row items-center gap-comp-small">
-            <MaterialIcons name="mail" size={16} color={ds.colors.icon.default} />
-            <Text
-              numberOfLines={1}
-              className="min-w-0 flex-1 font-paragraph text-small font-default leading-xxsmall text-text-default"
-            >
-              {member.email}
-            </Text>
-          </View>
-        )}
       </View>
       {isMe && (
         <Pressable
@@ -520,7 +504,7 @@ function MemberRow({
           hitSlop={8}
           onPress={onEdit}
         >
-          <MaterialIcons name="more-vert" size={24} color={ds.colors.icon.default} />
+          <MaterialIcons name="more-vert" size={24} color={ds.colors.icon.subtle} />
         </Pressable>
       )}
     </View>

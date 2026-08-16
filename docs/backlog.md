@@ -112,7 +112,7 @@ Everything else in this file is Claude's to get on with.
   <sub>Next – v1.1</sub>
 - **⭐ Share a recipe with someone – FIRST ITEM IN v1.1** – how much of a recipe a stranger sees before installing.
   <sub>Next – v1.1</sub>
-- `2.27` **Rename the Kitchen tab to Settings, and nest the kitchen inside it** – **A REDESIGN OF THE WHOLE SCREEN**, which he has taken on himself (2026-08-16): *"this whole page is messy design vise – I have to fix it and make it simpler."* Claude builds nothing on this screen until there are frames.
+- `2.27` **Rename the Kitchen tab to Settings, and nest the kitchen inside it** – a verdict on the SEVEN deviations listed below, each of which is the new design disagreeing with something already written down. Nothing is blocked on him; they are built as drawn.
   <sub>Next – v1.1</sub>
 - `2.10` **⭐ Show IN THE APP that a meal can go on the plan without a recipe** – a frame for a line on the EMPTY PLAN saying a meal need not be a recipe. That is the half that reaches someone still deciding whether the app is for them, and no frame draws it.
   <sub>Next – v1.1</sub>
@@ -2685,13 +2685,51 @@ says whether any of it costs anything commercially.
       what a household WAS. Nobody failed to decode kitchen. The residual is
       cost, not failure.
 - [ ] `2.27` **Rename the Kitchen tab to Settings, and nest the kitchen inside it**
-      Needs: Thomas – **A REDESIGN OF THE WHOLE SCREEN**, which he has taken
-           on himself (2026-08-16): *"this whole page is messy design vise – I
-           have to fix it and make it simpler."* Claude builds nothing on this
-           screen until there are frames.
-      Status: **BUILT, ON THE PHONE, AND NOW GOING BACK TO DESIGN.** The
-           implementation works – both invite states confirmed on the phone
-           2026-08-16 – it is the composition that is wrong.
+      Needs: Thomas – a verdict on the SEVEN deviations listed below, each of
+           which is the new design disagreeing with something already written
+           down. Nothing is blocked on him; they are built as drawn.
+      Status: **REDESIGNED BY THOMAS AND REBUILT 2026-08-16.** Implemented
+           from `Settings – default` / `default 3` + `default 4`, specs read
+           off the file (bound variables and geometry), NOT from screenshots.
+
+      ⚠️ **SEVEN PLACES THE NEW DESIGN OVERRULES SOMETHING PREVIOUSLY AGREED.**
+      All built as drawn – listed because each one silently retires an earlier
+      decision, and a rule nobody knows was retired comes back as a "bug".
+      1. **Row labels are BODY TEXT now** – IBM Plex Regular 16 on
+         `text/default`, where the header rule says a card header (kitchen
+         name, member name) is Montserrat Bold on `text/subtle`. Applied to
+         every row on the screen, so it reads as deliberate: it is what makes
+         the list read as a list rather than a stack of cards. **The header
+         rule's "card header" line is now wrong for this screen** – either the
+         rule needs a carve-out or the frames do.
+      2. **The avatar rule is INVERTED.** 2026-07-18: "the phone owner's
+         avatar is outlined, everyone else's is solid." The frames draw YOUR
+         avatar solid `surface/secondary/main` and everyone else's
+         `surface/neutral/light`. Consistent with your row sorting to the top,
+         so probably intended.
+      3. **The member count is gone from the kitchen row** – no "2 people"
+         line, no `people-alt` icon. The row is now indicator + name + `⋮`.
+      4. **The email is gone from the member row.** No member row shows one,
+         including your own. Retires the 08-13 rule that your row shows your
+         email.
+      5. **The inactive kitchen slot is EMPTY** – `unselected` has a radius and
+         padding but no fill and no stroke, so there is no ring. Flagged in the
+         review as reading like an absence rather than a state; built as drawn.
+      6. **The active indicator changed colour** – `surface/secondary/main`
+         (brown) with a white check, not the green it had been.
+      7. **All non-brand icons are `icon/subtle`**, not `icon/default`.
+
+      ⚠️ **ONE THING COULD NOT BE BUILT FROM A TOKEN, AND IT IS THE DS'S
+      FAULT.** The check glyph binds to `icon/default`, which Figma resolves to
+      **#FFFFFF** and `ds-theme.cjs` resolves to **#4F4230**. The sync was
+      re-run 2026-08-16 and no colour moved, so this is not a stale bridge – the
+      library and the token repo genuinely disagree. Binding the code to
+      `icon.default` would have painted a dark check on a dark brown badge, so
+      it uses **`text.inverse`** instead, which has the value the frame shows.
+      **Settle `icon/default` in the DS and come back to this line.**
+
+      *Not reproduced:* the white stroke on `emptyStateBanner`. White on a
+      white banner draws nothing, and it is almost certainly a leftover.
 
       ⚠️ **THE REDESIGN SUPERSEDES FOUR OPEN DRAWING TASKS, so do not draw
       them separately.** The `⋮` menu, the Edit kitchen sheet's delete state,

@@ -111,6 +111,12 @@ neither outranks the MINOR already set by leftovers and ingredient sections.
   the order they joined. It used to be join order alone, so if somebody else
   set the kitchen up, you found yourself somewhere down the list.
 
+- **Settings is simpler to read.** The screen was carrying more weight than it
+  needed: kitchen and member names were set like headings, kitchens showed a
+  member count, and your own row showed your email address. Names are now plain
+  text, the extra lines are gone, and the rows are all one shape – so the eye
+  goes down the list instead of stopping on every row.
+
 ### Dev builds, 2026-08-13
 
 - **The Kitchen tab is now Settings, and it holds more.** Plan, Recipes and
