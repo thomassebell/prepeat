@@ -733,6 +733,40 @@ Committed work for the first update after launch. Panel findings default here un
 
 ### Known bugs (open)
 
+- [x] **YOUR OWN ROW SAT SECOND IN People. Found by Thomas on the phone
+      2026-08-16, fixed the same hour.** *"the people section is not sorted
+      correct. It should always show the owner as the top one."*
+      Fixed in [household.ts:93](../src/lib/household.ts:93): you first, then
+      everyone else oldest-joined first.
+      **THE CAUSE WAS A COMMENT THAT ASSERTED SOMETHING IT COULD NOT KNOW.**
+      The query ordered on `joined_at` alone, under the comment *"oldest
+      joiner first – the creator naturally tops the list"*. That is an
+      ASSUMPTION about the data wearing the clothes of a rule, and it is false
+      whenever the person reading the screen is not the person who created the
+      kitchen – which is every second member of every shared kitchen, i.e. the
+      normal case the app is FOR. It read as correct for as long as the only
+      kitchens anyone looked at were ones they had made themselves.
+      **WHY NOT "THE OWNER", WHICH IS WHAT WAS ASKED FOR.** Put to Thomas
+      2026-08-16 with the trade-off, and he chose "you, always". There is no
+      owner in the product: any member can rename, invite and leave, no roles
+      ([household.ts:121](../src/lib/household.ts:121)). And
+      `households.created_by_user_id` has been nullable since migration 0016
+      so accounts can be deleted – so sorting by creator puts a row at the top
+      that can cease to exist while the kitchen lives on, and grants a rank
+      nothing else in the app honours. "You" is always defined.
+      Implemented as a stable PARTITION, not a re-sort, so the `joined_at`
+      order underneath survives and a null user id degrades to the old order
+      rather than throwing.
+      ⚠️ **NOT IN BUILD 19** – that was built an hour earlier. Rebuild before
+      submitting, or this ships wrong.
+      LESSON, and it is the same one as the section bug above: **this screen
+      had been specced from Figma, built, typechecked, linted and looked at,
+      and the wrong row was top the entire time.** No check that does not
+      involve a real account in a real kitchen could have caught it, because
+      with one member the bug is invisible and with a kitchen you created it
+      is invisible too. **Add "look at it as the person who did NOT create the
+      thing" to the walk list for anything listing people.**
+
 - [x] **EDITING A SECTION SILENTLY TURNED IT INTO AN INGREDIENT. Found by
       Thomas on device 2026-08-07, fixed the same hour.** *"there is a bug in
       edit section. when you edit the section it becomes a ingredient."*
@@ -2658,11 +2692,14 @@ says whether any of it costs anything commercially.
             2026-08-16 while reading the backlog to plan the release. Exactly
             the "closing is a separate job from doing" failure at the top of
             this file.
-            ⚠️ **STILL UNRECORDED: whether BOTH states were seen** – alone in a
-            kitchen, and one with several members. The banner-vs-green-row rule
-            is the whole point of the People group, and only one of its two
-            sides can have been on screen. Worth two minutes with the phone
-            before build 19 is submitted.
+            ✅ **BOTH STATES CONFIRMED 2026-08-16 by Thomas on the phone** –
+            the banner alone in a kitchen, and the green row in a two-person
+            one (screenshot: `TestKitchen`, 2 people, green "Invite someone").
+            So the invite rule is verified end to end.
+            **AND THE SAME SCREENSHOT FOUND A BUG** – see the People ordering
+            item under Known bugs. Which is the argument for the phone: the
+            screen had been read in Figma, built, typechecked and looked at,
+            and the wrong row was top the whole time.
       - [ ] **Two improvisations, flagged rather than hidden:**
             **1. The `⋮` renders on the ACTIVE kitchen only**, though the frame
             draws it on every row – because the menu behind it is not designed

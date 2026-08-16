@@ -87,12 +87,25 @@ export async function fetchMyHousehold(): Promise<Household | null> {
 }
 
 /**
- * The member directory: memberships plus each member's profile (0010),
- * oldest joiner first – the creator naturally tops the list.
+ * The member directory: memberships plus each member's profile (0010).
+ *
+ * ORDER: YOU FIRST, then everyone else oldest-joined first (Thomas,
+ * 2026-08-16, after seeing his own row sit second on the phone).
+ *
+ * It used to be joined_at alone, on the comment "the creator naturally tops
+ * the list" – an ASSUMPTION, not a rule, and the screenshot disproved it.
+ * Sorting by creator was considered and rejected: the app grants no roles (any
+ * member can rename, invite and leave), and `households.created_by_user_id`
+ * has been nullable since 0016 so accounts can be deleted – so "the owner" is
+ * a row that can cease to exist while the kitchen lives on. "You" is the one
+ * answer that is always defined, and it is already the distinguishable row,
+ * being the only one that shows an email and a ⋮.
  */
 export async function fetchHouseholdMembers(
   householdId: string,
 ): Promise<HouseholdMember[]> {
+  const { data: sessionData } = await supabase.auth.getSession();
+  const myUserId = sessionData.session?.user?.id ?? null;
   const { data: memberships, error } = await supabase
     .from('household_members')
     .select('user_id, joined_at')
@@ -110,12 +123,19 @@ export async function fetchHouseholdMembers(
     );
   if (profileError) throw profileError;
   const byId = new Map((profiles ?? []).map((p) => [p.user_id, p]));
-  return rows.map((row) => ({
+  const members = rows.map((row) => ({
     userId: row.user_id,
     firstName: byId.get(row.user_id)?.first_name ?? null,
     email: byId.get(row.user_id)?.email ?? null,
     joinedAt: Date.parse(row.joined_at),
   }));
+  // Lift my own row to the top. A stable partition rather than a sort, so the
+  // joined_at order the query already applied survives underneath it – and so
+  // a signed-out caller (myUserId null) simply gets that order unchanged.
+  return [
+    ...members.filter((m) => m.userId === myUserId),
+    ...members.filter((m) => m.userId !== myUserId),
+  ];
 }
 
 /** Rename the household (any member may, no roles). */

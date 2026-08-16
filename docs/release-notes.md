@@ -60,16 +60,22 @@ Two more rules this file exists to keep straight:
 More goes in before this ships, so this section grows. On the dev build only:
 not on TestFlight, not in review, and it needs a build to reach anyone.
 
-> **⏸ BUILD 18 EXISTS AND IS PARKED** (2026-08-11). Built on EAS, signed, and
-> deliberately NOT submitted – `./scripts/eas-submit-ios.sh` ships it with no
-> rebuild. Held at Thomas's call until the Kitchen→Settings tab (panel finding
-> 2.27) is in, so the family gets one update instead of seeing "Kitchen" this
-> week and "Settings" the next. It carries everything below.
-> Build: https://expo.dev/accounts/sebell/projects/prepeat/builds/0d78f007-d584-4288-a35a-b221fa1925ea
-> **If more changes land before Settings does, rebuild rather than shipping
-> this one** – it is a snapshot of 2026-08-11, not a moving target.
-> ⚠️ **THAT HAS NOW HAPPENED: the Settings tab landed in code 2026-08-13, so
-> build 18 IS STALE and must be rebuilt, not submitted.**
+> **☠️ BUILD 18 IS DEAD. SUPERSEDED BY BUILD 19** (2026-08-16). It was parked
+> on 2026-08-11 waiting for the Kitchen→Settings tab, that tab landed in code
+> on 08-13, and a build that predates what it was waiting for can never ship.
+> Do not submit it; the entry is kept only so nobody rediscovers it and
+> wonders.
+>
+> **⏸ BUILD 19 – 1.1.0, built 2026-08-16, NOT SUBMITTED.** The version is
+> bumped in `app.json` for the first time, because App Store Connect binds a
+> release to the version string inside the build: a build carrying 1.0.0
+> cannot be released as 1.1.0, which is the other half of why 18 was scrap.
+> Build: https://expo.dev/accounts/sebell/projects/prepeat/builds/576397ca-c1a3-4b39-b584-a700f1e1dbc6
+> ⚠️ **ALREADY ONE FIX BEHIND: the People ordering fix (below) landed an hour
+> after it was built.** Rebuild before submitting. **This is the third time
+> this file has recorded a parked build going stale** – the pattern is that a
+> build is only ever a snapshot, so the rule is: build when you are ready to
+> submit, not before.
 
 **This will be 1.1.0** under the rule above – a new capability (moving
 leftovers between weeks, and now ingredient sections) alongside the fixes, and
@@ -80,6 +86,13 @@ released first either way.
 **Version re-checked 2026-08-10 against the rule above: still 1.1.0.** Today is
 copy and polish plus one small capability (forms now say what is missing), and
 neither outranks the MINOR already set by leftovers and ingredient sections.
+
+### Dev builds, 2026-08-16
+
+- **You are the first person listed in your kitchen.** Under **People** in
+  Settings, your own row now sits at the top, with everyone else underneath in
+  the order they joined. It used to be join order alone, so if somebody else
+  set the kitchen up, you found yourself somewhere down the list.
 
 ### Dev builds, 2026-08-13
 
