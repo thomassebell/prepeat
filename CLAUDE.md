@@ -76,6 +76,32 @@ Eat. Repeat." The old working name "Madapp" may linger in docs/projektgrundlag.
   gotcha as the backup job. A failed push prints a warning and logs to
   `.git/autopush.log`; silence means it worked.
 
+## Two sessions, one folder (2026-08-16)
+
+Thomas runs more than one Claude session against this repo at a time, and they
+share ONE working tree. So the files another session is halfway through editing
+are sitting in your `git status` right now, indistinguishable from your own.
+
+⚠️ **NEVER `git add -A`, `git add .`, or `git commit -a`. Stage the paths you
+actually touched, by name.** On 2026-08-16 a Settings-redesign commit swept up
+three half-written recipe-import fixes from a parallel session: nothing was
+lost, but the fixes are now inside a commit whose message says only "Settings",
+so they cannot be found by reading the log. The reverse is just as easy –
+committing someone's broken half-edit under YOUR message, and it builds and
+ships that way.
+
+Two more consequences worth knowing:
+
+- **A device build carries whatever else is in the tree.** `build-iphone.sh`
+  builds the working tree, not your commits, so the app on Thomas's phone
+  includes the other session's work in progress. Say so when handing him a
+  build during parallel work – otherwise a half-done screen reads as a bug.
+- **Don't switch branches to isolate yourself.** One working tree means a
+  checkout moves the files under the other session's feet. Real isolation is a
+  second FOLDER (`git worktree add`), not a second branch – and that costs its
+  own `node_modules` (1.1 GB), its own pods, a copy of `.env`, and it loses the
+  auto-push hook, which is main-only by design.
+
 **These commands are yours to run, not Thomas's** (agreed 2026-08-04 – he is
 not a developer and should not have to remember them). Standing rules:
 1. **`npm run backup` before applying anything destructive** to the live
