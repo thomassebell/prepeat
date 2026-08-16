@@ -281,12 +281,21 @@ const PROPERTY_MAX_CHARS = 600;
 function extractMicrodataRecipe(
   html: string,
 ): Omit<ImportedRecipe, "sourceUrl"> | null {
-  // Scope to the Recipe item so page-level itemprops (site name etc.) and
-  // inline scripts that merely mention the attribute don't pollute the
-  // extraction (both happened on valdemarsro.dk).
+  // Scope to the Recipe item so page-level itemprops (site name etc.) don't
+  // pollute the extraction (happened on valdemarsro.dk).
   const scopeMatch = html.match(/itemtype="[^"]*schema\.org\/Recipe"/i);
   if (!scopeMatch || scopeMatch.index == null) return null;
-  const scope = html.slice(scopeMatch.index);
+  // Empty out inline <script>/<style> bodies. Scoping to the Recipe item was
+  // supposed to keep code that merely MENTIONS the attribute out, but on
+  // valdemarsro.dk that code sits INSIDE the recipe: a jQuery selector
+  // `li[itemprop="recipeIngredient"]` and a CSS rule using the same attribute
+  // both imported as ingredients, so every recipe from there arrived with two
+  // junk rows ("div[itemprop=…] > p.can-hover" and "×"). The tags themselves
+  // stay, because the instruction scan uses `<script` as a stop boundary.
+  const scope = html
+    .slice(scopeMatch.index)
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "<script></script>")
+    .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, "<style></style>");
 
   const ingredients = matchAllTexts(scope, "recipeIngredient").map(
     splitIngredient,

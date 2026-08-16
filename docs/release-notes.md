@@ -100,6 +100,12 @@ neither outranks the MINOR already set by leftovers and ingredient sections.
 
 ### Dev builds, 2026-08-16
 
+- **Importing a recipe from a link brings more of it across.** Some sites
+  hid their ingredients behind a link or wrote their method in a way the
+  import didn't recognise, so recipes arrived with amounts but no
+  ingredients, or with no method at all. Steps the site had already numbered
+  no longer come in numbered twice.
+
 - **You are the first person listed in your kitchen.** Under **People** in
   Settings, your own row now sits at the top, with everyone else underneath in
   the order they joined. It used to be join order alone, so if somebody else

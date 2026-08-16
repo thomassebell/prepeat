@@ -733,6 +733,43 @@ Committed work for the first update after launch. Panel findings default here un
 
 ### Known bugs (open)
 
+- [x] **IMPORT FROM mkuniverset.dk LOST EVERY INGREDIENT NAME AND EVERY STEP.
+      Reported by Thomas 2026-08-16, fixed the same day.** The recipe imported
+      as "240 g kogte", "4 stk", "400 g" – amounts with no food attached – and
+      with no method at all.
+      Fixed in [recipe-import.ts](../src/lib/recipe-import.ts). Three separate
+      causes, all in the MICRODATA path (the site publishes no Recipe in its
+      JSON-LD, so the fallback path is the only one that runs):
+      1. **The ingredient text was cut at the first inner tag.** The extractor
+         captured up to the next `<`, and this site links each ingredient to
+         its own page – `240 g kogte <a>butterbeans</a>, dåse` – so the `<a>`
+         ended the capture and took the food with it. It now reads to the end
+         of the element instead, treating only BLOCK tags as the boundary and
+         walking inline ones (`<a>`, `<strong>`, `<i>`) through.
+      2. **`itemprop` holds a LIST, not one name.** The method is marked
+         `itemprop="recipeInstructions description"`, and every regex here
+         matched the attribute value exactly, so it matched nothing and the
+         steps came back empty. Matched as a token among the list now.
+      3. **The site numbers its own steps** ("1. Kom butterbeans…") and the
+         recipe screen numbers them again, so each step read "1  1. Kom…".
+         Stripped, but only when the whole list is numbered 1, 2, 3… in order,
+         so a step that merely opens with a figure survives.
+      **A FOURTH, FOUND WHILE REGRESSION-TESTING, ON valdemarsro.dk:** every
+      import from there carried two junk rows – `div[itemprop="…"] >
+      p.can-hover` and `×` – because the site's own inline `<script>` and
+      `<style>` mention `itemprop="recipeIngredient"` in a selector, INSIDE the
+      recipe element, where scoping to the Recipe item could not exclude them.
+      Script and style bodies are emptied before extraction now.
+      **WHY IT WAS NEVER CAUGHT:** the microdata path was written for
+      valdemarsro.dk and tested there, and valdemarsro writes plain
+      single-token `itemprop`s with no links inside its ingredients. Every
+      assumption that broke here is one that site happens to satisfy.
+      Regression-checked against valdemarsro, RecipeTin, BBC Good Food and
+      Love & Lemons: all four byte-identical afterwards apart from the two
+      junk rows disappearing.
+      ⚠️ **NEEDS A BUILD** – import runs on the phone, so nothing changes for
+      Thomas until the next dev build.
+
 - [x] **YOUR OWN ROW SAT SECOND IN People. Found by Thomas on the phone
       2026-08-16, fixed the same hour.** *"the people section is not sorted
       correct. It should always show the owner as the top one."*
