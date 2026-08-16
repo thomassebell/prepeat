@@ -733,6 +733,48 @@ Committed work for the first update after launch. Panel findings default here un
 
 ### Known bugs (open)
 
+- [ ] **Tidy four small import defects found by sweeping ten sites**
+      Found 2026-08-16, sweeping the importer across ten sites after the
+      mkuniverset fix. None of them lose data – each is a row that reads wrong
+      in the aisle – and all four predate that fix. Grouped because they are
+      one afternoon's work in one file,
+      [recipe-import.ts](../src/lib/recipe-import.ts).
+      1. **A trailing adverb survives the prep cut.** BBC writes "1 onion
+         finely chopped" without a comma; the cut takes "chopped" and leaves
+         **"onion finely"**. Same for "garlic cloves finely" and "ball
+         mozzarella roughly". Fix: after cutting, drop a trailing
+         finely/roughly/thinly/coarsely/freshly/lightly.
+      2. **A trailing SPACE defeats the same cut.** "large handful basil leaves
+         torn (optional)" – stripping "(optional)" leaves a trailing space, so
+         `split(/\s+/)` yields an empty last token, the "is this the last word"
+         test sees `""` instead of `undefined`, and **"torn" stays**. One-line
+         fix: trim before splitting.
+      3. **"2 x 400g cans chopped tomatoes"** imports as quantity 2, name
+         **"x 400g cans chopped tomatoes"**. The multiplier form is not
+         recognised.
+      4. **A cookTime of literally zero is trusted.** Arla publishes
+         `cookTime PT00M` with `totalTime PT2H` and `prepTime PT40M`, so the
+         recipe shows **40 min total instead of 2 hours** – the simmering is
+         invisible. Fix: treat a zero cookTime as "not stated" and derive from
+         the total, which is what `resolveCookMinutes` already does when
+         cookTime is absent.
+
+- [ ] **Say so when an imported recipe has no method**
+      Found 2026-08-16. smittenkitchen.com marks up its INGREDIENTS but not its
+      instructions – there is no `recipeInstructions` anywhere on the page – so
+      the import succeeds, fills the form, and leaves the steps empty with no
+      explanation. Nothing is broken and nothing can be parsed; the gap is that
+      the sheet does not SAY it, so it reads as the import silently dropping
+      the method. The near-miss it resembles is the "silent failure" already
+      guarded against for empty ingredients
+      ([recipe-import.ts:130](../src/lib/recipe-import.ts:130)) – ingredients
+      bail out, steps do not.
+      **NOT the same as bailing out.** A recipe with ingredients and no steps
+      is still worth importing; it just needs a line in the sheet along the
+      lines of "this page doesn't publish its method – you'll need to add the
+      steps yourself". Needs a wording decision from Thomas, and Figma has no
+      state drawn for it.
+
 - [x] **IMPORT FROM mkuniverset.dk LOST EVERY INGREDIENT NAME AND EVERY STEP.
       Reported by Thomas 2026-08-16, fixed the same day.** The recipe imported
       as "240 g kogte", "4 stk", "400 g" – amounts with no food attached – and
