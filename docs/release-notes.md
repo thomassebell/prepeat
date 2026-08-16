@@ -128,6 +128,17 @@ neither outranks the MINOR already set by leftovers and ingredient sections.
   text, the extra lines are gone, and the rows are all one shape – so the eye
   goes down the list instead of stopping on every row.
 
+- **Changing kitchen leaves you where you were.** Switching from Settings sent
+  you off to another tab – to Plan usually, and all the way to Recipes if the
+  kitchen you picked had none yet. You now stay on the screen you were on, and
+  the kitchen underneath it is the new one.
+
+- **Deleting or leaving a kitchen finishes properly.** Both confirmations sat
+  there turning after you tapped the button, with no way to tell whether
+  anything had happened. The work itself had already gone through – it was the
+  panel on top that never closed. It now closes and puts you in your other
+  kitchen.
+
 ### Dev builds, 2026-08-13
 
 - **The Kitchen tab is now Settings, and it holds more.** Plan, Recipes and
