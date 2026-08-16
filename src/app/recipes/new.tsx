@@ -29,6 +29,7 @@ import { ReorderSheet } from "@/components/ui/reorder-sheet";
 // It stays in use on the shopping list, the plan and the recipe DETAIL screen,
 // where a row tap already means something else (ticking an ingredient off).
 import { SwipeActions } from "@/components/recipes/swipe-actions";
+import { AlertBanner } from "@/components/ui/alert-banner";
 import { Input } from "@/components/ui/input";
 import { ds } from "@/constants/ds";
 import { Spacing, tabBarClearance } from "@/constants/theme";
@@ -532,17 +533,15 @@ export default function AddRecipeScreen() {
               )}
             </View>
             <View className="w-full gap-layout-small overflow-hidden rounded-large bg-surface-neutral-white p-layout-small">
-              {/* IMPROVISED – no frame exists for this state, see backlog.
-                  Shaped like the import sheet's existing error box, but on
-                  info/* rather than error/*: nothing went wrong, the page
-                  simply has no method to give. */}
+              {/* The DS alert banner, warning (Thomas, 2026-08-16 – he has one
+                  and asked for it used, over the box improvised here first).
+                  The title wording is still mine and unreviewed. */}
               {importHadNoSteps && steps.length === 0 && (
-                <View className="w-full rounded-medium bg-info-lightest px-comp-large py-comp-small">
-                  <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-default">
-                    This page didn’t share any instructions – you’ll need to add
-                    them yourself.
-                  </Text>
-                </View>
+                <AlertBanner
+                  status="warning"
+                  title="No instructions found"
+                  message="This page didn’t share any instructions – you’ll need to add them yourself."
+                />
               )}
               {steps.length > 0 && (
                 <View style={{ marginHorizontal: -16, marginTop: -16 }}>

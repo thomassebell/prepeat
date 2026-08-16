@@ -822,42 +822,79 @@ Committed work for the first update after launch. Panel findings default here un
       rather than left to read as design:
       1. **The wording is Claude's.** Never reviewed, and it is the whole
          feature – the whole point is that the sentence explains the gap.
-      2. **The container is Claude's.** No notice/banner/callout component
-         exists in the DS (searched 2026-08-16) and no frame is drawn for this
-         state, so it reuses the shape the import sheet already improvises for
-         its error box – `rounded-medium` + `px-comp-large py-comp-small` – on
-         `bg-info-lightest` rather than `bg-error-lightest`. **The tone change
-         is the deliberate part:** nothing went wrong, so a red box would say
-         something false. `info/*` is a real DS family with a full ramp, so
-         only the SHAPE is invented, not the colour.
+      2. ~~**The container is Claude's.** No notice/banner/callout component
+         exists in the DS.~~ **WRONG, AND CORRECTED THE SAME DAY** – the DS has
+         an `alert banner`, Claude searched for the wrong four words and wrote
+         the absence down as fact. The box was replaced by the real component;
+         see the alert banner entry above. Left struck through rather than
+         deleted, because the mistake was writing an unverified absence into a
+         doc, and deleting it hides that.
       The import sheet itself has never had a frame either
       ([import-recipe-sheet.tsx:12](../src/components/recipes/import-recipe-sheet.tsx:12)),
       so this is the second improvisation in one flow – worth a design pass on
       the whole import path rather than one more patch.
 
-- [ ] **Design an inline NOTICE component – there are two hand-rolled ones now**
-      Asked by Thomas 2026-08-16 – *"what component did you use"* – and the
-      answer was: none. The no-method line is a raw `View` + `Text` inlined at
-      [new.tsx:540](../src/app/recipes/new.tsx:540), copied from the import
-      sheet's error box at
-      [import-recipe-sheet.tsx:64](../src/components/recipes/import-recipe-sheet.tsx:64).
-      Same geometry (`rounded-medium`, `px-comp-large py-comp-small`, same type
-      classes), different background token, no shared definition.
-      **THIS EXACT CYCLE HAS ALREADY RUN ONCE HERE.** `LoadError`'s own
-      docstring says it "replaces the two hand-rolled versions improvised in
-      July and blessed as-is on 2026-07-25"
-      ([load-error.tsx:20](../src/components/ui/load-error.tsx:20)) – two
-      copies, then a designed component to replace them. We are back at step
-      one, with two copies again.
-      **DON'T let Claude extract it unprompted.** Pulling the invented shape
-      into `src/components/ui/notice.tsx` would make it look official without
-      anyone having designed it – a third improvisation wearing a component's
-      clothes. The DS has the TOKENS for every tone already
-      (`error/lightest`, `warning/lightest`, `info/lightest`,
-      `success/lightest`, each with a full ramp) and no component to spend them
-      on, so the missing piece is a frame, not code.
-      Wants: one notice block, tone as a variant, and a decision on whether it
-      carries an icon.
+- [x] **BUILT THE DS ALERT BANNER – AND THE "NO NOTICE COMPONENT EXISTS"
+      CLAIM ABOVE IT WAS WRONG.** Thomas, 2026-08-16: *"There is an alert
+      component that could be used."* There is –
+      **`alert banner`, Figma node `42:78`, page `alert`** in the DS file,
+      a component set of `variant` (solid/outlined) × `status`
+      (Error/warning/success/info), with boolean properties for `icon`,
+      `title`, `message` and `close`.
+      **HOW CLAUDE MISSED IT:** searched `search_design_system` for "inline
+      notice banner callout message", got nothing, and reported the absence as
+      fact. One query, one vocabulary, treated as a survey. The DS calls it an
+      *alert*, which was not among the four words tried. **A single failed
+      search is not evidence a component is missing** – say what was searched,
+      or search the obvious synonym before writing "none exists" into a doc
+      that someone will later trust.
+      Now built as
+      [alert-banner.tsx](../src/components/ui/alert-banner.tsx) and used for
+      the no-method notice, replacing the hand-rolled box.
+      **VALUES CAME FROM THE BINDINGS, NOT THE CANVAS**, and this component is
+      the clearest case yet for why. The DS file's alert page resolves in the
+      SEBELL brand: warning fill reads `#c6bb9f`, radius `0`, fonts Noto Serif
+      / Noto Sans. Prep+Eat aliases the same token names to `#F6CB4C`, `12px`,
+      Montserrat / IBM Plex. Copying what the canvas showed would have shipped
+      another brand's component. This is NOT a missed token sync – same names,
+      different brand mode, which is the system working.
+
+- [ ] **Export the `icon/*` and `text/contrast-text` tokens the alert banner
+      needs** – two of its eight variants and its close button cannot be built
+      without them.
+      Found 2026-08-16 while building
+      [alert-banner.tsx](../src/components/ui/alert-banner.tsx). `ds-theme.cjs`
+      exports icon `default/subtle/brand/accent/disabled`; the alert binds
+      `color/icon/primary`, `icon/contrast`, `icon/light` and `icon/lighter`
+      for its close button, and `color/text/contrast-text` for the error
+      message. None are in the bridge.
+      Blocked by this, and deliberately left unbuilt rather than approximated
+      with a neighbouring token (CLAUDE.md rule 1):
+      - the **close button**, on every variant
+      - **solid + error** (message binds `color/text/contrast-text`)
+      - **outlined + warning** (icon binds `color/icon/primary`)
+      The other six variants are complete. Fix is in the DS repo: add the
+      groups to the export list in `packages/tokens/transforms/
+      generate-nativewind.mjs`, `npm run tokens:build` there, then
+      `npm run sync-ds-tokens` here.
+
+- [ ] **The alert banner's eight variants disagree with each other** – worth a
+      look, since DS components are meant to be the part that is right.
+      Read off the node bindings 2026-08-16:
+      - the **close icon** uses four different tokens across eight variants:
+        `icon/primary` (solid+warning, outlined+warning), `icon/contrast`
+        (solid+Error), `icon/light` (solid+success, solid+info),
+        `icon/lighter` (all other outlined)
+      - **solid + info** fills with `info/light`; every other solid fills with
+        its `main`
+      - **solid + Error**'s message binds `text/contrast-text` while every
+        other solid's message binds its own `status/contrast-text`
+      - **outlined + Error** strokes `error/main`; every other outlined strokes
+        its `dark`
+      - **outlined + warning**'s icon binds `icon/primary` while every other
+        outlined binds its `status/dark`
+      Each one alone reads as a slip; five of them says the set was edited
+      variant by variant. None of it is guessed – all from `boundVariables`.
 
 - [ ] **Design the import flow properly** – separate from the notice above: the
       sheet itself has never had a frame
