@@ -914,10 +914,21 @@ Committed work for the first update after launch. Panel findings default here un
       - the **close button**, on every variant
       - **solid + error** (message binds `color/text/contrast-text`)
       - **outlined + warning** (icon binds `color/icon/primary`)
-      The other six variants are complete. Fix is in the DS repo: add the
-      groups to the export list in `packages/tokens/transforms/
-      generate-nativewind.mjs`, `npm run tokens:build` there, then
-      `npm run sync-ds-tokens` here.
+      ⚠️ **CORRECTION – THE FIX IS IN FIGMA, NOT THE EXPORT LIST.** This entry
+      first said to add the groups to the export list in
+      `packages/tokens/transforms/generate-nativewind.mjs`. Wrong: that file
+      **already exports `icon` and `text`** (its foreground loop covers text,
+      border, icon, tab-bar, chip, button, forms). Its own docstring names the
+      real cause – *"the appearance border/icon sets are currently thin… That's
+      a DS appearance-layer limitation, not this generator's – expand those
+      tokens in Figma if the app needs more border/icon shades."* The app
+      receives icon `default/subtle/brand/accent/disabled` and text
+      `default/subtle/disabled/link/brand/accent/inverse/danger/success/
+      warning/info` because that is what the appearance layer contains.
+      So the names the alert banner binds are missing UPSTREAM, and nobody can
+      build its close button faithfully – in the DS or anywhere – until they
+      exist in the Figma appearance collection. Adding them there, then
+      `tokens:build` + `sync-ds-tokens`, is the order.
 
 - [ ] **The alert banner's eight variants disagree with each other** – worth a
       look, since DS components are meant to be the part that is right.
