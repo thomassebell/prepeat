@@ -106,6 +106,11 @@ neither outranks the MINOR already set by leftovers and ingredient sections.
   ingredients, or with no method at all. Steps the site had already numbered
   no longer come in numbered twice.
 
+- **Imported ingredients read like a shopping list again.** "onion finely"
+  is an onion, "2 x 400g cans chopped tomatoes" is 800 g of chopped
+  tomatoes, and a recipe that simmers for two hours no longer claims to take
+  forty minutes.
+
 - **You are the first person listed in your kitchen.** Under **People** in
   Settings, your own row now sits at the top, with everyone else underneath in
   the order they joined. It used to be join order alone, so if somebody else

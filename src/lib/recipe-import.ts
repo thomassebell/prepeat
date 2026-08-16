@@ -708,6 +708,10 @@ function tidyIngredientName(raw: string): string {
   // "1 pinch of ground cumin", "2 slices of white bread"
   name = name.replace(/^(?:of|af)\s+/i, "");
 
+  // A multiplier we could not fold, because the unit was unknown: "2 x large
+  // eggs" keeps its amount of 2, but the bare "x" is not part of the name.
+  name = name.replace(/^[x×]\s+/i, "");
+
   // "spur chilies or another mild, red pepper" – buy the first alternative.
   // Only when something substantial precedes the "or": in "store-bought or
   // homemade brownies" the head noun lives in the SECOND half, and cutting
@@ -840,6 +844,47 @@ function liftTrailingUnit(
   };
 }
 
+// The container a multiplied pack comes in. Once "2 x 400g" has become
+// "800 g", the word is describing packaging rather than food, and "cans
+// chopped tomatoes" is not what you look for on a shelf.
+const PACK_CONTAINERS = new Set([
+  "can", "cans", "tin", "tins", "jar", "jars", "pack", "packs", "packet",
+  "packets", "tub", "tubs", "carton", "cartons", "bottle", "bottles",
+  "dåse", "dåser", "pakke", "pakker", "glas", "bæger", "pose", "poser",
+]);
+
+/**
+ * "2 x 400g cans chopped tomatoes" → "800 g chopped tomatoes".
+ *
+ * The multiplier form defeated the amount regex, which read the leading "2"
+ * and left the REST as the name – "x 400g cans chopped tomatoes" on the
+ * shopping list (BBC Good Food, found 2026-08-16).
+ *
+ * Multiplying rather than keeping "2 x 400 g" is deliberate: the shopping list
+ * merges on name + unit string (item_merge_key, migration 0013), so "800 g
+ * chopped tomatoes" adds up with another recipe's "400 g" into 1200 g, while a
+ * "2 x 400 g" unit string would sit beside them as a third row. What is lost
+ * is the word "cans", and 800 g of chopped tomatoes is still two of them.
+ *
+ * Only folded when the unit is one we know. "2 x large eggs" keeps its shape
+ * rather than becoming a number we invented.
+ */
+function foldPackMultiplier(text: string): string {
+  const match = text.match(
+    /^(\d+)\s*[x×]\s*(\d+(?:[.,]\d+)?)\s*([a-zA-Z]+)\b\s*(.*)$/,
+  );
+  if (!match) return text;
+  const unit = match[3].toLowerCase();
+  if (!UNITS.has(unit)) return text;
+  const total = Number(match[1]) * Number(match[2].replace(",", "."));
+  if (!Number.isFinite(total) || total <= 0) return text;
+  const rest = match[4].trim().split(/\s+/);
+  if (rest.length > 1 && PACK_CONTAINERS.has(rest[0].toLowerCase())) {
+    rest.shift();
+  }
+  return `${total} ${UNIT_ALIASES[unit] ?? unit} ${rest.join(" ")}`.trim();
+}
+
 function splitIngredientParts(text: string): {
   name: string;
   quantityText: string | null;
@@ -865,19 +910,22 @@ function splitIngredientParts(text: string): {
       /(\d)\s*([a-zA-Z]+)\s*\/\s*[\d\s.,/]*(?:fl\s*)?[a-zA-Z]{1,4}\b/,
       "$1 $2",
     );
-  const match = cleaned.match(
+  // Last, so it sees a string whose fractions and conversions are already
+  // resolved: "2 x 400g cans chopped tomatoes" → "800 g chopped tomatoes".
+  const folded = foldPackMultiplier(cleaned);
+  const match = folded.match(
     /^(\d+\s+\d+\/\d+|\d+\/\d+|\d+(?:[.,]\d+)?(?:\s*[-–]\s*\d+(?:[.,]\d+)?)?)\s*(.*)$/,
   );
 
   // No leading amount. The amount may still be trailing – "coriander leaves,
   // 1 large handful" – in which case that clause is the quantity, not a name.
   if (!match) {
-    const trailing = cleaned.match(/^(.*?),\s*(\d[^,]*)$/);
+    const trailing = folded.match(/^(.*?),\s*(\d[^,]*)$/);
     if (trailing) {
       const name = tidyIngredientName(trailing[1]);
       if (name) return { name, quantityText: trailing[2].trim() };
     }
-    return { name: tidyIngredientName(cleaned) || cleaned, quantityText: null };
+    return { name: tidyIngredientName(folded) || folded, quantityText: null };
   }
 
   const amount = match[1].replace(/\s*[-–]\s*\d+(?:[.,]\d+)?$/, ""); // ranges: keep the low end
@@ -901,7 +949,7 @@ function splitIngredientParts(text: string): {
   }
   const name = tidyIngredientName(rest);
   if (!name) {
-    return { name: tidyIngredientName(cleaned) || cleaned, quantityText: null };
+    return { name: tidyIngredientName(folded) || folded, quantityText: null };
   }
   // No unit was found up front, but the name may end in one.
   return liftTrailingUnit(name, amount);

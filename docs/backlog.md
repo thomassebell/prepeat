@@ -733,12 +733,19 @@ Committed work for the first update after launch. Panel findings default here un
 
 ### Known bugs (open)
 
-- [ ] **Tidy four small import defects found by sweeping ten sites**
+- [x] **TIDIED FOUR SMALL IMPORT DEFECTS FOUND BY SWEEPING TEN SITES.**
       Found 2026-08-16, sweeping the importer across ten sites after the
-      mkuniverset fix. None of them lose data – each is a row that reads wrong
-      in the aisle – and all four predate that fix. Grouped because they are
-      one afternoon's work in one file,
+      mkuniverset fix; fixed the same day on Thomas's "fix all four". None of
+      them lost data – each was a row that read wrong in the aisle – and all
+      four predated that fix. Done in
       [recipe-import.ts](../src/lib/recipe-import.ts).
+      ⚠️ **PART OF THIS LANDED INSIDE COMMIT `d23ae29`**, the Settings-redesign
+      commit from a session running in parallel, which staged the whole working
+      tree while these edits were half-written. Nothing is lost and nothing is
+      broken – but `d23ae29`'s message describes only Settings, so the first
+      three fixes below cannot be found by reading the log. **Two sessions
+      committing one working tree is how that happens**; worth knowing before
+      the next parallel run.
       1. **A trailing adverb survives the prep cut.** BBC writes "1 onion
          finely chopped" without a comma; the cut takes "chopped" and leaves
          **"onion finely"**. Same for "garlic cloves finely" and "ball
@@ -749,15 +756,26 @@ Committed work for the first update after launch. Panel findings default here un
          `split(/\s+/)` yields an empty last token, the "is this the last word"
          test sees `""` instead of `undefined`, and **"torn" stays**. One-line
          fix: trim before splitting.
-      3. **"2 x 400g cans chopped tomatoes"** imports as quantity 2, name
-         **"x 400g cans chopped tomatoes"**. The multiplier form is not
-         recognised.
-      4. **A cookTime of literally zero is trusted.** Arla publishes
-         `cookTime PT00M` with `totalTime PT2H` and `prepTime PT40M`, so the
-         recipe shows **40 min total instead of 2 hours** – the simmering is
-         invisible. Fix: treat a zero cookTime as "not stated" and derive from
-         the total, which is what `resolveCookMinutes` already does when
-         cookTime is absent.
+      3. **"2 x 400g cans chopped tomatoes"** imported as quantity 2, name
+         **"x 400g cans chopped tomatoes"** – the multiplier form defeated the
+         amount regex. Now MULTIPLIED to "800 g chopped tomatoes", deliberately
+         rather than kept as "2 x 400 g": the shopping list merges on name +
+         unit string, so 800 g adds up with another recipe's 400 g into 1200 g
+         where a "2 x 400 g" unit string would sit beside them as a third row.
+         Only folded when the unit is known – "2 x large eggs" keeps its
+         amount of 2 and just loses the stray "x", rather than becoming a
+         number we invented.
+      4. **A cookTime of literally zero was trusted.** Arla publishes
+         `cookTime PT00M` with `totalTime PT2H` and `prepTime PT40M`, so their
+         lasagne showed **40 min total instead of 2 hours** – the simmering was
+         invisible. A zero cookTime now means "not stated" and the cook time is
+         derived from the total, which is what `resolveCookMinutes` already did
+         when cookTime was absent. A GENUINE no-cook recipe still lands on
+         zero, one line further down (prep 5 with total 5 gives cook 0).
+      **Regression-checked against the same ten-site sweep**: RecipeTin Eats,
+      Love & Lemons, Valdemarsro, Madens Verden, Budget Bytes, Smitten Kitchen
+      and MK Universet came back byte-identical; only BBC Good Food and Arla
+      changed, and only in the six rows listed above.
 
 - [ ] **Say so when an imported recipe has no method**
       Found 2026-08-16. smittenkitchen.com marks up its INGREDIENTS but not its
