@@ -859,6 +859,26 @@ Committed work for the first update after launch. Panel findings default here un
       another brand's component. This is NOT a missed token sync – same names,
       different brand mode, which is the system working.
 
+- [ ] **The alert banner exists in Figma and in this app, but not in
+      `@ds/react`** – the web DS now lags its own Figma library.
+      Noticed by Thomas 2026-08-16: *"I just realized the alert banner was not
+      coded. Did you just code it?"* Yes – it had no code implementation
+      anywhere, and
+      [alert-banner.tsx](../src/components/ui/alert-banner.tsx) is the first.
+      **THE APP COULD NOT HAVE CONSUMED A DS ONE ANYWAY**, which is worth
+      writing down because it is easy to assume otherwise: `@ds/react` peers on
+      `react-dom` and is a WEB library, and this app has no `@ds/*` dependency
+      at all – it takes the DS as TOKENS only, via `ds-theme.cjs`. Every DS
+      component in this app is hand-built in React Native from those tokens;
+      `chip.tsx`, `input.tsx` and `tabs.tsx` already mirror the DS's Chip,
+      Input and TabBar the same way. The alert banner is the fourth, not a
+      departure.
+      So the open question is for the DS, not the app: `@ds/react` has Button,
+      Checkbox, Chip, Field, Icon, Input, Radio, Stack, Surface, Switch, TabBar
+      and Text – and no Alert. Porting this implementation to web is a
+      different job from writing it (RN primitives, no Tailwind classes), so it
+      is a DS-repo task rather than a copy-paste.
+
 - [ ] **Export the `icon/*` and `text/contrast-text` tokens the alert banner
       needs** – two of its eight variants and its close button cannot be built
       without them.
