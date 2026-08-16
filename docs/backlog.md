@@ -4387,6 +4387,27 @@ Not work. Kept so a cold thread can pick things up without re-litigating them.
 
 ### In flight (built, not yet live)
 
+- [x] **DELETING OR LEAVING A KITCHEN SPUN FOREVER – FIXED AND CONFIRMED
+      2026-08-16.** Thomas, on the device: *"delete and leave kitchen both work
+      now."* Reported as *"Deleting a kitchen does not finish in the UI"*, fixed
+      in `6225c97`, in the release notes.
+      ⚠️ **A SAME-DAY REGRESSION OF ANOTHER FIX, WHICH IS THE PART WORTH
+      KEEPING.** Both sheets closed for free because `AppTabs` was keyed on the
+      active household id, and both flows end by switching kitchen – so the tab
+      tree remounted and took the sheet with it. `7e7ccf5` removed that key
+      THAT MORNING so switching kitchen keeps your place in the navigator, and
+      the sheets lost the unmount they had been relying on without ever asking
+      for it.
+      **Nothing was broken server-side:** the kitchen was gone, the switch had
+      happened, the screen behind was correct. Only the panel on top never
+      left, which is the worst shape of bug – it reads as data loss.
+      **THE LESSON: a component that relies on being unmounted by someone
+      else's key has an invisible dependency.** Both `onConfirm` handlers now
+      close their own sheet, which is what their comments already claimed.
+      Worth a look wherever else a sheet assumes it will be torn down for it.
+      Logged 2026-08-16 because the fix and its release note existed while this
+      file said nothing at all – the bug never had an entry to close.
+
 - [x] **SUNSET 2026-08-11, Thomas's call – Apple sign-in, in both its forms**
       Why dropped: convenience only. Apple does not require it (guideline 4.8
            exempts first-party email OTP), it does not remove the demo-mailbox
