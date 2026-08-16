@@ -106,6 +106,12 @@ neither outranks the MINOR already set by leftovers and ingredient sections.
   ingredients, or with no method at all. Steps the site had already numbered
   no longer come in numbered twice.
 
+- **An import that finds no method now says so.** Some recipe pages publish
+  their ingredients but not their steps. The form used to open with an empty
+  Instructions card and no explanation, which looked like the import had lost
+  them; it now tells you the page didn't share any, so you know to write them
+  yourself.
+
 - **Imported ingredients read like a shopping list again.** "onion finely"
   is an onion, "2 x 400g cans chopped tomatoes" is 800 g of chopped
   tomatoes, and a recipe that simmers for two hours no longer claims to take

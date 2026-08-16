@@ -811,21 +811,35 @@ Committed work for the first update after launch. Panel findings default here un
       and MK Universet came back byte-identical; only BBC Good Food and Arla
       changed, and only in the six rows listed above.
 
-- [ ] **Say so when an imported recipe has no method**
-      Found 2026-08-16. smittenkitchen.com marks up its INGREDIENTS but not its
-      instructions – there is no `recipeInstructions` anywhere on the page – so
-      the import succeeds, fills the form, and leaves the steps empty with no
-      explanation. Nothing is broken and nothing can be parsed; the gap is that
-      the sheet does not SAY it, so it reads as the import silently dropping
-      the method. The near-miss it resembles is the "silent failure" already
-      guarded against for empty ingredients
-      ([recipe-import.ts:130](../src/lib/recipe-import.ts:130)) – ingredients
-      bail out, steps do not.
-      **NOT the same as bailing out.** A recipe with ingredients and no steps
-      is still worth importing; it just needs a line in the sheet along the
-      lines of "this page doesn't publish its method – you'll need to add the
-      steps yourself". Needs a wording decision from Thomas, and Figma has no
-      state drawn for it.
+- [x] **SAID SO WHEN AN IMPORTED RECIPE HAS NO METHOD.** Built 2026-08-16 on
+      Thomas's "fix the missing method notice too". A line now appears inside
+      the Instructions card on the Add-recipe form when an import returned no
+      steps: *"This page didn't share any instructions – you'll need to add
+      them yourself."* It clears itself the moment a step is added, and is set
+      on EVERY import so importing a second recipe over the first does not
+      inherit a notice the new page does not deserve.
+      ⚠️ **IMPROVISED – TWO THINGS ARE CLAUDE'S, NOT THOMAS'S**, flagged here
+      rather than left to read as design:
+      1. **The wording is Claude's.** Never reviewed, and it is the whole
+         feature – the whole point is that the sentence explains the gap.
+      2. **The container is Claude's.** No notice/banner/callout component
+         exists in the DS (searched 2026-08-16) and no frame is drawn for this
+         state, so it reuses the shape the import sheet already improvises for
+         its error box – `rounded-medium` + `px-comp-large py-comp-small` – on
+         `bg-info-lightest` rather than `bg-error-lightest`. **The tone change
+         is the deliberate part:** nothing went wrong, so a red box would say
+         something false. `info/*` is a real DS family with a full ramp, so
+         only the SHAPE is invented, not the colour.
+      The import sheet itself has never had a frame either
+      ([import-recipe-sheet.tsx:12](../src/components/recipes/import-recipe-sheet.tsx:12)),
+      so this is the second improvisation in one flow – worth a design pass on
+      the whole import path rather than one more patch.
+
+- [ ] **Design the import flow properly** – it is now two improvisations deep
+      (the sheet itself, and the no-method notice above), and a third would be
+      the point at which nobody can tell which parts Thomas drew. Wants frames
+      for: the sheet, its error state, its busy state, and the notice.
+      Raised by Claude, 2026-08-16.
 
 - [x] **IMPORT FROM mkuniverset.dk LOST EVERY INGREDIENT NAME AND EVERY STEP.
       Reported by Thomas 2026-08-16, fixed the same day.** The recipe imported

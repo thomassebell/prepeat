@@ -113,6 +113,12 @@ export default function AddRecipeScreen() {
   // Held as a plain string so the field can be typed in and cleared; saved as
   // null when empty. Filled by an import, and editable ever since (2026-07-27).
   const [sourceUrl, setSourceUrl] = useState("");
+  // An import that brought ingredients but NO method. smittenkitchen.com marks
+  // up its ingredients and not its instructions, so the form opened with an
+  // empty Instructions card and no explanation – indistinguishable from the
+  // importer having dropped the steps, which is a bug Thomas had just reported
+  // for real (2026-08-16). Nothing can be parsed; the fix is saying so.
+  const [importHadNoSteps, setImportHadNoSteps] = useState(false);
 
   useEffect(() => {
     if (!editing) return;
@@ -168,6 +174,9 @@ export default function AddRecipeScreen() {
       })),
     );
     setSteps(imported.steps);
+    // Set on EVERY import, not only when empty, so importing a second recipe
+    // over the first clears a notice the new page does not deserve.
+    setImportHadNoSteps(imported.steps.length === 0);
     setSourceUrl(imported.sourceUrl);
   };
 
@@ -523,6 +532,18 @@ export default function AddRecipeScreen() {
               )}
             </View>
             <View className="w-full gap-layout-small overflow-hidden rounded-large bg-surface-neutral-white p-layout-small">
+              {/* IMPROVISED – no frame exists for this state, see backlog.
+                  Shaped like the import sheet's existing error box, but on
+                  info/* rather than error/*: nothing went wrong, the page
+                  simply has no method to give. */}
+              {importHadNoSteps && steps.length === 0 && (
+                <View className="w-full rounded-medium bg-info-lightest px-comp-large py-comp-small">
+                  <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-default">
+                    This page didn’t share any instructions – you’ll need to add
+                    them yourself.
+                  </Text>
+                </View>
+              )}
               {steps.length > 0 && (
                 <View style={{ marginHorizontal: -16, marginTop: -16 }}>
                   {steps.map((step, index) => (
