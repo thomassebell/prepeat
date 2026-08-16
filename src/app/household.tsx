@@ -82,9 +82,9 @@ export default function SettingsScreen() {
       .catch((error) => console.warn("[settings] members load failed", error));
   }, []);
 
-  // Load the directory and invite code for the active household. Switching
-  // household remounts the tab tree (RootGate keys AppTabs on the active id),
-  // so this mounts fresh per household – no manual reset needed.
+  // Load the directory and invite code for the active household. This screen
+  // survives a switch (the tab tree is no longer keyed on the household id –
+  // see <AppTabs> in _layout.tsx), so the id in the deps is what refreshes it.
   useEffect(() => {
     let cancelled = false;
     loadMembers(household.id);
@@ -253,10 +253,13 @@ export default function SettingsScreen() {
         onClose={() => setSheet("none")}
         onConfirm={async () => {
           const newHousehold = await leaveHousehold(household.id);
-          // Drop the household we left and switch into the new kitchen
-          // (addHousehold makes it active, remounting the tabs).
+          // Drop the kitchen we left and switch into the new one (addHousehold
+          // makes it active). Close the sheet ourselves: it used to disappear
+          // because a switch remounted the tab tree, and that stopped on
+          // 2026-08-16 – see <AppTabs> in _layout.tsx.
           removeHousehold(household.id);
           addHousehold(newHousehold);
+          setSheet("none");
         }}
       />
       <DeleteProfileSheet
@@ -276,11 +279,14 @@ export default function SettingsScreen() {
         onClose={() => setSheet("none")}
         onConfirm={async () => {
           await deleteHousehold(household.id);
-          // Switch to another of your households (canDelete guarantees one
-          // exists), then drop the deleted one. Switching remounts the tabs.
+          // Switch to another of your kitchens (canDelete guarantees one
+          // exists), then drop the deleted one. Close the sheet ourselves: it
+          // used to disappear because a switch remounted the tab tree, and
+          // that stopped on 2026-08-16 – see <AppTabs> in _layout.tsx.
           const other = households.find((h) => h.id !== household.id);
           if (other) setActiveHousehold(other.id);
           removeHousehold(household.id);
+          setSheet("none");
         }}
       />
 

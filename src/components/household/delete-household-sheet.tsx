@@ -54,6 +54,8 @@ function Content({
     setError(null);
     try {
       await onConfirm();
+      // onConfirm closes the sheet on success, which unmounts this – so the
+      // spinner stays up until then and there is no state to reset here.
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong – please try again");
       setBusy(false);
