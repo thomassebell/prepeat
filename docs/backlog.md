@@ -112,7 +112,7 @@ Everything else in this file is Claude's to get on with.
   <sub>Next – v1.1</sub>
 - **⭐ Share a recipe with someone – FIRST ITEM IN v1.1** – how much of a recipe a stranger sees before installing.
   <sub>Next – v1.1</sub>
-- `2.27` **Rename the Kitchen tab to Settings, and nest the kitchen inside it** – three drawings, now that the screen itself is built and shipping in build 19: the kitchen row's `⋮` menu, the Edit kitchen sheet's delete state, and a verdict on the banner copy that says "you both". None of them block the release; they are what turns two improvisations into design.
+- `2.27` **Rename the Kitchen tab to Settings, and nest the kitchen inside it** – **A REDESIGN OF THE WHOLE SCREEN**, which he has taken on himself (2026-08-16): *"this whole page is messy design vise – I have to fix it and make it simpler."* Claude builds nothing on this screen until there are frames.
   <sub>Next – v1.1</sub>
 - `2.10` **⭐ Show IN THE APP that a meal can go on the plan without a recipe** – a frame for a line on the EMPTY PLAN saying a meal need not be a recipe. That is the half that reaches someone still deciding whether the app is for them, and no frame draws it.
   <sub>Next – v1.1</sub>
@@ -2648,15 +2648,29 @@ says whether any of it costs anything commercially.
       what a household WAS. Nobody failed to decode kitchen. The residual is
       cost, not failure.
 - [ ] `2.27` **Rename the Kitchen tab to Settings, and nest the kitchen inside it**
-      Needs: Thomas – three drawings, now that the screen itself is built and
-           shipping in build 19: the kitchen row's `⋮` menu, the Edit kitchen
-           sheet's delete state, and a verdict on the banner copy that says
-           "you both". None of them block the release; they are what turns two
-           improvisations into design.
-      Status: **BUILT AND ON THE PHONE 2026-08-13**, and **IN BUILD 19**
-           (1.1.0, built 2026-08-16, not submitted). Seven dev builds through
-           the afternoon; Thomas checked the tab, the kitchen list, the App
-           rows and scrolling, all pass.
+      Needs: Thomas – **A REDESIGN OF THE WHOLE SCREEN**, which he has taken
+           on himself (2026-08-16): *"this whole page is messy design vise – I
+           have to fix it and make it simpler."* Claude builds nothing on this
+           screen until there are frames.
+      Status: **BUILT, ON THE PHONE, AND NOW GOING BACK TO DESIGN.** The
+           implementation works – both invite states confirmed on the phone
+           2026-08-16 – it is the composition that is wrong.
+
+      ⚠️ **THE REDESIGN SUPERSEDES FOUR OPEN DRAWING TASKS, so do not draw
+      them separately.** The `⋮` menu, the Edit kitchen sheet's delete state,
+      the row pressed state and the "you both" banner copy were all queued
+      against the CURRENT composition. Drawing any of them now is work aimed at
+      a screen that is being replaced. They are listed further down, still
+      accurate as descriptions of the gaps, and each should be re-asked of the
+      new design rather than carried across.
+      **The one thing that must survive the redesign, because it was decided on
+      its own evidence and not on the layout:** the invite rule – banner at one
+      member, quiet green row at two or more. See the argument below.
+
+      **WHAT THE OLD SCREEN IS WORTH KEEPING AS EVIDENCE:** it is the only
+      version anyone has used, and two of its findings came from real use
+      rather than a frame – your own row must top People (fixed 2026-08-16),
+      and the invite rule reads correctly in both states.
 
       ⭐ **THE HEADER RULE (Thomas, 2026-08-13) – applies to the WHOLE app, not
       just this screen. Do not re-derive it from a frame.**
