@@ -834,9 +834,31 @@ Committed work for the first update after launch. Panel findings default here un
       so this is the second improvisation in one flow – worth a design pass on
       the whole import path rather than one more patch.
 
-- [x] **BUILT THE DS ALERT BANNER – AND THE "NO NOTICE COMPONENT EXISTS"
-      CLAIM ABOVE IT WAS WRONG.** Thomas, 2026-08-16: *"There is an alert
-      component that could be used."* There is –
+- [x] **BUILT THE DS ALERT BANNER IN THE APP, THEN DELETED IT AGAIN THE SAME
+      HOUR.** Thomas, 2026-08-16: *"This could be dangerous drift in the DS. I
+      don't know if you build from the same rules that the DS project is bound
+      by."* He was right, and the answer was no – see the entry below. The
+      component was removed and the screen went back to its app-local box.
+      **WHAT THE DS RULES ACTUALLY SAY, read after the fact** (the DS repo's
+      own `CLAUDE.md`, which was never opened while building):
+      - `get_design_context` must be called on the node before writing a
+        component – **`get_metadata`, `get_screenshot` and `get_variable_defs`
+        are explicitly named as orientation only, and none of them tell you how
+        a frame is laid out.** Every read done here was one of those three.
+      - `get_variable_defs` on a parent returns **the union of bindings across
+        all variants with no indication of which node binds what** – and the
+        component set was read at parent level first.
+      - components must consume semantic tokens, never primitives, and this is
+        **machine-enforced by stylelint in the DS repo**. Nothing enforces it
+        in the app.
+      - **cross-brand parity and density are checked on every DS build**;
+        density in particular is invisible at default and only shows in the
+        other mode. The app has no density axis to check against.
+      - *"Flagging an improvisation is not permission to ship it… The point is
+        that Thomas decides."* Which is exactly what happened here in reverse:
+        flagged thoroughly, shipped anyway, then reversed.
+      The rest of this entry is kept because the FINDINGS survive the deletion.
+      There is an alert banner –
       **`alert banner`, Figma node `42:78`, page `alert`** in the DS file,
       a component set of `variant` (solid/outlined) × `status`
       (Error/warning/success/info), with boolean properties for `icon`,
@@ -848,9 +870,8 @@ Committed work for the first update after launch. Panel findings default here un
       search is not evidence a component is missing** – say what was searched,
       or search the obvious synonym before writing "none exists" into a doc
       that someone will later trust.
-      Now built as
-      [alert-banner.tsx](../src/components/ui/alert-banner.tsx) and used for
-      the no-method notice, replacing the hand-rolled box.
+      It was built as `src/components/ui/alert-banner.tsx` and used for the
+      no-method notice; **that file is deleted** – see the top of this entry.
       **VALUES CAME FROM THE BINDINGS, NOT THE CANVAS**, and this component is
       the clearest case yet for why. The DS file's alert page resolves in the
       SEBELL brand: warning fill reads `#c6bb9f`, radius `0`, fonts Noto Serif
@@ -859,12 +880,12 @@ Committed work for the first update after launch. Panel findings default here un
       another brand's component. This is NOT a missed token sync – same names,
       different brand mode, which is the system working.
 
-- [ ] **The alert banner exists in Figma and in this app, but not in
-      `@ds/react`** – the web DS now lags its own Figma library.
+- [ ] **The alert banner exists in Figma only – not in `@ds/react`, and no
+      longer in the app either.**
       Noticed by Thomas 2026-08-16: *"I just realized the alert banner was not
       coded. Did you just code it?"* Yes – it had no code implementation
-      anywhere, and
-      [alert-banner.tsx](../src/components/ui/alert-banner.tsx) is the first.
+      anywhere. The one written here was deleted the same hour, so it has none
+      again.
       **THE APP COULD NOT HAVE CONSUMED A DS ONE ANYWAY**, which is worth
       writing down because it is easy to assume otherwise: `@ds/react` peers on
       `react-dom` and is a WEB library, and this app has no `@ds/*` dependency
@@ -882,8 +903,8 @@ Committed work for the first update after launch. Panel findings default here un
 - [ ] **Export the `icon/*` and `text/contrast-text` tokens the alert banner
       needs** – two of its eight variants and its close button cannot be built
       without them.
-      Found 2026-08-16 while building
-      [alert-banner.tsx](../src/components/ui/alert-banner.tsx). `ds-theme.cjs`
+      Found 2026-08-16 while building the since-deleted alert banner, and
+      still true for whoever builds it in the DS. `ds-theme.cjs`
       exports icon `default/subtle/brand/accent/disabled`; the alert binds
       `color/icon/primary`, `icon/contrast`, `icon/light` and `icon/lighter`
       for its close button, and `color/text/contrast-text` for the error

@@ -29,7 +29,6 @@ import { ReorderSheet } from "@/components/ui/reorder-sheet";
 // It stays in use on the shopping list, the plan and the recipe DETAIL screen,
 // where a row tap already means something else (ticking an ingredient off).
 import { SwipeActions } from "@/components/recipes/swipe-actions";
-import { AlertBanner } from "@/components/ui/alert-banner";
 import { Input } from "@/components/ui/input";
 import { ds } from "@/constants/ds";
 import { Spacing, tabBarClearance } from "@/constants/theme";
@@ -533,15 +532,21 @@ export default function AddRecipeScreen() {
               )}
             </View>
             <View className="w-full gap-layout-small overflow-hidden rounded-large bg-surface-neutral-white p-layout-small">
-              {/* The DS alert banner, warning (Thomas, 2026-08-16 – he has one
-                  and asked for it used, over the box improvised here first).
-                  The title wording is still mine and unreviewed. */}
+              {/* App-local box, deliberately NOT a DS component (Thomas,
+                  2026-08-16). A DS alert banner was built here and deleted the
+                  same hour: implementing a DS component outside the DS repo
+                  risks drift, because the DS's own rules – semantic tokens
+                  only, cross-brand parity, density checked in both modes –
+                  cannot be enforced from in here. This box makes no claim to
+                  be the alert banner; it is one screen's improvisation, and
+                  the backlog says so. */}
               {importHadNoSteps && steps.length === 0 && (
-                <AlertBanner
-                  status="warning"
-                  title="No instructions found"
-                  message="This page didn’t share any instructions – you’ll need to add them yourself."
-                />
+                <View className="w-full rounded-medium bg-info-lightest px-comp-large py-comp-small">
+                  <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-default">
+                    This page didn’t share any instructions – you’ll need to add
+                    them yourself.
+                  </Text>
+                </View>
               )}
               {steps.length > 0 && (
                 <View style={{ marginHorizontal: -16, marginTop: -16 }}>
