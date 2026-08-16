@@ -16,6 +16,13 @@ current: check items off as they land, add new tasks and ideas there (with
 attribution and date for ideas), and consult it when the owner asks what's
 next.
 
+⚠️ **EVERY backlog edit ends with `node ./scripts/backlog-view.mjs`** (Thomas,
+2026-08-16 – *"please do that every time some changes"*). `docs/backlog-view.html`
+is the scannable page he actually reads, it is GENERATED, and it is committed –
+so a backlog commit without a regenerated view ships him a page that quietly
+disagrees with the file. Commit the two together. Use the bare `node` command,
+not `npm run backlog:view`, which also opens a browser window.
+
 The app is named **Prep+Eat** (decided 2026-06-12): "Prep+Eat" is the visual
 wordmark (the + is the brand mark), "Prepeat" (pronounced PREP-eat) is the
 plain-text form used for slug, scheme, domains and handles. Tagline: "Prep.
