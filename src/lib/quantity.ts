@@ -1,6 +1,6 @@
 // The edit sheets work with one free-text quantity field ("250g", "2 pcs",
 // "1/2 tsp", "a handful") while the database splits it into numeric quantity
-// + unit text (projektgrundlag data model). These helpers translate between
+// + unit text (foundation.md data model). These helpers translate between
 // the two: a leading number becomes the quantity, the rest becomes the unit,
 // and pure text ("a handful") is stored as unit only. Decimal commas ("1,5")
 // and simple or mixed fractions ("1/2", "1 1/2") all parse – real cooking

@@ -3,7 +3,7 @@
 // shopping-list.tsx can depend on the same pieces without an import cycle).
 import { supabase } from '@/lib/supabase';
 
-// v1 category set (projektgrundlag decision #7): fixed constants in app code.
+// v1 category set (foundation.md decision #7): fixed constants in app code.
 // Order here is the default display order until the household reorders.
 export const CATEGORIES = [
   'Produce',

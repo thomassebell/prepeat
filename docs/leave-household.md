@@ -8,7 +8,7 @@ members). Built in the Prepeat DS brand (Montserrat + lime). Original
 decisions below (decided 2026-07-20).
 
 Implements the copy-on-leave promise from
-[projektgrundlag.md](projektgrundlag.md) decision #1, and touches the
+[foundation.md](foundation.md) decision #1, and touches the
 multi-household model (decision #3). Both are already filed under
 "Later (v1.1+)" in the foundation. This doc records the product decisions so
 design and build can follow without re-litigating them.
@@ -100,7 +100,7 @@ member of two households at once. v1's UI only shows one, and today
   arrives."*
 
 Bringing the parked recipes into the family later is the deferred
-"merge / copy a recipe to my other household" feature (projektgrundlag,
+"merge / copy a recipe to my other household" feature (foundation.md,
 Later v1.1+) – deliberately out of scope here.
 
 ## Leaving again (uniform rule, decided 2026-07-21)

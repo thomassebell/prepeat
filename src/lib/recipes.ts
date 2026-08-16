@@ -1,5 +1,5 @@
 // Recipes data access (migration 0006). Plain async functions – recipe
-// editing is deliberately NOT realtime (projektgrundlag: the classic
+// editing is deliberately NOT realtime (foundation.md: the classic
 // conflict problem; last write wins), so screens fetch on focus instead of
 // subscribing. Favorites are shared household favorites (decided
 // 2026-07-12): a flag on the recipe row, one heart for the whole family.

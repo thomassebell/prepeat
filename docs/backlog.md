@@ -1,7 +1,7 @@
 # Prep+Eat backlog
 
 The working to-do list for the project. Scope and decisions live in
-[projektgrundlag.md](projektgrundlag.md) – this file is about what happens
+[foundation.md](foundation.md) – this file is about what happens
 next and in which order. Items graduate upward as we commit to them – Someday
 → Next → Now – and end in Record rather than being deleted.
 
@@ -2029,7 +2029,7 @@ Closed 2026-07-27:
       English exactly as today.
       **THAT KILLS MOST OF WHAT THE FIRST DRAFT WORRIED ABOUT, and the corrections
       are worth keeping because they were wrong in an expensive direction:**
-      - **It does NOT reverse the projektgrundlag.** English stays the base
+      - **It does NOT reverse the foundation.md.** English stays the base
         language and the international target is untouched – Danish is added
         alongside. The document needs a sentence, not an amendment.
       - **It is NOT a market decision.** No App Store listing work, no Danish
@@ -2199,7 +2199,7 @@ Closed 2026-07-27:
            names? One-directional matches how categories already learn.
 
       This is the "advanced ingredient normalization (onion vs
-      yellow onion)" line already in projektgrundlag under Later (v1.1+) –
+      yellow onion)" line already in foundation.md under Later (v1.1+) –
       written up here 2026-07-30 after it showed on a real list as three
       un-merged Parmesans (`Parmesan`, `Parmesan cheese`, `shaved Parmesan
       cheese`) and onion split three ways (`onion` / `small onion` /
@@ -5719,7 +5719,7 @@ Not work. Kept so a cold thread can pick things up without re-litigating them.
   improvised rather than passed off as designed. Held back from the blessing
   because it was a missing feature rather than an undesigned one: the bulk
   "Clear done items" had no undo – built the same evening, see above.
-- **2026-07-25 – the plan→list link step retired** (projektgrundlag decision
+- **2026-07-25 – the plan→list link step retired** (foundation.md decision
   #8, commit 6a251e3). Started as a product question from Thomas, not a bug:
   *"why do we need the button 'Update shopping list'?"* – then, on learning a
   week stayed unlinked until someone pressed it once, *"I want to delete the

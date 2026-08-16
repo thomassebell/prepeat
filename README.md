@@ -6,8 +6,7 @@ list that syncs in real time across household members.
 *Prep. Eat. Repeat.*
 
 The project foundation – decisions, data model and scope – lives in
-[docs/projektgrundlag.md](docs/projektgrundlag.md) (in Danish; it predates the
-decision to target an international audience).
+[docs/foundation.md](docs/foundation.md).
 
 ## Stack
 

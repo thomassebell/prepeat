@@ -3,7 +3,7 @@
 *Written 2026-08-02, the week Prep+Eat was submitted to the App Store.*
 
 A keepsake, not a spec. The scope, data model and open work live in
-[projektgrundlag.md](projektgrundlag.md) and [backlog.md](backlog.md). This
+[foundation.md](foundation.md) and [backlog.md](backlog.md). This
 page is the step back: how the app actually got built, what worked, where the
 wasted rounds came from, and what to carry into the next thing. Written for
 Thomas, who is not a developer and built a real consumer app anyway.

@@ -1,4 +1,4 @@
-// Week math for the meal plan. Weeks start on Monday (projektgrundlag) and
+// Week math for the meal plan. Weeks start on Monday (foundation.md) and
 // are identified by their start date as a local 'YYYY-MM-DD' key – the same
 // value stored in meal_plans.week_start_date. All math is done in local
 // time; the plan is a family calendar, not a timezone puzzle.

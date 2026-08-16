@@ -3,7 +3,7 @@
 //
 // Sync model: every action applies to local state immediately (taps must
 // feel instant in a store aisle) and the write goes to Supabase in the
-// background – last write wins via updated_at, per projektgrundlag. A
+// background – last write wins via updated_at, per foundation.md. A
 // realtime channel on shopping_list_items streams the other phones' changes
 // in; our own writes echo back through the same channel and merge
 // harmlessly. On reconnect and app foreground the list is refetched, which

@@ -6,7 +6,7 @@
 // updated_at), and realtime channels stream the other phones' changes in.
 // Ingredients are snapshotted onto entries at add time and scaled as
 // servings / recipe_servings – the plan never reads ingredients live from
-// recipes (projektgrundlag core principle).
+// recipes (foundation.md core principle).
 //
 // Week navigation (2026-07-16, revised 2026-07-17): the switcher moves
 // between existing weeks (plus the current week, which always shows), two

@@ -6,7 +6,7 @@ Meal-planning app for families: recipes, weekly meal plan, auto-generated
 shopping list with real-time sync across household members. Target: iOS App
 Store first, Android later.
 
-**Read [docs/projektgrundlag.md](docs/projektgrundlag.md) before making product
+**Read [docs/foundation.md](docs/foundation.md) before making product
 or data-model decisions.** It records the agreed scope (v1 vs later vs
 deliberately excluded), the data model, and the core principles. The app's UI
 language is English and it targets an international audience.
@@ -26,7 +26,7 @@ not `npm run backlog:view`, which also opens a browser window.
 The app is named **Prep+Eat** (decided 2026-06-12): "Prep+Eat" is the visual
 wordmark (the + is the brand mark), "Prepeat" (pronounced PREP-eat) is the
 plain-text form used for slug, scheme, domains and handles. Tagline: "Prep.
-Eat. Repeat." The old working name "Madapp" may linger in docs/projektgrundlag.
+Eat. Repeat." The old working name "Madapp" may linger in docs/foundation.md.
 
 ## Stack
 
@@ -137,7 +137,7 @@ not a developer and should not have to remember them). Standing rules:
   never edit an applied migration.
 - Every table needs RLS policies in the same migration that creates it.
   Household-scoped access goes through `is_household_member()`.
-- Key data-model principles (from projektgrundlag): ingredients are
+- Key data-model principles (from foundation.md): ingredients are
   snapshotted onto the meal plan (never read live from recipes), soft delete
   via `deleted_at`, last-write-wins concurrency via `updated_at`. Recipes,
   meal plans and shopping lists are all owned by the household; recipes carry
