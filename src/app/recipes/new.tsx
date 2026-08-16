@@ -532,14 +532,10 @@ export default function AddRecipeScreen() {
               )}
             </View>
             <View className="w-full gap-layout-small overflow-hidden rounded-large bg-surface-neutral-white p-layout-small">
-              {/* App-local box, deliberately NOT a DS component (Thomas,
-                  2026-08-16). A DS alert banner was built here and deleted the
-                  same hour: implementing a DS component outside the DS repo
-                  risks drift, because the DS's own rules – semantic tokens
-                  only, cross-brand parity, density checked in both modes –
-                  cannot be enforced from in here. This box makes no claim to
-                  be the alert banner; it is one screen's improvisation, and
-                  the backlog says so. */}
+              {/* This screen's own box – it makes no claim to be the DS alert
+                  banner, which is the DS's to build. A copy of that component
+                  lived here briefly on 2026-08-16 and was deleted; see the
+                  backlog. */}
               {importHadNoSteps && steps.length === 0 && (
                 <View className="w-full rounded-medium bg-info-lightest px-comp-large py-comp-small">
                   <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-default">
