@@ -112,7 +112,7 @@ Everything else in this file is Claude's to get on with.
   <sub>Next – v1.1</sub>
 - **⭐ Share a recipe with someone – FIRST ITEM IN v1.1** – how much of a recipe a stranger sees before installing.
   <sub>Next – v1.1</sub>
-- `2.27` **Rename the Kitchen tab to Settings, and nest the kitchen inside it** – a verdict on the SEVEN deviations listed below, each of which is the new design disagreeing with something already written down. Nothing is blocked on him; they are built as drawn.
+- `2.27` **Rename the Kitchen tab to Settings, and nest the kitchen inside it** – the deep link to the Edit kitchen sheet's DELETE state in Figma. He has seen it and it is drawn; the page list the MCP returns for the app file is broken (one page, "app icon"), so it cannot be found from here.
   <sub>Next – v1.1</sub>
 - `2.10` **⭐ Show IN THE APP that a meal can go on the plan without a recipe** – a frame for a line on the EMPTY PLAN saying a meal need not be a recipe. That is the half that reaches someone still deciding whether the app is for them, and no frame draws it.
   <sub>Next – v1.1</sub>
@@ -158,53 +158,29 @@ Everything the App Store release is actually waiting on. If it is not blocking l
 
 ### Pre-launch checklist (v1 ship)
 
-- [ ] **⏳ Get everything off the work Mac before it goes back**
-      Why: the machine belongs to the employer and Thomas is job-hunting. Not
-           *if* it goes but *when*.
-      Must be copied off: `~/Prepeat-backups/` (58 MB, nothing else holds it),
-           `app-store-assets/` (10 MB), Claude's memory folder, the two env
-           files.
-      Travels by itself: all four accounts are personal, and the signing key is
-           already in Apple Passwords on a personal Apple ID. The CODE is safe –
-           three repos on GitHub, 0 unpushed commits, and the post-commit hook
-           keeps it that way.
-      ⚠️ VERIFIED 2026-08-11, because "surely GitHub and iCloud cover it"
-           (Thomas) is the natural assumption and it is WRONG: **macOS Desktop &
-           Documents sync is OFF.** `~/Documents` and the `Documents` folder
-           visible in iCloud Drive are two different folders with the same name
-           (different inodes; the project is not in the iCloud one). So nothing
-           under `~/Documents` is backed up by iCloud, including the gitignored
-           `app-store-assets/`, which sits inside a folder anyone would assume
-           was safe. Re-check with `stat -f '%d %i' ~/Documents ~/Library/Mobile\
-           Documents/com~apple~CloudDocs/Documents` rather than by looking in
-           Finder, which is what makes this believable in the first place.
-      ⚖️ Worth a professional, not Claude: a commercial product built on
-           employer hardware. IP clauses sometimes reach further than people
-           expect, and it is cheaper to check early.
-      Do it with: [if-the-mac-is-gone.md](if-the-mac-is-gone.md), the
-           step-by-step playbook written 2026-08-11. Section B is the
-           handing-it-back list.
+- [x] **DONE 2026-08-16 – everything is off the work Mac.** The four things
+      nothing else held are copied off: `~/Prepeat-backups/` (58 MB),
+      `app-store-assets/` (10 MB, gitignored because it shows real household
+      data), Claude's memory folder, and the two env files. The rest travelled
+      by itself: all four accounts are personal (GitHub, Apple Developer,
+      Supabase, Expo), the code is on GitHub across three repos, and the
+      signing key was already in Apple Passwords on a personal Apple ID.
+      Playbook used: [if-the-mac-is-gone.md](if-the-mac-is-gone.md), section B.
 
-      (2026-08-04.) **Full checklist:
-      [backups-and-local-db.md](backups-and-local-db.md) → "Leaving the company
-      Mac"**, audited the same day. Headlines:
-      - **Travels by itself:** all four accounts are personal (GitHub, Apple
-        Developer, Supabase, Expo), so do the three repos, and the signing key
-        is already in Apple Passwords on a personal Apple ID.
-      - **Must be copied off:** `~/Prepeat-backups/` (58 MB – nothing else
-        holds it), `app-store-assets/` (10 MB, gitignored because it shows real
-        household data), Claude's memory folder, the two env files.
-      - **Regenerates:** the LaunchAgent, the runtime copy, the log, the Apple
-        *Development* certificate and provisioning profiles. Distribution
-        credentials live at EAS, not locally.
-      - **Re-weigh Supabase Pro when the job actually changes.** The backup
-        system built today runs on a machine that gets handed back – a
-        different argument from the one declined earlier, since $25/mo buys
-        backups sitting nowhere near a computer somebody else owns.
-      - **⚖️ Worth checking with a professional, not with Claude:** a
-        commercial product built on employer-owned hardware, and IP clauses in
-        employment contracts sometimes reach further than people expect.
-        Cheaper to check early. Noted so it is not forgotten.
+      Two things outlive the item and are worth keeping:
+      - **⚠️ macOS Desktop & Documents sync is OFF on this machine** (verified
+        2026-08-11). `~/Documents` and the `Documents` folder visible in iCloud
+        Drive are two different folders with the same name – different inodes,
+        and the project is not in the iCloud one. So nothing under
+        `~/Documents` is backed up by iCloud, which is why the copy-off had to
+        happen by hand. "Surely GitHub and iCloud cover it" is the natural
+        assumption and it is wrong. Re-check on any new machine with
+        `stat -f '%d %i' ~/Documents ~/Library/Mobile\ Documents/com~apple~CloudDocs/Documents`,
+        not by looking in Finder – Finder is what makes it believable.
+      - **⚖️ Still worth a professional, not Claude:** a commercial product was
+        built on employer-owned hardware. IP clauses sometimes reach further
+        than people expect, and handing the machine back does not settle that
+        question. Cheaper to check early.
 
 - [x] **DONE 2026-08-04 – `credentials/AuthKey_UN3YR958DC.p8` is copied into
       Apple Passwords**, and **Thomas confirmed it visible on his iPhone**, so
@@ -2907,33 +2883,44 @@ says whether any of it costs anything commercially.
       what a household WAS. Nobody failed to decode kitchen. The residual is
       cost, not failure.
 - [ ] `2.27` **Rename the Kitchen tab to Settings, and nest the kitchen inside it**
-      Needs: Thomas – a verdict on the SEVEN deviations listed below, each of
-           which is the new design disagreeing with something already written
-           down. Nothing is blocked on him; they are built as drawn.
+      Needs: Thomas – the deep link to the Edit kitchen sheet's DELETE state in
+           Figma. He has seen it and it is drawn; the page list the MCP returns
+           for the app file is broken (one page, "app icon"), so it cannot be
+           found from here.
       Status: **REDESIGNED BY THOMAS AND REBUILT 2026-08-16.** Implemented
            from `Settings – default` / `default 3` + `default 4`, specs read
            off the file (bound variables and geometry), NOT from screenshots.
+           **ALL SEVEN DEVIATIONS RULED ON BY THOMAS 2026-08-16 – see below.**
 
-      ⚠️ **SEVEN PLACES THE NEW DESIGN OVERRULES SOMETHING PREVIOUSLY AGREED.**
-      All built as drawn – listed because each one silently retires an earlier
-      decision, and a rule nobody knows was retired comes back as a "bug".
-      1. **Row labels are BODY TEXT now** – IBM Plex Regular 16 on
+      ✅ **SEVEN PLACES THE NEW DESIGN OVERRULED SOMETHING PREVIOUSLY AGREED –
+      ALL SETTLED 2026-08-16 IN THE DESIGN'S FAVOUR.** Kept in full because
+      each one retires an earlier decision, and a rule nobody knows was retired
+      comes back as a "bug".
+      1. ✅ **Row labels are BODY TEXT now** – IBM Plex Regular 16 on
          `text/default`, where the header rule says a card header (kitchen
          name, member name) is Montserrat Bold on `text/subtle`. Applied to
          every row on the screen, so it reads as deliberate: it is what makes
-         the list read as a list rather than a stack of cards. **The header
-         rule's "card header" line is now wrong for this screen** – either the
-         rule needs a carve-out or the frames do.
-      2. **The avatar rule is INVERTED.** 2026-07-18: "the phone owner's
-         avatar is outlined, everyone else's is solid." The frames draw YOUR
-         avatar solid `surface/secondary/main` and everyone else's
-         `surface/neutral/light`. Consistent with your row sorting to the top,
-         so probably intended.
-      3. **The member count is gone from the kitchen row** – no "2 people"
+         the list read as a list rather than a stack of cards.
+         ⭐ **SETTLED 2026-08-16 – THE DESIGN CONTROLS THE UI.** Thomas: *"I
+         don't know the header rule – design is controlling the UI."* So the
+         frame wins and the header rule does not override it. This is bigger
+         than one screen; see the decisions log, and read the header-rule
+         table further down as a DESCRIPTION of what the frames do, not as an
+         authority over them.
+      2. ✅ **The avatar rule is INVERTED, AND THE INVERSION IS RIGHT.**
+         2026-07-18: "the phone owner's avatar is outlined, everyone else's is
+         solid." The frames draw YOUR avatar solid `surface/secondary/main`
+         and everyone else's `surface/neutral/light`.
+         **Thomas 2026-08-16: "update avatar to what's in Figma"** – so the
+         07-18 rule is retired. The code already matched the frames, so
+         nothing changed in the app; what changed is that it is no longer
+         flagged as a deviation. Do not restore the outlined version.
+      3. ✅ **The member count is gone from the kitchen row** – no "2 people"
          line, no `people-alt` icon. The row is now indicator + name + `⋮`.
-      4. **The email is gone from the member row.** No member row shows one,
+         **By design (Thomas, 2026-08-16).**
+      4. ✅ **The email is gone from the member row.** No member row shows one,
          including your own. Retires the 08-13 rule that your row shows your
-         email.
+         email. **By design (Thomas, 2026-08-16).**
       5. ✅ **The inactive kitchen slot – FIXED BY THOMAS 2026-08-16.** It was
          drawn empty (no fill, no stroke), the review flagged it as reading
          like an absence rather than a state, and it shipped blank in the first
@@ -2947,9 +2934,11 @@ says whether any of it costs anything commercially.
          remembering as the shape of the problem: **the frame the spec points
          at is the one most likely to be missed**, because a change gets made
          where the eye happens to be.
-      6. **The active indicator changed colour** – `surface/secondary/main`
+      6. ✅ **The active indicator changed colour** – `surface/secondary/main`
          (brown) with a white check, not the green it had been.
-      7. **All non-brand icons are `icon/subtle`**, not `icon/default`.
+         **By design (Thomas, 2026-08-16).**
+      7. ✅ **All non-brand icons are `icon/subtle`**, not `icon/default`.
+         **By design (Thomas, 2026-08-16).**
 
       ⚠️ **ONE THING COULD NOT BE BUILT FROM A TOKEN, AND IT IS THE DS'S
       FAULT.** The check glyph binds to `icon/default`, which Figma resolves to
@@ -2979,8 +2968,13 @@ says whether any of it costs anything commercially.
       rather than a frame – your own row must top People (fixed 2026-08-16),
       and the invite rule reads correctly in both states.
 
-      ⭐ **THE HEADER RULE (Thomas, 2026-08-13) – applies to the WHOLE app, not
-      just this screen. Do not re-derive it from a frame.**
+      ⭐ **THE HEADER RULE (Thomas, 2026-08-13) – DEMOTED 2026-08-16 FROM RULE
+      TO DESCRIPTION.** It still records what the frames did when it was
+      written, and it is still the right default when a frame is silent. What
+      it is NOT, any longer, is an authority that overrides a frame: Thomas,
+      asked to settle deviation 1 above, said *"I don't know the header rule –
+      design is controlling the UI."* Where this table and a frame disagree,
+      **build the frame** and correct the table.
       | header | token | type |
       |---|---|---|
       | **Screen** header (the page title) | `text/subtle` | Montserrat Bold 32/40 |
@@ -2991,11 +2985,27 @@ says whether any of it costs anything commercially.
       picker's value follows Figma at `text/subtle` too.
 
       **WHAT IS STILL OPEN ON THIS ITEM** (everything else below is done):
-      1. **The kitchen row's `⋮` menu** – undrawn. Renders on the ACTIVE
-         kitchen only until it exists.
-      2. **The Edit kitchen sheet's delete state** – undrawn (the `canDelete`
-         one Thomas has never seen).
-      3. **The row pressed state** – undrawn; Claude's improvisation is live.
+      1. ✅ **The kitchen row's `⋮` menu – BY DESIGN (Thomas, 2026-08-16).**
+         It renders on the ACTIVE kitchen only and opens the existing Edit
+         kitchen sheet. That started as Claude's improvisation around an
+         undrawn menu; it is now the decided behaviour, so do not "fix" it by
+         putting a `⋮` on every row.
+      2. **The Edit kitchen sheet's delete state – DRAWN, AND THE ENTRY BELOW
+         SAYING OTHERWISE WAS WRONG.** Thomas, 2026-08-16: *"I have seen it,
+         and it's in figma."* The sheet's `canDelete` branch is also already
+         BUILT ([edit-household-sheet.tsx:110](../src/components/household/edit-household-sheet.tsx:110)),
+         and its docstring cites a Figma "delete household" frame from the
+         07-22 rework – so "never drawn, never seen" was wrong twice over.
+         **Left open for one reason only:** the built version predates the
+         Settings redesign and has not been checked against the frame since.
+         Needs the deep link (see `Needs:` at the top).
+      3. ✅ **The row pressed state – SPECIFIED BY THOMAS 2026-08-16 as
+         `surface/neutral/lighter`**, replacing Claude's `lightest`. Built.
+         ⚠️ **AND IT COLLIDES WITH THE INACTIVE KITCHEN CIRCLE**, which Thomas
+         retuned to the same token the same day – both are `#E7E6E4`, so
+         holding an inactive kitchen row makes its circle vanish into the row
+         for as long as the press lasts. Built as instructed and flagged
+         rather than quietly adjusted; worth a look on the phone.
       4. ✅ **FIXED IN FIGMA 2026-08-16 – "as you both change it" is now "as
          everyone changes it"**, in all three sections that carried it
          (`default`, `change kitchen`, `invite`). Still to reach the app: the
@@ -3023,15 +3033,18 @@ says whether any of it costs anything commercially.
             item under Known bugs. Which is the argument for the phone: the
             screen had been read in Figma, built, typechecked and looked at,
             and the wrong row was top the whole time.
-      - [ ] **Two improvisations, flagged rather than hidden:**
+      - [x] **BOTH IMPROVISATIONS ADOPTED BY THOMAS 2026-08-16 – they are his
+            decisions now, not Claude's guesses.** Flagging them is what got
+            them ruled on, which is the argument for flagging.
             **1. The `⋮` renders on the ACTIVE kitchen only**, though the frame
             draws it on every row – because the menu behind it is not designed
             (see below). It opens the existing Edit kitchen sheet, exactly as
             today. A control on the other rows would have nothing to open.
-            **2. The row pressed state** uses `surface-neutral-lightest`. The
-            frame does not draw one, and tappable rows with no feedback are
-            broken – so this is a DS value, not an invented one, but it is
-            Claude's choice and not Thomas's design.
+            ✅ **"By design."** Kept exactly as built.
+            **2. The row pressed state** used `surface-neutral-lightest` – a DS
+            value, but Claude's choice and not Thomas's design.
+            ✅ **CHANGED to `surface/neutral/lighter` on his instruction**
+            ("pressed: neutral/lighter"). See the collision warning above.
       - [x] **PAGE TITLE COLOUR – SETTLED 2026-08-13 on `text/subtle`
             (#5F503A), on all four screens.** The header spec was finally read
             off Figma properly for Plan, Shopping and Recipes rather than
@@ -3147,22 +3160,29 @@ says whether any of it costs anything commercially.
       had been built as a switcher row all along.
       **The `HouseholdSwitcher` component goes away entirely.**
 
-      **STILL TO DRAW before this can be finished:**
-      - [ ] **The kitchen row's `⋮` menu.** The list created this: the menu now
+      **STILL TO DRAW – ALL THREE CLOSED BY THOMAS 2026-08-16.** Left in place
+      because each says what the gap WAS, and the answers only make sense next
+      to it.
+      - [x] **The kitchen row's `⋮` menu.** The list created this: the menu now
             has to answer *edit / leave / delete* for a kitchen the user may
             not currently be standing in, and leaving a kitchen you are not in
             is a different confirmation from leaving the one you are using.
             This is the real gap.
-      - [ ] **The Edit kitchen sheet's second state.** `canDelete` is
+            ✅ **NOT A GAP – "by design."** The `⋮` stays on the active kitchen
+            only, opening the Edit kitchen sheet. No menu to draw.
+      - [x] **The Edit kitchen sheet's second state.** `canDelete` is
             `members.length === 1 && households.length > 1`
             ([household.tsx:193](../src/app/household.tsx:193)), so the red
             Delete kitchen button plus its warning line only appear when you
-            are alone in one of several kitchens. Thomas has never seen it,
-            which is why the first redraw looked complete without it. It is
-            about to appear MORE often, because the new list makes joining and
-            creating kitchens visible on the main screen.
-      - [ ] **Row pressed state** – React Native has no hover/focus, so every
+            are alone in one of several kitchens. It is about to appear MORE
+            often, because the new list makes joining and creating kitchens
+            visible on the main screen.
+            ⚠️ **"Thomas has never seen it" WAS WRONG** – *"I have seen it, and
+            it's in figma."* It is also already built. What remains is a check
+            against the frame, not a drawing job; moved up to the open list.
+      - [x] **Row pressed state** – React Native has no hover/focus, so every
             state is built by hand (DS rule 3).
+            ✅ **Answered directly: `neutral/lighter`.** Built.
 
       **OPEN COPY QUESTION:** the banner says "…as you **both** change it",
       which is right for a kitchen of two and wrong for the three-person
@@ -4661,6 +4681,39 @@ Not work. Kept so a cold thread can pick things up without re-litigating them.
             missing radius is not evidence of radius 0. `ds-theme.cjs` decides.
 
 ### Decisions log (recent)
+
+- **2026-08-16 – ⭐ THE DESIGN CONTROLS THE UI. A WRITTEN RULE DOES NOT
+  OVERRIDE A FRAME.** Asked to settle the Settings screen's row labels, where
+  the frames draw body text and the header rule demands a Montserrat card
+  header, Thomas: *"I don't know the header rule – design is controlling the
+  UI."* So the frame wins.
+  **THIS RETIRES A RULE HE WROTE HIMSELF**, which is why it is logged rather
+  than just applied: on 2026-08-13 he said of the same header spec, *"If you
+  build them as IBM plex you are not following the DS."* Both are his; the
+  later one governs. If that is narrower than intended – if the header rule
+  was meant to survive for screen and section titles and only lose on list
+  rows – say so and this entry gets split.
+  **WHAT DID NOT CHANGE:** a DS COMPONENT still beats a screen frame
+  (CLAUDE.md), because components are the audited part and screen frames are
+  design work that can contain mistakes. The order is now: DS component →
+  screen frame → written convention. The header-rule table under `2.27`
+  survives as a description of what the frames do and a default when a frame
+  is silent, not as an authority.
+
+- **2026-08-16 – THE AVATAR RULE IS RETIRED; FOLLOW FIGMA.** *"Update avatar
+  to what's in Figma."* YOUR avatar is solid `surface/secondary/main`,
+  everyone else's `surface/neutral/light` – the inverse of the 2026-07-18
+  rule ("the phone owner's avatar is outlined, everyone else's is solid").
+  The code already matched the frames, so nothing shipped differently; what
+  changed is that the old rule can no longer be cited to reverse it.
+
+- **2026-08-16 – THE SETTINGS SCREEN'S OTHER FIVE DEVIATIONS ARE ALL "BY
+  DESIGN".** No member count on the kitchen row, no email on the member row,
+  a brown active indicator instead of green, `icon/subtle` for all non-brand
+  icons, and the `⋮` on the active kitchen only. Each retired an earlier
+  written decision and each was ruled in the design's favour, in one pass.
+  The pattern worth keeping: the deviations were listed as deviations at
+  build time, which is the only reason a single sitting could close them.
 
 - **2026-08-16 – COMPONENTS ARE BUILT IN THE DS AND NOWHERE ELSE, AND THAT
   RULE DOES NOT LIVE IN THIS REPO.** Thomas, after a DS alert banner was

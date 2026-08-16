@@ -331,13 +331,14 @@ function SettingsGroup({ title, children }: { title: string; children: React.Rea
   );
 }
 
-// Rows share one pressed treatment. The frame does not draw a pressed state
-// (logged as still-to-draw in backlog 2.27) – IMPROVISED here rather than
-// shipping tappable rows with no feedback at all, using the page background
-// token so it is a DS value and not an invented one.
+// Rows share one pressed treatment. SPECIFIED BY THOMAS 2026-08-16 as
+// `surface/neutral/lighter` – it was Claude's improvisation on `lightest`
+// until then. See the backlog: at this value a pressed row matches the
+// INACTIVE kitchen circle exactly (both #E7E6E4), so that circle disappears
+// for as long as the row is held.
 const rowBase = "w-full flex-row items-center gap-layout-small p-layout-small";
 const rowFill = (pressed: boolean) =>
-  pressed ? "bg-surface-neutral-lightest" : "bg-surface-neutral-white";
+  pressed ? "bg-surface-neutral-lighter" : "bg-surface-neutral-white";
 const rowBorder = (isLast: boolean) => (isLast ? "" : "border-b border-border-subtle");
 
 /**
@@ -382,11 +383,10 @@ function KitchenRow({
             )}
           </View>
           <View className="min-w-0 flex-1">
-            {/* Row label: IBM Plex Regular 16/24 on `text/default`. The 08-13
-                design had this as a Montserrat card header on `text/subtle`;
-                the 08-16 redesign makes every row label body text, which is
-                what makes the list read as a list. It contradicts the header
-                rule's "card header" line – see the backlog. */}
+            {/* Row label: IBM Plex Regular 16/24 on `text/default`, as the
+                frames draw it. This contradicted the 08-13 header rule's "card
+                header" line; SETTLED BY THOMAS 2026-08-16 – the design controls
+                the UI, so the frame wins and the rule does not override it. */}
             <Text
               numberOfLines={1}
               className="font-paragraph text-paragraph font-default leading-xsmall text-text-default"
@@ -461,15 +461,14 @@ function ActionRow({
  * row is padding-driven at 56), an avatar, a name, and the overflow control on
  * your own row only, because you can only edit yourself.
  *
- * ⚠️ THE AVATAR RULE IS INVERTED FROM 2026-07-18. That rule was "the phone
- * owner's avatar is outlined, everyone else's is solid". The 08-16 frames draw
- * the opposite: YOUR avatar is solid `surface/secondary/main`, everyone else's
- * is `surface/neutral/light`. Built as drawn and flagged in the backlog – it
- * now reads as "you are the emphasised one", which is consistent with your row
- * sorting to the top, so it may well be deliberate.
+ * The avatar follows the frames: YOUR avatar is solid `surface/secondary/main`,
+ * everyone else's is `surface/neutral/light`. That is inverted from the
+ * 2026-07-18 rule ("the phone owner's avatar is outlined, everyone else's is
+ * solid"), and THOMAS RETIRED THAT RULE 2026-08-16 in favour of what Figma
+ * draws. Do not restore it.
  *
  * The email line is gone: the frames give every member row a single label, and
- * no email node is visible on any of them.
+ * no email node is visible on any of them. Confirmed by design, same day.
  */
 function MemberRow({
   member,
