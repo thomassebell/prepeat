@@ -4113,7 +4113,14 @@ Chores with a trigger rather than a finish line. These never get ticked off for 
         2. more than a few days away from the Mac – turn it on BEFORE
            travelling;
         3. egress or database past half the free limit. At 162 MB / 31 MB
-           today, so distant.
+           today, so distant;
+        4. **no Mac is currently running the nightly job.** Added 2026-08-16,
+           when the work-Mac copy-off finished: the LaunchAgent exists only on
+           the machine `npm run backup:install` was run on, so between handing
+           one Mac back and setting the next one up there is NO automatic
+           backup at all. Either close that window fast (section C of
+           [if-the-mac-is-gone.md](if-the-mac-is-gone.md)) or turn Pro on for
+           the duration – this is trigger 2's argument without the travel.
       Why not now: Pro only adds two things – it runs when the Mac does not,
            and it sits somewhere other than the desk. On retention it is
            WORSE than what we have, and its backups have never been restored.
