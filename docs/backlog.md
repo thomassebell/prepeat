@@ -880,8 +880,8 @@ Committed work for the first update after launch. Panel findings default here un
       another brand's component. This is NOT a missed token sync – same names,
       different brand mode, which is the system working.
 
-- [ ] **The alert banner exists in Figma only – not in `@ds/react`, and no
-      longer in the app either.**
+- [ ] **The alert banner exists in Figma only – it has no code anywhere**
+      Note: not in `@ds/react`, and no longer in the app either.
       Noticed by Thomas 2026-08-16: *"I just realized the alert banner was not
       coded. Did you just code it?"* Yes – it had no code implementation
       anywhere. The one written here was deleted the same hour, so it has none
@@ -900,8 +900,8 @@ Committed work for the first update after launch. Panel findings default here un
       different job from writing it (RN primitives, no Tailwind classes), so it
       is a DS-repo task rather than a copy-paste.
 
-- [ ] **Export the `icon/*` and `text/contrast-text` tokens the alert banner
-      needs** – two of its eight variants and its close button cannot be built
+- [ ] **Export the `icon/*` and `text/contrast-text` tokens the alert banner needs**
+      Why: two of its eight variants and its close button cannot be built
       without them.
       Found 2026-08-16 while building the since-deleted alert banner, and
       still true for whoever builds it in the DS. `ds-theme.cjs`
@@ -2821,8 +2821,8 @@ panel raised that shipping it did not move the problem the request was about.
 - [ ] 2. **Watch two people in one home set it up independently.** Do they make
       two households? Observable in an afternoon.
       (Synthetic User Panel: comprehension, high.)
-- [ ] 3. **Does the second adult actually get in, and does anything change when
-      they do?** The pre-mortem's central claim is that access was granted and the
+- [ ] 3. **Does the second adult actually get in, and does anything change when they do?**
+      The pre-mortem's central claim is that access was granted and the
       load did not move. That is the product's premise, testable with one
       household. (Synthetic User Panel: objection harvest, high.)
 - [ ] 4. **Watch someone retrieve a recipe they saved six months ago.** Rikke's
@@ -3458,12 +3458,13 @@ are just sentences, and were missed on the first pass through these findings.
 
 #### What to verify with real humans (the panel's own three)
 
-- [ ] 1. **Show a real person screen 10 cold and ask what has to happen before
-      the plan works.** Directly tests the precondition finding, and the caveat
+- [ ] 1. **Show a real person screen 10 cold and ask what has to happen before the plan works.**
+      Directly tests the precondition finding, and the caveat
       above means only a human can settle it.
 - [ ] 2. **Ask what a "kitchen" is, in their words.**
-- [ ] 3. **⭐ Give the store page to one person in a household and the invite
-      code to the other, then watch what actually happens.** The sharpest
+- [ ] 3. **⭐ Give one person the store page and the other the invite code, then watch**
+      Note: the two are in the same household, and the point is what actually
+      happens between them. The sharpest
       research idea in either round – it tests the product's actual premise,
       which is that the second person's arrival changes something.
 
