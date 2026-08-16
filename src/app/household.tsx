@@ -384,9 +384,10 @@ function KitchenRow({
           </View>
           <View className="min-w-0 flex-1">
             {/* Row label: IBM Plex Regular 16/24 on `text/default`, as the
-                frames draw it. This contradicted the 08-13 header rule's "card
-                header" line; SETTLED BY THOMAS 2026-08-16 – the design controls
-                the UI, so the frame wins and the rule does not override it. */}
+                frames draw it. Confirmed by Thomas 2026-08-16, who also
+                deleted the app-side "header rule" this was once measured
+                against – type comes from the DS and from the frame, and
+                nothing in this repo overrules either. */}
             <Text
               numberOfLines={1}
               className="font-paragraph text-paragraph font-default leading-xsmall text-text-default"

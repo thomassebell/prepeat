@@ -2896,16 +2896,18 @@ says whether any of it costs anything commercially.
       each one retires an earlier decision, and a rule nobody knows was retired
       comes back as a "bug".
       1. ✅ **Row labels are BODY TEXT now** – IBM Plex Regular 16 on
-         `text/default`, where the header rule says a card header (kitchen
-         name, member name) is Montserrat Bold on `text/subtle`. Applied to
-         every row on the screen, so it reads as deliberate: it is what makes
-         the list read as a list rather than a stack of cards.
-         ⭐ **SETTLED 2026-08-16 – THE DESIGN CONTROLS THE UI.** Thomas: *"I
-         don't know the header rule – design is controlling the UI."* So the
-         frame wins and the header rule does not override it. This is bigger
-         than one screen; see the decisions log, and read the header-rule
-         table further down as a DESCRIPTION of what the frames do, not as an
-         authority over them.
+         `text/default`, where an app-side "header rule" written here on
+         2026-08-13 said a card header (kitchen name, member name) is
+         Montserrat Bold on `text/subtle`. Applied to every row on the screen,
+         so it reads as deliberate: it is what makes the list read as a list
+         rather than a stack of cards.
+         ⭐ **SETTLED 2026-08-16 – AND THE DEVIATION WAS NEVER REAL.** Thomas
+         first: *"I don't know the header rule – design is controlling the
+         UI."* Then, correcting the record properly: *"there are no (or should
+         not be) special rules about headers. Those rules is set in the DS and
+         by the designer."* So this was not a frame overruling a rule – there
+         was no rule to overrule, only a note this file should not have been
+         keeping. The table is deleted; see the decisions log.
       2. ✅ **The avatar rule is INVERTED, AND THE INVERSION IS RIGHT.**
          2026-07-18: "the phone owner's avatar is outlined, everyone else's is
          solid." The frames draw YOUR avatar solid `surface/secondary/main`
@@ -2967,21 +2969,16 @@ says whether any of it costs anything commercially.
       rather than a frame – your own row must top People (fixed 2026-08-16),
       and the invite rule reads correctly in both states.
 
-      ⭐ **THE HEADER RULE (Thomas, 2026-08-13) – DEMOTED 2026-08-16 FROM RULE
-      TO DESCRIPTION.** It still records what the frames did when it was
-      written, and it is still the right default when a frame is silent. What
-      it is NOT, any longer, is an authority that overrides a frame: Thomas,
-      asked to settle deviation 1 above, said *"I don't know the header rule –
-      design is controlling the UI."* Where this table and a frame disagree,
-      **build the frame** and correct the table.
-      | header | token | type |
-      |---|---|---|
-      | **Screen** header (the page title) | `text/subtle` | Montserrat Bold 32/40 |
-      | **Section** header ("Kitchens", "Produce", "Ingredients") | `text/default` | Montserrat Bold 16/24 |
-      | **Card** header (recipe title, meal row, kitchen name, member name) | `text/subtle` | Montserrat Bold 16/24 |
-      **All three are Montserrat.** *"If you build them as IBM plex you are not
-      following the DS."* Applied in Figma and in code on 2026-08-13; the week
-      picker's value follows Figma at `text/subtle` too.
+      ⭐ **THERE IS NO HEADER RULE, AND THERE SHOULD NEVER HAVE BEEN ONE.**
+      Thomas, 2026-08-16: *"there are no (or should not be) special rules about
+      headers. Those rules is set in the DS and by the designer."*
+      A table of header tokens lived here from 2026-08-13 until then. **It is
+      deleted, not demoted** – an app-side table of type and colour decisions
+      is a second source of truth competing with the DS and the frames, and
+      the only thing it can do is win an argument it has no standing in.
+      **Read the frame. Read the DS. Neither of them is in this file.**
+      See the decisions log, and the same shape one entry above it: components
+      may only be built in the DS, for the same reason.
 
       **WHAT IS STILL OPEN ON THIS ITEM** (everything else below is done):
       1. ✅ **The kitchen row's `⋮` menu – BY DESIGN (Thomas, 2026-08-16).**
@@ -3925,6 +3922,21 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
 
 ### Code debts (small, known, deliberate)
 
+- [ ] **Sweep this file and `CLAUDE.md` for any other design rule the app invented**
+      Why: the header-rule table was deleted 2026-08-16 because a design rule
+           written in this repo cannot be checked by anything and gets cited
+           against a frame. It was found by accident, when a redesign happened
+           to contradict it. Nothing says it was the only one.
+      What to look for: a table or a "always/never" line about type, colour,
+           spacing, radius or icon choice that is not quoting the DS or a
+           specific frame. Decisions with a date and a screen are FINE and
+           should stay – "the Settings rows are body text, Thomas 2026-08-16"
+           is evidence. The generalisation drawn from one is not.
+      Size: one read-through. No code changes expected.
+      Source: Thomas, 2026-08-16 – *"there are no (or should not be) special
+           rules about headers. Those rules is set in the DS and by the
+           designer."*
+
 - [ ] **⭐ `chip.tsx` and `input.tsx` should come from the DS, not from here**
       Asked by Thomas, 2026-08-16. Both are real DS components –
       he confirmed it – re-implemented in this app in React Native. Under the
@@ -4712,23 +4724,32 @@ Not work. Kept so a cold thread can pick things up without re-litigating them.
 
 ### Decisions log (recent)
 
-- **2026-08-16 – ⭐ THE DESIGN CONTROLS THE UI. A WRITTEN RULE DOES NOT
-  OVERRIDE A FRAME.** Asked to settle the Settings screen's row labels, where
-  the frames draw body text and the header rule demands a Montserrat card
-  header, Thomas: *"I don't know the header rule – design is controlling the
-  UI."* So the frame wins.
-  **THIS RETIRES A RULE HE WROTE HIMSELF**, which is why it is logged rather
-  than just applied: on 2026-08-13 he said of the same header spec, *"If you
-  build them as IBM plex you are not following the DS."* Both are his; the
-  later one governs. If that is narrower than intended – if the header rule
-  was meant to survive for screen and section titles and only lose on list
-  rows – say so and this entry gets split.
-  **WHAT DID NOT CHANGE:** a DS COMPONENT still beats a screen frame
-  (CLAUDE.md), because components are the audited part and screen frames are
-  design work that can contain mistakes. The order is now: DS component →
-  screen frame → written convention. The header-rule table under `2.27`
-  survives as a description of what the frames do and a default when a frame
-  is silent, not as an authority.
+- **2026-08-16 – ⭐ THIS REPO DOES NOT AUTHOR DESIGN RULES. THE DS AND THE
+  DESIGNER DO.** Thomas: *"there are no (or should not be) special rules about
+  headers. Those rules is set in the DS and by the designer."*
+  **So the header-rule table that lived under `2.27` is DELETED, not
+  demoted.** The first answer this session was a demotion – frame beats rule,
+  rule survives as a default – and that was still wrong, because it left the
+  table standing as something to consult. There is nothing to consult. Type,
+  colour, spacing and radius come from the DS; what a given screen does with
+  them comes from the frame.
+  **WHY A WRITTEN COPY IS WORSE THAN NO COPY**, which is the part worth
+  keeping: a table in this file cannot be checked by anything. The DS has
+  stylelint, cross-brand parity and both density modes; a frame has Thomas.
+  A markdown table has neither, so it cannot be right – only unchallenged.
+  It then gets cited against a frame, which is exactly what happened to the
+  Settings row labels: three deviations logged against a "rule" that had no
+  standing, and a round of correction to retire it.
+  **SAME SHAPE AS THE COMPONENT RULE LOGGED BELOW** – components may only be
+  built in the DS. Both are the app repo holding something that belongs
+  upstream, and both were caught by Thomas rather than by any check.
+  **WHAT STILL HOLDS:** a DS component beats a screen frame (CLAUDE.md),
+  because components are the audited part and screen frames are design work
+  that can contain mistakes. That is a DS rule, not one this file invented.
+  **WHAT TO DO INSTEAD OF WRITING A RULE DOWN:** record the DECISION and its
+  date – "the Settings rows are body text, Thomas 2026-08-16" – never the
+  generalisation drawn from it. Decisions are evidence; generalisations are
+  an unchecked second source of truth.
 
 - **2026-08-16 – THE AVATAR RULE IS RETIRED; FOLLOW FIGMA.** *"Update avatar
   to what's in Figma."* YOUR avatar is solid `surface/secondary/main`,

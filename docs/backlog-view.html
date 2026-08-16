@@ -79,7 +79,7 @@
 <main>
   <header>
     <h1>Prep+Eat – open backlog</h1>
-    <p class="meta">84 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
+    <p class="meta">85 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
   </header>
   <div class="filter"><input id="q" type="search" placeholder="Filter tasks…" autocomplete="off"></div>
   <section class="waiting">
@@ -629,7 +629,7 @@
     </article>
     </section>
     <section>
-      <h2>Someday – not committed <span class="count" data-total="23">23</span></h2>
+      <h2>Someday – not committed <span class="count" data-total="24">24</span></h2>
       <h4>Ideas – not yet committed</h4>
     <article class="item">
       <h3>
@@ -775,6 +775,15 @@
       <dl><dt>Why</dt><dd>madensverden.dk and allrecipes refuse non-browser fetches, so pasting a link from them fails.</dd><dt>Trigger</dt><dd>only build it if a site the family actually uses gets blocked.</dd><dt>Size</dt><dd>a hidden-WebView fetch is the known fix; nothing exists in code today (a comment in recipe-import.ts names it, and react-native-webview is not installed).</dd></dl>
       
     </article><h4>Code debts (small, known, deliberate)</h4>
+    <article class="item">
+      <h3>
+        
+        
+        <span><strong>Sweep this file and <code>CLAUDE.md</code> for any other design rule the app invented</strong></span>
+      </h3>
+      <dl><dt>Why</dt><dd>the header-rule table was deleted 2026-08-16 because a design rule written in this repo cannot be checked by anything and gets cited against a frame. It was found by accident, when a redesign happened to contradict it. Nothing says it was the only one.</dd></dl>
+      <details><summary>Full note</summary><p>What to look for: a table or a "always/never" line about type, colour, spacing, radius or icon choice that is not quoting the DS or a specific frame. Decisions with a date and a screen are FINE and should stay – "the Settings rows are body text, Thomas 2026-08-16" is evidence. The generalisation drawn from one is not. Size: one read-through. No code changes expected. Source: Thomas, 2026-08-16 – *"there are no (or should not be) special rules about headers. Those rules is set in the DS and by the designer."*</p></details>
+    </article>
     <article class="item">
       <h3>
         
