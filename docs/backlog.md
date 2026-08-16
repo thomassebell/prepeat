@@ -4327,6 +4327,31 @@ Not work. Kept so a cold thread can pick things up without re-litigating them.
 
 ### Decisions log (recent)
 
+- **2026-08-16 – 1.1.0 WAITS FOR THE SETTINGS REDESIGN.** Thomas, asked
+  directly, chose one update over two: users get the new Settings screen only
+  once he has simplified it, rather than seeing the messy version and then a
+  better one. **The trade-off was put to him and he took it knowingly** – every
+  other change in 1.1.0 (leftovers moving between weeks, ingredient sections,
+  the kitchen wording round, two weeks of fixes) stays undelivered for as long
+  as the redesign takes, and real users have been on build 12 since 2026-07-30.
+  **So `2.27` is the critical path to 1.1.0 for the second time**, having been
+  it once already when it parked build 18.
+  **THE OPERATIONAL LESSON, WHICH IS SEPARATE AND NOT UP FOR DEBATE:** do not
+  pre-build a release that is waiting on something. Build 18 was parked and
+  died; build 19 was built this morning and was one fix behind within the hour.
+  Three stale builds in two weeks. **A build is only ever a snapshot of the
+  minute it was made, and EAS takes twenty minutes whenever it is actually
+  wanted** – so building early buys nothing and reliably produces something
+  that looks shippable and is not. The next build happens at submission time.
+
+- **2026-08-16 – "YOU" TOPS THE PEOPLE LIST, NOT "THE OWNER".** Thomas asked
+  for the owner at the top; offered the trade-off, he chose "you, always".
+  There is no owner in the product – any member can rename, invite and leave –
+  and `created_by_user_id` has been nullable since 0016, so the creator's row
+  can cease to exist while the kitchen lives on. "You" is the only answer that
+  is always defined. See the bug entry under Known bugs for the cause, which
+  was a comment asserting something it could not know.
+
 - **2026-08-11 – THE FOURTH TAB IS `SETTINGS`, and the kitchen nests inside
   it.** Thomas: *"settings seems like a better match."* Closes panel finding
   2.27, where P03 read "kitchen" as *"a thing you name, a thing you're in, and

@@ -66,16 +66,27 @@ not on TestFlight, not in review, and it needs a build to reach anyone.
 > Do not submit it; the entry is kept only so nobody rediscovers it and
 > wonders.
 >
-> **⏸ BUILD 19 – 1.1.0, built 2026-08-16, NOT SUBMITTED.** The version is
-> bumped in `app.json` for the first time, because App Store Connect binds a
-> release to the version string inside the build: a build carrying 1.0.0
-> cannot be released as 1.1.0, which is the other half of why 18 was scrap.
-> Build: https://expo.dev/accounts/sebell/projects/prepeat/builds/576397ca-c1a3-4b39-b584-a700f1e1dbc6
-> ⚠️ **ALREADY ONE FIX BEHIND: the People ordering fix (below) landed an hour
-> after it was built.** Rebuild before submitting. **This is the third time
-> this file has recorded a parked build going stale** – the pattern is that a
-> build is only ever a snapshot, so the rule is: build when you are ready to
-> submit, not before.
+> **☠️ BUILD 19 IS ALSO DEAD** – 1.1.0, built 2026-08-16, never submitted, one
+> fix behind within the hour (the People ordering fix below). Do not submit it.
+>
+> **⏸ 1.1.0 IS HELD FOR THE SETTINGS REDESIGN** (Thomas, 2026-08-16). He is
+> redoing the screen – *"this whole page is messy design vise"* – and chose one
+> update over two, with the trade-off stated: everything else in this section
+> stays undelivered for as long as the redesign takes, and real users have been
+> on build 12 since 2026-07-30. **So `2.27` is the critical path to 1.1.0 for
+> the second time.**
+>
+> ⚠️ **DO NOT PRE-BUILD IT THIS TIME.** Builds 18 and 19 both died parked, 19
+> within an hour, and that is now three in this file. **A build is only ever a
+> snapshot: build when you are ready to submit, not before.** There is nothing
+> to preserve by building early – EAS takes about twenty minutes whenever the
+> moment comes.
+>
+> **`app.json` says 1.1.0 while nothing is shipping**, deliberately: it is the
+> version the next submission carries, and App Store Connect binds a release to
+> the string inside the build. **If a 1.0.1 hotfix is ever needed BEFORE the
+> redesign lands**, drop it back to 1.0.1 for that build – the digit follows
+> what is being submitted, not what is in the repo.
 
 **This will be 1.1.0** under the rule above – a new capability (moving
 leftovers between weeks, and now ingredient sections) alongside the fixes, and
