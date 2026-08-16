@@ -2810,12 +2810,15 @@ says whether any of it costs anything commercially.
          drawn empty (no fill, no stroke), the review flagged it as reading
          like an absence rather than a state, and it shipped blank in the first
          build. It is now a light `surface/neutral/lightest` circle.
-         ⚠️ **BUT `default 4` IN `Settings – default` IS THE ONE FRAME THAT
-         STILL HAS THE EMPTY VERSION.** Twelve `unselected` badges across the
-         other sections carry the circle; the two in the canonical frame do
-         not. **That frame is the one anything gets built from**, so it is
-         worth updating – otherwise the next person to read the spec rebuilds
-         the blank version. The code follows the twelve, not the two.
+         ✅ **AND RETUNED 2026-08-16 from `surface/neutral/lightest` to
+         `surface/neutral/lighter`** (#F8F7F7 → #E7E6E4). The first value was
+         the page background, so on a white card the circle barely read.
+         ✅ **ALL 14 BADGES NOW AGREE, `default 4` INCLUDED.** For one build the
+         canonical frame was the only one still drawing the empty version while
+         twelve others had the circle – flagged, and Thomas fixed it. Worth
+         remembering as the shape of the problem: **the frame the spec points
+         at is the one most likely to be missed**, because a change gets made
+         where the eye happens to be.
       6. **The active indicator changed colour** – `surface/secondary/main`
          (brown) with a white check, not the green it had been.
       7. **All non-brand icons are `icon/subtle`**, not `icon/default`.

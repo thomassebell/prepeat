@@ -342,9 +342,11 @@ const rowBorder = (isLast: boolean) => (isLast ? "" : "border-b border-border-su
 
 /**
  * One kitchen. The active one carries a filled `surface/secondary/main`
- * indicator with a white check; the others carry a light
- * `surface/neutral/lightest` circle, so the left gutter is never empty
- * (Thomas, 2026-08-16, after the first build shipped the blank version).
+ * indicator with a white check; the others carry a `surface/neutral/lighter`
+ * circle, so the left gutter is never empty (Thomas, 2026-08-16, after the
+ * first build shipped the blank version – then moved a step darker from
+ * `lightest`, which matched the page background and barely read on a white
+ * card).
  *
  * The 24px box takes `radius/large` (16), which clamps to a full circle at
  * this size – the same value the frame uses.
@@ -372,7 +374,7 @@ function KitchenRow({
           <View
             className={
               "h-[24px] w-[24px] items-center justify-center rounded-large " +
-              (selected ? "bg-surface-secondary-main" : "bg-surface-neutral-lightest")
+              (selected ? "bg-surface-secondary-main" : "bg-surface-neutral-lighter")
             }
           >
             {selected && (
