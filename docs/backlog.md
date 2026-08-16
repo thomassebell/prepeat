@@ -3905,6 +3905,31 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
 
 ### Code debts (small, known, deliberate)
 
+- [ ] **⭐ `chip.tsx` and `input.tsx` should come from the DS, not from here**
+      Asked by Thomas, 2026-08-16. Both are real DS components –
+      he confirmed it – re-implemented in this app in React Native. Under the
+      rule in the global `~/.claude/CLAUDE.md` (components are built in the DS
+      and nowhere else) they should not live here at all.
+      Why not fixed today: **there is no route from the DS into this app.**
+           `@ds/react` peers on `react-dom` and is a web library; this app is
+           React Native and carries no `@ds/*` dependency of any kind, taking
+           the DS as TOKENS only via `ds-theme.cjs`. So "just import them" is
+           not available – something has to exist to import first.
+      What it actually needs, in the DS and not here: an RN-consumable package
+           (`@ds/react-native` or similar) built from the same tokens, with the
+           DS's own checks extended to cover it. The stylelint rule that
+           enforces semantic-tokens-only reads CSS Modules, which RN does not
+           have, so that guard needs an equivalent rather than a copy.
+      Cost of doing nothing: two components in this app can drift from the DS
+           silently, and today showed the failure is not hypothetical – the
+           same drift happened in one hour with a third component, and was
+           caught by Thomas rather than by any check.
+      ⚠️ **NOT a licence to delete them.** They ship today and users are on
+           them. This is a migration once there is somewhere to migrate TO,
+           not a tidy-up.
+      Related: `tabs.tsx` is NOT part of this – decided the same day, it is app
+           UI and stays (see the decisions log).
+
 - [ ] **The first ingredient heading sits 16px lower than the design draws it**
       Why not fixed: every LATER heading matches Figma exactly. Only the first
            one differs, because the design gives it no space above and the code
