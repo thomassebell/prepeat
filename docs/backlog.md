@@ -758,6 +758,9 @@ Committed work for the first update after launch. Panel findings default here un
       The nudge now sits inside `useFocusEffect`, so it can only fire while Plan
       is the tab you are actually looking at, and blur cancels the in-flight
       check so a slow query cannot land late.
+      ✅ **CONFIRMED ON DEVICE by Thomas 2026-08-16 – *"it works now, both
+      ways"***, i.e. switching to an empty kitchen and to one with recipes both
+      leave you on Settings.
       LESSON: **a `key` on a navigator is a data-freshness fix that quietly buys
       a navigation bug.** It went unnoticed for months because nothing changed
       the key while the user cared where they were – the switcher used to be a
