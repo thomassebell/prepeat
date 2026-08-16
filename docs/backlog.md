@@ -3004,8 +3004,10 @@ says whether any of it costs anything commercially.
          rather than quietly adjusted; worth a look on the phone.
       4. ✅ **FIXED IN FIGMA 2026-08-16 – "as you both change it" is now "as
          everyone changes it"**, in all three sections that carried it
-         (`default`, `change kitchen`, `invite`). Still to reach the app: the
-         string lives in `emptyStateBanner`'s copy in code too.
+         (`default`, `change kitchen`, `invite`).
+         ✅ **AND IN THE APP** ([household.tsx:539](../src/app/household.tsx:539)) –
+         verified 2026-08-16. The "still to reach the app" note here was
+         stale; the code had already been changed alongside the frames.
       5. **`text/secondary` is missing from the token bridge** – DS `check` and
          `more_vert` bind their glyphs to it. Fix in the DS repo and re-sync.
       6. **`initicial` is misspelled on a DS component** – fix in the DS file,
