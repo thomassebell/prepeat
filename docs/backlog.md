@@ -835,11 +835,36 @@ Committed work for the first update after launch. Panel findings default here un
       so this is the second improvisation in one flow – worth a design pass on
       the whole import path rather than one more patch.
 
-- [ ] **Design the import flow properly** – it is now two improvisations deep
-      (the sheet itself, and the no-method notice above), and a third would be
-      the point at which nobody can tell which parts Thomas drew. Wants frames
-      for: the sheet, its error state, its busy state, and the notice.
-      Raised by Claude, 2026-08-16.
+- [ ] **Design an inline NOTICE component – there are two hand-rolled ones now**
+      Asked by Thomas 2026-08-16 – *"what component did you use"* – and the
+      answer was: none. The no-method line is a raw `View` + `Text` inlined at
+      [new.tsx:540](../src/app/recipes/new.tsx:540), copied from the import
+      sheet's error box at
+      [import-recipe-sheet.tsx:64](../src/components/recipes/import-recipe-sheet.tsx:64).
+      Same geometry (`rounded-medium`, `px-comp-large py-comp-small`, same type
+      classes), different background token, no shared definition.
+      **THIS EXACT CYCLE HAS ALREADY RUN ONCE HERE.** `LoadError`'s own
+      docstring says it "replaces the two hand-rolled versions improvised in
+      July and blessed as-is on 2026-07-25"
+      ([load-error.tsx:20](../src/components/ui/load-error.tsx:20)) – two
+      copies, then a designed component to replace them. We are back at step
+      one, with two copies again.
+      **DON'T let Claude extract it unprompted.** Pulling the invented shape
+      into `src/components/ui/notice.tsx` would make it look official without
+      anyone having designed it – a third improvisation wearing a component's
+      clothes. The DS has the TOKENS for every tone already
+      (`error/lightest`, `warning/lightest`, `info/lightest`,
+      `success/lightest`, each with a full ramp) and no component to spend them
+      on, so the missing piece is a frame, not code.
+      Wants: one notice block, tone as a variant, and a decision on whether it
+      carries an icon.
+
+- [ ] **Design the import flow properly** – separate from the notice above: the
+      sheet itself has never had a frame
+      ([import-recipe-sheet.tsx:12](../src/components/recipes/import-recipe-sheet.tsx:12)),
+      so the flow is two improvisations deep and a third would be the point at
+      which nobody can tell which parts Thomas drew. Wants frames for the
+      sheet, its error state and its busy state. Raised by Claude, 2026-08-16.
 
 - [x] **IMPORT FROM mkuniverset.dk LOST EVERY INGREDIENT NAME AND EVERY STEP.
       Reported by Thomas 2026-08-16, fixed the same day.** The recipe imported
