@@ -2689,8 +2689,10 @@ says whether any of it costs anything commercially.
       2. **The Edit kitchen sheet's delete state** – undrawn (the `canDelete`
          one Thomas has never seen).
       3. **The row pressed state** – undrawn; Claude's improvisation is live.
-      4. **The banner copy says "as you both change it"** – wrong for a kitchen
-         of three.
+      4. ✅ **FIXED IN FIGMA 2026-08-16 – "as you both change it" is now "as
+         everyone changes it"**, in all three sections that carried it
+         (`default`, `change kitchen`, `invite`). Still to reach the app: the
+         string lives in `emptyStateBanner`'s copy in code too.
       5. **`text/secondary` is missing from the token bridge** – DS `check` and
          `more_vert` bind their glyphs to it. Fix in the DS repo and re-sync.
       6. **`initicial` is misspelled on a DS component** – fix in the DS file,

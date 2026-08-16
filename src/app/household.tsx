@@ -543,8 +543,8 @@ function InviteBanner({ onPress }: { onPress: () => void }) {
           Invite someone
         </Text>
         <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-default">
-          Everyone sees the same plan and the same shopping list – and it updates as you both
-          change it.
+          Everyone sees the same plan and the same shopping list – and it updates as everyone
+          changes it.
         </Text>
       </View>
       <Pressable

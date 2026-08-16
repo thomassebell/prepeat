@@ -140,7 +140,7 @@ function normalizeJsonLd(
     ),
     imageUrl: extractImage(node.image),
     ingredients,
-    steps: extractInstructions(node.recipeInstructions),
+    steps: stripStepNumbers(extractInstructions(node.recipeInstructions)),
   };
 }
 
@@ -163,6 +163,24 @@ function extractImage(value: JsonValue | undefined): string | null {
     return typeof url === "string" ? url : null;
   }
   return null;
+}
+
+/**
+ * Sites that number their own steps ("1. Skyl bønnerne.") hand us that number
+ * inside the text, and the recipe screen numbers the steps AGAIN – so every
+ * step read "1  1. Skyl bønnerne" (mkuniverset.dk, 2026-08-16).
+ *
+ * Only stripped when the list is unambiguously the site's own numbering: at
+ * least two steps, every one of them numbered, and the numbers running 1, 2,
+ * 3… in order. A step that merely opens with a figure ("200 g mel røres i")
+ * is left alone, and so is a partly numbered list, because there the digit is
+ * likelier to be content than a counter.
+ */
+function stripStepNumbers(steps: string[]): string[] {
+  if (steps.length < 2) return steps;
+  const parsed = steps.map((step) => step.match(/^(\d{1,2})\s*[.)]\s+(.*)$/s));
+  if (parsed.some((m, i) => m == null || Number(m[1]) !== i + 1)) return steps;
+  return parsed.map((m, i) => m![2].trim() || steps[i]);
 }
 
 function extractInstructions(value: JsonValue | undefined): string[] {
@@ -238,6 +256,28 @@ export function resolveCookMinutes(
 
 // ── Microdata (the older flavor – e.g. valdemarsro.dk) ───────────────────
 
+/**
+ * `itemprop` holds a SPACE-SEPARATED LIST, not a single name – microdata lets
+ * one element carry several properties at once. mkuniverset.dk writes
+ * `itemprop="recipeInstructions description"` on its method, and matching the
+ * attribute value exactly missed it, so that recipe imported with no steps at
+ * all (2026-08-16). Match the name as one token among the list instead.
+ */
+function itempropPattern(name: string): string {
+  return `itemprop="(?:[^"]*\\s)?${name}(?:\\s[^"]*)?"`;
+}
+
+// Where the text of a property ends. INLINE tags (<a>, <strong>, <i>…) are
+// deliberately absent: this site links each ingredient to its own page, so the
+// ingredient sits INSIDE an <a>, and stopping at the first closing tag threw
+// the actual food away and imported "240 g kogte" and "4 stk".
+const PROPERTY_END =
+  /<\/(?:span|li|p|div|td|th|h[1-6]|ul|ol|section|article|dd|dt)\b|<li\b/i;
+
+// A property's text is short – a cap keeps a page with unclosed tags (this one
+// never closes its ingredient <span>) from swallowing the rest of the document.
+const PROPERTY_MAX_CHARS = 600;
+
 function extractMicrodataRecipe(
   html: string,
 ): Omit<ImportedRecipe, "sourceUrl"> | null {
@@ -256,8 +296,12 @@ function extractMicrodataRecipe(
   // Real instruction containers are HTML tags carrying the itemprop; the
   // steps are their <p>/<li> children.
   const steps: string[] = [];
-  const blockRegex =
-    /<[a-zA-Z][^>]*itemprop="recipeInstructions"[^>]*>([\s\S]{0,6000}?)(?=<[a-zA-Z][^>]*itemprop="|<\/section|<\/article|<script)/g;
+  const blockRegex = new RegExp(
+    `<[a-zA-Z][^>]*${itempropPattern("recipeInstructions")}[^>]*>` +
+      `([\\s\\S]{0,6000}?)` +
+      `(?=<[a-zA-Z][^>]*itemprop="|<\\/section|<\\/article|<script)`,
+    "gi",
+  );
   let blockMatch: RegExpExecArray | null;
   while ((blockMatch = blockRegex.exec(scope)) != null) {
     const block = blockMatch[1];
@@ -286,7 +330,9 @@ function extractMicrodataRecipe(
     // The recipe's own name is the heading carrying the itemprop; plain
     // first-name-in-scope can be the author/site.
     cleanText(
-      scope.match(/<h[12][^>]*itemprop="name"[^>]*>([^<]+)/i)?.[1] ?? "",
+      scope.match(
+        new RegExp(`<h[12][^>]*${itempropPattern("name")}[^>]*>([^<]+)`, "i"),
+      )?.[1] ?? "",
     ) ||
     matchAllTexts(scope, "name")[0] ||
     cleanText(
@@ -314,16 +360,25 @@ function extractMicrodataRecipe(
     ),
     imageUrl: image,
     ingredients,
-    steps,
+    steps: stripStepNumbers(steps),
   };
 }
 
 function matchAllTexts(html: string, itemprop: string): string[] {
   const results: string[] = [];
-  const regex = new RegExp(`itemprop="${itemprop}"[^>]*>([\\s\\S]*?)<`, "g");
+  // Match only the OPENING TAG, then walk forward to the property's end in
+  // JS. Doing the end in a lookahead would drop a property whose closing tag
+  // is missing; here a broken one is merely truncated at the cap, which is
+  // visible in the form rather than a silently missing ingredient.
+  const regex = new RegExp(`${itempropPattern(itemprop)}[^>]*>`, "gi");
   let match: RegExpExecArray | null;
   while ((match = regex.exec(html)) != null) {
-    const text = cleanText(match[1]);
+    const after = html.slice(
+      match.index + match[0].length,
+      match.index + match[0].length + PROPERTY_MAX_CHARS,
+    );
+    const end = after.search(PROPERTY_END);
+    const text = cleanText(end === -1 ? after : after.slice(0, end));
     if (text) results.push(text);
   }
   return results;
@@ -334,13 +389,10 @@ function matchAttr(
   itemprop: string,
   attr: string,
 ): string | null {
+  const prop = itempropPattern(itemprop);
   return (
-    html.match(
-      new RegExp(`itemprop="${itemprop}"[^>]*${attr}="([^"]+)"`, "i"),
-    )?.[1] ??
-    html.match(
-      new RegExp(`${attr}="([^"]+)"[^>]*itemprop="${itemprop}"`, "i"),
-    )?.[1] ??
+    html.match(new RegExp(`${prop}[^>]*${attr}="([^"]+)"`, "i"))?.[1] ??
+    html.match(new RegExp(`${attr}="([^"]+)"[^>]*${prop}`, "i"))?.[1] ??
     null
   );
 }
@@ -430,6 +482,10 @@ function cleanText(html: string): string {
     // before the named pass.
     .replace(/&amp;/g, "&")
     .replace(/\s+/g, " ")
+    // Tags become a space, so an inline tag sitting right before punctuation
+    // leaves one behind: "<a>skyr</a>, neutral" cleaned to "skyr , neutral"
+    // and that space travelled onto the shopping list.
+    .replace(/\s+([,.;:!?])/g, "$1")
     .trim();
 }
 
