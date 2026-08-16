@@ -4636,6 +4636,35 @@ Not work. Kept so a cold thread can pick things up without re-litigating them.
 
 ### Decisions log (recent)
 
+- **2026-08-16 – COMPONENTS ARE BUILT IN THE DS AND NOWHERE ELSE, AND THAT
+  RULE DOES NOT LIVE IN THIS REPO.** Thomas, after a DS alert banner was
+  implemented inside this app: *"This could be dangerous drift in the DS. I
+  don't know if you build from the same rules that the DS project is bound
+  by."* The component was deleted. **The rule itself is in the GLOBAL
+  `~/.claude/CLAUDE.md`, deliberately** – *"Components is only allowed to be
+  build in the DS, not in any other projects. There for the rules can not be in
+  this project."* It binds every repo, including ones that do not exist yet, so
+  a copy here would be a second source of truth. Do not restate it in this
+  file; point at it.
+  **WHY A CAREFUL LOCAL BUILD IS STILL WRONG:** the DS repo enforces things no
+  consuming repo can – `get_design_context` before writing a component (the
+  three tools used here are named there as orientation only), semantic-tokens-
+  only via stylelint in CI, cross-brand parity, and BOTH density modes, where a
+  wrong binding is invisible at the default one. The implementation was
+  flagged, reasoned and documented, and was still unchecked.
+
+- **2026-08-16 – `tabs.tsx` STAYS. It is app UI, not a DS component.** Thomas:
+  *"tabs is not in the DS and not planed to be one."* Raised because the rule
+  above could otherwise get it deleted by a later session tidying up.
+  It is the two-up switcher inside sheets (Recipes / Anything else; Ingredient
+  / Section), drawn in the APP file at node `213:63962` and extracted on
+  2026-08-06 so the strip was not hand-rebuilt in two places.
+  **NOT the DS `TabBar`**, which is the bottom navigation chrome – a `<nav>`
+  landmark whose buttons take an icon and a label. Different component.
+  ⚠️ **`chip.tsx` and `input.tsx` ARE different** – Thomas confirmed both are
+  real DS components, so those two remain open against the rule above. No
+  decision taken on them yet; they predate it and they ship today.
+
 - **2026-08-16 – 1.1.0 WAITS FOR THE SETTINGS REDESIGN.** Thomas, asked
   directly, chose one update over two: users get the new Settings screen only
   once he has simplified it, rather than seeing the messy version and then a
