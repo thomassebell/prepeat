@@ -60,16 +60,16 @@ which the third paragraph refers to.
 
 ⚠️ **THE PUBLISHING VERSION IS NOT THIS FILE.** It is
 `Documents/Claude/Projects/LinkedIn 2026/Post 4 - Prep+Eat the other half.md`,
-created 2026-08-14, which carries the proposed slot (Tuesday 25 August), the
-fold treatment and the checklist. This file is the reasoning: the brief, the
+which carries the slot, the fold treatment and the checklist. **It is post #4
+in that series, scheduled Tuesday 25 August 2026, 8:30 Copenhagen** (confirmed
+2026-08-15; the business-side post became #5 and keeps 1 September). This file is the reasoning: the brief, the
 corrections, what earlier drafts got wrong. Change one, change the other – the
 launch post had already diverged from its publishing copy once, and both sides
 had edited the same opening on the same day.
 
-Two things the publishing copy adds that are not in the text above: **lines 1
-and 2 run with NO blank line between them** (the series' fold trick, so both
-halves of the plausible/wrong pair clear the preview), and **taking the 25
-August slot renumbers the business-side post to #5**.
+One thing the publishing copy adds that is not in the text above: **lines 1 and
+2 run with NO blank line between them** – the series' fold trick, so both halves
+of the plausible/wrong pair clear the preview.
 
 ## Corrections that shaped it – do not undo these
 
