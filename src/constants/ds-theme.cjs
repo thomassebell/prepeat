@@ -271,7 +271,8 @@ module.exports = {
     "comp-medium": "12px",
     "comp-large": "16px",
     "comp-xlarge": "24px",
-    "comp-xxlarge": "32px"
+    "comp-xxlarge": "32px",
+    "comp-xxxlarge": "40px"
   },
   "borderRadius": {
     "none": "0px",
@@ -279,7 +280,8 @@ module.exports = {
     "small": "8px",
     "medium": "12px",
     "large": "16px",
-    "xlarge": "24px"
+    "xlarge": "24px",
+    "full": "8000px"
   },
   "fontSize": {
     "display-1": "72px",
