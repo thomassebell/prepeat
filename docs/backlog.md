@@ -2879,15 +2879,17 @@ says whether any of it costs anything commercially.
       **Still a large improvement:** round 1 had seven of seven unable to say
       what a household WAS. Nobody failed to decode kitchen. The residual is
       cost, not failure.
-- [ ] **Look at the Settings row pressed colour on the next build**
-      Why: it changed to `surface/neutral/lighter` on 2026-08-16, AFTER the
-           last device build, so nobody has seen it. Everything else on that
-           screen has been confirmed on the phone.
-      Watch for: that value is the same `#E7E6E4` as the INACTIVE kitchen
-           circle, so holding an inactive kitchen row should make its circle
-           vanish into the row. Built as Thomas specified and flagged rather
-           than adjusted – the question is whether it looks wrong in the hand.
-      Source: `2.27`, closed the same day.
+- [x] **CONFIRMED ON THE PHONE 2026-08-16 – the Settings row pressed colour is
+      right, and the circle vanishing is fine.** Thomas: *"the pressed state
+      looks fine. circle disappearing is no problem."*
+      What was flagged: `surface/neutral/lighter` is the same `#E7E6E4` as the
+           INACTIVE kitchen circle, so holding an inactive row makes its circle
+           disappear into the row. Built as specified and flagged rather than
+           quietly adjusted, because it was a predictable collision.
+      ⚠️ **DO NOT "FIX" THIS.** A later session reading the two tokens against
+           each other will see a clash. It was seen in the hand and accepted;
+           changing either value needs a new decision from Thomas.
+      Source: `2.27`, closed the same day. This was its last loose end.
 
 - [x] `2.27` **Rename the Kitchen tab to Settings, and nest the kitchen inside it**
       ✅ **CLOSED 2026-08-16.** Every open question was answered in one
