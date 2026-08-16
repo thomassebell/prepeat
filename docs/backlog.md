@@ -557,17 +557,16 @@ missing from it entirely.
             processed inside the EU rather than the US. Good for the privacy
             policy's data-location paragraph; still confirm it in Resend's own
             terms before treating it as settled.
-- [ ] ⚠️ **Keep the Apple reviewer's demo mailbox working**
-      Why: the app signs you in with an emailed code, so a reviewer needs a
-           real mailbox they can open. This is the reviewer's very first
-           action, and the one thing that turns a week in the queue into a
-           rejection plus another week.
-      Status: built, seeded and CONFIRMED WORKING 2026-08-07. Open only
-           because it needs re-checking before each submission – the demo
-           week is dated, so re-run the seed close to submitting.
-      Do not: use the Postgres test-OTP trigger. It writes into Supabase's
-           internal auth schema, is a permanent known-code backdoor, and rots
-           silently. Fallback only if Apple pushes back.
+- [x] **DONE for v1.0 – the reviewer's demo mailbox carried the review.**
+      `appreview@sebell.dk` was live, the webmail credentials Apple holds
+      signed in, the one-time code arrived, and v1.0 was approved (live
+      2026-08-13). The reviewer's very first action is a sign-in the app
+      cannot complete for them, so this was the single likeliest way to turn a
+      week in the queue into a rejection plus another week. It didn't.
+      ⚠️ **It is not finished for good – it comes back at every submission**,
+      and has moved to Standing – recurring as "Re-check the reviewer's demo
+      mailbox before every submission". The seeded weeks are dated, so an
+      untouched demo account reviews worse each month it sits.
 
       `src/lib/auth.tsx:58` uses
       `signInWithOtp` – a one-time code emailed to you, no password anywhere.
@@ -4105,6 +4104,30 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
 ## Standing – recurring
 
 Chores with a trigger rather than a finish line. These never get ticked off for good.
+
+- [ ] **Re-check the reviewer's demo mailbox before every submission**
+      Trigger: submitting any build for App Review – not just a first release.
+           An update goes through the same sign-in.
+      Steps: 1. sign in to `appreview@sebell.dk` webmail with the password
+           Apple holds and confirm a one-time code still arrives (that is the
+           whole reviewer path, end to end); 2. re-run the seed generator
+           `scratchpad/gen-demo.ts` so the plan is populated for the CURRENT
+           week; 3. confirm the App Review Information in App Store Connect
+           still matches – username, mailbox password, §3 notes with the
+           webmail URL.
+      Why it cannot be ticked off: the seeded weeks are
+           `date_trunc('week', now())`, so a demo account nobody re-seeds
+           shows a reviewer an empty plan – the app looking broken at exactly
+           the moment it is being judged. And a mailbox password can be
+           changed or a mailbox left to lapse between releases.
+      Do not: use the Postgres test-OTP trigger. It writes into Supabase's
+           internal auth schema, is a permanent known-code backdoor, and rots
+           silently. Fallback only if Apple pushes back, never the opening
+           move.
+      History: built and seeded 2026-07-30, confirmed working 2026-08-07,
+           carried the v1.0 review (approved, live 2026-08-13). The closed
+           entry with the full build detail is under the v1 pre-launch
+           checklist.
 
 - [ ] **Watch for the moment Supabase Pro becomes necessary** (a standing check, not a task to do)
       Upgrade when ANY one of these is true:
