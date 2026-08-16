@@ -1,5 +1,5 @@
-import { useRouter } from "expo-router";
-import { useEffect, useMemo, useState } from "react";
+import { useFocusEffect, useRouter } from "expo-router";
+import { useCallback, useMemo, useState } from "react";
 import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 import {
   SafeAreaView,
@@ -52,36 +52,50 @@ const launchNudged = new Set<string>();
  * one-shot navigation in an effect cannot do that: it happens once and leaves
  * no state behind to repeat itself.
  *
+ * ⚠️ ONLY WHILE PLAN IS FOCUSED (2026-08-16). It used to be a plain effect on
+ * `household.id`, so switching to a kitchen with no recipes fired it while you
+ * were standing on Settings and threw you onto Recipes – you had just chosen a
+ * kitchen, and the app answered by moving you somewhere you did not ask to go
+ * (Thomas, on device). A nudge whose whole job is "do not open on an empty
+ * week" has no business running when the week is not what you are looking at.
+ * Blur cancels the in-flight check too, so a slow query cannot land late.
+ *
  * Deliberately NOT blocking. Everyone with recipes – nearly every launch – gets
  * the plan with no delay; only the empty case is moved.
  */
 function useEmptyCookbookNudge(): void {
   const household = useHousehold();
   const router = useRouter();
-  useEffect(() => {
-    if (launchNudged.has(household.id)) return;
-    let cancelled = false;
-    hasAnyRecipe(household.id)
-      .then((has) => {
-        if (cancelled) return;
-        launchNudged.add(household.id);
-        if (!has) router.replace("/recipes");
-      })
-      .catch((error) => {
-        // Never strand someone on an empty week because a query failed.
-        console.warn("[plan] cookbook check failed", error);
-        if (!cancelled) launchNudged.add(household.id);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [household.id, router]);
+  useFocusEffect(
+    useCallback(() => {
+      if (launchNudged.has(household.id)) return;
+      let cancelled = false;
+      hasAnyRecipe(household.id)
+        .then((has) => {
+          if (cancelled) return;
+          launchNudged.add(household.id);
+          if (!has) router.replace("/recipes");
+        })
+        .catch((error) => {
+          // Never strand someone on an empty week because a query failed.
+          console.warn("[plan] cookbook check failed", error);
+          if (!cancelled) launchNudged.add(household.id);
+        });
+      return () => {
+        cancelled = true;
+      };
+    }, [household.id, router]),
+  );
 }
 
 export default function PlanScreen() {
+  const household = useHousehold();
   useEmptyCookbookNudge();
+  // Keyed on the household so a switch starts the plan clean. This used to be
+  // done by remounting the whole tab tree, which also lost your place – see
+  // the note on <AppTabs> in _layout.tsx.
   return (
-    <MealPlanProvider>
+    <MealPlanProvider key={household.id}>
       <PlanContent />
     </MealPlanProvider>
   );

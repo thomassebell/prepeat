@@ -31,7 +31,17 @@ export default function RecipesListScreen() {
   const household = useHousehold();
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const [recipes, setRecipes] = useState<RecipeSummary[] | null>(null);
+  // The loaded rows are TAGGED with the household they came from, and the list
+  // below is derived from that tag. Switching kitchen therefore empties the
+  // list during render, with no effect and nothing to clean up – the previous
+  // kitchen's recipes can never be on screen under the new kitchen's name.
+  // The tab tree used to be remounted on a switch, which did this for free; it
+  // no longer is (see <AppTabs> in _layout.tsx).
+  const [loaded, setLoaded] = useState<{
+    householdId: string;
+    rows: RecipeSummary[];
+  } | null>(null);
+  const recipes = loaded?.householdId === household.id ? loaded.rows : null;
   const [failed, setFailed] = useState(false);
   const [query, setQuery] = useState("");
   const [favoritesOnly, setFavoritesOnly] = useState(false);
@@ -41,9 +51,10 @@ export default function RecipesListScreen() {
   const load = useCallback(() => {
     let cancelled = false;
     setFailed(false);
-    fetchRecipes(household.id)
+    const householdId = household.id;
+    fetchRecipes(householdId)
       .then((rows) => {
-        if (!cancelled) setRecipes(rows);
+        if (!cancelled) setLoaded({ householdId, rows });
       })
       .catch((error) => {
         console.warn("[recipes] fetch failed", error);
@@ -67,11 +78,15 @@ export default function RecipesListScreen() {
 
   const toggleFavorite = (recipe: RecipeSummary) => {
     // Optimistic flip; shared household favorite (decided 2026-07-12).
-    setRecipes(
-      (current) =>
-        current?.map((r) =>
-          r.id === recipe.id ? { ...r, isFavorite: !r.isFavorite } : r,
-        ) ?? null,
+    setLoaded((current) =>
+      current
+        ? {
+            ...current,
+            rows: current.rows.map((r) =>
+              r.id === recipe.id ? { ...r, isFavorite: !r.isFavorite } : r,
+            ),
+          }
+        : current,
     );
     setFavorite(recipe.id, !recipe.isFavorite).catch((error) =>
       console.warn("[recipes] favorite failed", error),

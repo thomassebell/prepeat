@@ -218,10 +218,18 @@ function RootGate() {
       applyHouseholdUpdate={applyHouseholdUpdate}
       removeHousehold={removeHousehold}
     >
-      {/* Remount the tabs on switch so the meal-plan / shopping providers
-          start clean for the new household instead of showing the old one's
-          data until their effects re-run. */}
-      <AppTabs key={activeHousehold.id} />
+      {/* NOT keyed on the household id, deliberately (2026-08-16). Keying here
+          remounted the whole tab tree on a switch, which threw away the
+          navigation state with it: you changed kitchen from Settings and the
+          navigator came back on its initial route. Thomas found it as "you are
+          taken to the recipe screen" – the empty-cookbook nudge then moved it
+          on again from Plan – but the first half happened on every switch,
+          recipes or not.
+          The reason for the key was real: the meal-plan and shopping providers
+          would otherwise show the previous household's data until their effects
+          re-ran. That reset now lives on those providers, keyed individually,
+          so the data starts clean without the navigator losing its place. */}
+      <AppTabs />
     </HouseholdProvider>
   );
 }

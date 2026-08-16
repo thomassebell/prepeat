@@ -79,7 +79,7 @@
 <main>
   <header>
     <h1>Prep+Eat – open backlog</h1>
-    <p class="meta">82 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
+    <p class="meta">81 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
   </header>
   <div class="filter"><input id="q" type="search" placeholder="Filter tasks…" autocomplete="off"></div>
   <section class="waiting">
@@ -143,17 +143,8 @@
     </article>
     </section>
     <section>
-      <h2>Next – v1.1 <span class="count" data-total="54">54</span></h2>
+      <h2>Next – v1.1 <span class="count" data-total="53">53</span></h2>
       <h4>Known bugs (open)</h4>
-    <article class="item">
-      <h3>
-        
-        
-        <span><strong>Tidy four small import defects found by sweeping ten sites</strong></span>
-      </h3>
-      
-      <details><summary>Full note</summary><p>Found 2026-08-16, sweeping the importer across ten sites after the mkuniverset fix. None of them lose data – each is a row that reads wrong in the aisle – and all four predate that fix. Grouped because they are one afternoon's work in one file, recipe-import.ts. 1. <strong>A trailing adverb survives the prep cut.</strong> BBC writes "1 onion finely chopped" without a comma; the cut takes "chopped" and leaves <strong>"onion finely"</strong>. Same for "garlic cloves finely" and "ball mozzarella roughly". Fix: after cutting, drop a trailing finely/roughly/thinly/coarsely/freshly/lightly. 2. <strong>A trailing SPACE defeats the same cut.</strong> "large handful basil leaves torn (optional)" – stripping "(optional)" leaves a trailing space, so <code>split(/\s+/)</code> yields an empty last token, the "is this the last word" test sees <code>""</code> instead of <code>undefined</code>, and <strong>"torn" stays</strong>. One-line fix: trim before splitting. 3. <strong>"2 x 400g cans chopped tomatoes"</strong> imports as quantity 2, name <strong>"x 400g cans chopped tomatoes"</strong>. The multiplier form is not recognised. 4. <strong>A cookTime of literally zero is trusted.</strong> Arla publishes <code>cookTime PT00M</code> with <code>totalTime PT2H</code> and <code>prepTime PT40M</code>, so the recipe shows <strong>40 min total instead of 2 hours</strong> – the simmering is invisible. Fix: treat a zero cookTime as "not stated" and derive from the total, which is what <code>resolveCookMinutes</code> already does when cookTime is absent.</p></details>
-    </article>
     <article class="item">
       <h3>
         

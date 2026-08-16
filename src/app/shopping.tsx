@@ -19,6 +19,7 @@ import { ReorderCategoriesSheet } from '@/components/shopping/reorder-categories
 import { LoadError } from '@/components/ui/load-error';
 import { UndoToast } from '@/components/ui/undo-toast';
 import { WeekPicker } from '@/components/ui/week-picker';
+import { useHousehold } from '@/lib/household-context';
 import {
   ShoppingListProvider,
   useShoppingList,
@@ -299,8 +300,11 @@ function ShoppingListScreen() {
 }
 
 export default function ShoppingRoute() {
+  const household = useHousehold();
+  // Keyed on the household so a switch starts the list clean – the reset that
+  // used to come from remounting the tab tree. See <AppTabs> in _layout.tsx.
   return (
-    <ShoppingListProvider>
+    <ShoppingListProvider key={household.id}>
       <ShoppingListScreen />
     </ShoppingListProvider>
   );

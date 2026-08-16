@@ -733,6 +733,37 @@ Committed work for the first update after launch. Panel findings default here un
 
 ### Known bugs (open)
 
+- [x] **SWITCHING KITCHEN TOOK YOU OFF SETTINGS. Found by Thomas on the phone
+      2026-08-16, fixed the same hour.** *"If you shift to a kitchen without
+      recipes, you are taken directly to the recipe screen, but you have just
+      changed kitchen so you should remain on the settings page."*
+      **IT WAS TWO BUGS STACKED, and the reported one was the second.**
+      1. `<AppTabs key={activeHousehold.id}>` remounted the entire tab tree on
+         every switch, and a fresh navigator has no navigation state – so it
+         came back on its initial route. **This happened on EVERY switch,
+         recipes or not**; with recipes you landed on Plan, which is also not
+         where you were, and nobody had reported it because Plan looks like a
+         reasonable place to end up.
+      2. The empty-cookbook nudge then ran, saw no recipes, and moved you on to
+         Recipes. That is the half that got noticed, because landing in the
+         cookbook after choosing a kitchen is obviously wrong.
+      **THE KEY WAS THERE FOR A REAL REASON** – without it the meal-plan and
+      shopping providers showed the previous kitchen's data until their effects
+      re-ran. That reset now lives on the providers themselves
+      (`<MealPlanProvider key>`, `<ShoppingListProvider key>`), so the data
+      still starts clean while the navigator keeps its place. Recipes does it by
+      TAGGING loaded rows with the household they came from and deriving the
+      list from that tag – no effect, which also satisfies the React Compiler's
+      `set-state-in-effect` rule that rejected the first attempt.
+      The nudge now sits inside `useFocusEffect`, so it can only fire while Plan
+      is the tab you are actually looking at, and blur cancels the in-flight
+      check so a slow query cannot land late.
+      LESSON: **a `key` on a navigator is a data-freshness fix that quietly buys
+      a navigation bug.** It went unnoticed for months because nothing changed
+      the key while the user cared where they were – the switcher used to be a
+      modal over the screen you were already on. Moving the switch INTO Settings
+      is what exposed it.
+
 - [x] **TIDIED FOUR SMALL IMPORT DEFECTS FOUND BY SWEEPING TEN SITES.**
       Found 2026-08-16, sweeping the importer across ten sites after the
       mkuniverset fix; fixed the same day on Thomas's "fix all four". None of
