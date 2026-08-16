@@ -112,7 +112,7 @@ Everything else in this file is Claude's to get on with.
   <sub>Next – v1.1</sub>
 - **⭐ Share a recipe with someone – FIRST ITEM IN v1.1** – how much of a recipe a stranger sees before installing.
   <sub>Next – v1.1</sub>
-- `2.27` **Rename the Kitchen tab to Settings, and nest the kitchen inside it** – BUILT AND ON THE PHONE 2026-08-13, and it carries the app-wide HEADER RULE (screen `text/subtle`, section `text/default`, card `text/subtle`, all Montserrat). Four things still need drawing: the kitchen row's `⋮` menu, the Edit kitchen sheet's delete state, the row pressed state, and the banner copy that says "you both".
+- `2.27` **Rename the Kitchen tab to Settings, and nest the kitchen inside it** – three drawings, now that the screen itself is built and shipping in build 19: the kitchen row's `⋮` menu, the Edit kitchen sheet's delete state, and a verdict on the banner copy that says "you both". None of them block the release; they are what turns two improvisations into design.
   <sub>Next – v1.1</sub>
 - `2.10` **⭐ Show IN THE APP that a meal can go on the plan without a recipe** – a frame for a line on the EMPTY PLAN saying a meal need not be a recipe. That is the half that reaches someone still deciding whether the app is for them, and no frame draws it.
   <sub>Next – v1.1</sub>
@@ -2614,11 +2614,13 @@ says whether any of it costs anything commercially.
       what a household WAS. Nobody failed to decode kitchen. The residual is
       cost, not failure.
 - [ ] `2.27` **Rename the Kitchen tab to Settings, and nest the kitchen inside it**
-      Needs: **nothing from Thomas to start** – the design is settled and drawn
-           (see below). Two pieces are still undrawn (the kitchen row's `⋮`
-           menu and the Edit kitchen sheet's delete state), but neither blocks
-           building the screen itself.
-      Status: **BUILT AND ON THE PHONE 2026-08-13.** Seven dev builds through
+      Needs: Thomas – three drawings, now that the screen itself is built and
+           shipping in build 19: the kitchen row's `⋮` menu, the Edit kitchen
+           sheet's delete state, and a verdict on the banner copy that says
+           "you both". None of them block the release; they are what turns two
+           improvisations into design.
+      Status: **BUILT AND ON THE PHONE 2026-08-13**, and **IN BUILD 19**
+           (1.1.0, built 2026-08-16, not submitted). Seven dev builds through
            the afternoon; Thomas checked the tab, the kitchen list, the App
            rows and scrolling, all pass.
 
@@ -2647,13 +2649,20 @@ says whether any of it costs anything commercially.
          not on the instances.
       7. **Annotations left unbound on purpose** – see the sweep note below;
          confirm that is right.
-      - [ ] ⚠️ **NOBODY HAS LOOKED AT THIS RUNNING YET.** The web preview
-            cannot reach it: every deep route sits behind the auth gate, and
-            signing in needs a code emailed to Thomas. So the screen is
-            verified only as far as "it compiles and Metro bundles it". Run
-            `./scripts/build-iphone.sh` with the phone to hand before treating
-            it as done, and check the two states – alone in a kitchen, and one
-            with several members.
+      - [x] **DONE 2026-08-13 – it has been looked at running.** Written while
+            the screen was still unseen (the web preview cannot reach it: every
+            deep route sits behind the auth gate, and signing in needs a code
+            emailed to Thomas), then overtaken the same afternoon by seven dev
+            builds on the phone – see `Status:` above. **Left unticked for
+            three days**, contradicting its own item's status line, and found
+            2026-08-16 while reading the backlog to plan the release. Exactly
+            the "closing is a separate job from doing" failure at the top of
+            this file.
+            ⚠️ **STILL UNRECORDED: whether BOTH states were seen** – alone in a
+            kitchen, and one with several members. The banner-vs-green-row rule
+            is the whole point of the People group, and only one of its two
+            sides can have been on screen. Worth two minutes with the phone
+            before build 19 is submitted.
       - [ ] **Two improvisations, flagged rather than hidden:**
             **1. The `⋮` renders on the ACTIVE kitchen only**, though the frame
             draws it on every row – because the menu behind it is not designed
