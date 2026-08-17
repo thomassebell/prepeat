@@ -2109,6 +2109,13 @@ Closed 2026-07-27:
            Danish words are in; **whether that row wraps needs a look on a
            device**, and if it does, the fix (stack, shorten, or abbreviate) is
            a design call, not a translation one.
+           ⚠️ **STILL UNANSWERED after the 2026-08-17 simulator run.** The
+           simulator was signed out, and everything past the welcome screen is
+           behind the email sign-in – Claude does not sign in or set off OTP
+           mail. So the locale machinery is proven and **the recipe screen
+           itself has still not been LOOKED at in Danish.** The cheap way to
+           settle it is a dev build on Thomas's phone, where he is already
+           signed in, with the phone set to Dansk.
       ⚠️ **THE STORED CATEGORY VALUE STAYS ENGLISH; ONLY THE LABEL IS
            TRANSLATED** (`categoryLabel()` in shopping-core.ts). `aisle` is
            shared by a whole kitchen and **two members can have their phones set
