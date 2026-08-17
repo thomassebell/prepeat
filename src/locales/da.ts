@@ -402,7 +402,10 @@ export const da: DeepPartial<typeof en> = {
     groupKitchens: 'Køkkener',
     groupPeople: 'Personer',
     groupApp: 'App',
-    keepScreenOn: 'Hold skærmen tændt',
+    // Matches recipes.detail.keepAwakeOn word for word, exactly as the English
+    // pair does – the setting and the status must not drift apart.
+    keepScreenOn: 'Skærmen forbliver tændt',
+    keepScreenOnHint: 'Kun når du er inde i en opskrift',
     joinKitchen: 'Deltag i et eksisterende køkken',
     createKitchen: 'Opret et nyt køkken',
     inviteSomeone: 'Inviter nogen',

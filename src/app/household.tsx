@@ -194,6 +194,7 @@ export default function SettingsScreen() {
           <SwitchRow
             icon="light-mode"
             label={t("settings.keepScreenOn")}
+            hint={t("settings.keepScreenOnHint")}
             value={keepScreenAwake}
             onValueChange={setKeepScreenAwake}
           />
@@ -447,12 +448,17 @@ function KitchenRow({
 function SwitchRow({
   icon,
   label,
+  hint,
   value,
   onValueChange,
   isLast = false,
 }: {
   icon: keyof typeof MaterialIcons.glyphMap;
   label: string;
+  /** Supporting line under the label. Says WHEN the switch applies – a label
+   *  alone names the thing but not its scope, which is how "Keep screen on"
+   *  read as an app-wide setting on the device (Thomas, 2026-08-17). */
+  hint?: string;
   value: boolean;
   onValueChange: (next: boolean) => void;
   isLast?: boolean;
@@ -460,16 +466,38 @@ function SwitchRow({
   return (
     <Pressable
       accessibilityRole="switch"
-      accessibilityLabel={label}
+      // The hint is part of what the row announces, or a screen reader gets the
+      // same "keep screen on, on" with none of the scope a sighted user reads.
+      accessibilityLabel={hint == null ? label : `${label}. ${hint}`}
       accessibilityState={{ checked: value }}
       onPress={() => onValueChange(!value)}
     >
       {({ pressed }) => (
-        <View className={`${rowBase} ${rowFill(pressed)} ${rowBorder(isLast)}`}>
+        <View
+          className={`${rowBase} ${rowFill(pressed)} ${rowBorder(isLast)} ${
+            // The DS switchField is `align-items: flex-start`, and it has to be
+            // once there are two lines of text: centring would float the icon
+            // and the switch against the middle of the block instead of the
+            // label they belong to. Rows without a hint keep the list's
+            // centred rhythm.
+            hint == null ? "" : "items-start"
+          }`}
+        >
           <MaterialIcons name={icon} size={24} color={ds.colors.icon.subtle} />
-          <Text className="min-w-0 flex-1 font-paragraph text-paragraph font-default leading-xsmall text-text-default">
-            {label}
-          </Text>
+          {/* Label and hint stack with NO gap – the DS's `text` column sets
+              none, so the 24px and 16px line boxes simply meet. Both are
+              `text/default`: the hint is NOT subtle, which is the one thing
+              here that would have been improvised wrong. */}
+          <View className="min-w-0 flex-1">
+            <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-default">
+              {label}
+            </Text>
+            {hint != null && (
+              <Text className="font-paragraph text-small font-default leading-xxsmall text-text-default">
+                {hint}
+              </Text>
+            )}
+          </View>
           {/* The switch is presentational – the row above is the one target, so
               a tap cannot double-toggle, and `pressed` carries the row's press
               into the DS pressed track. */}

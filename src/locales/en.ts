@@ -393,7 +393,14 @@ export const en = {
     // Fixed in both states – the switch carries the state, not the label.
     // Kept short at Thomas's request (2026-08-17): the Danish of anything
     // longer crowds the switch off a narrow phone.
-    keepScreenOn: 'Keep screen on',
+    // Both strings are Thomas's own, off Figma 684:3871 and 709:7592 – he
+    // rewrote the row after my first attempt shipped a hint long enough to run
+    // to three lines. The label deliberately matches the recipe screen's ON
+    // status word for word, so the setting and the state read as one thing.
+    // Still fixed in both switch positions: it names what the setting does when
+    // enabled, which is the convention, not the current state.
+    keepScreenOn: 'Screen stays on',
+    keepScreenOnHint: 'Only while you are on a recipe',
     joinKitchen: 'Join an existing kitchen',
     createKitchen: 'Create a new kitchen',
     inviteSomeone: 'Invite someone',

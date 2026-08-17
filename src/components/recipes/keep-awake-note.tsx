@@ -1,5 +1,6 @@
 import { MaterialIcons } from '@expo/vector-icons';
-import { Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import { Pressable, Text, View } from 'react-native';
 
 import { ds } from '@/constants/ds';
 import { t } from '@/lib/i18n';
@@ -20,14 +21,15 @@ import { usePreferences } from '@/lib/preferences';
  *   status   `paragraph/small emphasized` (12/16 bold), `text/default`
  *   hint     `paragraph/small` (12/16 regular), `text/default`
  *
- * IMPROVISED, and flagged: the frames draw "Change in settings" as plain text
- * in the same colour as the status, with no link treatment – so it is NOT a tap
- * target here either, faithfully. Making the line tap through to Settings would
- * be an improvement and would not change a pixel, but it is behaviour the
- * design does not draw. Worth a decision rather than a quiet addition.
+ * "Change in settings" IS a tap target, decided by Thomas 2026-08-17 after it
+ * shipped inert – the frames draw it as plain text with no link treatment, so it
+ * was left plain and raised rather than quietly wired up. It goes to the
+ * Settings tab and still looks exactly as drawn at rest; see the note on the
+ * Pressable for why only the pressed state was added.
  */
 export function KeepAwakeNote() {
   const { keepScreenAwake } = usePreferences();
+  const router = useRouter();
 
   return (
     <View className="w-full flex-row items-start gap-layout-xxsmall">
@@ -43,16 +45,40 @@ export function KeepAwakeNote() {
           ? t('recipes.detail.keepAwakeOn')
           : t('recipes.detail.keepAwakeOff')}
       </Text>
-      {/* Shrinkable, unlike the frame's fixed line: the Danish of both texts
+      {/* Tappable, and it goes to the Settings TAB rather than pushing Settings
+          onto the recipe's stack – `navigate` so you land on the tab you would
+          have reached by hand, with no second copy of it on top of this recipe.
+          (Thomas, 2026-08-17: "it would be nice to have a link".)
+          Shrinkable, unlike the frame's fixed line: the Danish of both texts
           plus the icon measures ~291 of the 370pt available, so it fits today,
           but a longer future translation should truncate the hint rather than
           push itself off the edge of the screen. */}
-      <Text
-        numberOfLines={1}
-        className="min-w-0 shrink font-paragraph text-small font-default leading-xxsmall text-text-default"
+      <Pressable
+        onPress={() => router.navigate('/household')}
+        hitSlop={{ top: 12, bottom: 12, left: 8, right: 12 }}
+        accessibilityRole="link"
+        accessibilityLabel={t('recipes.detail.keepAwakeHint')}
+        className="min-w-0 shrink"
       >
-        {t('recipes.detail.keepAwakeHint')}
-      </Text>
+        {({ pressed }) => (
+          // ⚠️ NO LINK TREATMENT AT REST, deliberately: Thomas's frame paints
+          // this `text/default`, the same colour as the status beside it, and it
+          // still does after he rewrote the row. So it reads exactly as drawn
+          // and only the PRESSED state is added – which React Native gives
+          // nothing for free (CLAUDE.md), so it is `text/link`, the DS's own
+          // semantic link colour. If it should look tappable at rest too, that
+          // same token is the answer and it is a one-line change.
+          <Text
+            numberOfLines={1}
+            className={
+              'font-paragraph text-small font-default leading-xxsmall ' +
+              (pressed ? 'text-text-link' : 'text-text-default')
+            }
+          >
+            {t('recipes.detail.keepAwakeHint')}
+          </Text>
+        )}
+      </Pressable>
     </View>
   );
 }

@@ -4279,17 +4279,30 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
 
       (2026-08-17.)
 
-- [ ] **Should "Change in settings" be tappable?**
-      Why: the frames draw it as plain text in `text/default`, the same colour
-           as the status beside it – no link treatment – so the app ships it
-           plain, faithfully. But it names a destination two taps away and sits
-           on the screen people are looking at when they wonder why the phone
-           stayed lit.
-      Size: trivial to build; it changes no pixel. That is exactly why it needs
-           deciding rather than quietly adding – behaviour the design does not
-           draw is still design.
+- [x] **DONE 2026-08-17. "Change in settings" is a link to Settings.** Thomas:
+      *"it would be nice to have a link on the recipe 'Change in settings' to
+      settings."* `router.navigate('/household')`, so it switches to the
+      Settings TAB rather than pushing a second copy of Settings onto the
+      recipe's own stack.
+      **It still looks exactly as drawn at rest** – `text/default`, no
+      underline, no link colour, because that is what the frame paints and it
+      still did after Thomas rewrote the row. Only the PRESSED state was added,
+      as `text/link`, since React Native gives no interactive state for free.
+      **If it should look tappable at rest**, that same token is the answer and
+      it is a one-line change – worth deciding, because an inert-looking link is
+      only found by accident.
 
-      (2026-08-17.)
+- [ ] **The other Settings frame still has the old switch row**
+      Why: Thomas rewrote the row in `default 3` (684:3866 – the empty-People
+           variant) to "Screen stays on" / "Only while you are on a recipe".
+           `default 4` (709:7582 – the three-People variant) still reads "Screen
+           on while cooking" with no hint. The app follows the rewritten one.
+      Watch: this is the shape of the 2026-08-16 header-colour bug, where one
+           screen's frame was read and four disagreed. Two frames of the SAME
+           screen disagreeing is the same trap one level down.
+      Size: one row, copied across.
+
+      (Found 2026-08-17 while implementing the rewrite.)
 
 - [ ] **⚠️ Put a height cap on the nine sheets that still lack one**
       Why: an uncapped sheet grows with its content until the close button goes
@@ -5305,6 +5318,37 @@ Not work. Kept so a cold thread can pick things up without re-litigating them.
             missing radius is not evidence of radius 0. `ds-theme.cjs` decides.
 
 ### Decisions log (recent)
+
+- **2026-08-17 – SCOPE GOES IN THE HINT, NOT THE LABEL.** `Keep screen on` shipped
+  to the phone as a label with nothing under it, and Thomas read it as an
+  app-wide setting: *"I'm missing the cooking part… the user must [know] when the
+  screen stays on and that it is only on the recipes."*
+  **THE COPY IS THOMAS'S, and my first attempt at it was wrong:** I wrote
+  "Stays on while you cook from a recipe. Other screens dim as usual.", he
+  replied *"The text is way too long"* and rewrote the row in Figma himself
+  (684:3871 / 709:7592). It ships as **"Screen stays on" / "Only while you are
+  on a recipe"** – one line each, both facts intact, about a third of the
+  length. The lesson is not about hints: I had *already* measured that the
+  Danish would run to three lines and flagged the trim, then shipped it anyway
+  rather than applying my own finding. **Flagging a problem is not the same as
+  fixing it.**
+  **What did hold:** the label was shortened for Danish length, and that reason
+  is only binding on the LABEL – a hint wraps, so it can carry scope the label
+  cannot, while the recipe screen's status line stays locked to one 16px row and
+  therefore stays terse. Length is a per-slot constraint, not a per-screen one.
+  Thomas's label also happens to match the recipe screen's ON status word for
+  word, which is better than what I had: the setting and the state now read as
+  one thing in both languages.
+  **And the spec existed:** the DS has a `switchField` with a `--with-hint`
+  story. Label `paragraph/paragraph`, hint `paragraph/small`, both
+  `text/default` – the hint is NOT `text/subtle`, which is exactly what would
+  have been improvised – no gap between the two lines, and the field flips to
+  `align-items: flex-start`, because centring floats the icon and the switch
+  against the middle of a two-line block instead of the label they belong to.
+  **The lesson is about how it was found:** the DS file's page listing returns
+  only `cover` through the MCP, so the component was unreadable that way. The
+  Storybook `index.json` lists every story id in one request, which is how
+  `switchfield--with-hint` surfaced at all. Start there next time.
 
 - **2026-08-17 – A SETTINGS SWITCH ROW NAMES WHAT IT CONTROLS, NOT ITS STATE.**
   Thomas asked for help with the Settings copy in the off state and chose to

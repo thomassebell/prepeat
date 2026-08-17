@@ -633,10 +633,10 @@
       <h3>
         
         
-        <span><strong>Should "Change in settings" be tappable?</strong></span>
+        <span><strong>The other Settings frame still has the old switch row</strong></span>
       </h3>
-      <dl><dt>Why</dt><dd>the frames draw it as plain text in <code>text/default</code>, the same colour as the status beside it – no link treatment – so the app ships it plain, faithfully. But it names a destination two taps away and sits on the screen people are looking at when they wonder why the phone stayed lit.</dd><dt>Size</dt><dd>trivial to build; it changes no pixel. That is exactly why it needs deciding rather than quietly adding – behaviour the design does not draw is still design.</dd></dl>
-      <details><summary>Full note</summary><p>(2026-08-17.)</p></details>
+      <dl><dt>Why</dt><dd>Thomas rewrote the row in <code>default 3</code> (684:3866 – the empty-People variant) to "Screen stays on" / "Only while you are on a recipe". <code>default 4</code> (709:7582 – the three-People variant) still reads "Screen on while cooking" with no hint. The app follows the rewritten one.</dd><dt>Watch</dt><dd>this is the shape of the 2026-08-16 header-colour bug, where one screen's frame was read and four disagreed. Two frames of the SAME screen disagreeing is the same trap one level down.</dd><dt>Size</dt><dd>one row, copied across.</dd></dl>
+      <details><summary>Full note</summary><p>(Found 2026-08-17 while implementing the rewrite.)</p></details>
     </article>
     <article class="item">
       <h3>
