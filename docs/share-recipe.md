@@ -101,10 +101,34 @@ with your own, and `source_url` is still set, so your own photo is suppressed.
 That errs in the safe direction. Per-field provenance would fix it if it ever
 matters.
 
-⚠️ **The cost is real and worth watching.** An imported recipe's page is thin –
-a generated card, three times and the ask. Most recipes are probably imported.
-If conversion disappoints, this is the first place to look, and per-field
-provenance is the first thing to try.
+⚠️ **THE COST IS NOT "WORTH WATCHING", IT IS THE NORM. MEASURED 2026-08-17:**
+
+| production, live recipes | count |
+|---|---|
+| total | 97 |
+| imported (`source_url` set) | **91** |
+| hand-written | 6 |
+| hand-written **with a photo** – the only ones that get a rich card | **4** |
+
+So four recipes in ninety-seven produce the good share. Ninety-three produce a
+generated title card, no description, and – until the gap below is closed – a
+text-only preview in the chat. For a feature whose entire purpose is
+mouth-to-mouth growth, the weak version is not an edge case, it is the product.
+
+**This does not overturn the decision** – the exposure of republishing other
+sites' photos and prose is real, and Thomas closed it deliberately. But it moves
+one item from "later" to "the main case":
+
+1. **Generate the title card as a PNG** so imported shares get a designed
+   preview card instead of a bare text one (`satori`/`@vercel/og`). I previously
+   called this a later optimisation. At 93 in 97, it is the primary path.
+2. **Ask for a photo at share time.** "Add a photo and this looks like yours" –
+   turns the constraint into a prompt, and produces content that is
+   unambiguously ours to publish. Untested idea, cheap to try.
+3. **Per-field provenance**, so replacing an imported recipe's photo with your
+   own lets that photo travel. Only helps people who bother.
+4. **Attribution instead of content** – "recipe from foodsite.com" – which
+   publishes a link rather than someone's work.
 
 This is the sharp edge of the whole feature. An imported recipe **already
 carries a copy of the source site's photograph in our public bucket** –
@@ -297,7 +321,14 @@ needs updating **before this ships**, not after.
    someone a dead link is worse than no share – testers would send them to
    family. Ungate it in the same change that deploys the page; there is a
    backlog item so it is not forgotten.
-5. The share host: one server-rendered route plus OG tags, on the subdomain.
+5. ⚠️ **BUILT 2026-08-17, NOT DEPLOYED** – new project `prepeat-share`
+   (`~/Documents/Claude/Projects/prepeat-share`, local git only, no remote yet).
+   One route, no npm dependencies, holds no secrets: it calls `share_by_token()`
+   with the anon key. All five states verified against the DEV database through
+   the real code – 200 own, 200 imported, 410 revoked, 404 unknown, 503 down.
+   **Needs Thomas:** a GitHub repo, a Vercel project, `share.prepeat.app` pointed
+   at it, and the env vars set to PRODUCTION Supabase.
+   **⚠️ AND THE ONE THING THAT SHOULD CHANGE A DECISION – see below.**
 6. Universal links: AASA, `associatedDomains`, and a build to verify on device.
 7. "Save to my recipes" for people who have the app.
 8. Privacy policy update; `npm run backup:verify` after the schema change.
