@@ -2131,16 +2131,38 @@ Closed 2026-07-27:
            which is why the short months are written out rather than sliced).
            **English output is unchanged in every one of those checks** – that
            is the thing being protected, since it is what real users are on.
-      **NOT YET SEEN RUNNING IN DANISH.** Everything above is verified off the
-           device. Seeing it needs a native rebuild with the simulator set to
-           Dansk – see the warning below, which is the reason.
-      ⚠️ **THE PLUGIN CHANGE NEEDS A NATIVE REBUILD, AND FAILS SILENTLY
-           WITHOUT ONE.** `supportedLocales: ["en", "da"]` on the
-           expo-localization plugin writes `CFBundleLocalizations`, and **iOS
-           only reports Danish if the BUNDLE claims to support it.** Without the
-           rebuild `getLocales()` returns `en` on a Danish phone and the whole
-           feature does nothing at all – no error, no clue. A JS reload is not
-           enough.
+      ✅ **SEEN RUNNING IN DANISH ON A SIMULATOR, 2026-08-17 – BOTH DIRECTIONS.**
+           iPhone 17 Pro, iOS 26.5, launched with `-AppleLanguages "(da)"` and
+           again with `"(en)"`, reading the values out of the live app:
+           | phone set to | `getLocales()` | `tabs.shopping` | 4 servings |
+           |---|---|---|---|
+           | Danish | `da` | Indkøb | 4 portioner |
+           | English | `en` | Shopping | 4 servings |
+           **The English column is the half that matters most** – it is what
+           every real user is on, and it is unchanged.
+      ⚠️ **THE PLUGIN CHANGE NEEDED A NATIVE REBUILD, AND IT HAD NOT HAPPENED
+           – CONFIRMED, NOT THEORISED.** Before the rebuild, `Info.plist` had
+           **no `CFBundleLocalizations` key at all**: the app.json edit had been
+           sitting in the repo doing nothing since it was written. `iOS only
+           reports Danish if the BUNDLE claims to support it`, so a Danish phone
+           would have got `en` and the whole feature would have done nothing –
+           no error, no clue. `npx expo prebuild --platform ios` wrote the key
+           (`en`, `da`), and the installed binary was checked for it afterwards
+           rather than assumed.
+           **`/ios` IS GITIGNORED (CNG)**, so this is not a one-off: the key
+           does not survive in the repo, and **every fresh clone and every EAS
+           build regenerates it from app.json**. Nothing to remember – but do
+           not go looking for `CFBundleLocalizations` in git and conclude it is
+           missing.
+      ⚠️ **A SIMULATOR BUILD NEEDS `LANG=en_US.UTF-8` AND THERE IS NO SCRIPT
+           THAT SETS IT.** The first attempt died in `pod install` with
+           `Unicode Normalization not appropriate for ASCII-8BIT`.
+           `scripts/build-iphone.sh` exports `LANG=en_US.UTF-8` and
+           `PATH=/opt/homebrew/bin:$PATH` at the top, which is exactly why
+           DEVICE builds never hit this – but that script only targets the
+           phone. For the simulator the command is
+           `LANG=en_US.UTF-8 npx expo run:ios --device <SIM-UDID>`, and the
+           failure looks like a CocoaPods bug rather than a missing env var.
       ⚠️ **DO NOT SHIP THIS HALF-DONE TO USERS.** Fallback means nothing is
            broken, but a Danish phone would now get a fully Danish app that
            was SET UP in English – first run and sign-in are the whole
