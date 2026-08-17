@@ -5,6 +5,7 @@ import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { MaterialIcons } from "@expo/vector-icons";
 
 import { ds } from "@/constants/ds";
+import { t } from "@/lib/i18n";
 
 /**
  * Leave confirmation (Figma "leave household", 2026-07-22). Carries the
@@ -23,7 +24,7 @@ export function LeaveHouseholdSheet({
   onConfirm: () => Promise<void>;
 }) {
   return (
-    <BottomSheet visible={visible} title="Leave kitchen" onClose={onClose}>
+    <BottomSheet visible={visible} title={t("settings.leaveKitchen.title")} onClose={onClose}>
       {visible && (
         <Content householdName={householdName} onClose={onClose} onConfirm={onConfirm} />
       )}
@@ -51,7 +52,7 @@ function Content({
       // onConfirm closes the sheet on success, which unmounts this – so the
       // spinner stays up until then and there is no state to reset here.
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong – please try again");
+      setError(err instanceof Error ? err.message : t("errors.generic"));
       setBusy(false);
     }
   };
@@ -59,7 +60,7 @@ function Content({
   return (
     <View className="w-full gap-layout-small">
       <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-subtle">
-        {`You’re about to leave “${householdName}”. You’ll keep your own copy of the recipes, and you can be invited back later.`}
+        {t("settings.leaveKitchen.body", { name: householdName })}
       </Text>
 
       {error != null && (
@@ -87,7 +88,7 @@ function Content({
               color={ds.colors.error['contrast-text']}
             />
             <Text className="font-paragraph text-components-button-label font-default text-button-danger-label-enabled">
-              Leave kitchen
+              {t("settings.leaveKitchen.confirm")}
             </Text>
           </>
         )}
@@ -100,7 +101,7 @@ function Content({
         className="w-full items-center rounded-medium border-2 border-button-outline-border-enabled py-comp-large"
       >
         <Text className="font-paragraph text-components-button-label font-default text-button-outline-label-enabled">
-          Cancel
+          {t("common.cancel")}
         </Text>
       </Pressable>
     </View>

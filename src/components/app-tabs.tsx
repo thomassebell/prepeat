@@ -1,6 +1,7 @@
 import { NativeTabs } from 'expo-router/unstable-native-tabs';
 
 import { ds } from '@/constants/ds';
+import { t } from '@/lib/i18n';
 
 export default function AppTabs() {
   return (
@@ -17,17 +18,17 @@ export default function AppTabs() {
           needs Recipes, and that is a question about their data, not about the
           tab bar. */}
       <NativeTabs.Trigger name="(plan)">
-        <NativeTabs.Trigger.Label>Plan</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Label>{t('tabs.plan')}</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon sf={{ default: 'calendar', selected: 'calendar' }} />
       </NativeTabs.Trigger>
 
       <NativeTabs.Trigger name="recipes">
-        <NativeTabs.Trigger.Label>Recipes</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Label>{t('tabs.recipes')}</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon sf={{ default: 'book', selected: 'book.fill' }} />
       </NativeTabs.Trigger>
 
       <NativeTabs.Trigger name="shopping">
-        <NativeTabs.Trigger.Label>Shopping</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Label>{t('tabs.shopping')}</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon sf={{ default: 'bag', selected: 'bag.fill' }} />
       </NativeTabs.Trigger>
 
@@ -36,7 +37,7 @@ export default function AppTabs() {
           next to its own contents. The ROUTE stays `household` – only the
           label and icon change, so nothing that links here breaks. */}
       <NativeTabs.Trigger name="household">
-        <NativeTabs.Trigger.Label>Settings</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Label>{t('tabs.settings')}</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon sf={{ default: 'gearshape', selected: 'gearshape.fill' }} />
       </NativeTabs.Trigger>
 

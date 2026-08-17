@@ -15,6 +15,7 @@ import { ds } from "@/constants/ds";
 import { Spacing, tabBarClearance } from "@/constants/theme";
 import { useAuth } from "@/lib/auth";
 import { useHouseholdSwitcher } from "@/lib/household-context";
+import { t } from "@/lib/i18n";
 import {
   deleteHousehold,
   deleteProfile,
@@ -116,7 +117,7 @@ export default function SettingsScreen() {
             2026-08-13). The other three frames still say `color/text/light` –
             same colour, looser binding – see backlog 2.27. */}
         <Text className="flex-1 font-header text-display-4 font-emphasized leading-medium text-text-subtle">
-          Settings
+          {t("settings.title")}
         </Text>
       </View>
 
@@ -128,7 +129,7 @@ export default function SettingsScreen() {
           paddingBottom: tabBarClearance(insets, Spacing.four),
         }}
       >
-        <SettingsGroup title="Kitchens">
+        <SettingsGroup title={t("settings.groupKitchens")}>
           {households.map((h) => (
             <KitchenRow
               key={h.id}
@@ -151,20 +152,20 @@ export default function SettingsScreen() {
               rows that state a fact. */}
           <ActionRow
             icon="login"
-            label="Join an existing kitchen"
+            label={t("settings.joinKitchen")}
             accent
             onPress={() => setJoinOpen(true)}
           />
           <ActionRow
             icon="add-home"
-            label="Create a new kitchen"
+            label={t("settings.createKitchen")}
             accent
             isLast
             onPress={() => setCreateOpen(true)}
           />
         </SettingsGroup>
 
-        <SettingsGroup title="People">
+        <SettingsGroup title={t("settings.groupPeople")}>
           {members.map((member) => (
             <MemberRow
               key={member.userId}
@@ -178,7 +179,7 @@ export default function SettingsScreen() {
           ) : (
             <ActionRow
               icon="person-add-alt-1"
-              label="Invite someone"
+              label={t("settings.inviteSomeone")}
               accent
               isLast
               onPress={() => setSheet("invite")}
@@ -186,16 +187,16 @@ export default function SettingsScreen() {
           )}
         </SettingsGroup>
 
-        <SettingsGroup title="App">
+        <SettingsGroup title={t("settings.groupApp")}>
           <ActionRow
             icon="help"
-            label="Help"
+            label={t("settings.help")}
             trailing="open-in-new"
             onPress={() => openExternal(SUPPORT_URL)}
           />
           <ActionRow
             icon="policy"
-            label="Privacy policy"
+            label={t("settings.privacy")}
             trailing="open-in-new"
             isLast
             onPress={() => openExternal(PRIVACY_URL)}
@@ -211,7 +212,7 @@ export default function SettingsScreen() {
         >
           <MaterialIcons name="logout" size={24} color={ds.colors.button.outline.label.enabled} />
           <Text className="font-paragraph text-components-button-label font-default text-button-outline-label-enabled">
-            Sign out
+            {t("settings.signOut")}
           </Text>
         </Pressable>
       </ScrollView>
@@ -373,7 +374,11 @@ function KitchenRow({
     <Pressable
       accessibilityRole="button"
       accessibilityState={{ selected }}
-      accessibilityLabel={selected ? `${name}, current kitchen` : `Switch to ${name}`}
+      accessibilityLabel={
+        selected
+          ? t("settings.currentKitchen", { name })
+          : t("settings.switchTo", { name })
+      }
       onPress={onPress}
     >
       {({ pressed }) => (
@@ -404,7 +409,7 @@ function KitchenRow({
           {onMore && (
             <Pressable
               accessibilityRole="button"
-              accessibilityLabel="Edit kitchen"
+              accessibilityLabel={t("settings.editKitchen")}
               hitSlop={8}
               onPress={onMore}
             >
@@ -515,7 +520,7 @@ function MemberRow({
       {isMe && (
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel="Edit profile"
+          accessibilityLabel={t("settings.editProfile")}
           hitSlop={8}
           onPress={onEdit}
         >
@@ -539,11 +544,10 @@ function InviteBanner({ onPress }: { onPress: () => void }) {
       <MaterialIcons name="person-add-alt-1" size={40} color={ds.colors.icon.brand} />
       <View className="w-full">
         <Text className="font-header text-display-5 font-emphasized leading-small text-text-accent">
-          Invite someone
+          {t("settings.inviteBanner.title")}
         </Text>
         <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-default">
-          Everyone sees the same plan and the same shopping list – and it updates as everyone
-          changes it.
+          {t("settings.inviteBanner.body")}
         </Text>
       </View>
       <Pressable
@@ -557,7 +561,7 @@ function InviteBanner({ onPress }: { onPress: () => void }) {
           color={ds.colors.button.solid.label.enabled}
         />
         <Text className="font-paragraph text-components-button-label font-default text-button-solid-label-enabled">
-          Invite someone
+          {t("settings.inviteBanner.action")}
         </Text>
       </Pressable>
     </View>

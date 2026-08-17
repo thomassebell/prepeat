@@ -24,6 +24,18 @@ export const da: DeepPartial<typeof en> = {
   common: {
     done: 'Færdig',
     back: 'Tilbage',
+    cancel: 'Annuller',
+    save: 'Gem',
+    saving: 'Gemmer…',
+  },
+
+  tabs: {
+    plan: 'Plan',
+    recipes: 'Opskrifter',
+    // "Indkøb", not "Indkøbsliste": it sits under an icon in a quarter of the
+    // tab bar, and the screen it opens carries the full title anyway.
+    shopping: 'Indkøb',
+    settings: 'Indstillinger',
   },
 
   errors: {
@@ -290,6 +302,103 @@ export const da: DeepPartial<typeof en> = {
       subtitle: 'Vælg en dag.',
       submit: 'Tilføj til plan',
       todaySuffix: ' · i dag',
+    },
+  },
+
+  settings: {
+    title: 'Indstillinger',
+    groupKitchens: 'Køkkener',
+    groupPeople: 'Personer',
+    groupApp: 'App',
+    joinKitchen: 'Deltag i et eksisterende køkken',
+    createKitchen: 'Opret et nyt køkken',
+    inviteSomeone: 'Inviter nogen',
+    help: 'Hjælp',
+    privacy: 'Privatlivspolitik',
+    signOut: 'Log ud',
+    currentKitchen: '%{name}, nuværende køkken',
+    switchTo: 'Skift til %{name}',
+    editKitchen: 'Rediger køkken',
+    editProfile: 'Rediger profil',
+
+    inviteBanner: {
+      title: 'Inviter nogen',
+      body: 'Alle ser den samme plan og den samme indkøbsliste – og den opdaterer sig, når nogen ændrer noget.',
+      action: 'Inviter nogen',
+    },
+
+    // ⚠️ A DANISH USER TYPES "SLET", NOT "DELETE". The same key is shown and
+    // compared against, so the prompt and the check cannot disagree.
+    confirmWord: 'SLET',
+    confirmTypePrompt: 'Skriv “%{word}” for at bekræfte',
+    confirmTypeLabel: 'Skriv %{word} for at bekræfte',
+
+    editKitchenSheet: {
+      title: 'Rediger køkken',
+      // Danish says køkken in both, unlike the English pair above – there is
+      // no shipped Danish string to preserve, so the miss is not inherited.
+      nameLabel: 'Køkkenets navn',
+      nameA11y: 'Køkkenets navn',
+      deleteKitchen: 'Slet køkken',
+    },
+
+    editProfileSheet: {
+      title: 'Rediger profil',
+      firstName: 'Fornavn',
+      email: 'E-mail',
+      save: 'Gem profil',
+      leaveKitchen: 'Forlad køkken',
+      deleteProfile: 'Slet profil',
+    },
+
+    deleteKitchen: {
+      title: 'Slet “%{name}”?',
+      body: 'Alt i “%{name}” forsvinder: planerne, opskrifterne og indkøbslisten. Det kan ikke fortrydes.',
+      confirm: 'Slet køkken',
+    },
+
+    deleteProfile: {
+      title: 'Slet profil',
+      body: 'Du er ved at slette din profil%{who}. Dine personlige data slettes; opskrifter, du har delt, bliver i køkkenet uden dit navn. Det kan ikke fortrydes.',
+      confirm: 'Slet profil',
+    },
+
+    leaveKitchen: {
+      title: 'Forlad køkken',
+      body: 'Du er ved at forlade “%{name}”. Du beholder din egen kopi af opskrifterne, og du kan blive inviteret tilbage senere.',
+      confirm: 'Forlad køkken',
+    },
+
+    invite: {
+      title: 'Inviter nogen',
+      intro: 'Inviter nogen, eller giv dem koden nedenfor.',
+      copyCode: 'Kopiér kode',
+      copied: 'Kopieret',
+      refreshes: 'Fornyes den %{date}',
+      newCode: 'Få en ny kode',
+      newCodeTitle: 'Få en ny kode?',
+      newCodeBody:
+        'Den nuværende kode holder op med at virke med det samme. Alle, du allerede har delt den med, skal bruge den nye.',
+      newCodeConfirm: 'Ny kode',
+      failedTitle: 'Kunne ikke lave en ny kode',
+      failedBody: 'Prøv igen om et øjeblik.',
+      shareMessage: 'Kom med i vores køkken “%{name}” i Prep+Eat med koden %{code}',
+      action: 'Inviter nogen',
+    },
+
+    createKitchenModal: {
+      title: 'Navngiv dit køkken',
+      subtitle: 'Du kan ændre det når som helst.',
+      nameLabel: 'Køkkenets navn',
+      namePlaceholder: 'Familien Hansen',
+      submit: 'Opret køkken',
+    },
+
+    joinKitchenModal: {
+      title: 'Indtast din invitationskode',
+      subtitle: 'Spørg den, der har sat Prep+Eat op, om koden.',
+      codeLabel: 'Invitationskode',
+      submit: 'Deltag',
     },
   },
 

@@ -6,6 +6,7 @@ import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { ClearableInput } from "@/components/ui/input";
 import { ds } from "@/constants/ds";
 import { updateHousehold, type Household } from "@/lib/household";
+import { t } from "@/lib/i18n";
 
 /**
  * "Edit household" (Figma "edit household" / "delete household", reworked
@@ -30,7 +31,7 @@ export function EditHouseholdSheet({
   onDelete: () => void;
 }) {
   return (
-    <BottomSheet visible={visible} title="Edit kitchen" onClose={onClose}>
+    <BottomSheet visible={visible} title={t("settings.editKitchenSheet.title")} onClose={onClose}>
       {visible && (
         <SheetContent
           household={household}
@@ -78,12 +79,12 @@ function SheetContent({
     <View className="w-full gap-layout-small">
       <View className="w-full gap-comp-small">
         <Text className="font-paragraph text-components-label font-default leading-xxsmall text-text-subtle">
-          Household name
+          {t("settings.editKitchenSheet.nameLabel")}
         </Text>
         <ClearableInput
           value={name}
           onChangeText={setName}
-          accessibilityLabel="Kitchen name"
+          accessibilityLabel={t("settings.editKitchenSheet.nameA11y")}
           autoCorrect={false}
           returnKeyType="done"
           onSubmitEditing={save}
@@ -104,7 +105,7 @@ function SheetContent({
             (canSave ? "text-button-solid-label-enabled" : "text-text-disabled")
           }
         >
-          {busy ? "Saving…" : "Save"}
+          {busy ? t("common.saving") : t("common.save")}
         </Text>
       </Pressable>
       {canDelete && (
@@ -125,7 +126,7 @@ function SheetContent({
               color={ds.colors.error["contrast-text"]}
             />
             <Text className="font-paragraph text-components-button-label font-default text-button-danger-label-enabled">
-              Delete kitchen
+              {t("settings.editKitchenSheet.deleteKitchen")}
             </Text>
           </Pressable>
         </>

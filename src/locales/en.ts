@@ -13,6 +13,17 @@ export const en = {
   common: {
     done: 'Done',
     back: 'Back',
+    cancel: 'Cancel',
+    save: 'Save',
+    saving: 'Saving…',
+  },
+
+  /** The four tab-bar labels. Short – they sit under an icon. */
+  tabs: {
+    plan: 'Plan',
+    recipes: 'Recipes',
+    shopping: 'Shopping',
+    settings: 'Settings',
   },
 
   /**
@@ -270,6 +281,115 @@ export const en = {
       submit: 'Add to plan',
       /** Appended to a day name in the picker – " · today". */
       todaySuffix: ' · today',
+    },
+  },
+
+  settings: {
+    title: 'Settings',
+    groupKitchens: 'Kitchens',
+    groupPeople: 'People',
+    groupApp: 'App',
+    joinKitchen: 'Join an existing kitchen',
+    createKitchen: 'Create a new kitchen',
+    inviteSomeone: 'Invite someone',
+    help: 'Help',
+    privacy: 'Privacy policy',
+    signOut: 'Sign out',
+    currentKitchen: '%{name}, current kitchen',
+    switchTo: 'Switch to %{name}',
+    editKitchen: 'Edit kitchen',
+    editProfile: 'Edit profile',
+
+    inviteBanner: {
+      title: 'Invite someone',
+      body: 'Everyone sees the same plan and the same shopping list – and it updates as everyone changes it.',
+      action: 'Invite someone',
+    },
+
+    /**
+     * ⚠️ THE TYPED CONFIRMATION IS TRANSLATED, AND MUST STAY IN STEP.
+     * `confirmWord` is both the word shown and the word compared against – one
+     * key feeding both, so they cannot drift. A Danish user types SLET, not
+     * DELETE. It never leaves the device.
+     */
+    confirmWord: 'DELETE',
+    confirmTypePrompt: 'To confirm this, type “%{word}”',
+    confirmTypeLabel: 'Type %{word} to confirm',
+
+    editKitchenSheet: {
+      title: 'Edit kitchen',
+      /**
+       * ⚠️ SAYS "Household", NOT "Kitchen", AND THAT IS THE SHIPPED ENGLISH –
+       * left exactly as it is. The 2026-08-10 rename missed this one visible
+       * label, while the accessibility label beside it already says "Kitchen
+       * name". Danish says køkken, because there is no Danish string to
+       * preserve. Flagged in the backlog as an English copy bug; fixing it is
+       * a copy change, not a translation.
+       */
+      nameLabel: 'Household name',
+      nameA11y: 'Kitchen name',
+      deleteKitchen: 'Delete kitchen',
+    },
+
+    editProfileSheet: {
+      title: 'Edit profile',
+      firstName: 'First name',
+      email: 'Email',
+      save: 'Save profile',
+      leaveKitchen: 'Leave kitchen',
+      deleteProfile: 'Delete profile',
+    },
+
+    deleteKitchen: {
+      title: 'Delete “%{name}”?',
+      body: 'Everything in “%{name}” goes: the plans, the recipes and the shopping list. This cannot be undone.',
+      confirm: 'Delete kitchen',
+    },
+
+    deleteProfile: {
+      title: 'Delete profile',
+      /** `who` is ` "Thomas"` or empty – it carries its own leading space. */
+      body: 'You’re about to delete your profile%{who}. Your personal data is deleted; recipes you shared stay in the kitchen, without your name. This cannot be undone.',
+      confirm: 'Delete profile',
+    },
+
+    leaveKitchen: {
+      title: 'Leave kitchen',
+      body: 'You’re about to leave “%{name}”. You’ll keep your own copy of the recipes, and you can be invited back later.',
+      confirm: 'Leave kitchen',
+    },
+
+    invite: {
+      title: 'Invite someone',
+      intro: 'Invite someone, or give them the code below.',
+      copyCode: 'Copy code',
+      copied: 'Copied',
+      refreshes: 'Refreshes on %{date}',
+      newCode: 'Get a new code',
+      newCodeTitle: 'Get a new code?',
+      newCodeBody:
+        'The current code stops working right away. Anyone you already shared it with will need the new one.',
+      newCodeConfirm: 'New code',
+      failedTitle: 'Could not make a new code',
+      failedBody: 'Please try again in a moment.',
+      /** Goes out to another person through the OS share sheet. */
+      shareMessage: 'Join our kitchen “%{name}” in Prep+Eat with the code %{code}',
+      action: 'Invite someone',
+    },
+
+    createKitchenModal: {
+      title: 'Name your kitchen',
+      subtitle: 'You can change this any time.',
+      nameLabel: 'Kitchen name',
+      namePlaceholder: 'The Hansens',
+      submit: 'Create kitchen',
+    },
+
+    joinKitchenModal: {
+      title: 'Enter your invite code',
+      subtitle: 'Ask whoever set up Prep+Eat for the code.',
+      codeLabel: 'Invite code',
+      submit: 'Join',
     },
   },
 

@@ -702,6 +702,29 @@ Committed work for the first update after launch. Panel findings default here un
 
 ### Known bugs (open)
 
+- [ ] **THE EDIT-KITCHEN SHEET STILL SAYS "Household name". The 2026-08-10
+      rename missed it.** Found 2026-08-17 while translating Settings.
+      Where: [edit-household-sheet.tsx](../src/components/household/edit-household-sheet.tsx)
+           – the visible field label above the input. **The accessibility
+           label on the very same input already says "Kitchen name"**, which is
+           what makes it a miss rather than a decision: a screen reader and a
+           pair of eyes are told two different words for one field.
+      Size: one word. It is the last "household" left in the UI as far as this
+           sweep could see.
+      ⚠️ **DELIBERATELY NOT FIXED IN THE TRANSLATION WORK, and that is the part
+           worth keeping.** Every commit in that run held English output
+           byte-for-byte identical, because English is what real users are on
+           and a translation pass is the worst possible place to hide a copy
+           change – it would ride in under a commit message about Danish and
+           never be reviewed as the copy edit it is. So the English key carries
+           the wrong word, with a comment saying why, and **Danish says
+           `Køkkenets navn` in both places** – there was no shipped Danish
+           string to preserve, so the miss is not inherited into the new
+           language.
+      Fix: change `settings.editKitchenSheet.nameLabel` in
+           [en.ts](../src/locales/en.ts) to "Kitchen name" and delete the
+           comment above it. Danish needs nothing.
+
 - [x] **SWITCHING KITCHEN TOOK YOU OFF SETTINGS. Found by Thomas on the phone
       2026-08-16, fixed the same hour.** *"If you shift to a kitchen without
       recipes, you are taken directly to the recipe screen, but you have just
@@ -2013,12 +2036,12 @@ Closed 2026-07-27:
 - [ ] **⭐ Show the app in Danish when the phone is set to Danish**
       Why: one app, two languages, iOS picks. Not a Danish edition and not a
            market decision – English stays the base language.
-      ✅ **STARTED 2026-08-17: the machinery is in, and THREE OF THE FOUR TABS
-           are fully translated** – Shopping, Plan and Recipes. English is
-           unchanged, verified – see below.
-      Left: **Settings and the TAB BAR**, then the whole first-run and sign-in
-           flow, and the OTP email Resend sends. (`friendlyError()` came along
-           with Recipes – see below.)
+      ✅ **STARTED 2026-08-17: the machinery is in, and ALL FOUR TABS AND THE
+           TAB BAR are fully translated** – Shopping, Plan, Recipes and
+           Settings, in one day. English is unchanged, verified – see below.
+      Left: **the first-run and sign-in flow**, and the OTP email Resend sends.
+           That is the whole remainder. (`friendlyError()` and the recipe
+           importer came along with Recipes – see below.)
       Size: incremental – it can ship a screen at a time, and should.
 
       ✅ **WHAT LANDED 2026-08-17**
@@ -2039,7 +2062,11 @@ Closed 2026-07-27:
         state, the recipe detail with its action menu, both confirm dialogs and
         both reorder sheets, the 822-line add/edit form, and the ingredient,
         instruction, import and add-to-plan sheets.
-      - **192 keys, no English key without a Danish one.**
+      - **The whole Settings tab AND THE TAB BAR** (same day): the four tab
+        labels, the kitchen switcher rows, People, the App group, sign out, and
+        all eight sheets and modals – edit kitchen, edit profile, invite
+        someone, join, create, leave, delete kitchen and delete profile.
+      - **260 keys, no English key without a Danish one.**
       ⚠️ **DANISH WEEKDAYS ARE LOWER CASE** – "mandag", not "Mandag" – and that
            is grammar there, not a style choice. Verified in both the places it
            has to work: standing alone in the move-day row, and inside a
@@ -2064,6 +2091,17 @@ Closed 2026-07-27:
            entry a *trin*, so the heading and the row noun cannot share a key
            the way "Instructions"/"instruction" does. Worth knowing before
            anyone "tidies" them into one.
+      ⚠️ **THE TYPED DELETE CONFIRMATION IS TRANSLATED – A DANISH USER TYPES
+           "SLET".** The word shown and the word compared against are ONE key
+           (`settings.confirmWord`), so the prompt and the check cannot drift
+           apart into a sheet nobody can arm. It never leaves the device, so
+           nothing stored or sent changes. Verified in both languages: typing
+           the word the sheet asks for arms the button, in each.
+      ⚠️ **THE INVITE'S REFRESH DATE IS A SHAPE TOO**, and it was already
+           calling `toLocaleDateString("en", …)` with the locale hard-coded.
+           Now it follows the app: "August 2, 2026" in English, "2. august
+           2026" in Danish. Intl gets the ORDER right per language, which a
+           translated month name alone would not.
       ⚠️ **A LAYOUT RISK, FLAGGED RATHER THAN PAPERED OVER: the recipe detail's
            three time labels get much longer in Danish.** Total/Prep/Cook
            become I alt / Forberedelse / Tilberedning, in a three-column
@@ -2085,7 +2123,7 @@ Closed 2026-07-27:
            was – the label sits in a one-line slot in Thomas's week switcher.
       **VERIFIED, and how:** `npx tsc --noEmit` and `expo lint` clean; Metro
            bundles and the app loads with no console errors; every one of the
-           192 keys resolved in both languages through i18n-js, including plurals
+           260 keys resolved in both languages through i18n-js, including plurals
            ("1 vare klaret" / "4 varer klaret", "1 portion" / "4 portioner") and
            fallback; and the REAL `weekRangeLabel`, `DAY_NAMES` and `DAY_LABELS`
            run in both locales over five weeks, including both month boundaries
@@ -2104,11 +2142,14 @@ Closed 2026-07-27:
            feature does nothing at all – no error, no clue. A JS reload is not
            enough.
       ⚠️ **DO NOT SHIP THIS HALF-DONE TO USERS.** Fallback means nothing is
-           broken, but a Danish phone would now get three Danish tabs, an
-           English Settings, and an English TAB BAR over the lot. That reads as
-           a bug, not as progress. It is safe in a dev build and safe in the
-           repo; it wants Settings and the tab bar before it goes in a
-           release. **No release note yet, deliberately** –
+           broken, but a Danish phone would now get a fully Danish app that
+           was SET UP in English – first run and sign-in are the whole
+           remainder. Someone installing fresh meets English, then everything
+           turns Danish, which reads as a bug at exactly the moment a new user
+           is deciding whether to trust the thing.
+           **It is much closer than it was**: an existing user switching their
+           phone to Danish would now see a coherent app. It is still dev-build
+           only until first-run lands. **No release note yet, deliberately** –
            there is nothing announceable until then.
       **IMPROVISED COPY, FLAGGED – TWO PLACES, BOTH EMPTY STATES.** Both are
            English idioms with no Danish equivalent, so both are rewrites rather

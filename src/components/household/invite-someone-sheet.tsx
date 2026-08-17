@@ -6,6 +6,7 @@ import { ActivityIndicator, Alert, Pressable, Share, Text, View } from "react-na
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { ds } from "@/constants/ds";
 import type { Invite } from "@/lib/household";
+import { locale, t } from "@/lib/i18n";
 
 /**
  * "Invite someone" (Figma "Householde – invite", node 271:14935, built to spec
@@ -31,7 +32,7 @@ export function InviteSomeoneSheet({
   onRegenerate: () => Promise<Invite>;
 }) {
   return (
-    <BottomSheet visible={visible} title="Invite someone" onClose={onClose}>
+    <BottomSheet visible={visible} title={t("settings.invite.title")} onClose={onClose}>
       {visible && (
         <SheetContent
           householdName={householdName}
@@ -43,9 +44,14 @@ export function InviteSomeoneSheet({
   );
 }
 
-/** "Refreshes on August 2, 2026" – English month-day-year, per the English UI. */
+/**
+ * "Refreshes on August 2, 2026" in English; "2. august 2026" in Danish.
+ * Intl gets the ORDER right per language, which a translated month name on its
+ * own would not - so this is one of the places the locale reaches past the
+ * words and into the shape.
+ */
 function formatRefreshDate(expiresAt: number): string {
-  return new Date(expiresAt).toLocaleDateString("en", {
+  return new Date(expiresAt).toLocaleDateString(locale, {
     month: "long",
     day: "numeric",
     year: "numeric",
@@ -89,7 +95,10 @@ function SheetContent({
     if (code == null) return;
     try {
       await Share.share({
-        message: `Join our kitchen “${householdName}” in Prep+Eat with the code ${code}`,
+        message: t("settings.invite.shareMessage", {
+          name: householdName,
+          code,
+        }),
       });
     } catch {
       // Sharing cancelled – nothing to do.
@@ -103,7 +112,10 @@ function SheetContent({
       setCopied(false);
     } catch (error) {
       console.warn("[household] regenerate failed", error);
-      Alert.alert("Could not make a new code", "Please try again in a moment.");
+      Alert.alert(
+        t("settings.invite.failedTitle"),
+        t("settings.invite.failedBody"),
+      );
     } finally {
       setRegenerating(false);
     }
@@ -113,11 +125,15 @@ function SheetContent({
   const confirmRegenerate = () => {
     if (code == null || regenerating) return;
     Alert.alert(
-      "Get a new code?",
-      "The current code stops working right away. Anyone you already shared it with will need the new one.",
+      t("settings.invite.newCodeTitle"),
+      t("settings.invite.newCodeBody"),
       [
-        { text: "Cancel", style: "cancel" },
-        { text: "New code", style: "destructive", onPress: runRegenerate },
+        { text: t("common.cancel"), style: "cancel" },
+        {
+          text: t("settings.invite.newCodeConfirm"),
+          style: "destructive",
+          onPress: runRegenerate,
+        },
       ],
     );
   };
@@ -127,14 +143,16 @@ function SheetContent({
       {/* Intro + code + refresh row, 16px apart (Figma content group). */}
       <View className="w-full gap-layout-small">
         <Text className="w-full font-paragraph text-paragraph font-default leading-xsmall text-text-subtle">
-          Invite someone, or give them the code below.
+          {t("settings.invite.intro")}
         </Text>
 
         {/* Code chip with copy. The left spacer mirrors the icon column so the
             code stays optically centered (Figma [24px | 1fr | 24px] grid). */}
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel={copied ? "Copied" : "Copy code"}
+          accessibilityLabel={
+            copied ? t("settings.invite.copied") : t("settings.invite.copyCode")
+          }
           onPress={copy}
           disabled={code == null}
           className="w-full flex-row items-center gap-comp-small rounded-medium bg-surface-neutral-lighter p-layout-small"
@@ -156,11 +174,15 @@ function SheetContent({
         {/* Refresh date (left) + manual rotation link (right). */}
         <View className="w-full flex-row items-center gap-comp-small">
           <Text className="flex-1 font-paragraph text-paragraph font-default leading-xsmall text-text-subtle">
-            {invite ? `Refreshes on ${formatRefreshDate(invite.expiresAt)}` : " "}
+            {invite
+              ? t("settings.invite.refreshes", {
+                  date: formatRefreshDate(invite.expiresAt),
+                })
+              : " "}
           </Text>
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Get a new code"
+            accessibilityLabel={t("settings.invite.newCode")}
             disabled={code == null || regenerating}
             onPress={confirmRegenerate}
             className="flex-row items-center gap-comp-xsmall border-b-2 border-button-text-underline-enabled"
@@ -171,7 +193,7 @@ function SheetContent({
               <MaterialIcons name="refresh" size={16} color={ds.colors.text.subtle} />
             )}
             <Text className="font-paragraph text-paragraph font-default leading-xsmall text-button-text-label-enabled">
-              Get a new code
+              {t("settings.invite.newCode")}
             </Text>
           </Pressable>
         </View>
@@ -190,7 +212,7 @@ function SheetContent({
           color={ds.colors.button.solid.label.enabled}
         />
         <Text className="font-paragraph text-components-button-label font-default text-button-solid-label-enabled">
-          Invite someone
+          {t("settings.invite.action")}
         </Text>
       </Pressable>
     </View>

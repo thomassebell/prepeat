@@ -14,6 +14,7 @@ import { ThemedText } from './themed-text';
 import { ThemedView } from './themed-view';
 
 import { Colors, MaxContentWidth, Spacing } from '@/constants/theme';
+import { t } from '@/lib/i18n';
 
 export default function AppTabs() {
   return (
@@ -23,16 +24,16 @@ export default function AppTabs() {
         <CustomTabList>
           {/* Order mirrors app-tabs.tsx – see the note there. */}
           <TabTrigger name="plan" href="/" asChild>
-            <TabButton>Plan</TabButton>
+            <TabButton>{t('tabs.plan')}</TabButton>
           </TabTrigger>
           <TabTrigger name="recipes" href="/recipes" asChild>
-            <TabButton>Recipes</TabButton>
+            <TabButton>{t('tabs.recipes')}</TabButton>
           </TabTrigger>
           <TabTrigger name="shopping" href="/shopping" asChild>
-            <TabButton>Shopping</TabButton>
+            <TabButton>{t('tabs.shopping')}</TabButton>
           </TabTrigger>
           <TabTrigger name="household" href="/household" asChild>
-            <TabButton>Settings</TabButton>
+            <TabButton>{t('tabs.settings')}</TabButton>
           </TabTrigger>
         </CustomTabList>
       </TabList>

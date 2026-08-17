@@ -27,6 +27,7 @@ import { Input } from '@/components/ui/input';
 import { ds } from '@/constants/ds';
 import { friendlyError } from '@/lib/error-messages';
 import { createHousehold, type Household } from '@/lib/household';
+import { t } from '@/lib/i18n';
 
 export function CreateHouseholdModal({
   visible,
@@ -102,7 +103,7 @@ export function CreateHouseholdModal({
                 onPress={close}
                 hitSlop={12}
                 accessibilityRole="button"
-                accessibilityLabel="Back">
+                accessibilityLabel={t('common.back')}>
                 <MaterialIcons name="arrow-back" size={28} color={ds.colors.surface.primary.main} />
               </Pressable>
             </View>
@@ -110,15 +111,15 @@ export function CreateHouseholdModal({
               <View className="w-full gap-layout-small rounded-large bg-surface-neutral-white px-layout-small pb-layout-small pt-layout-large">
                 <View className="w-full gap-layout-small">
                   <Text className="font-header text-display-5 font-emphasized leading-small text-text-subtle">
-                    Name your kitchen
+                    {t('settings.createKitchenModal.title')}
                   </Text>
                   <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-subtle">
-                    You can change this any time.
+                    {t('settings.createKitchenModal.subtitle')}
                   </Text>
                 </View>
                 <View className="w-full gap-layout-xsmall">
                   <Text className="font-paragraph text-components-label font-default leading-xxsmall text-text-default">
-                    Kitchen name
+                    {t('settings.createKitchenModal.nameLabel')}
                   </Text>
                   {error != null && (
                     <View className="w-full flex-row items-start gap-comp-large rounded-medium bg-error-lightest px-comp-large py-comp-small">
@@ -131,7 +132,7 @@ export function CreateHouseholdModal({
                   <Input
                     value={name}
                     onChangeText={setName}
-                    placeholder="The Hansens"
+                    placeholder={t('settings.createKitchenModal.namePlaceholder')}
                     autoFocus
                     hasError={error != null}
                   />
@@ -151,7 +152,7 @@ export function CreateHouseholdModal({
                   <ActivityIndicator color={ds.colors.button.solid.label.enabled} />
                 ) : (
                   <Text className="font-paragraph text-paragraph font-default leading-xsmall text-button-solid-label-enabled">
-                    Create kitchen
+                    {t('settings.createKitchenModal.submit')}
                   </Text>
                 )}
               </Pressable>

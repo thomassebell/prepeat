@@ -5,10 +5,11 @@ import { ActivityIndicator, Pressable, Text, View } from "react-native";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { Input } from "@/components/ui/input";
 import { ds } from "@/constants/ds";
+import { t } from "@/lib/i18n";
 
 // The fail-safe: the user must type this to arm the delete (Figma
 // "delete profile 3", label "To confirm this, type “DELETE”").
-const CONFIRM_WORD = "DELETE";
+const confirmWord = () => t("settings.confirmWord");
 
 /**
  * Delete profile confirmation (Figma "delete profile 3", 2026-07-22). GDPR
@@ -29,7 +30,7 @@ export function DeleteProfileSheet({
   onConfirm: () => Promise<void>;
 }) {
   return (
-    <BottomSheet visible={visible} title="Delete profile" onClose={onClose}>
+    <BottomSheet visible={visible} title={t("settings.deleteProfile.title")} onClose={onClose}>
       {visible && <Content firstName={firstName} onConfirm={onConfirm} />}
     </BottomSheet>
   );
@@ -46,7 +47,7 @@ function Content({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const armed = confirm.trim().toUpperCase() === CONFIRM_WORD;
+  const armed = confirm.trim().toUpperCase() === confirmWord();
   const canDelete = armed && !busy;
 
   const del = async () => {
@@ -56,7 +57,7 @@ function Content({
     try {
       await onConfirm();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong – please try again");
+      setError(err instanceof Error ? err.message : t("errors.generic"));
       setBusy(false);
     }
   };
@@ -66,19 +67,19 @@ function Content({
   return (
     <View className="w-full gap-layout-small">
       <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-default">
-        {`You’re about to delete your profile${who}. Your personal data is deleted; recipes you shared stay in the kitchen, without your name. This cannot be undone.`}
+        {t("settings.deleteProfile.body", { who })}
       </Text>
 
       <View className="w-full gap-layout-xsmall">
         <Text className="font-paragraph text-components-label font-default leading-xxsmall text-text-subtle">
-          {`To confirm this, type “${CONFIRM_WORD}”`}
+          {t("settings.confirmTypePrompt", { word: confirmWord() })}
         </Text>
         <Input
           value={confirm}
           onChangeText={setConfirm}
           autoCapitalize="characters"
           autoCorrect={false}
-          accessibilityLabel={`Type ${CONFIRM_WORD} to confirm`}
+          accessibilityLabel={t("settings.confirmTypeLabel", { word: confirmWord() })}
         />
       </View>
 
@@ -115,7 +116,7 @@ function Content({
                 (canDelete ? "text-button-danger-label-enabled" : "text-text-disabled")
               }
             >
-              Delete profile
+              {t("settings.deleteProfile.confirm")}
             </Text>
           </>
         )}

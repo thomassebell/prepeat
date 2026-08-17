@@ -5,10 +5,11 @@ import { ActivityIndicator, Pressable, Text, View } from "react-native";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { Input } from "@/components/ui/input";
 import { ds } from "@/constants/ds";
+import { t } from "@/lib/i18n";
 
 // The fail-safe: the user must type this to arm the delete (Figma
 // "delete household 3", label "To confirm this, type “DELETE”").
-const CONFIRM_WORD = "DELETE";
+const confirmWord = () => t("settings.confirmWord");
 
 /**
  * Delete household confirmation (Figma "delete household 3", 2026-07-22).
@@ -28,7 +29,7 @@ export function DeleteHouseholdSheet({
   onConfirm: () => Promise<void>;
 }) {
   return (
-    <BottomSheet visible={visible} title={`Delete “${householdName}”?`} onClose={onClose}>
+    <BottomSheet visible={visible} title={t("settings.deleteKitchen.title", { name: householdName })} onClose={onClose}>
       {visible && <Content householdName={householdName} onConfirm={onConfirm} />}
     </BottomSheet>
   );
@@ -45,7 +46,7 @@ function Content({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const armed = confirm.trim().toUpperCase() === CONFIRM_WORD;
+  const armed = confirm.trim().toUpperCase() === confirmWord();
   const canDelete = armed && !busy;
 
   const del = async () => {
@@ -57,7 +58,7 @@ function Content({
       // onConfirm closes the sheet on success, which unmounts this – so the
       // spinner stays up until then and there is no state to reset here.
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong – please try again");
+      setError(err instanceof Error ? err.message : t("errors.generic"));
       setBusy(false);
     }
   };
@@ -65,19 +66,19 @@ function Content({
   return (
     <View className="w-full gap-layout-small">
       <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-default">
-        {`Everything in “${householdName}” goes: the plans, the recipes and the shopping list. This cannot be undone.`}
+        {t("settings.deleteKitchen.body", { name: householdName })}
       </Text>
 
       <View className="w-full gap-layout-xsmall">
         <Text className="font-paragraph text-components-label font-default leading-xxsmall text-text-subtle">
-          {`To confirm this, type “${CONFIRM_WORD}”`}
+          {t("settings.confirmTypePrompt", { word: confirmWord() })}
         </Text>
         <Input
           value={confirm}
           onChangeText={setConfirm}
           autoCapitalize="characters"
           autoCorrect={false}
-          accessibilityLabel={`Type ${CONFIRM_WORD} to confirm`}
+          accessibilityLabel={t("settings.confirmTypeLabel", { word: confirmWord() })}
         />
       </View>
 
@@ -114,7 +115,7 @@ function Content({
                 (canDelete ? "text-button-danger-label-enabled" : "text-text-disabled")
               }
             >
-              Delete kitchen
+              {t("settings.deleteKitchen.confirm")}
             </Text>
           </>
         )}

@@ -25,6 +25,7 @@ import { Input } from '@/components/ui/input';
 import { ds } from '@/constants/ds';
 import { friendlyError } from '@/lib/error-messages';
 import { joinHousehold, type Household } from '@/lib/household';
+import { t } from '@/lib/i18n';
 
 export function JoinHouseholdModal({
   visible,
@@ -100,7 +101,7 @@ export function JoinHouseholdModal({
               onPress={close}
               hitSlop={12}
               accessibilityRole="button"
-              accessibilityLabel="Back">
+              accessibilityLabel={t('common.back')}>
               <MaterialIcons name="arrow-back" size={28} color={ds.colors.surface.primary.main} />
             </Pressable>
           </View>
@@ -108,15 +109,15 @@ export function JoinHouseholdModal({
             <View className="w-full gap-layout-small rounded-large bg-surface-neutral-white px-layout-small pb-layout-small pt-layout-large">
               <View className="w-full gap-layout-small">
                 <Text className="font-header text-display-5 font-emphasized leading-small text-text-subtle">
-                  Enter your invite code
+                  {t('settings.joinKitchenModal.title')}
                 </Text>
                 <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-subtle">
-                  Ask whoever set up Prep+Eat for the code.
+                  {t('settings.joinKitchenModal.subtitle')}
                 </Text>
               </View>
               <View className="w-full gap-layout-xsmall">
                 <Text className="font-paragraph text-components-label font-default leading-xxsmall text-text-default">
-                  Invite code
+                  {t('settings.joinKitchenModal.codeLabel')}
                 </Text>
                 {error != null && (
                   <View className="w-full flex-row items-start gap-comp-large rounded-medium bg-error-lightest px-comp-large py-comp-small">
@@ -151,7 +152,7 @@ export function JoinHouseholdModal({
                 <ActivityIndicator color={ds.colors.button.solid.label.enabled} />
               ) : (
                 <Text className="font-paragraph text-paragraph font-default leading-xsmall text-button-solid-label-enabled">
-                  Join
+                  {t('settings.joinKitchenModal.submit')}
                 </Text>
               )}
             </Pressable>

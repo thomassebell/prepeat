@@ -6,6 +6,7 @@ import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { ClearableInput } from "@/components/ui/input";
 import { ds } from "@/constants/ds";
 import { useAuth } from "@/lib/auth";
+import { t } from "@/lib/i18n";
 
 /**
  * "Edit profile" (Figma "edit your profile", 2026-07-18 / reworked
@@ -34,7 +35,7 @@ export function EditProfileSheet({
   onDelete: () => void;
 }) {
   return (
-    <BottomSheet visible={visible} title="Edit profile" onClose={onClose}>
+    <BottomSheet visible={visible} title={t("settings.editProfileSheet.title")} onClose={onClose}>
       {visible && (
         <SheetContent
           canLeave={canLeave}
@@ -83,12 +84,12 @@ function SheetContent({
     <View className="w-full gap-layout-small">
       <View className="w-full gap-comp-small">
         <Text className="font-paragraph text-components-label font-default leading-xxsmall text-text-subtle">
-          First name
+          {t("settings.editProfileSheet.firstName")}
         </Text>
         <ClearableInput
           value={name}
           onChangeText={setName}
-          accessibilityLabel="First name"
+          accessibilityLabel={t("settings.editProfileSheet.firstName")}
           autoCorrect={false}
           returnKeyType="done"
           onSubmitEditing={save}
@@ -96,7 +97,7 @@ function SheetContent({
       </View>
       <View className="w-full gap-comp-small">
         <Text className="font-paragraph text-components-label font-default leading-xxsmall text-text-subtle">
-          Email
+          {t("settings.editProfileSheet.email")}
         </Text>
         {/* Read-only (subdued border, Figma 213:66305) – shows which
             account is being edited. */}
@@ -121,7 +122,7 @@ function SheetContent({
             (canSave ? "text-button-solid-label-enabled" : "text-text-disabled")
           }
         >
-          {busy ? "Saving…" : "Save profile"}
+          {busy ? t("common.saving") : t("settings.editProfileSheet.save")}
         </Text>
       </Pressable>
       {canLeave && (
@@ -133,7 +134,7 @@ function SheetContent({
         >
           <MaterialIcons name="logout" size={24} color={ds.colors.error.main} />
           <Text className="font-paragraph text-components-button-label font-default text-error">
-            Leave kitchen
+            {t("settings.editProfileSheet.leaveKitchen")}
           </Text>
         </Pressable>
       )}
@@ -149,7 +150,7 @@ function SheetContent({
           color={ds.colors.error["contrast-text"]}
         />
         <Text className="font-paragraph text-components-button-label font-default text-button-danger-label-enabled">
-          Delete profile
+          {t("settings.editProfileSheet.deleteProfile")}
         </Text>
       </Pressable>
     </View>
