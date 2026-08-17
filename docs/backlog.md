@@ -54,6 +54,19 @@ Claude needs the reasoning, Thomas needs to recognise a task.
       Size: …          ← only when it is genuinely known
 ```
 
+⚠️ **EVERY LABEL MUST COME BEFORE THE ITEM'S PROSE. A LABEL BELOW A PARAGRAPH IS
+SILENTLY IGNORED.** `backlog-view.mjs` stops reading labels the moment an
+unlabelled paragraph starts ([the parser](../scripts/backlog-view.mjs), "Labels
+only count before the item's prose starts"), because body text sometimes opens
+with something like "Capped today:" and that is not a label.
+**The consequence is invisible and it is the exact failure this file exists to
+prevent:** on 2026-08-17 a spec summary was added ABOVE the `Needs:` line of the
+starred sharing item, and the item silently dropped off *⏸ Waiting on you*. The
+file still said Thomas was needed; the page he actually reads no longer did.
+Caught only because the count went from 3 to 2 in the same breath.
+**So: labels first, prose after a blank line.** And after any edit that moves a
+`Needs:` line, check the regenerated index still lists the item.
+
 **The labels are a SHORT LIST, and `Note:` is the escape hatch** – reach for it
 rather than inventing a twelfth label, which is how the section sprawl started.
 
@@ -108,7 +121,7 @@ the index below.
 Nothing moves on these until Thomas decides or draws something.
 Everything else in this file is Claude's to get on with.
 
-- **⭐ Share a recipe with someone – FIRST ITEM IN v1.1** – how much of a recipe a stranger sees before installing.
+- **⭐ Share a recipe with someone – FIRST ITEM IN v1.1** – the share page has no Figma frame. Nothing else: all three product decisions were locked 2026-08-17.
   <sub>Next – v1.1</sub>
 - **⭐ Let the household teach the app that two ingredient names mean the same thing** – design the "same as…" action, and settle whether an alias is one-directional.
   <sub>Someday – not committed</sub>
@@ -2610,15 +2623,44 @@ are not a queue this project can work through.
       now bails out when `c` is followed by `à`/`a`. Any future language work
       needs the same paranoia about collisions with English abbreviations.
 - [ ] **⭐ Share a recipe with someone – FIRST ITEM IN v1.1**
-      Needs: Thomas – how much of a recipe a stranger sees before installing.
+      Needs: Thomas – the share page has no Figma frame. Nothing else: all three
+           product decisions were locked 2026-08-17.
       Why: Thomas's case is that this is the growth mechanic, not a
            convenience – *"without 'mouth to mouth' sharing, this app will not
            be a success. And having a recipe as a carrier will be key."*
-      Decide first: how much a stranger sees – the whole recipe, or a teaser
-           that needs the app. And the copyright question below, which is
-           genuinely unanswered.
-      Size: about a week. It is the project's first web deployment.
-      Do before code: a spec doc, like leave-household.md.
+      Size: about a week for the teaser. NOT the first web deployment – see the
+           spec. The genuinely new surface is server-rendered link previews, on
+           their own subdomain.
+      Do before code: ✅ done – [share-recipe.md](share-recipe.md).
+
+      **📄 THE SPEC IS THE ENTRY NOW: [share-recipe.md](share-recipe.md).** Read
+      it instead of what follows – this text is kept for the history.
+      ✅ **ALL THREE DECISIONS LOCKED 2026-08-17.**
+      1. **A TEASER, NOT THE WHOLE RECIPE.** A stranger sees photo, title and
+         times, then an invitation to install; no ingredients, no method. Chosen
+         because conversion is the point, because it is a dial rather than a door
+         (opening it up later is easy, clawing a public page back is not), and
+         because it publishes almost nothing copyrightable.
+      2. **AN IMPORTED PHOTO IS NEVER PUBLISHED.** Own photos only, a generated
+         title card otherwise – which needs photo provenance recorded at import,
+         since a scraped photo and one you shot are today indistinguishable
+         uploads in the same bucket.
+      3. **"SAVE TO MY RECIPES" ON AN EXPLICIT TAP** for a recipient who has the
+         app, copying it into their kitchen. Not automatic – that would add
+         things to someone's cookbook without asking.
+      **NOTHING BLOCKS THE BUILD ANY MORE EXCEPT THE PAGE'S DESIGN**, and its
+      tone is load-bearing: a wall that reads as a gift converts very differently
+      from one that reads as a paywall, with identical information on it.
+      The spec corrects two things stated below as fact: **prepeat.app is NOT
+      parked and this is NOT the first web deployment** (`prepeat-web` is live on
+      GitHub Pages and already serves Apple's required privacy and support URLs),
+      and the import photo path has moved to `new.tsx:169` / `new.tsx:204`.
+      **The one thing the spec adds that nothing here anticipated:** unfurl bots
+      do not run JavaScript, so a link pasted into iMessage or WhatsApp needs
+      SERVER-RENDERED OG tags or it previews as a grey generic card. For a
+      feature whose whole purpose is mouth-to-mouth, the preview card IS the
+      product – so this, not the page, is the real new surface, and it wants its
+      own subdomain rather than re-pointing the host that serves Apple's URLs.
 
       (Thomas, raised as an idea
       2026-07-25, weighed for v1.0 on 2026-07-27 and deliberately left out of
