@@ -176,9 +176,23 @@ recipe_shares
   snapshot      jsonb not null        -- title, times, servings, photo url or null
 ```
 
-RLS: anon may `select` where `revoked_at is null`; household members may insert
-and revoke their own household's rows. `snapshot` never contains ingredients or
-steps under the teaser.
+⚠️ **RLS, corrected while building it.** This section originally read "anon may
+`select` where `revoked_at is null`". **That is a leak, and it is the most
+dangerous sentence this doc ever contained.** The anon key ships inside the app
+and inside the web page, so a select policy of any kind lets anyone list every
+share in the database. What 0034 actually does:
+
+- Household members may `select` their own household's rows (so a "shared
+  recipes" screen can exist later). No insert or update policy at all – writes go
+  through functions, so nothing can hand-assemble a snapshot.
+- **anon gets no policy and no table privileges.** `revoke all on table
+  public.recipe_shares from anon` as well, because a hosted project grants anon
+  by default at table creation.
+- `public.share_by_token(token)` is `security definer` and the only thing anon
+  may execute. It takes the token as an argument, so there is nothing to
+  enumerate, and it returns at most one row.
+
+`snapshot` never contains ingredients or steps.
 
 ## Link previews: why this needs server rendering
 
@@ -248,10 +262,25 @@ needs updating **before this ships**, not after.
 ## Build order
 
 1. This doc, agreed. ✅
-2. Migration: `recipe_shares` + RLS. Dev first, then production, `--dry-run`
-   read before the production push, `npm run db:reset` before it goes anywhere.
-   The snapshot carries the sharer's **first name**, the title and the times –
-   and the photo URL only when `source_url is null`.
+2. ✅ **DONE 2026-08-17 – migration 0034, live on dev AND production.** Additive
+   only, so build 12 cannot be affected: nothing references it yet.
+   Backup taken first, `--dry-run` read against production (listed exactly one
+   migration, so the ledger is intact), all 34 replayed locally, `backup:verify`
+   after – 8642 rows restored exactly. Behavioural test:
+   `supabase/tests/recipe-shares.sql`, 29 checks.
+   **Two things the migration decides that this spec had left to the client, and
+   should not have:**
+   - **The snapshot is built by the DATABASE.** `create_recipe_share(recipe_id)`
+     reads the recipe and applies the imported-content rule itself. Had the app
+     assembled it, the rule would live in a build – and builds linger on phones
+     for months, so it would keep leaking from every old version ever shipped.
+   - **⚠️ ANON CANNOT SELECT THE TABLE AT ALL.** The policy sketched below in an
+     earlier draft (`for select to anon using (revoked_at is null)`) is a LEAK:
+     the anon key is public, so anyone holding it could list every share in the
+     database, title, photo and sender's name included. The token stops being a
+     secret the moment rows can be listed. `share_by_token()` takes the token as
+     an argument, so there is nothing to enumerate, and it is the only public
+     door.
 3. ~~`photo_source` on `recipes`~~ – **dropped, not needed.**
    `recipes.source_url` already distinguishes imported from hand-written.
 4. The share action in the app: create token, native share sheet, copy link.
