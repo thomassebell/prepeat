@@ -4751,6 +4751,26 @@ Not work. Kept so a cold thread can pick things up without re-litigating them.
 
 ### In flight (built, not yet live)
 
+- [x] **THE APP IN DANISH – BUILT 2026-08-17, IN NOBODY'S HANDS.** 310 keys
+      across all four tabs, the tab bar and the whole first-run flow. Confirmed
+      on Thomas's phone and on a simulator in both languages; English output
+      unchanged throughout, which is the half that matters while users are on
+      build 12.
+      ⚠️ **TODAY PRODUCED TWO CHANGES OF DIFFERENT KINDS, AND THEY MUST NOT BE
+      SPOKEN OF TOGETHER:**
+      - **The APP translation is NOT live.** It needs a build and a submission.
+        Nobody outside this Mac and Thomas's phone has any of it.
+      - **The EMAIL is live for everyone, right now** – it is a Supabase
+        template, not app code, so saving it reached every installed build
+        including build 12. Already recorded under *Server changes* in
+        [release-notes.md](release-notes.md), where it belongs precisely
+        because it can never belong to a version's notes.
+      **So a Danish user today gets an English app and a bilingual email.**
+      That is the honest state, and it is temporary in one direction only:
+      shipping 1.1.0 closes it.
+      Release note for the app half is written and waiting under *Accumulating
+      toward the next version*, dated 2026-08-17.
+
 - [x] **DELETING OR LEAVING A KITCHEN SPUN FOREVER – FIXED AND CONFIRMED
       2026-08-16.** Thomas, on the device: *"delete and leave kitchen both work
       now."* Reported as *"Deleting a kitchen does not finish in the UI"*, fixed
