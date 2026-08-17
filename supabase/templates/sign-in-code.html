@@ -1,30 +1,3 @@
-<!--
-  The sign-in code email – BILINGUAL (Thomas, 2026-08-17).
-
-  ⚠️ THIS FILE IS A RECORD, NOT THE LIVE COPY. Supabase serves the version
-  stored in the DASHBOARD; nothing here reaches a user until it is pasted in.
-  It lives in the repo so the live text is reviewable, diffable and restorable
-  after a disaster recovery – the same reason the five dashboard-only settings
-  are written down in docs/backups-and-local-db.md.
-
-  ⚠️ IT IS USED BY **BOTH** TEMPLATES – "Confirm signup" (fires for an address
-  the project has never seen) and "Magic Link" (every time after). One text for
-  both, so they cannot drift apart. Paste it into both.
-
-  WHY BILINGUAL: Supabase has ONE template per project and no way to know the
-  reader's language – the app cannot tell it, because the code is requested
-  before anyone is signed in. So the choice is one language for everyone or
-  both, and Thomas chose both.
-
-  ENGLISH FIRST because English is the app's base language (foundation.md);
-  Danish is added alongside. Flipping the order is a straight swap of the two
-  blocks.
-
-  ⚠️ `{{ .Token }}` IS THE CODE AND MUST SURVIVE ANY EDIT. Without it the mail
-  arrives with no code in it and NOBODY CAN SIGN IN – existing users included,
-  the moment it is saved. The stock Supabase template sends a confirmation
-  LINK instead, which this app cannot complete.
--->
 <table width="100%" cellpadding="0" cellspacing="0" role="presentation"
        style="background:#F8F7F7;margin:0;padding:24px 0;">
   <tr>
