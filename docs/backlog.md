@@ -842,7 +842,8 @@ Committed work for the first update after launch. Panel findings default here un
          exists in the DS.~~ **WRONG, AND CORRECTED THE SAME DAY** – the DS has
          an `alert banner`, Claude searched for the wrong four words and wrote
          the absence down as fact. The box was replaced by the real component;
-         see the alert banner entry above. Left struck through rather than
+         see the alert-banner entries under **Later (v1.1+)**, where they moved
+         2026-08-17. Left struck through rather than
          deleted, because the mistake was writing an unverified absence into a
          doc, and deleting it hides that.
       The import sheet itself has never had a frame either
@@ -853,7 +854,8 @@ Committed work for the first update after launch. Panel findings default here un
 - [x] **BUILT THE DS ALERT BANNER IN THE APP, THEN DELETED IT AGAIN THE SAME
       HOUR.** Thomas, 2026-08-16: *"This could be dangerous drift in the DS. I
       don't know if you build from the same rules that the DS project is bound
-      by."* He was right, and the answer was no – see the entry below. The
+      by."* He was right, and the answer was no – see the alert-banner entries
+      under **Later (v1.1+)**, where they moved 2026-08-17. The
       component was removed and the screen went back to its app-local box.
       **WHAT THE DS RULES ACTUALLY SAY, read after the fact** (the DS repo's
       own `CLAUDE.md`, which was never opened while building):
@@ -895,74 +897,6 @@ Committed work for the first update after launch. Panel findings default here un
       Montserrat / IBM Plex. Copying what the canvas showed would have shipped
       another brand's component. This is NOT a missed token sync – same names,
       different brand mode, which is the system working.
-
-- [ ] **The alert banner exists in Figma only – it has no code anywhere**
-      Note: not in `@ds/react`, and no longer in the app either.
-      Noticed by Thomas 2026-08-16: *"I just realized the alert banner was not
-      coded. Did you just code it?"* Yes – it had no code implementation
-      anywhere. The one written here was deleted the same hour, so it has none
-      again.
-      **THE APP COULD NOT HAVE CONSUMED A DS ONE ANYWAY**, which is worth
-      writing down because it is easy to assume otherwise: `@ds/react` peers on
-      `react-dom` and is a WEB library, and this app has no `@ds/*` dependency
-      at all – it takes the DS as TOKENS only, via `ds-theme.cjs`. Every DS
-      component in this app is hand-built in React Native from those tokens;
-      `chip.tsx`, `input.tsx` and `tabs.tsx` already mirror the DS's Chip,
-      Input and TabBar the same way. The alert banner is the fourth, not a
-      departure.
-      So the open question is for the DS, not the app: `@ds/react` has Button,
-      Checkbox, Chip, Field, Icon, Input, Radio, Stack, Surface, Switch, TabBar
-      and Text – and no Alert. Porting this implementation to web is a
-      different job from writing it (RN primitives, no Tailwind classes), so it
-      is a DS-repo task rather than a copy-paste.
-
-- [ ] **Export the `icon/*` and `text/contrast-text` tokens the alert banner needs**
-      Why: two of its eight variants and its close button cannot be built
-      without them.
-      Found 2026-08-16 while building the since-deleted alert banner, and
-      still true for whoever builds it in the DS. `ds-theme.cjs`
-      exports icon `default/subtle/brand/accent/disabled`; the alert binds
-      `color/icon/primary`, `icon/contrast`, `icon/light` and `icon/lighter`
-      for its close button, and `color/text/contrast-text` for the error
-      message. None are in the bridge.
-      Blocked by this, and deliberately left unbuilt rather than approximated
-      with a neighbouring token (CLAUDE.md rule 1):
-      - the **close button**, on every variant
-      - **solid + error** (message binds `color/text/contrast-text`)
-      - **outlined + warning** (icon binds `color/icon/primary`)
-      ⚠️ **CORRECTION – THE FIX IS IN FIGMA, NOT THE EXPORT LIST.** This entry
-      first said to add the groups to the export list in
-      `packages/tokens/transforms/generate-nativewind.mjs`. Wrong: that file
-      **already exports `icon` and `text`** (its foreground loop covers text,
-      border, icon, tab-bar, chip, button, forms). Its own docstring names the
-      real cause – *"the appearance border/icon sets are currently thin… That's
-      a DS appearance-layer limitation, not this generator's – expand those
-      tokens in Figma if the app needs more border/icon shades."* The app
-      receives icon `default/subtle/brand/accent/disabled` and text
-      `default/subtle/disabled/link/brand/accent/inverse/danger/success/
-      warning/info` because that is what the appearance layer contains.
-      So the names the alert banner binds are missing UPSTREAM, and nobody can
-      build its close button faithfully – in the DS or anywhere – until they
-      exist in the Figma appearance collection. Adding them there, then
-      `tokens:build` + `sync-ds-tokens`, is the order.
-
-- [ ] **The alert banner's eight variants disagree with each other** – worth a
-      look, since DS components are meant to be the part that is right.
-      Read off the node bindings 2026-08-16:
-      - the **close icon** uses four different tokens across eight variants:
-        `icon/primary` (solid+warning, outlined+warning), `icon/contrast`
-        (solid+Error), `icon/light` (solid+success, solid+info),
-        `icon/lighter` (all other outlined)
-      - **solid + info** fills with `info/light`; every other solid fills with
-        its `main`
-      - **solid + Error**'s message binds `text/contrast-text` while every
-        other solid's message binds its own `status/contrast-text`
-      - **outlined + Error** strokes `error/main`; every other outlined strokes
-        its `dark`
-      - **outlined + warning**'s icon binds `icon/primary` while every other
-        outlined binds its `status/dark`
-      Each one alone reads as a slip; five of them says the set was edited
-      variant by variant. None of it is guessed – all from `boundVariables`.
 
 - [x] `RETIRED 2026-08-17, Thomas's call – "retire it".` **The import sheet
       stays as it is, unframed.**
@@ -2073,6 +2007,87 @@ Closed 2026-07-27:
   swiped row"** (never a bug – a short name sliding out of view).
 
 ### Later (v1.1+)
+
+**The three alert-banner items below are DS work, not app work** – moved out
+of *Known bugs* 2026-08-17 on Thomas's call. They were filed there because
+they were FOUND while building an alert banner in this app on 2026-08-16;
+that build was deleted the same hour under the rule that components are only
+ever built in the DS. Nothing in this repo is broken by any of them, which is
+what made them wrong as bugs.
+
+⚠️ **TWO OF THE THREE CANNOT BE DONE FROM THIS REPO AT ALL** – the missing
+`icon/*` tokens live in the Figma appearance collection, and the variant
+disagreements are in the DS component itself. They sit here as a RECORD of
+what was found, so the next person to open the DS has it written down; they
+are not a queue this project can work through.
+
+- [ ] **The alert banner exists in Figma only – it has no code anywhere**
+      Note: not in `@ds/react`, and no longer in the app either.
+      Noticed by Thomas 2026-08-16: *"I just realized the alert banner was not
+      coded. Did you just code it?"* Yes – it had no code implementation
+      anywhere. The one written here was deleted the same hour, so it has none
+      again.
+      **THE APP COULD NOT HAVE CONSUMED A DS ONE ANYWAY**, which is worth
+      writing down because it is easy to assume otherwise: `@ds/react` peers on
+      `react-dom` and is a WEB library, and this app has no `@ds/*` dependency
+      at all – it takes the DS as TOKENS only, via `ds-theme.cjs`. Every DS
+      component in this app is hand-built in React Native from those tokens;
+      `chip.tsx`, `input.tsx` and `tabs.tsx` already mirror the DS's Chip,
+      Input and TabBar the same way. The alert banner is the fourth, not a
+      departure.
+      So the open question is for the DS, not the app: `@ds/react` has Button,
+      Checkbox, Chip, Field, Icon, Input, Radio, Stack, Surface, Switch, TabBar
+      and Text – and no Alert. Porting this implementation to web is a
+      different job from writing it (RN primitives, no Tailwind classes), so it
+      is a DS-repo task rather than a copy-paste.
+
+- [ ] **Export the `icon/*` and `text/contrast-text` tokens the alert banner needs**
+      Why: two of its eight variants and its close button cannot be built
+      without them.
+      Found 2026-08-16 while building the since-deleted alert banner, and
+      still true for whoever builds it in the DS. `ds-theme.cjs`
+      exports icon `default/subtle/brand/accent/disabled`; the alert binds
+      `color/icon/primary`, `icon/contrast`, `icon/light` and `icon/lighter`
+      for its close button, and `color/text/contrast-text` for the error
+      message. None are in the bridge.
+      Blocked by this, and deliberately left unbuilt rather than approximated
+      with a neighbouring token (CLAUDE.md rule 1):
+      - the **close button**, on every variant
+      - **solid + error** (message binds `color/text/contrast-text`)
+      - **outlined + warning** (icon binds `color/icon/primary`)
+      ⚠️ **CORRECTION – THE FIX IS IN FIGMA, NOT THE EXPORT LIST.** This entry
+      first said to add the groups to the export list in
+      `packages/tokens/transforms/generate-nativewind.mjs`. Wrong: that file
+      **already exports `icon` and `text`** (its foreground loop covers text,
+      border, icon, tab-bar, chip, button, forms). Its own docstring names the
+      real cause – *"the appearance border/icon sets are currently thin… That's
+      a DS appearance-layer limitation, not this generator's – expand those
+      tokens in Figma if the app needs more border/icon shades."* The app
+      receives icon `default/subtle/brand/accent/disabled` and text
+      `default/subtle/disabled/link/brand/accent/inverse/danger/success/
+      warning/info` because that is what the appearance layer contains.
+      So the names the alert banner binds are missing UPSTREAM, and nobody can
+      build its close button faithfully – in the DS or anywhere – until they
+      exist in the Figma appearance collection. Adding them there, then
+      `tokens:build` + `sync-ds-tokens`, is the order.
+
+- [ ] **The alert banner's eight variants disagree with each other** – worth a
+      look, since DS components are meant to be the part that is right.
+      Read off the node bindings 2026-08-16:
+      - the **close icon** uses four different tokens across eight variants:
+        `icon/primary` (solid+warning, outlined+warning), `icon/contrast`
+        (solid+Error), `icon/light` (solid+success, solid+info),
+        `icon/lighter` (all other outlined)
+      - **solid + info** fills with `info/light`; every other solid fills with
+        its `main`
+      - **solid + Error**'s message binds `text/contrast-text` while every
+        other solid's message binds its own `status/contrast-text`
+      - **outlined + Error** strokes `error/main`; every other outlined strokes
+        its `dark`
+      - **outlined + warning**'s icon binds `icon/primary` while every other
+        outlined binds its `status/dark`
+      Each one alone reads as a slip; five of them says the set was edited
+      variant by variant. None of it is guessed – all from `boundVariables`.
 
 - [x] **⭐ DONE 2026-08-17 – the app shows in Danish when the phone is set to
       Danish.** Built and confirmed on Thomas's phone the same day it was
