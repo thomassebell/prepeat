@@ -33,6 +33,7 @@ import { ServingsCounter } from "@/components/recipes/servings-counter";
 import { SwipeActions } from "@/components/recipes/swipe-actions";
 import { SwipeHint } from "@/components/ui/swipe-hint";
 import { UndoToast } from "@/components/ui/undo-toast";
+import { IS_DEV_APP } from "@/constants/build-variant";
 import { ds } from "@/constants/ds";
 import { Spacing, tabBarClearance } from "@/constants/theme";
 import { AddToPlanSheet } from "@/components/recipes/add-to-plan-sheet";
@@ -314,13 +315,16 @@ export default function RecipeDetailScreen() {
       label: t("recipes.detail.addToList"),
       onPress: () => setDialog("shopping"),
     },
-    // ⚠️ DEV BUILDS ONLY, and it must stay that way until the share PAGE is
+    // ⚠️ THE DEV APP ONLY, and it must stay that way until the share PAGE is
     // deployed (spec step 5). The link a share produces resolves to nothing
     // today, and a share that hands someone a dead link is worse than no share
-    // at all – testers would send them to family. Same __DEV__ gate the
-    // token-debug screen uses. UNGATE THIS IN THE SAME CHANGE THAT SHIPS THE
-    // PAGE; there is a backlog item so it is not forgotten.
-    ...(__DEV__
+    // at all – a tester would send it to family. UNGATE THIS IN THE SAME CHANGE
+    // THAT SHIPS THE PAGE; there is a backlog item so it is not forgotten.
+    //
+    // `IS_DEV_APP`, NOT `__DEV__`: `__DEV__` is false in a Release build, which
+    // is exactly what goes on Thomas's phone, so gating on it would have hidden
+    // this from the one device it needs trying on. See build-variant.ts.
+    ...(IS_DEV_APP
       ? [
           {
             icon: "ios-share" as keyof typeof MaterialIcons.glyphMap,

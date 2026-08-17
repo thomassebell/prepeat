@@ -4347,10 +4347,22 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
       Watch: this is the classic thing that gets forgotten, and forgetting it in
            EITHER direction is bad – ship the page without ungating and nobody
            can use it; ungate without the page and every link 404s.
-      Where: `src/app/recipes/[id].tsx`, the `...(__DEV__ ? [...] : [])` in
+      Where: `src/app/recipes/[id].tsx`, the `...(IS_DEV_APP ? [...] : [])` in
            `menuItems`, and the header comment in `src/lib/recipe-shares.ts`.
 
       (2026-08-17, with the share action.)
+      **⚠️ AND A TRAP WORTH KEEPING EVEN AFTER THIS ITEM CLOSES: the gate is
+      `IS_DEV_APP`, NOT `__DEV__`.** It was written as `__DEV__` first, which
+      sounds like "development builds" and is not: `__DEV__` means "running from
+      the Metro dev client" and is FALSE in a Release build – which is exactly
+      what `build-iphone.sh` puts on Thomas's phone. Gating on it would have
+      hidden the feature from the one device it needed trying on, and the build
+      would have reported success while showing nothing new. Caught one command
+      before that build. The honest signal is the bundle id, which
+      `app.config.js` already sets to `app.prepeat.dev` for device builds; it is
+      now a named constant in `src/constants/build-variant.ts` with the
+      reasoning in it, because the next "on my phone but not for users" feature
+      will reach for `__DEV__` too.
 
 - [ ] **`eas-submit-ios.sh` reports the wrong build as proof**
       Why: it ends by asking App Store Connect for the newest VALID build and
