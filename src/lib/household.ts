@@ -3,6 +3,7 @@
 // join_household_with_code RPC.
 import * as Crypto from 'expo-crypto';
 
+import { t } from '@/lib/i18n';
 import { supabase } from '@/lib/supabase';
 
 export interface Household {
@@ -146,7 +147,7 @@ export async function updateHousehold(
   const patch: { name?: string } = {};
   if (changes.name != null) {
     const trimmed = changes.name.replace(/\s+/g, ' ').trim();
-    if (!trimmed) throw new Error('Please give your household a name');
+    if (!trimmed) throw new Error(t('errors.kitchenNameRequired'));
     patch.name = trimmed;
   }
   const { error } = await supabase
@@ -163,7 +164,7 @@ export async function updateHousehold(
  */
 export async function createHousehold(name: string): Promise<{ household: Household; inviteCode: string }> {
   const trimmed = name.replace(/\s+/g, ' ').trim();
-  if (!trimmed) throw new Error('Please give your household a name');
+  if (!trimmed) throw new Error(t('errors.kitchenNameRequired'));
   const { data: userData, error: userError } = await supabase.auth.getUser();
   if (userError) throw userError;
   const userId = userData.user.id;
@@ -225,16 +226,16 @@ export async function regenerateInvite(householdId: string): Promise<Invite> {
 /** Redeems an invite code and returns the joined household. */
 export async function joinHousehold(code: string): Promise<Household> {
   const normalized = code.replace(/\s+/g, '').toUpperCase();
-  if (!normalized) throw new Error('Please enter an invite code');
+  if (!normalized) throw new Error(t('errors.inviteCodeRequired'));
   const { data: householdId, error } = await supabase.rpc('join_household_with_code', {
     p_code: normalized,
   });
   if (error) {
     if (/invalid or expired/i.test(error.message)) {
-      throw new Error('That code is not valid – check it with the person who sent it');
+      throw new Error(t('errors.inviteCodeInvalid'));
     }
     if (/too many attempts/i.test(error.message)) {
-      throw new Error('Too many tries – wait a few minutes, then try that code again');
+      throw new Error(t('errors.inviteCodeTooMany'));
     }
     throw error;
   }

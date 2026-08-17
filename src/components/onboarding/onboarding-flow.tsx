@@ -23,6 +23,7 @@ import { Input } from '@/components/ui/input';
 import { ds } from '@/constants/ds';
 import { useAuth } from '@/lib/auth';
 import { friendlyError } from '@/lib/error-messages';
+import { t } from '@/lib/i18n';
 import {
   createHousehold,
   joinHousehold,
@@ -89,7 +90,7 @@ function AuthSteps() {
               </Text>
             </View>
             <Text className="text-center font-paragraph text-paragraph font-default leading-xsmall text-text-default">
-              Plan dinners, collect recipes{'\n'}and shop together
+              {t('onboarding.tagline')}
             </Text>
           </View>
           <View className="w-full flex-1 items-center justify-end gap-layout-small pb-layout-xsmall">
@@ -103,7 +104,7 @@ function AuthSteps() {
               onPress={() => setStep({ kind: 'email' })}
               className="w-full items-center rounded-medium bg-surface-neutral-white px-comp-xlarge py-comp-large">
               <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-default">
-                Continue with email
+                {t('onboarding.continueWithEmail')}
               </Text>
             </Pressable>
           </View>
@@ -115,24 +116,24 @@ function AuthSteps() {
   if (step.kind === 'email') {
     return (
       <FormScreen
-        title="What’s your email?"
-        subtitle="New here or coming back, it’s the same – we’ll send you a code. No password to remember."
+        title={t('onboarding.email.title')}
+        subtitle={t('onboarding.email.subtitle')}
         onBack={() => setStep({ kind: 'welcome' })}
-        submitLabel="Send code"
+        submitLabel={t('onboarding.email.submit')}
         onSubmit={async () => {
           await requestCode(email);
           setCode('');
           setStep({ kind: 'code', email });
         }}
         validate={() =>
-          /.+@.+\..+/.test(email.trim()) ? null : 'Enter your email to continue.'
+          /.+@.+\..+/.test(email.trim()) ? null : t('onboarding.email.invalid')
         }>
         {(error) => (
-          <Field label="Email" error={error}>
+          <Field label={t('onboarding.email.label')} error={error}>
             <Input
               value={email}
               onChangeText={setEmail}
-              placeholder="you@example.com"
+              placeholder={t('onboarding.email.placeholder')}
               keyboardType="email-address"
               autoCapitalize="none"
               autoComplete="email"
@@ -147,15 +148,15 @@ function AuthSteps() {
 
   return (
     <FormScreen
-      title="Check your email"
-      subtitle={`We sent a code to ${step.email}.\nCan’t find it? Check your spam folder.`}
+      title={t('onboarding.code.title')}
+      subtitle={t('onboarding.code.subtitle', { email: step.email })}
       onBack={() => setStep({ kind: 'email' })}
-      submitLabel="Continue"
+      submitLabel={t('onboarding.code.submit')}
       onSubmit={() => verifyCode(step.email, code)}
       canSubmit={code.length === CODE_LENGTH}
       footer={<ResendLink email={step.email} onSent={() => setCode('')} />}>
       {(error) => (
-        <Field label="Code" error={error}>
+        <Field label={t('onboarding.code.label')} error={error}>
           <CodeInput value={code} onChangeText={setCode} hasError={error != null} />
         </Field>
       )}
@@ -168,18 +169,18 @@ function NameStep() {
   const [name, setName] = useState('');
   return (
     <FormScreen
-      title="What’s your name?"
-      submitLabel="Continue"
+      title={t('onboarding.name.title')}
+      submitLabel={t('onboarding.name.submit')}
       onSubmit={() => saveFirstName(name)}
-      validate={() => (name.trim().length > 0 ? null : 'Enter your name to continue.')}>
+      validate={() => (name.trim().length > 0 ? null : t('onboarding.name.invalid'))}>
       {(error) => (
-        <Field label="Name" error={error}>
+        <Field label={t('onboarding.name.label')} error={error}>
           <Input
             value={name}
             onChangeText={setName}
             // The placeholder is the only thing left signalling first-name-only
             // now that neither title nor label says "first" (Thomas, 2026-08-10).
-            placeholder="Sofia"
+            placeholder={t('onboarding.name.placeholder')}
             autoFocus
             hasError={error != null}
           />
@@ -207,25 +208,23 @@ function HouseholdSteps({ onHouseholdReady }: { onHouseholdReady: (h: Household)
           <View className="w-full gap-layout-small rounded-large bg-surface-neutral-white px-layout-small pb-layout-small pt-layout-large">
             <View className="w-full gap-layout-small">
               <Text className="font-header text-display-5 font-emphasized leading-small text-text-subtle">
-                Set up your kitchen
+                {t('onboarding.setup.title')}
               </Text>
               <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-subtle">
-                Your recipes, weekly plan and shopping list live in a kitchen – shared with
-                whoever you cook with. If someone at home already has one, join theirs
-                instead of starting another.
+                {t('onboarding.setup.body')}
               </Text>
             </View>
             <View className="w-full gap-layout-small">
               <ChoiceCard
                 icon="add-home"
-                title="Create a new kitchen"
-                body="Start fresh. Invite people whenever you like, or keep it to yourself."
+                title={t('onboarding.setup.createTitle')}
+                body={t('onboarding.setup.createBody')}
                 onPress={() => setStep({ kind: 'create' })}
               />
               <ChoiceCard
                 icon="card-membership"
-                title="Join an existing kitchen"
-                body="You’ll share the same recipes, plan and shopping list – anything you add shows up for them too."
+                title={t('onboarding.setup.joinTitle')}
+                body={t('onboarding.setup.joinBody')}
                 onPress={() => setStep({ kind: 'join' })}
               />
             </View>
@@ -252,11 +251,10 @@ function HouseholdSteps({ onHouseholdReady }: { onHouseholdReady: (h: Household)
             <View className="w-full gap-layout-small rounded-large bg-surface-neutral-white px-layout-small pb-layout-small pt-layout-large">
               <View className="w-full gap-layout-small">
                 <Text className="font-header text-display-5 font-emphasized leading-small text-text-subtle">
-                  Your kitchen is ready
+                  {t('onboarding.ready.title')}
                 </Text>
                 <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-subtle">
-                  Share this code and they’ll see the same recipes, plan and list. You can
-                  also do this later from the Kitchen tab.
+                  {t('onboarding.ready.body')}
                 </Text>
               </View>
               <View className="w-full gap-layout-small">
@@ -273,7 +271,7 @@ function HouseholdSteps({ onHouseholdReady }: { onHouseholdReady: (h: Household)
                   </Text>
                   <Pressable
                     accessibilityRole="button"
-                    accessibilityLabel="Copy the code"
+                    accessibilityLabel={t('onboarding.ready.copyCode')}
                     hitSlop={8}
                     onPress={() => shareInvite(created.household.name, created.inviteCode)}>
                     <MaterialIcons name="content-copy" size={24} color={ds.colors.icon.default} />
@@ -285,36 +283,39 @@ function HouseholdSteps({ onHouseholdReady }: { onHouseholdReady: (h: Household)
                   className="w-full flex-row items-center justify-center gap-comp-xsmall rounded-medium bg-button-solid-fill-enabled py-comp-large">
                   <MaterialIcons name="ios-share" size={24} color={ds.colors.button.solid.label.enabled} />
                   <Text className="font-paragraph text-paragraph font-default leading-xsmall text-button-solid-label-enabled">
-                    Share the code
+                    {t('onboarding.ready.share')}
                   </Text>
                 </Pressable>
               </View>
             </View>
           </View>
           <View className="w-full flex-1 justify-end px-layout-small pb-layout-medium">
-            <PrimaryButton label="Continue" onPress={() => setCreatedWelcome(true)} />
+            <PrimaryButton
+              label={t('onboarding.ready.continue')}
+              onPress={() => setCreatedWelcome(true)}
+            />
           </View>
         </Screen>
       );
     }
     return (
       <FormScreen
-        title="Name your kitchen"
-        subtitle="You can change this any time."
+        title={t('onboarding.create.title')}
+        subtitle={t('onboarding.create.subtitle')}
         onBack={() => setStep({ kind: 'choice' })}
-        submitLabel="Continue"
+        submitLabel={t('onboarding.create.submit')}
         onSubmit={async () => {
           setCreated(await createHousehold(name));
         }}
         validate={() =>
-          name.trim().length > 0 ? null : 'Give your kitchen a name to continue.'
+          name.trim().length > 0 ? null : t('onboarding.create.invalid')
         }>
         {(error) => (
-          <Field label="Kitchen name" error={error}>
+          <Field label={t('onboarding.create.label')} error={error}>
             <Input
               value={name}
               onChangeText={setName}
-              placeholder="The Hansens"
+              placeholder={t('onboarding.create.placeholder')}
               autoFocus
               hasError={error != null}
             />
@@ -330,16 +331,16 @@ function HouseholdSteps({ onHouseholdReady }: { onHouseholdReady: (h: Household)
 
   return (
     <FormScreen
-      title="Enter your invite code"
-      subtitle="Ask whoever set up Prep+Eat for the code."
+      title={t('onboarding.join.title')}
+      subtitle={t('onboarding.join.subtitle')}
       onBack={() => setStep({ kind: 'choice' })}
-      submitLabel="Join"
+      submitLabel={t('onboarding.join.submit')}
       onSubmit={async () => {
         setJoined(await joinHousehold(code));
       }}
-      validate={() => (code.trim().length >= 4 ? null : 'Enter an invite code to continue.')}>
+      validate={() => (code.trim().length >= 4 ? null : t('onboarding.join.invalid'))}>
       {(error) => (
-        <Field label="Invite code" error={error}>
+        <Field label={t('onboarding.join.label')} error={error}>
           <Input
             value={code}
             onChangeText={setCode}
@@ -365,7 +366,7 @@ export function WelcomeScreen({
   // Never name a destination here: a creator's kitchen is empty and opens on
   // Recipes, a joiner's usually has recipes and opens on Plan. "Start planning"
   // promised one of those and delivered the other (Thomas, 2026-08-10).
-  buttonLabel = 'Take a look around',
+  buttonLabel = t('onboarding.welcome.action'),
 }: {
   household: Household;
   onContinue: () => void;
@@ -392,7 +393,7 @@ export function WelcomeScreen({
             ))}
           </View>
           <Text className="font-header text-display-5 font-emphasized leading-small text-text-default">
-            Welcome to {household.name}
+            {t('onboarding.welcome.greeting', { name: household.name })}
           </Text>
         </View>
         <View className="w-full flex-1 items-center justify-end gap-layout-small px-layout-small pb-layout-medium">
@@ -431,7 +432,7 @@ function TopBar({ onBack }: { onBack?: () => void }) {
           onPress={onBack}
           hitSlop={12}
           accessibilityRole="button"
-          accessibilityLabel="Back"
+          accessibilityLabel={t('common.back')}
           className="absolute bottom-0 left-layout-small">
           <MaterialIcons name="arrow-back" size={28} color={ds.colors.surface.primary.main} />
         </Pressable>
@@ -683,7 +684,7 @@ function CodeInput({
         caretHidden
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
-        accessibilityLabel="Code"
+        accessibilityLabel={t('onboarding.code.label')}
         style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, opacity: 0.011 }}
       />
     </View>
@@ -753,7 +754,7 @@ function ResendLink({ email, onSent }: { email: string; onSent: () => void }) {
   if (status === 'sending') {
     return (
       <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-subtle">
-        Sending a new code…
+        {t('onboarding.resend.sending')}
       </Text>
     );
   }
@@ -762,7 +763,7 @@ function ResendLink({ email, onSent }: { email: string; onSent: () => void }) {
       <View className="flex-row items-center gap-comp-xsmall">
         <MaterialIcons name="check" size={20} color={ds.colors.text.link} />
         <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-subtle">
-          New code sent – check your email
+          {t('onboarding.resend.sent')}
         </Text>
       </View>
     );
@@ -770,13 +771,17 @@ function ResendLink({ email, onSent }: { email: string; onSent: () => void }) {
   if (status === 'wait') {
     return (
       <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-subtle">
-        A code was just sent – wait a minute, then try again
+        {t('onboarding.resend.wait')}
       </Text>
     );
   }
   return (
     <LinkButton
-      label={status === 'failed' ? "Couldn’t send – tap to retry" : 'Send a new code'}
+      label={
+        status === 'failed'
+          ? t('onboarding.resend.failed')
+          : t('onboarding.resend.link')
+      }
       onPress={send}
     />
   );

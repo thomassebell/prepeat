@@ -13,6 +13,7 @@ import {
 import { AppState } from 'react-native';
 
 import { supabase } from '@/lib/supabase';
+import { t } from '@/lib/i18n';
 
 interface AuthApi {
   /** undefined while the stored session is still loading at launch. */
@@ -71,7 +72,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       },
       saveFirstName: async (name) => {
         const first = name.replace(/\s+/g, ' ').trim();
-        if (!first) throw new Error('Please enter your name');
+        if (!first) throw new Error(t('errors.nameRequired'));
         const { error } = await supabase.auth.updateUser({ data: { first_name: first } });
         if (error) throw error;
         // updateUser fires onAuthStateChange with the fresh metadata.

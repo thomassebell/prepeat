@@ -36,6 +36,108 @@ export const en = {
     offline: 'You appear to be offline. Check your connection and try again.',
     badCode: 'That code is wrong or has expired. Ask for a new one below.',
     rateLimited: 'You’re going a little fast. Wait a minute, then try again.',
+
+    /**
+     * Thrown by auth.ts and household.ts. These are ALREADY plain language, so
+     * `friendlyError()` passes them through untouched – translating them here
+     * is the only way they ever reach a Danish reader.
+     */
+    nameRequired: 'Please enter your name',
+    /**
+     * ⚠️ SAYS "household", NOT "kitchen" – shipped English, left as it is.
+     * Same 2026-08-10 rename miss as `settings.editKitchenSheet.nameLabel`,
+     * and logged with it. Danish says køkken, having no wrong string to keep.
+     */
+    kitchenNameRequired: 'Please give your household a name',
+    inviteCodeRequired: 'Please enter an invite code',
+    inviteCodeInvalid:
+      'That code is not valid – check it with the person who sent it',
+    inviteCodeTooMany:
+      'Too many tries – wait a few minutes, then try that code again',
+  },
+
+  onboarding: {
+    tagline: 'Plan dinners, collect recipes\nand shop together',
+    continueWithEmail: 'Continue with email',
+
+    email: {
+      title: 'What’s your email?',
+      subtitle:
+        'New here or coming back, it’s the same – we’ll send you a code. No password to remember.',
+      submit: 'Send code',
+      label: 'Email',
+      placeholder: 'you@example.com',
+      invalid: 'Enter your email to continue.',
+    },
+
+    code: {
+      title: 'Check your email',
+      subtitle: 'We sent a code to %{email}.\nCan’t find it? Check your spam folder.',
+      submit: 'Continue',
+      label: 'Code',
+    },
+
+    resend: {
+      link: 'Send a new code',
+      sending: 'Sending a new code…',
+      sent: 'New code sent – check your email',
+      wait: 'A code was just sent – wait a minute, then try again',
+      failed: 'Couldn’t send – tap to retry',
+    },
+
+    name: {
+      title: 'What’s your name?',
+      submit: 'Continue',
+      label: 'Name',
+      placeholder: 'Sofia',
+      invalid: 'Enter your name to continue.',
+    },
+
+    setup: {
+      title: 'Set up your kitchen',
+      body: 'Your recipes, weekly plan and shopping list live in a kitchen – shared with whoever you cook with. If someone at home already has one, join theirs instead of starting another.',
+      createTitle: 'Create a new kitchen',
+      createBody: 'Start fresh. Invite people whenever you like, or keep it to yourself.',
+      joinTitle: 'Join an existing kitchen',
+      joinBody:
+        'You’ll share the same recipes, plan and shopping list – anything you add shows up for them too.',
+    },
+
+    create: {
+      title: 'Name your kitchen',
+      subtitle: 'You can change this any time.',
+      label: 'Kitchen name',
+      placeholder: 'The Hansens',
+      submit: 'Continue',
+      invalid: 'Give your kitchen a name to continue.',
+    },
+
+    join: {
+      title: 'Enter your invite code',
+      subtitle: 'Ask whoever set up Prep+Eat for the code.',
+      label: 'Invite code',
+      submit: 'Join',
+      invalid: 'Enter an invite code to continue.',
+    },
+
+    ready: {
+      title: 'Your kitchen is ready',
+      /**
+       * ⚠️ SAYS "the Kitchen tab", WHICH NO LONGER EXISTS – it became Settings
+       * on 2026-08-13. Shipped English, left as it is and logged with the other
+       * two rename misses. Danish names Indstillinger, which is what is there.
+       */
+      body: 'Share this code and they’ll see the same recipes, plan and list. You can also do this later from the Kitchen tab.',
+      copyCode: 'Copy the code',
+      share: 'Share the code',
+      continue: 'Continue',
+    },
+
+    welcome: {
+      greeting: 'Welcome to %{name}',
+      /** Never names a destination – a creator lands on Recipes, a joiner on Plan. */
+      action: 'Take a look around',
+    },
   },
 
   categories: {

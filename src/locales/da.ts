@@ -43,6 +43,96 @@ export const da: DeepPartial<typeof en> = {
     offline: 'Du ser ud til at være offline. Tjek din forbindelse, og prøv igen.',
     badCode: 'Den kode er forkert eller udløbet. Bed om en ny nedenfor.',
     rateLimited: 'Du går lidt hurtigt frem. Vent et minut, og prøv så igen.',
+
+    nameRequired: 'Indtast dit navn',
+    // Danish says køkken – the English above still says "household", which is
+    // a rename miss being kept deliberately, not one to copy.
+    kitchenNameRequired: 'Giv dit køkken et navn',
+    inviteCodeRequired: 'Indtast en invitationskode',
+    inviteCodeInvalid:
+      'Den kode er ikke gyldig – tjek den med personen, der sendte den',
+    inviteCodeTooMany:
+      'For mange forsøg – vent et par minutter, og prøv så koden igen',
+  },
+
+  onboarding: {
+    tagline: 'Planlæg middage, saml opskrifter\nog køb ind sammen',
+    continueWithEmail: 'Fortsæt med e-mail',
+
+    email: {
+      title: 'Hvad er din e-mail?',
+      subtitle:
+        'Ny her eller på vej tilbage – det er det samme. Vi sender dig en kode. Ingen adgangskode at huske.',
+      submit: 'Send kode',
+      label: 'E-mail',
+      placeholder: 'dig@eksempel.dk',
+      invalid: 'Indtast din e-mail for at fortsætte.',
+    },
+
+    code: {
+      title: 'Tjek din e-mail',
+      subtitle: 'Vi har sendt en kode til %{email}.\nKan du ikke finde den? Tjek din spammappe.',
+      submit: 'Fortsæt',
+      label: 'Kode',
+    },
+
+    resend: {
+      link: 'Send en ny kode',
+      sending: 'Sender en ny kode…',
+      sent: 'Ny kode sendt – tjek din e-mail',
+      wait: 'Der blev lige sendt en kode – vent et minut, og prøv så igen',
+      failed: 'Kunne ikke sende – tryk for at prøve igen',
+    },
+
+    name: {
+      title: 'Hvad hedder du?',
+      submit: 'Fortsæt',
+      label: 'Navn',
+      placeholder: 'Sofia',
+      invalid: 'Indtast dit navn for at fortsætte.',
+    },
+
+    setup: {
+      title: 'Sæt dit køkken op',
+      body: 'Dine opskrifter, ugeplan og indkøbsliste bor i et køkken – delt med dem, du laver mad sammen med. Hvis nogen derhjemme allerede har et, så deltag i deres i stedet for at starte et nyt.',
+      createTitle: 'Opret et nyt køkken',
+      createBody: 'Start forfra. Inviter folk, når du har lyst – eller behold det for dig selv.',
+      joinTitle: 'Deltag i et eksisterende køkken',
+      joinBody:
+        'I deler de samme opskrifter, den samme plan og den samme indkøbsliste – alt, hvad du tilføjer, dukker også op hos dem.',
+    },
+
+    create: {
+      title: 'Navngiv dit køkken',
+      subtitle: 'Du kan ændre det når som helst.',
+      label: 'Køkkenets navn',
+      placeholder: 'Familien Hansen',
+      submit: 'Fortsæt',
+      invalid: 'Giv dit køkken et navn for at fortsætte.',
+    },
+
+    join: {
+      title: 'Indtast din invitationskode',
+      subtitle: 'Spørg den, der har sat Prep+Eat op, om koden.',
+      label: 'Invitationskode',
+      submit: 'Deltag',
+      invalid: 'Indtast en invitationskode for at fortsætte.',
+    },
+
+    ready: {
+      title: 'Dit køkken er klar',
+      // Names Indstillinger – which is what the tab is actually called. The
+      // English still says "the Kitchen tab", a rename miss kept on purpose.
+      body: 'Del denne kode, så ser de de samme opskrifter, den samme plan og den samme liste. Du kan også gøre det senere under Indstillinger.',
+      copyCode: 'Kopiér koden',
+      share: 'Del koden',
+      continue: 'Fortsæt',
+    },
+
+    welcome: {
+      greeting: 'Velkommen til %{name}',
+      action: 'Se dig omkring',
+    },
   },
 
   categories: {

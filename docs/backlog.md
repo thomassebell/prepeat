@@ -702,15 +702,25 @@ Committed work for the first update after launch. Panel findings default here un
 
 ### Known bugs (open)
 
-- [ ] **THE EDIT-KITCHEN SHEET STILL SAYS "Household name". The 2026-08-10
-      rename missed it.** Found 2026-08-17 while translating Settings.
+- [ ] **THREE PLACES STILL SAY "household" OR "Kitchen tab". The 2026-08-10
+      and 08-13 renames missed them.** Found 2026-08-17 while translating.
       Where: [edit-household-sheet.tsx](../src/components/household/edit-household-sheet.tsx)
            – the visible field label above the input. **The accessibility
            label on the very same input already says "Kitchen name"**, which is
            what makes it a miss rather than a decision: a screen reader and a
            pair of eyes are told two different words for one field.
-      Size: one word. It is the last "household" left in the UI as far as this
-           sweep could see.
+      **AND TWO MORE, found the same day translating first-run:**
+      2. **[household.ts](../src/lib/household.ts)** throws *"Please give your
+           household a name"* – user-visible, because `friendlyError()` passes
+           already-plain messages straight through. Thrown from two call sites.
+      3. **The invite hand-off after creating a kitchen** says *"You can also
+           do this later from the Kitchen tab"* – and there IS no Kitchen tab;
+           it became **Settings** on 2026-08-13. This one is worse than a stale
+           word: it sends a new user to a tab that is not there, in the first
+           five minutes of using the app.
+      Size: three strings, all in
+           [en.ts](../src/locales/en.ts) now – `settings.editKitchenSheet.nameLabel`,
+           `errors.kitchenNameRequired` and `onboarding.ready.body`.
       ⚠️ **DELIBERATELY NOT FIXED IN THE TRANSLATION WORK, and that is the part
            worth keeping.** Every commit in that run held English output
            byte-for-byte identical, because English is what real users are on
@@ -721,9 +731,11 @@ Committed work for the first update after launch. Panel findings default here un
            `Køkkenets navn` in both places** – there was no shipped Danish
            string to preserve, so the miss is not inherited into the new
            language.
-      Fix: change `settings.editKitchenSheet.nameLabel` in
-           [en.ts](../src/locales/en.ts) to "Kitchen name" and delete the
-           comment above it. Danish needs nothing.
+      Fix: edit those three English values and delete the ⚠️ comments above
+           them. **Danish needs nothing** – it already says `køkken` and
+           `Indstillinger` in all three, because there was no shipped Danish
+           string to preserve. So the Danish app is already right and only
+           English carries the misses.
 
 - [x] **SWITCHING KITCHEN TOOK YOU OFF SETTINGS. Found by Thomas on the phone
       2026-08-16, fixed the same hour.** *"If you shift to a kitchen without
@@ -2036,12 +2048,13 @@ Closed 2026-07-27:
 - [ ] **⭐ Show the app in Danish when the phone is set to Danish**
       Why: one app, two languages, iOS picks. Not a Danish edition and not a
            market decision – English stays the base language.
-      ✅ **STARTED 2026-08-17: the machinery is in, and ALL FOUR TABS AND THE
-           TAB BAR are fully translated** – Shopping, Plan, Recipes and
-           Settings, in one day. English is unchanged, verified – see below.
-      Left: **the first-run and sign-in flow**, and the OTP email Resend sends.
-           That is the whole remainder. (`friendlyError()` and the recipe
-           importer came along with Recipes – see below.)
+      ✅ **DONE IN THE APP, 2026-08-17 – ALL FOUR TABS, THE TAB BAR AND THE
+           WHOLE FIRST-RUN FLOW.** 311 keys, none without Danish. English is
+           unchanged, verified – see below.
+      Left: **only the OTP email Resend sends**, which is a server-side
+           template and not app code at all – so nothing in this repo is
+           waiting. Whoever picks it up should know it is the one place a
+           Danish user still meets English.
       Size: incremental – it can ship a screen at a time, and should.
 
       ✅ **WHAT LANDED 2026-08-17**
@@ -2066,7 +2079,14 @@ Closed 2026-07-27:
         labels, the kitchen switcher rows, People, the App group, sign out, and
         all eight sheets and modals – edit kitchen, edit profile, invite
         someone, join, create, leave, delete kitchen and delete profile.
-      - **260 keys, no English key without a Danish one.**
+      - **The whole first-run and sign-in flow** (same day): welcome, email,
+        the six-box code screen and its resend states, the name step, the
+        create-or-join fork, both setup paths, the invite-code hand-off and the
+        welcome screen – plus the plain-language errors thrown by `auth.tsx`
+        and `household.ts`, which `friendlyError()` passes through untouched
+        and which were therefore the only way they could ever reach a Danish
+        reader.
+      - **311 keys, no English key without a Danish one.**
       ⚠️ **DANISH WEEKDAYS ARE LOWER CASE** – "mandag", not "Mandag" – and that
            is grammar there, not a style choice. Verified in both the places it
            has to work: standing alone in the move-day row, and inside a
@@ -2130,7 +2150,7 @@ Closed 2026-07-27:
            was – the label sits in a one-line slot in Thomas's week switcher.
       **VERIFIED, and how:** `npx tsc --noEmit` and `expo lint` clean; Metro
            bundles and the app loads with no console errors; every one of the
-           260 keys resolved in both languages through i18n-js, including plurals
+           311 keys resolved in both languages through i18n-js, including plurals
            ("1 vare klaret" / "4 varer klaret", "1 portion" / "4 portioner") and
            fallback; and the REAL `weekRangeLabel`, `DAY_NAMES` and `DAY_LABELS`
            run in both locales over five weeks, including both month boundaries
@@ -2147,6 +2167,17 @@ Closed 2026-07-27:
            | English | `en` | Shopping | 4 servings |
            **The English column is the half that matters most** – it is what
            every real user is on, and it is unchanged.
+      ✅ **AND THE FIRST-RUN FLOW WAS SEEN WITH ACTUAL EYES, same day.** Once
+           onboarding was translated it became the one part reachable WITHOUT
+           signing in, so it could be walked rather than inferred: welcome
+           ("Planlæg middage, saml opskrifter / og køb ind sammen", "Fortsæt
+           med e-mail"), the email step ("Hvad er din e-mail?", placeholder
+           "dig@eksempel.dk", "Send kode") **and its ERROR state** – pressing
+           with an empty field gives "Indtast din e-mail for at fortsætte." in
+           the designed red treatment. The same screens in English came back
+           byte-identical to what shipped.
+           **That is the first screenshot-level proof of the translation**, as
+           opposed to keys resolving in a harness.
       ⚠️ **THE PLUGIN CHANGE NEEDED A NATIVE REBUILD, AND IT HAD NOT HAPPENED
            – CONFIRMED, NOT THEORISED.** Before the rebuild, `Info.plist` had
            **no `CFBundleLocalizations` key at all**: the app.json edit had been
