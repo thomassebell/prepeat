@@ -964,12 +964,29 @@ Committed work for the first update after launch. Panel findings default here un
       Each one alone reads as a slip; five of them says the set was edited
       variant by variant. None of it is guessed – all from `boundVariables`.
 
-- [ ] **Design the import flow properly** – separate from the notice above: the
-      sheet itself has never had a frame
-      ([import-recipe-sheet.tsx:12](../src/components/recipes/import-recipe-sheet.tsx:12)),
-      so the flow is two improvisations deep and a third would be the point at
-      which nobody can tell which parts Thomas drew. Wants frames for the
-      sheet, its error state and its busy state. Raised by Claude, 2026-08-16.
+- [x] `RETIRED 2026-08-17, Thomas's call – "retire it".` **The import sheet
+      stays as it is, unframed.**
+      **Design the import flow properly** – the sheet itself has never had a
+      frame ([import-recipe-sheet.tsx:12](../src/components/recipes/import-recipe-sheet.tsx:12)):
+      it borrows the generic BottomSheet shell, and its copy, error state and
+      busy state were all improvised by Claude. Wanted frames for all three.
+      Raised by Claude 2026-08-16 – **not by Thomas, which is the part that
+      decided it.** It was a flag that improvisation was stacking up, not a gap
+      he had felt in use. The flow works; paste a link, get a recipe.
+      ⚠️ **DO NOT CLOSE THIS AS "ALREADY DONE" – IT WAS RETIRED, WHICH IS A
+      DIFFERENT THING.** The item sits among import items that ARE closed (the
+      mkuniverset data loss, the four small defects, the no-method notice) and
+      it is easy to read the cluster as one finished job. It is not: those
+      fixed what the importer EXTRACTS; this was about what the sheet LOOKS
+      like, and its own first line said "separate from the notice above"
+      precisely to survive that confusion. Nothing designed it. Thomas decided
+      it did not need designing.
+      Reopen if: the sheet bothers Thomas in use – which is better evidence
+           than Claude's tidiness, and the reason retiring costs little.
+      ⚠️ **THE IMPROVISATION IS NOW BILINGUAL.** The 2026-08-17 translation put
+           Danish on this sheet, so its unframed copy exists in two languages,
+           neither traceable to a frame. Not a reason to reopen – but whoever
+           does design it is designing two languages, not one.
 
 - [x] **IMPORT FROM mkuniverset.dk LOST EVERY INGREDIENT NAME AND EVERY STEP.
       Reported by Thomas 2026-08-16, fixed the same day.** The recipe imported

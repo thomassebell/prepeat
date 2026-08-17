@@ -79,7 +79,7 @@
 <main>
   <header>
     <h1>Prep+Eat – open backlog</h1>
-    <p class="meta">81 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
+    <p class="meta">80 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
   </header>
   <div class="filter"><input id="q" type="search" placeholder="Filter tasks…" autocomplete="off"></div>
   <section class="waiting">
@@ -109,7 +109,7 @@
     </section>
   <div id="list">
     <section>
-      <h2>Next – v1.1 <span class="count" data-total="52">52</span></h2>
+      <h2>Next – v1.1 <span class="count" data-total="51">51</span></h2>
       <h4>Known bugs (open)</h4>
     <article class="item">
       <h3>
@@ -137,15 +137,6 @@
       </h3>
       
       <details><summary>Full note</summary><p>look, since DS components are meant to be the part that is right. Read off the node bindings 2026-08-16: - the <strong>close icon</strong> uses four different tokens across eight variants: <code>icon/primary</code> (solid+warning, outlined+warning), <code>icon/contrast</code> (solid+Error), <code>icon/light</code> (solid+success, solid+info), <code>icon/lighter</code> (all other outlined) - <strong>solid + info</strong> fills with <code>info/light</code>; every other solid fills with its <code>main</code> - <strong>solid + Error</strong>'s message binds <code>text/contrast-text</code> while every other solid's message binds its own <code>status/contrast-text</code> - <strong>outlined + Error</strong> strokes <code>error/main</code>; every other outlined strokes its <code>dark</code> - <strong>outlined + warning</strong>'s icon binds <code>icon/primary</code> while every other outlined binds its <code>status/dark</code> Each one alone reads as a slip; five of them says the set was edited variant by variant. None of it is guessed – all from <code>boundVariables</code>.</p></details>
-    </article>
-    <article class="item">
-      <h3>
-        
-        
-        <span><strong>Design the import flow properly</strong> – separate from the notice above: the</span>
-      </h3>
-      
-      <details><summary>Full note</summary><p>sheet itself has never had a frame (import-recipe-sheet.tsx:12), so the flow is two improvisations deep and a third would be the point at which nobody can tell which parts Thomas drew. Wants frames for the sheet, its error state and its busy state. Raised by Claude, 2026-08-16.</p></details>
     </article>
     <article class="item">
       <h3>
