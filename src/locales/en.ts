@@ -241,6 +241,9 @@ export const en = {
 
   recipes: {
     title: 'Recipes',
+    /** The two section headings – shown on the detail screen AND the form. */
+    ingredients: 'Ingredients',
+    instructions: 'Instructions',
     add: 'Add a recipe',
     all: 'All',
     favorites: 'Favorites',
@@ -326,8 +329,6 @@ export const en = {
       source: 'Source',
       sourceLink: 'Source link',
       sourcePlaceholder: 'https://example.com/recipe',
-      ingredients: 'Ingredients',
-      instructions: 'Instructions',
       addIngredient: 'Add ingredient',
       addInstruction: 'Add instruction',
       editSection: 'Edit section %{name}',

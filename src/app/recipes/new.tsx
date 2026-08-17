@@ -410,7 +410,7 @@ export default function AddRecipeScreen() {
                   first section REPLACES this line, so they are one slot and
                   must not change typeface when that happens. */}
               <Text className="flex-1 font-header text-display-6 font-emphasized text-text-default">
-                {t("recipes.form.ingredients")}
+                {t("recipes.ingredients")}
               </Text>
               {ingredients.length > 1 && (
                 <Pressable
@@ -520,7 +520,7 @@ export default function AddRecipeScreen() {
           <View className="w-full gap-comp-xsmall px-layout-small">
             <View className="w-full flex-row items-center">
               <Text className="flex-1 font-paragraph text-paragraph font-emphasized text-text-default">
-                {t("recipes.form.instructions")}
+                {t("recipes.instructions")}
               </Text>
               {steps.length > 1 && (
                 <Pressable

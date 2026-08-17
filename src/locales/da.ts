@@ -239,6 +239,10 @@ export const da: DeepPartial<typeof en> = {
 
   recipes: {
     title: 'Opskrifter',
+    ingredients: 'Ingredienser',
+    // Danish calls the method as a whole "fremgangsmåde" and each entry a
+    // "trin" – see the note on the form keys below.
+    instructions: 'Fremgangsmåde',
     add: 'Tilføj en opskrift',
     all: 'Alle',
     favorites: 'Favoritter',
@@ -330,11 +334,6 @@ export const da: DeepPartial<typeof en> = {
       source: 'Kilde',
       sourceLink: 'Kildelink',
       sourcePlaceholder: 'https://example.com/recipe',
-      ingredients: 'Ingredienser',
-      // Danish recipes call the method "fremgangsmåde" as a heading and each
-      // entry a "trin" – so the heading and the row noun are different words,
-      // where English reuses "instruction" for both.
-      instructions: 'Fremgangsmåde',
       addIngredient: 'Tilføj ingrediens',
       addInstruction: 'Tilføj trin',
       editSection: 'Rediger sektion %{name}',

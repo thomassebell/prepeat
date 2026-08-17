@@ -377,7 +377,7 @@ export default function RecipeDetailScreen() {
             {!recipe.ingredients.some((row) => row.isSection) && (
             <View className="w-full flex-row items-center">
               <Text className="flex-1 font-header text-display-6 font-emphasized leading-xsmall text-text-default">
-                Ingredients
+                {t("recipes.ingredients")}
               </Text>
               {recipe.ingredients.length > 1 && (
                 <Pressable
@@ -466,7 +466,7 @@ export default function RecipeDetailScreen() {
           <View className="w-full gap-comp-xsmall">
             <View className="w-full flex-row items-center">
               <Text className="flex-1 font-header text-display-6 font-emphasized leading-xsmall text-text-default">
-                Instructions
+                {t("recipes.instructions")}
               </Text>
               {recipe.steps.length > 1 && (
                 <Pressable
