@@ -2339,8 +2339,14 @@ Closed 2026-07-27:
            [sign-in-code.html](../supabase/templates/sign-in-code.html).
            `config.toml` points the LOCAL stack at it; the runbook section is in
            [backups-and-local-db.md](backups-and-local-db.md).
-      Left: **pasting it into two dashboard templates on two projects** –
-           Confirm signup and Magic Link, dev first then production. Claude
+      ✅ **DEV DONE AND CONFIRMED 2026-08-17, Thomas: *"It works when logging
+           in"*.** Real code received at test5@sebell.dk from the dev sender,
+           read on a desktop client AND on the phone; renders correctly on
+           both, code legible, both languages present. That is the **Magic
+           Link** template proven – the one that fires for an address the
+           project already knows.
+      Left: **the Confirm signup template** (being tested now by creating a new
+           user – see below), then **the whole thing again on production**. Claude
            cannot: there is no management token on this Mac, and the one CLI
            route (`supabase config push`) pushes the WHOLE config.toml, whose
            other values are local – `site_url` 127.0.0.1 and a 2/hour email
@@ -2354,6 +2360,13 @@ Closed 2026-07-27:
            production.
       Decided: English above Danish (English is the base language); one text
            for both templates so they cannot drift.
+      ⚠️ **CREATING A NEW USER IS THE TEST THAT CATCHES A HALF-DONE PASTE**, and
+           it is worth knowing why: signing in with an EXISTING address uses
+           Magic Link, a NEW address uses Confirm signup. They are two separate
+           templates in the dashboard. If only one was pasted, the other still
+           serves Supabase's stock template – **which sends a confirmation LINK,
+           not a code, and the app cannot complete it**. So a working sign-in
+           proves exactly half the job.
       **ORIGINAL FRAMING, still true:**
       Why: the app is fully Danish since 2026-08-17, so the one email it sends
            is now the only English a Danish user sees – and it arrives at the
