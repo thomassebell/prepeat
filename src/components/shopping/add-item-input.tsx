@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 
 import { Input } from '@/components/ui/input';
+import { t } from '@/lib/i18n';
 
 interface AddItemInputProps {
   onSubmit: (name: string) => void;
@@ -27,8 +28,8 @@ export function AddItemInput({ onSubmit }: AddItemInputProps) {
         // Families add several items in a row: keep the keyboard up.
         submitBehavior="submit"
         returnKeyType="done"
-        placeholder="Add an item"
-        accessibilityLabel="Add an item"
+        placeholder={t('shopping.addItem')}
+        accessibilityLabel={t('shopping.addItem')}
       />
     </View>
   );

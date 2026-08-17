@@ -20,7 +20,9 @@ import { LoadError } from '@/components/ui/load-error';
 import { UndoToast } from '@/components/ui/undo-toast';
 import { WeekPicker } from '@/components/ui/week-picker';
 import { useHousehold } from '@/lib/household-context';
+import { t } from '@/lib/i18n';
 import {
+  categoryLabel,
   ShoppingListProvider,
   useShoppingList,
   type Category,
@@ -126,7 +128,7 @@ function ShoppingListScreen() {
     <SafeAreaView edges={['top']} className="flex-1 bg-surface-neutral-lightest">
       <View className="w-full flex-row items-center gap-comp-small px-layout-small pb-layout-small">
         <Text className="flex-1 font-header text-display-4 font-emphasized leading-medium text-text-subtle">
-          Shopping list
+          {t('shopping.title')}
         </Text>
         <LiveBadge />
       </View>
@@ -162,8 +164,8 @@ function ShoppingListScreen() {
           // Outside the ScrollView so the block can centre itself in the list
           // area, as designed.
           <LoadError
-            title="Can’t load your list"
-            message="We couldn’t load your shopping list. Check your connection and try again – nothing on your list is lost."
+            title={t('shopping.error.title')}
+            message={t('shopping.error.message')}
             onRetry={retry}
           />
         ) : loading && items.length === 0 ? (
@@ -209,7 +211,7 @@ function ShoppingListScreen() {
                 {groups.map(({ category, items: groupItems }) => (
                   <CategoryGroup
                     key={category}
-                    title={category}
+                    title={categoryLabel(category)}
                     items={groupItems}
                     onToggle={toggleItem}
                     onEdit={setEditing}
@@ -287,7 +289,7 @@ function ShoppingListScreen() {
           name={
             undoItems.length === 1
               ? undoItems[0].name
-              : `${undoItems.length} items`
+              : t('undo.itemCount', { count: undoItems.length })
           }
           verb={undoVerb}
           onUndo={undoRemove}

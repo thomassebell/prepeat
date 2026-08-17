@@ -2,6 +2,7 @@
 // are identified by their start date as a local 'YYYY-MM-DD' key – the same
 // value stored in meal_plans.week_start_date. All math is done in local
 // time; the plan is a family calendar, not a timezone puzzle.
+import { locale } from "@/lib/i18n";
 
 export const DAY_NAMES = [
   "Monday",
@@ -86,10 +87,61 @@ export function isoWeekNumber(weekStart: string): number {
   return Math.floor(days / 7) + 1;
 }
 
-/** "July 13-19" within one month, "Jul 27 – Aug 2" across months. */
+// ⚠️ A DATE IS NOT A STRING TO TRANSLATE – it is a different SHAPE per
+// language, which is why these live here rather than in the locale files.
+// Danish puts the day first, keeps the month in lower case and puts it after
+// the range: "13.-19. juli", never "juli 13-19".
+const MONTHS_DA = [
+  "januar",
+  "februar",
+  "marts",
+  "april",
+  "maj",
+  "juni",
+  "juli",
+  "august",
+  "september",
+  "oktober",
+  "november",
+  "december",
+];
+// Written out rather than sliced: Danish abbreviates with a full stop, except
+// "maj", which is already short enough not to take one. Slicing to three would
+// produce "maj.".
+const MONTHS_DA_SHORT = [
+  "jan.",
+  "feb.",
+  "mar.",
+  "apr.",
+  "maj",
+  "jun.",
+  "jul.",
+  "aug.",
+  "sep.",
+  "okt.",
+  "nov.",
+  "dec.",
+];
+
+/**
+ * "July 13-19" within one month, "Jul 27 – Aug 2" across months.
+ * In Danish: "13.-19. juli" and "27. jul. – 2. aug."
+ *
+ * The English branch is byte-for-byte what it always was – the label sits in a
+ * `numberOfLines={1}` slot in the week switcher, so a change of shape is a
+ * change to Thomas's design, not a translation.
+ */
 export function weekRangeLabel(weekStart: string): string {
   const start = fromDateKey(weekStart);
   const end = fromDateKey(addDaysKey(weekStart, 6));
+  if (locale === "da") {
+    if (start.getMonth() === end.getMonth()) {
+      return `${start.getDate()}.-${end.getDate()}. ${MONTHS_DA[start.getMonth()]}`;
+    }
+    const shortDa = (d: Date) =>
+      `${d.getDate()}. ${MONTHS_DA_SHORT[d.getMonth()]}`;
+    return `${shortDa(start)} – ${shortDa(end)}`;
+  }
   if (start.getMonth() === end.getMonth()) {
     return `${MONTHS[start.getMonth()]} ${start.getDate()}-${end.getDate()}`;
   }

@@ -10,8 +10,10 @@ import { Keyboard, Pressable, Text, View } from "react-native";
 import { BottomSheet, useBottomSheetScroll } from "@/components/ui/bottom-sheet";
 import { Input } from "@/components/ui/input";
 import { ds } from "@/constants/ds";
+import { t } from "@/lib/i18n";
 import {
   CATEGORIES,
+  categoryLabel,
   type Category,
   type ShoppingItem,
 } from "@/lib/shopping-list";
@@ -33,7 +35,7 @@ export function EditItemSheet({ item, onClose, onSave }: EditItemSheetProps) {
   return (
     <BottomSheet
       visible={item != null}
-      title="Edit item"
+      title={t("shopping.edit.title")}
       onClose={onClose}
       scroll
       // Hug the content (0 = no forced minimum): short when the category
@@ -48,7 +50,7 @@ export function EditItemSheet({ item, onClose, onSave }: EditItemSheetProps) {
           className="w-full items-center rounded-medium bg-button-solid-fill-enabled py-comp-large"
         >
           <Text className="font-paragraph text-components-button-label font-default text-button-solid-label-enabled">
-            Done
+            {t("shopping.edit.save")}
           </Text>
         </Pressable>
       }
@@ -104,20 +106,24 @@ function SheetContent({ item, onClose, onSave, saveRef }: SheetContentProps) {
     <>
       <View className="w-full gap-comp-xsmall">
         <Text className="font-paragraph text-small font-default text-text-subtle">
-          Name
+          {t("shopping.edit.name")}
         </Text>
-        <Input value={name} onChangeText={setName} accessibilityLabel="Name" />
+        <Input
+          value={name}
+          onChangeText={setName}
+          accessibilityLabel={t("shopping.edit.name")}
+        />
       </View>
 
       <View className="w-full gap-comp-xsmall">
         <Text className="font-paragraph text-small font-default text-text-subtle">
-          Quantity
+          {t("shopping.edit.quantity")}
         </Text>
         <Input
           value={quantity}
           onChangeText={setQuantity}
-          placeholder="e.g. 250g"
-          accessibilityLabel="Quantity"
+          placeholder={t("shopping.edit.quantityPlaceholder")}
+          accessibilityLabel={t("shopping.edit.quantity")}
         />
       </View>
 
@@ -128,10 +134,10 @@ function SheetContent({ item, onClose, onSave, saveRef }: SheetContentProps) {
         }}
       >
         <Text className="font-paragraph text-small font-default text-text-subtle">
-          Category
+          {t("shopping.edit.category")}
         </Text>
         <Text className="font-paragraph text-small font-default text-text-subtle">
-          Your kitchen will remember this.
+          {t("shopping.edit.categoryHint")}
         </Text>
         <Pressable
           onPress={() => {
@@ -157,7 +163,10 @@ function SheetContent({ item, onClose, onSave, saveRef }: SheetContentProps) {
             });
           }}
           accessibilityRole="button"
-          accessibilityLabel={`Category: ${aisle ?? "none yet"}`}
+          accessibilityLabel={t("shopping.edit.categoryLabel", {
+            value:
+              aisle == null ? t("shopping.edit.categoryNone") : categoryLabel(aisle),
+          })}
           className="w-full flex-row items-center rounded-medium border border-forms-border-enabled bg-forms-background-default p-comp-large"
         >
           <Text
@@ -166,7 +175,7 @@ function SheetContent({ item, onClose, onSave, saveRef }: SheetContentProps) {
               (aisle == null ? "text-text-subtle" : "text-text-default")
             }
           >
-            {aisle ?? "Choose a category"}
+            {aisle == null ? t("shopping.edit.categoryChoose") : categoryLabel(aisle)}
           </Text>
           <SymbolView
             name={pickerOpen ? "chevron.up" : "chevron.down"}
@@ -183,7 +192,7 @@ function SheetContent({ item, onClose, onSave, saveRef }: SheetContentProps) {
               <Pressable
                 key={category}
                 accessibilityRole="button"
-                accessibilityLabel={category}
+                accessibilityLabel={categoryLabel(category)}
                 onPress={() => {
                   setAisle(category);
                   setPickerOpen(false);
@@ -198,7 +207,7 @@ function SheetContent({ item, onClose, onSave, saveRef }: SheetContentProps) {
                 }
               >
                 <Text className="p-comp-medium font-paragraph text-paragraph text-text-default">
-                  {category}
+                  {categoryLabel(category)}
                 </Text>
               </Pressable>
             ))}

@@ -3,6 +3,7 @@ import { Pressable, Text, View } from 'react-native';
 import Animated, { FadeInDown, FadeOutDown } from 'react-native-reanimated';
 
 import { useKeyboardHeight } from '@/hooks/use-keyboard-height';
+import { t } from '@/lib/i18n';
 
 // IMPROVISED – no Figma design for a toast/snackbar yet (flagged in the
 // backlog). Built from DS tokens (dark secondary surface + brand-lime action)
@@ -62,11 +63,11 @@ export function UndoToast({
         </View>
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel="Undo"
+          accessibilityLabel={t('undo.action')}
           onPress={onUndo}
           hitSlop={12}>
           <Text className="font-paragraph text-paragraph font-emphasized leading-xsmall text-surface-primary-light">
-            Undo
+            {t('undo.action')}
           </Text>
         </Pressable>
       </View>

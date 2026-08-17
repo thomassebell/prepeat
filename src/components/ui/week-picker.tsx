@@ -2,6 +2,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Pressable, Text, View } from "react-native";
 
 import { ds } from "@/constants/ds";
+import { t } from "@/lib/i18n";
 import { isoWeekNumber, weekRangeLabel } from "@/lib/week";
 
 /**
@@ -28,7 +29,7 @@ export function WeekPicker({
     <View className="w-full flex-row items-center">
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel="Previous week"
+        accessibilityLabel={t("week.previous")}
         disabled={!canGoBack}
         hitSlop={8}
         onPress={onBack}
@@ -49,12 +50,12 @@ export function WeekPicker({
           {weekRangeLabel(weekStart)}
         </Text>
         <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-default">
-          Week {isoWeekNumber(weekStart)}
+          {t("week.number", { number: isoWeekNumber(weekStart) })}
         </Text>
       </View>
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel="Next week"
+        accessibilityLabel={t("week.next")}
         disabled={!canGoForward}
         hitSlop={8}
         onPress={onForward}

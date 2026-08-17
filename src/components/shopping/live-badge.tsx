@@ -2,6 +2,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { Text, View } from 'react-native';
 
 import { ds } from '@/constants/ds';
+import { t, type TranslationKey } from '@/lib/i18n';
 import { useShoppingList, type LiveStatus } from '@/lib/shopping-list';
 
 // Realtime connection indicator, from the Figma statusBatch component set
@@ -10,25 +11,31 @@ import { useShoppingList, type LiveStatus } from '@/lib/shopping-list';
 // while not live still save – they sync when the connection returns.
 const VARIANTS: Record<
   LiveStatus,
-  { icon: keyof typeof MaterialIcons.glyphMap; label: string; box: string; text: string; tint: string }
+  {
+    icon: keyof typeof MaterialIcons.glyphMap;
+    label: TranslationKey;
+    box: string;
+    text: string;
+    tint: string;
+  }
 > = {
   live: {
     icon: 'wifi',
-    label: 'Live',
+    label: 'shopping.live.live',
     box: 'border-success-dark bg-success-lighter',
     text: 'text-success-dark',
     tint: ds.colors.success.dark,
   },
   connecting: {
     icon: 'perm-scan-wifi',
-    label: 'Connecting',
+    label: 'shopping.live.connecting',
     box: 'border-info-dark bg-info-lighter',
     text: 'text-info-dark',
     tint: ds.colors.info.dark,
   },
   offline: {
     icon: 'wifi-off',
-    label: 'Offline',
+    label: 'shopping.live.offline',
     box: 'border-error-dark bg-error-lighter',
     text: 'text-error-dark',
     tint: ds.colors.error.dark,
@@ -45,7 +52,7 @@ export function LiveBadge() {
       <MaterialIcons name={variant.icon} size={16} color={variant.tint} />
       <Text
         className={`font-paragraph text-small font-emphasized leading-xxsmall ${variant.text}`}>
-        {variant.label}
+        {t(variant.label)}
       </Text>
     </View>
   );

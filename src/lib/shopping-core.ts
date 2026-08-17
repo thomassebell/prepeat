@@ -1,6 +1,7 @@
 // Leaf helpers shared by the shopping list, the recipes hand-off and the
 // plan→shopping reconciler (extracted 2026-07-16 so plan-shopping.ts and
 // shopping-list.tsx can depend on the same pieces without an import cycle).
+import { t, type TranslationKey } from '@/lib/i18n';
 import { supabase } from '@/lib/supabase';
 
 // v1 category set (foundation.md decision #7): fixed constants in app code.
@@ -17,6 +18,33 @@ export const CATEGORIES = [
   'Other',
 ] as const;
 export type Category = (typeof CATEGORIES)[number];
+
+/**
+ * ⚠️ THE STORED VALUE STAYS ENGLISH. THE LABEL IS TRANSLATED. Never the two at
+ * once.
+ *
+ * `aisle` is written to the database and read by every member of a kitchen –
+ * and two members can have their phones set to different languages. A Danish
+ * phone writing "Mejeri" where an English one writes "Dairy" would split one
+ * category into two for the same household, and the learned aisle a kitchen
+ * builds up over months would come apart. So the English word above is the
+ * KEY, and this is the only place a category becomes something to read.
+ */
+const CATEGORY_KEYS: Record<Category, TranslationKey> = {
+  Produce: 'categories.produce',
+  Dairy: 'categories.dairy',
+  'Meat & Fish': 'categories.meatFish',
+  Bakery: 'categories.bakery',
+  Frozen: 'categories.frozen',
+  Pantry: 'categories.pantry',
+  Drinks: 'categories.drinks',
+  Household: 'categories.household',
+  Other: 'categories.other',
+};
+
+export function categoryLabel(category: Category): string {
+  return t(CATEGORY_KEYS[category]);
+}
 
 export function normalizeItemName(name: string): string {
   // Same rule as ingredient merging: trimmed, lowercased. Also collapse

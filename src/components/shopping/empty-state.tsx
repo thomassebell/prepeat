@@ -2,6 +2,7 @@ import { SymbolView } from 'expo-symbols';
 import { Text, View } from 'react-native';
 
 import { ds } from '@/constants/ds';
+import { t } from '@/lib/i18n';
 
 /**
  * Shown when this week's list has nothing on it – which now means the week has
@@ -16,11 +17,10 @@ export function EmptyState() {
       <View className="w-full items-start gap-layout-xsmall rounded-large bg-surface-neutral-white p-layout-small">
         <SymbolView name="cart" size={40} tintColor={ds.colors.surface.primary.main} />
         <Text className="font-header text-display-5 font-emphasized text-text-default">
-          Time to prep
+          {t('shopping.empty.title')}
         </Text>
         <Text className="font-paragraph text-paragraph font-default text-text-default">
-          Meals you plan for this week land here on their own. Add anything else
-          you need above.
+          {t('shopping.empty.body')}
         </Text>
       </View>
     </View>

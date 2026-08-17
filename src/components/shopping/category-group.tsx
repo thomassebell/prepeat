@@ -4,12 +4,16 @@ import { GestureDetector } from 'react-native-gesture-handler';
 import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
 
 import { ds } from '@/constants/ds';
+import { t } from '@/lib/i18n';
 
 import { ItemRow } from '@/components/shopping/item-row';
 import type { ShoppingItem } from '@/lib/shopping-list';
 
 interface CategoryGroupProps {
-  /** Omitted for the uncategorized group at the top of the list. */
+  /**
+   * The category's LABEL, already translated – not the stored `aisle` value.
+   * Omitted for the uncategorized group at the top of the list.
+   */
   title?: string;
   items: ShoppingItem[];
   onToggle: (id: string) => void;
@@ -38,7 +42,7 @@ export function CategoryGroup({
       onPress={onReorder}
       hitSlop={8}
       accessibilityRole="button"
-      accessibilityLabel="Reorder categories">
+      accessibilityLabel={t('shopping.reorderCategories')}>
       {/* 24, not 22, to sit beside the taller heading the way the recipe
           screen's handle does - the two screens now draw the same row. */}
       <MaterialIcons name="drag-handle" size={24} color={ds.colors.icon.subtle} />

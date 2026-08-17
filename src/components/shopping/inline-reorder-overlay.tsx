@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import Animated, { useAnimatedStyle, withSpring, type SharedValue } from 'react-native-reanimated';
 
 import { ds } from '@/constants/ds';
-import type { Category } from '@/lib/shopping-list';
+import { categoryLabel, type Category } from '@/lib/shopping-list';
 
 export const INLINE_ROW_HEIGHT = 52;
 
@@ -86,7 +86,7 @@ function OverlayRow({ category, index, count, activeIndex, isActive, fingerY, li
           (isActive ? 'bg-surface-neutral-lighter' : 'bg-surface-neutral-white')
         }>
         <Text className="flex-1 font-paragraph text-paragraph font-default text-text-default">
-          {category}
+          {categoryLabel(category)}
         </Text>
         <MaterialIcons name="drag-handle" size={22} color={ds.colors.icon.subtle} />
       </View>

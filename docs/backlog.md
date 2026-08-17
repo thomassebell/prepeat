@@ -2013,9 +2013,67 @@ Closed 2026-07-27:
 - [ ] **⭐ Show the app in Danish when the phone is set to Danish**
       Why: one app, two languages, iOS picks. Not a Danish edition and not a
            market decision – English stays the base language.
-      Left: extract ~242 strings, add a Danish file, let anything untranslated
-           fall back to English.
+      ✅ **STARTED 2026-08-17: the machinery is in and the SHOPPING TAB is
+           fully translated.** English is unchanged, verified – see below.
+      Left: the other three tabs (Plan, Recipes, Settings), the whole first-run
+           and sign-in flow, `friendlyError()` and the OTP email Resend sends.
       Size: incremental – it can ship a screen at a time, and should.
+
+      ✅ **WHAT LANDED 2026-08-17**
+      - `expo-localization` + `i18n-js`, wired up in
+        [i18n.ts](../src/lib/i18n.ts). English in
+        [en.ts](../src/locales/en.ts), Danish in
+        [da.ts](../src/locales/da.ts) as a partial overlay.
+      - **Keys are TYPE-CHECKED against English**, so a typo is a build error
+        rather than `[missing "da.x" translation]` on a phone. Danish is a deep
+        partial of English: a missing key is allowed, a misspelled one is not.
+      - The whole shopping tab, its ten components, the week switcher and the
+        undo toast. 46 keys, no English key without a Danish one.
+      ⚠️ **THE STORED CATEGORY VALUE STAYS ENGLISH; ONLY THE LABEL IS
+           TRANSLATED** (`categoryLabel()` in shopping-core.ts). `aisle` is
+           shared by a whole kitchen and **two members can have their phones set
+           to different languages** – a Danish phone writing "Mejeri" where an
+           English one writes "Dairy" would split one category in two and take
+           apart the learned aisle a kitchen builds up over months. This is the
+           single thing in the feature that could corrupt data rather than just
+           read wrong.
+      ⚠️ **A DATE IS A SHAPE, NOT A STRING.** Danish writes "17.-23. august",
+           not "august 17-23", so `weekRangeLabel` branches on the locale rather
+           than looking up a word. The English branch is byte-for-byte what it
+           was – the label sits in a one-line slot in Thomas's week switcher.
+      **VERIFIED, and how:** `npx tsc --noEmit` and `expo lint` clean; Metro
+           bundles all 1905 modules and the app loads with no console errors;
+           every key resolved in both languages through i18n-js, including
+           plurals ("1 vare klaret" / "4 varer klaret") and fallback; and the
+           REAL `weekRangeLabel` run in both locales over five weeks, including
+           both month boundaries and "25.-31. maj" (Danish abbreviates with a
+           full stop except "maj", which is why the short months are written out
+           rather than sliced).
+      **NOT YET SEEN RUNNING IN DANISH.** Everything above is verified off the
+           device. Seeing it needs a native rebuild with the simulator set to
+           Dansk – see the warning below, which is the reason.
+      ⚠️ **THE PLUGIN CHANGE NEEDS A NATIVE REBUILD, AND FAILS SILENTLY
+           WITHOUT ONE.** `supportedLocales: ["en", "da"]` on the
+           expo-localization plugin writes `CFBundleLocalizations`, and **iOS
+           only reports Danish if the BUNDLE claims to support it.** Without the
+           rebuild `getLocales()` returns `en` on a Danish phone and the whole
+           feature does nothing at all – no error, no clue. A JS reload is not
+           enough.
+      ⚠️ **DO NOT SHIP THIS HALF-DONE TO USERS.** Fallback means nothing is
+           broken, but a Danish phone would get a Danish shopping tab, a Danish
+           week strip on Plan, and English everywhere else. That reads as a bug,
+           not as progress. It is safe in a dev build and safe in the repo;
+           it wants at least the four tabs before it goes in a release. **No
+           release note yet, deliberately** – there is nothing announceable
+           until then.
+      **IMPROVISED COPY, FLAGGED, ONE PLACE:** the empty shopping list says
+           *"Time to prep"*, which has no Danish equivalent that is not either
+           the meal-prep loanword (*"Tid til at prepe"* – plastic tubs and
+           batch-cooking, the exact misreading `2.21` was raised about) or flat
+           (*"Tid til at forberede"*). It currently says **"Klar til ugen"**,
+           which keeps the forward-looking tone and drops the pun. Thomas's
+           call, not Claude's – it is the one line here that is a rewrite rather
+           than a translation.
 
       (Thomas, 2026-08-07, correcting a first write-up that had this far bigger
       than it is: *"I don't want to make a danish app, I just want the app to be

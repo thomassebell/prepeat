@@ -27,6 +27,7 @@ import { AppState } from 'react-native';
 
 import { useAuth } from '@/lib/auth';
 import { useHousehold } from '@/lib/household-context';
+import { t } from '@/lib/i18n';
 import { pushPlanToList } from '@/lib/plan-shopping';
 import { formatQuantity, parseQuantity } from '@/lib/quantity';
 import {
@@ -46,6 +47,7 @@ import { addWeeksKey } from '@/lib/week';
 // existing imports keep working.
 export {
   CATEGORIES,
+  categoryLabel,
   getOrCreateListId,
   normalizeItemName,
   type Category,
@@ -1098,10 +1100,10 @@ export function ShoppingListProvider({ children }: { children: ReactNode }) {
   // One item keeps its name ("Milk deleted"); a batch is counted. The verb
   // says which of the three ways it left.
   const undoVerb = state.moveReceipt
-    ? 'moved'
+    ? t('undo.moved')
     : state.removed.length === 1
-      ? 'deleted'
-      : 'cleared';
+      ? t('undo.deleted')
+      : t('undo.cleared');
 
   // Week navigation derived state: chevrons disable at the edges.
   const viewedIndex = weekOptions.indexOf(viewedWeekStart);

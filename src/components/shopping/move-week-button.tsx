@@ -2,6 +2,7 @@ import { Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Spacing, tabBarClearance } from '@/constants/theme';
+import { t } from '@/lib/i18n';
 
 /**
  * "Move all items to this week" – the action on a past week's list (Figma
@@ -39,7 +40,7 @@ export function MoveWeekButton({ onPress }: { onPress: () => void }) {
               className={`font-paragraph text-paragraph font-default leading-xsmall ${
                 pressed ? 'text-button-solid-label-pressed' : 'text-button-solid-label-enabled'
               }`}>
-              Move all items to this week
+              {t('shopping.moveToThisWeek')}
             </Text>
           </View>
         )}

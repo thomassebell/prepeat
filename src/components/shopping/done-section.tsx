@@ -4,6 +4,7 @@ import { Pressable, Text, View } from 'react-native';
 import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
 
 import { ds } from '@/constants/ds';
+import { t } from '@/lib/i18n';
 
 import { ItemRow } from '@/components/shopping/item-row';
 import type { ShoppingItem } from '@/lib/shopping-list';
@@ -35,7 +36,7 @@ export function DoneSection({
 }: DoneSectionProps) {
   const [collapsed, setCollapsed] = useState(false);
   if (items.length === 0) return null;
-  const label = `${items.length} ${items.length === 1 ? 'item' : 'items'} done`;
+  const label = t('shopping.done.heading', { count: items.length });
   return (
     <Animated.View layout={LinearTransition.duration(250)} exiting={FadeOut.duration(150)}>
       <View
@@ -53,7 +54,11 @@ export function DoneSection({
         <View className="w-full gap-layout-small">
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel={collapsed ? `Show ${label}` : `Hide ${label}`}
+            accessibilityLabel={
+              collapsed
+                ? t('shopping.done.show', { label })
+                : t('shopping.done.hide', { label })
+            }
             onPress={() => setCollapsed((value) => !value)}
             hitSlop={8}
             className="w-full flex-row items-center gap-comp-small">
@@ -121,7 +126,7 @@ export function DoneSection({
             <Pressable
               onPress={onClear}
               accessibilityRole="button"
-              accessibilityLabel="Clear done items"
+              accessibilityLabel={t('shopping.done.clear')}
               className="w-full flex-row items-center justify-center gap-comp-xsmall rounded-medium bg-button-danger-fill-enabled px-comp-xlarge py-comp-large">
               <MaterialIcons
                 name="delete"
@@ -129,7 +134,7 @@ export function DoneSection({
                 color={ds.colors.button.danger.label.enabled}
               />
               <Text className="font-paragraph text-components-button-label font-default text-button-danger-label-enabled">
-                Clear done items
+                {t('shopping.done.clear')}
               </Text>
             </Pressable>
           </Animated.View>

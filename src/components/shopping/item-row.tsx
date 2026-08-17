@@ -9,6 +9,7 @@ import ReanimatedSwipeable, {
   type SwipeableMethods,
 } from 'react-native-gesture-handler/ReanimatedSwipeable';
 
+import { t } from '@/lib/i18n';
 import type { ShoppingItem } from '@/lib/shopping-list';
 
 interface ItemRowProps {
@@ -150,7 +151,7 @@ export function ItemRow({
         <View className="flex-row">
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel={`Edit ${item.name}`}
+            accessibilityLabel={t('shopping.row.edit', { name: item.name })}
             onPress={() => {
               swipeable.current?.close();
               onEdit();
@@ -160,7 +161,7 @@ export function ItemRow({
           </Pressable>
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel={`Delete ${item.name}`}
+            accessibilityLabel={t('shopping.row.delete', { name: item.name })}
             onPress={() => {
               swipeable.current?.close();
               onDelete();

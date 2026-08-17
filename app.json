@@ -48,6 +48,12 @@
       ],
       "expo-font",
       [
+        "expo-localization",
+        {
+          "supportedLocales": ["en", "da"]
+        }
+      ],
+      [
         "expo-build-properties",
         {
           "ios": {
