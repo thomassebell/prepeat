@@ -79,11 +79,11 @@
 <main>
   <header>
     <h1>Prep+Eat – open backlog</h1>
-    <p class="meta">79 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
+    <p class="meta">77 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
   </header>
   <div class="filter"><input id="q" type="search" placeholder="Filter tasks…" autocomplete="off"></div>
   <section class="waiting">
-      <h2>Waiting on you <span class="count" data-total="5">5</span></h2>
+      <h2>Waiting on you <span class="count" data-total="3">3</span></h2>
       <p class="lede">Nothing moves on these until you decide or draw something. Everything else is mine.</p>
       <article class="item">
         <h3><span><strong>⭐ Share a recipe with someone – FIRST ITEM IN v1.1</strong></span></h3>
@@ -96,14 +96,6 @@
       </article><article class="item">
         <h3><span><strong>Stop the screen dimming while you cook from a recipe</strong></span></h3>
         <dl><dt>Needs</dt><dd>Thomas – whole recipe or a cook mode, steps or everything, visible or silent.</dd></dl>
-        <p class="from">Someday – not committed</p>
-      </article><article class="item">
-        <h3><span><strong>Let people leave a kitchen from the switcher</strong></span></h3>
-        <dl><dt>Needs</dt><dd>Thomas – a frame for the leave affordance, and whether it belongs there at all.</dd></dl>
-        <p class="from">Someday – not committed</p>
-      </article><article class="item">
-        <h3><span><strong>Show the invite code as a filled brand chip</strong></span></h3>
-        <dl><dt>Needs</dt><dd>Thomas – a call on whether it is worth designing at all.</dd></dl>
         <p class="from">Someday – not committed</p>
       </article>
     </section>
@@ -554,7 +546,7 @@
     </article>
     </section>
     <section>
-      <h2>Someday – not committed <span class="count" data-total="25">25</span></h2>
+      <h2>Someday – not committed <span class="count" data-total="23">23</span></h2>
       <h4>Ideas – not yet committed</h4>
     <article class="item">
       <h3>
@@ -641,28 +633,10 @@
       <h3>
         
         
-        <span><strong>Let people leave a kitchen from the switcher</strong></span>
-      </h3>
-      <dl><dt>Needs</dt><dd>Thomas – a frame for the leave affordance, and whether it belongs there at all.</dd><dt>Why</dt><dd>Thomas went looking there and could not find it. Leaving lives inside Edit profile, which is about your name and your account – the switcher is where the kitchen itself is the subject.</dd><dt>Weigh first</dt><dd>leaving is irreversible-ish, so it should not sit one tap from a routine switch.</dd><dt>Blocked by</dt><dd>no frame draws a leave affordance in the switcher.</dd><dt>Note</dt><dd>leaving DOES exist today – Kitchen tab → your name → Edit profile.</dd></dl>
-      <details><summary>Full note</summary><p>(Thomas, 2026-08-07, walking the 0032/0033 device list: *"it is not possible to leave a household from the switcher, but maybe it should be"*). <strong>Leaving does exist</strong> – Household tab → tap your own name → Edit profile → Leave household, gated on <code>members.length &gt; 1</code> (household.tsx:200). Thomas could not find it because it is not where he looked, and because the household he had just created was solo, so the option was correctly absent anyway. **THE REAL QUESTION IS WHERE LEAVING BELONGS, and Claude thinks the current home is wrong** (flagged as Claude's opinion, not Thomas's ask): leaving a HOUSEHOLD sits inside EDIT PROFILE, which is about your name and your account. The switcher is where the household you are in is the subject of the screen, so it is the natural place to ask to get out of one – and it is where a second household becomes visible in the first place. Worth weighing against two things before building: leaving is irreversible-ish (you get a copy of the recipes, not the shared household back), so it should not sit one tap from a routine switch; and the switcher is a small surface that already carries create and join. <strong>Needs a design</strong>, per the no-improvised-UI rule – no frame draws a leave affordance in the switcher today.</p></details>
-    </article>
-    <article class="item">
-      <h3>
-        
-        
         <span><strong>Show the shopping list when the phone has no signal</strong></span>
       </h3>
       <dl><dt>Why</dt><dd>the list is the one screen used standing in a shop, which is exactly where signal is worst – and today you get an error and nothing else.</dd><dt>Not a defect</dt><dd>every error path behaves as designed. It is a product assumption (the app assumes it is online) with no fallback.</dd></dl>
       <details><summary>Full note</summary><p>Cheap first step: cache the CURRENT week's list and show it read-only when the load fails. Covers the in-the-shop case without touching the sync model. Decide: before the family relies on it weekly. (Found 2026-08-03 by Thomas testing the retry screens. The item's opening line was lost at some point before 2026-08-11 and is restored here.) Force-quit the app, lose signal, reopen: you get "Can't reach your kitchen" and nothing else – no plan, no recipes, and no shopping list. Confirmed in code: <code>AsyncStorage</code> holds only the auth session, the active household id and a one-time legacy-prefs migration. **No recipe, meal plan or shopping item is cached on the device**; every screen fetches from Supabase on each launch. WHY IT MATTERS more than it looks: the shopping list is the one screen used standing in a shop, which is exactly where signal is worst, and iOS evicts backgrounded apps routinely on a long trip. While the app stays in memory everything is fine – the failure needs a force-quit or an eviction, which is not constant but is not rare either. NOT A DEFECT – every error path behaves exactly as designed, which is why the pre-build audit did not flag it. It is a product assumption (the app assumes it is online) with no last-known-good fallback. A real offline mode is significant work and touches the sync model (last-write-wins via <code>updated_at</code>, realtime merges), so this is logged as a known limitation rather than a task. A cheap first step, if it ever bites: cache just the CURRENT week's list and show it read-only when the load fails, which covers the in-the-shop case without touching sync. Worth a decision before the family relies on it weekly.</p></details>
-    </article>
-    <article class="item">
-      <h3>
-        
-        
-        <span><strong>Show the invite code as a filled brand chip</strong></span>
-      </h3>
-      <dl><dt>Needs</dt><dd>Thomas – a call on whether it is worth designing at all.</dd><dt>Why</dt><dd>it would make the code look like a thing to be copied, while keeping the brand green.</dd><dt>Note</dt><dd>purely an enhancement. The accessibility defect is already fixed and both invite surfaces agree – there is nothing wrong to repair.</dd><dt>Only if</dt><dd>Thomas wants to design it.</dd></dl>
-      <details><summary>Full note</summary><p>(Measured 2026-08-02, not committed to.) White on #378112 clears AA at 4.87:1 and would make the code look like a thing to be copied while keeping the brand green. Purely an enhancement – the accessibility defect is already fixed with <code>text/default</code> (9.12:1) and both invite surfaces now agree, so there is nothing wrong to repair. Only worth doing if Thomas wants to design it.</p></details>
     </article>
     <article class="item">
       <h3>
