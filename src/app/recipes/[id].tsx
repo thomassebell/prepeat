@@ -10,9 +10,11 @@ import {
 import { Fragment, useCallback, useRef, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   Linking,
   Pressable,
   ScrollView,
+  Share,
   Text,
   View,
 } from "react-native";
@@ -37,8 +39,10 @@ import { AddToPlanSheet } from "@/components/recipes/add-to-plan-sheet";
 import { useAuth } from "@/lib/auth";
 import { useHousehold } from "@/lib/household-context";
 import { t } from "@/lib/i18n";
+import { friendlyError } from "@/lib/error-messages";
 import { addRecipeToPlan } from "@/lib/meal-plan";
 import { usePreferences } from "@/lib/preferences";
+import { createRecipeShare } from "@/lib/recipe-shares";
 import {
   addIngredient,
   addIngredientsToShoppingList,
@@ -264,6 +268,30 @@ export default function RecipeDetailScreen() {
     setDialog(null);
   };
 
+  // Create the link, then hand it to the OS share sheet. Two failure modes and
+  // they are NOT the same thing: creating the share is a network call that can
+  // genuinely fail, while the sheet "failing" is almost always the user
+  // cancelling. Only the first deserves an alert – the invite sheet learned the
+  // same lesson (invite-someone-sheet.tsx:103).
+  const shareRecipe = async () => {
+    setMenuOpen(false);
+    let url: string;
+    try {
+      url = await createRecipeShare(recipe.id);
+    } catch (error) {
+      console.warn("[recipes] could not create share", error);
+      Alert.alert(t("recipes.detail.shareFailedTitle"), friendlyError(error));
+      return;
+    }
+    try {
+      await Share.share({
+        message: t("recipes.detail.shareMessage", { title: recipe.title, url }),
+      });
+    } catch {
+      // Sharing cancelled – nothing to do.
+    }
+  };
+
   const menuItems: {
     icon: keyof typeof MaterialIcons.glyphMap;
     label: string;
@@ -286,6 +314,21 @@ export default function RecipeDetailScreen() {
       label: t("recipes.detail.addToList"),
       onPress: () => setDialog("shopping"),
     },
+    // ⚠️ DEV BUILDS ONLY, and it must stay that way until the share PAGE is
+    // deployed (spec step 5). The link a share produces resolves to nothing
+    // today, and a share that hands someone a dead link is worse than no share
+    // at all – testers would send them to family. Same __DEV__ gate the
+    // token-debug screen uses. UNGATE THIS IN THE SAME CHANGE THAT SHIPS THE
+    // PAGE; there is a backlog item so it is not forgotten.
+    ...(__DEV__
+      ? [
+          {
+            icon: "ios-share" as keyof typeof MaterialIcons.glyphMap,
+            label: t("recipes.detail.share"),
+            onPress: shareRecipe,
+          },
+        ]
+      : []),
     // "Add ingredient/instruction" left this menu 2026-07-16 (feedback):
     // ingredients and steps are edited inline on the lists below. Edit recipe
     // joined it 2026-07-27 (Thomas) – it keeps its button at the bottom of the

@@ -289,6 +289,9 @@ export const da: DeepPartial<typeof en> = {
       addToList: 'Tilføj ingredienser til indkøbslisten',
       edit: 'Rediger opskrift',
       delete: 'Slet opskrift',
+      share: 'Del opskrift',
+      shareMessage: '%{title}\n%{url}',
+      shareFailedTitle: 'Kunne ikke oprette linket',
       // ⚠️ ABBREVIATED ON PURPOSE, AND SHORTENED TWICE – Thomas's call, both
       // rounds on 2026-08-17 from his phone. The correct words are
       // "Forberedelse" and "Tilberedning"; they overflowed the row, and

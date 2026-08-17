@@ -283,7 +283,20 @@ needs updating **before this ships**, not after.
      door.
 3. ~~`photo_source` on `recipes`~~ – **dropped, not needed.**
    `recipes.source_url` already distinguishes imported from hand-written.
-4. The share action in the app: create token, native share sheet, copy link.
+4. ✅ **DONE 2026-08-17 – "Share recipe" in the recipe's ⋯ menu.**
+   `createRecipeShare()` in [src/lib/recipe-shares.ts](../src/lib/recipe-shares.ts),
+   then the OS share sheet, following the invite sheet's pattern: a failed
+   CREATE gets an alert, a "failed" share sheet is almost always the user
+   cancelling and gets nothing.
+   Verified through PostgREST with a minted JWT, not just in SQL – the app's
+   exact call shape returns a token, an imported recipe comes back with
+   `description: null` and `image_url: null`, and anon listing the table gets
+   `42501 permission denied`.
+   ⚠️ **GATED BEHIND `__DEV__`, AND MUST STAY THAT WAY UNTIL STEP 5 SHIPS.** The
+   link resolves to nothing until the page exists, and a share that hands
+   someone a dead link is worse than no share – testers would send them to
+   family. Ungate it in the same change that deploys the page; there is a
+   backlog item so it is not forgotten.
 5. The share host: one server-rendered route plus OG tags, on the subdomain.
 6. Universal links: AASA, `associatedDomains`, and a build to verify on device.
 7. "Save to my recipes" for people who have the app.
