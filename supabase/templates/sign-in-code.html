@@ -1,0 +1,88 @@
+<!--
+  The sign-in code email – BILINGUAL (Thomas, 2026-08-17).
+
+  ⚠️ THIS FILE IS A RECORD, NOT THE LIVE COPY. Supabase serves the version
+  stored in the DASHBOARD; nothing here reaches a user until it is pasted in.
+  It lives in the repo so the live text is reviewable, diffable and restorable
+  after a disaster recovery – the same reason the five dashboard-only settings
+  are written down in docs/backups-and-local-db.md.
+
+  ⚠️ IT IS USED BY **BOTH** TEMPLATES – "Confirm signup" (fires for an address
+  the project has never seen) and "Magic Link" (every time after). One text for
+  both, so they cannot drift apart. Paste it into both.
+
+  WHY BILINGUAL: Supabase has ONE template per project and no way to know the
+  reader's language – the app cannot tell it, because the code is requested
+  before anyone is signed in. So the choice is one language for everyone or
+  both, and Thomas chose both.
+
+  ENGLISH FIRST because English is the app's base language (foundation.md);
+  Danish is added alongside. Flipping the order is a straight swap of the two
+  blocks.
+
+  ⚠️ `{{ .Token }}` IS THE CODE AND MUST SURVIVE ANY EDIT. Without it the mail
+  arrives with no code in it and NOBODY CAN SIGN IN – existing users included,
+  the moment it is saved. The stock Supabase template sends a confirmation
+  LINK instead, which this app cannot complete.
+-->
+<table width="100%" cellpadding="0" cellspacing="0" role="presentation"
+       style="background:#F8F7F7;margin:0;padding:24px 0;">
+  <tr>
+    <td align="center">
+      <table width="100%" cellpadding="0" cellspacing="0" role="presentation"
+             style="max-width:480px;background:#FFFFFF;border-radius:16px;padding:32px;">
+
+        <tr>
+          <td align="center" style="padding-bottom:24px;">
+            <span style="font-family:Helvetica,Arial,sans-serif;font-size:28px;font-weight:700;color:#5F503A;">prep</span><span
+                  style="font-family:Helvetica,Arial,sans-serif;font-size:28px;font-weight:700;color:#56C91D;">+</span><span
+                  style="font-family:Helvetica,Arial,sans-serif;font-size:28px;font-weight:700;color:#5F503A;">eat</span>
+          </td>
+        </tr>
+
+        <!-- The code. One copy only: two would be two things to read, and the
+             digits are the same in both languages. -->
+        <tr>
+          <td align="center"
+              style="background:#F8F7F7;border-radius:12px;padding:20px 16px;
+                     font-family:Helvetica,Arial,sans-serif;font-size:32px;
+                     font-weight:700;letter-spacing:6px;color:#4F4230;">
+            {{ .Token }}
+          </td>
+        </tr>
+
+        <!-- English -->
+        <tr>
+          <td style="padding-top:24px;font-family:Helvetica,Arial,sans-serif;
+                     font-size:15px;line-height:22px;color:#4F4230;">
+            <p style="margin:0 0 8px;">Enter this code in Prep+Eat to sign in.</p>
+            <p style="margin:0;color:#5F503A;">
+              It stops working shortly, and can only be used once. If you didn’t
+              ask to sign in, you can ignore this email – nothing will happen.
+            </p>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:20px 0;">
+            <div style="height:1px;background:#E7E6E4;line-height:1px;">&nbsp;</div>
+          </td>
+        </tr>
+
+        <!-- Dansk -->
+        <tr>
+          <td style="font-family:Helvetica,Arial,sans-serif;font-size:15px;
+                     line-height:22px;color:#4F4230;">
+            <p style="margin:0 0 8px;">Indtast denne kode i Prep+Eat for at logge ind.</p>
+            <p style="margin:0;color:#5F503A;">
+              Den holder op med at virke efter kort tid og kan kun bruges én
+              gang. Hvis du ikke har bedt om at logge ind, kan du bare ignorere
+              denne mail – der sker ikke noget.
+            </p>
+          </td>
+        </tr>
+
+      </table>
+    </td>
+  </tr>
+</table>

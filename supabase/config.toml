@@ -243,6 +243,25 @@ otp_expiry = 3600
 # admin_email = "admin@email.com"
 # sender_name = "Admin"
 
+# The sign-in code email, bilingual (2026-08-17). BOTH templates get the same
+# file: `confirmation` fires for an address the project has never seen,
+# `magic_link` every time after – one text for both so they cannot drift.
+#
+# ⚠️ THIS ONLY CONFIGURES THE **LOCAL** STACK (`npm run db:start`). The hosted
+# dev and production projects serve whatever is pasted into their DASHBOARD,
+# and nothing here changes that. Do NOT reach for `supabase config push` to
+# sync them: it pushes this WHOLE file, and the values above it are local ones
+# – `site_url` is 127.0.0.1 and the email rate limit is 2/hour. Pushing that at
+# production would break redirects and throttle real sign-ins.
+# The dashboard steps live in docs/backups-and-local-db.md.
+[auth.email.template.confirmation]
+subject = "Your Prep+Eat code · Din Prep+Eat-kode"
+content_path = "./supabase/templates/sign-in-code.html"
+
+[auth.email.template.magic_link]
+subject = "Your Prep+Eat code · Din Prep+Eat-kode"
+content_path = "./supabase/templates/sign-in-code.html"
+
 # Uncomment to customize email template
 # [auth.email.template.invite]
 # subject = "You have been invited"

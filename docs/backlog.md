@@ -2334,7 +2334,27 @@ Closed 2026-07-27:
       and adding it later costs little once the strings are extracted.
 
 - [ ] **Translate the sign-in code EMAIL – the last place a Danish user meets
-      English**
+      English. ✍️ WRITTEN 2026-08-17; NEEDS THOMAS TO PASTE IT IN.**
+      Done: the bilingual text is written, rendered and checked, and lives at
+           [sign-in-code.html](../supabase/templates/sign-in-code.html).
+           `config.toml` points the LOCAL stack at it; the runbook section is in
+           [backups-and-local-db.md](backups-and-local-db.md).
+      Left: **pasting it into two dashboard templates on two projects** –
+           Confirm signup and Magic Link, dev first then production. Claude
+           cannot: there is no management token on this Mac, and the one CLI
+           route (`supabase config push`) pushes the WHOLE config.toml, whose
+           other values are local – `site_url` 127.0.0.1 and a 2/hour email
+           limit. At production that breaks redirects and throttles real
+           sign-ins. A dashboard login is Thomas's to give, not Claude's to
+           take.
+      ⚠️ **`{{ .Token }}` MUST SURVIVE THE PASTE.** Without it the mail carries
+           no code and **every existing user is locked out the moment it
+           saves** – it is live for all builds at once, like a migration.
+           So: dev first, send yourself a real code and READ it, then
+           production.
+      Decided: English above Danish (English is the base language); one text
+           for both templates so they cannot drift.
+      **ORIGINAL FRAMING, still true:**
       Why: the app is fully Danish since 2026-08-17, so the one email it sends
            is now the only English a Danish user sees – and it arrives at the
            most fragile moment there is, before they are in.

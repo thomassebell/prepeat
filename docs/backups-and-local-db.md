@@ -247,7 +247,7 @@ same list applies to a disaster restore into a new project.
 | **Automatically expose new tables** | **ON** | The migrations never `grant` on tables – only on three functions. Off, and you get 15 tables the app cannot read. |
 | **Email OTP Length** | **6** | New projects default to **8**. The app truncates to 6 (`CODE_LENGTH`), so every sign-in fails as "invalid code". |
 | **SMTP** | Resend | Supabase's built-in sender only reaches project members, AND locks template editing – so you cannot get a code at all. |
-| **Email templates** | `{{ .Token }}` | The stock templates send a confirmation LINK. The app expects a code and there is no way to complete sign-in. |
+| **Email templates** | `{{ .Token }}`, from [sign-in-code.html](../supabase/templates/sign-in-code.html) | The stock templates send a confirmation LINK. The app expects a code and there is no way to complete sign-in. |
 | **Region + Postgres** | eu-north-1, 17 | Match production, or the test bed proves less than it appears to. |
 
 SMTP settings that work, for reference: host `smtp.resend.com`, port `465`,
@@ -256,6 +256,37 @@ username `resend`, password = a Resend API key scoped to `prepeat.app`, sender
 real one). Both **Confirm signup** and **Magic Link** templates need the token –
 the first fires for an address the project has never seen, the second every
 time after.
+
+### The sign-in code email (bilingual since 2026-08-17)
+
+The text lives at
+[supabase/templates/sign-in-code.html](../supabase/templates/sign-in-code.html)
+– **as a record, not as the live copy.** Supabase serves what is in the
+dashboard; the repo copy is there so the live wording is reviewable, diffable
+and restorable. `supabase/config.toml` points the LOCAL stack at the same file,
+so `npm run db:start` matches – but that is all it does.
+
+**⚠️ NEVER `supabase config push` to sync it.** That pushes the whole
+config.toml, whose other values are local: `site_url` is 127.0.0.1 and the
+email rate limit is 2/hour. At production that breaks redirects and throttles
+real sign-ins. There is no narrow CLI path; the dashboard is the way.
+
+**To change it** (Authentication → Emails → Templates), for EACH of **Confirm
+signup** and **Magic Link**:
+1. Subject: `Your Prep+Eat code · Din Prep+Eat-kode`
+2. Message body: paste the file's contents.
+3. Save, then **send yourself a real code and read the mail** before moving on.
+
+**Dev project first, then production** – the same order as a migration, and for
+the same reason: this is live for every installed build the moment it saves,
+including users on an old build. **A template without `{{ .Token }}` locks
+every existing user out of the app**, because the mail then carries no code at
+all.
+
+English sits above Danish because English is the app's base language. Supabase
+has one template per project and cannot know the reader's language – the code
+is requested before anyone is signed in – so bilingual is the only option that
+serves both without rebuilding the auth flow (Thomas, 2026-08-17).
 
 **The pattern worth noticing:** every item here is a project setting the repo
 does not carry. `CODE_LENGTH = 6` had a code comment recording the 2026-07-07
