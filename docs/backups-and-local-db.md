@@ -264,7 +264,10 @@ The text lives at
 – **as a record, not as the live copy.** The file is deliberately **pure
 paste-ready markup with no comments in it**: an HTML comment does not render,
 but it DOES travel inside the source of every email sent, so repo notes belong
-here rather than in the template. Everything worth knowing about it is in this
+here rather than in the template. The two `<!-- English -->` / `<!-- Dansk -->`
+labels are kept deliberately – they help whoever edits the template in the
+dashboard find the right block, and they say nothing a recipient could not
+already see. Everything worth knowing about it is in this
 section. Supabase serves what is in the
 dashboard; the repo copy is there so the live wording is reviewable, diffable
 and restorable. `supabase/config.toml` points the LOCAL stack at the same file,
