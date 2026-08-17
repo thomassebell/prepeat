@@ -2087,6 +2087,15 @@ Closed 2026-07-27:
         and which were therefore the only way they could ever reach a Danish
         reader.
       - **311 keys, no English key without a Danish one.**
+      ⚠️ **TWO HEADINGS ON THE RECIPE DETAIL WERE MISSED, found by Thomas on the
+        phone 2026-08-17: "Ingredients" and "Instructions" were still English
+        there.** Fixed the same hour. **The reason is the interesting part:** the
+        SAME two words on the add/edit form HAD been translated, so the keys
+        existed, the sweep grep found no untranslated literal it recognised, and
+        the pair looked done from the locale file. Two screens showing one word
+        is exactly the shape that survives a search. Both now read from shared
+        keys (`recipes.ingredients` / `recipes.instructions`) used by BOTH
+        screens, so they cannot drift apart again.
       ⚠️ **DANISH WEEKDAYS ARE LOWER CASE** – "mandag", not "Mandag" – and that
            is grammar there, not a style choice. Verified in both the places it
            has to work: standing alone in the move-day row, and inside a
@@ -2129,13 +2138,22 @@ Closed 2026-07-27:
            Danish words are in; **whether that row wraps needs a look on a
            device**, and if it does, the fix (stack, shorten, or abbreviate) is
            a design call, not a translation one.
-           ⚠️ **STILL UNANSWERED after the 2026-08-17 simulator run.** The
-           simulator was signed out, and everything past the welcome screen is
-           behind the email sign-in – Claude does not sign in or set off OTP
-           mail. So the locale machinery is proven and **the recipe screen
-           itself has still not been LOOKED at in Danish.** The cheap way to
-           settle it is a dev build on Thomas's phone, where he is already
-           signed in, with the phone set to Dansk.
+           ✅ **SETTLED 2026-08-17 – IT DID OVERFLOW, and Thomas chose the fix.**
+           He saw it on his phone: the words ran past their columns, the flame
+           icon sat on top of the word "min", and the third value was clipped
+           by the screen edge. Offered four ways out (stack label over value,
+           icons only, wrap to a second row, shorten the Danish) he chose
+           **shortening: "Forbered." and "Tilbered."**, keeping the row on one
+           line and English untouched.
+           **A guard went in with it, and it is not a design change:** the
+           LABEL now shrinks and ellipsises inside its own column, so a
+           too-long translation can never again slide under the next item's
+           icon. The VALUE keeps its full width – a clipped number would be a
+           lie, and that is the one thing in the row that must stay readable.
+           **The lesson, which is worth more than the fix:** this exact risk was
+           flagged in writing when the words went in, and it still shipped to a
+           phone before anyone saw it – because the only screen that shows it
+           sits behind a sign-in Claude will not do. **A flag is not a check.**
       ⚠️ **THE STORED CATEGORY VALUE STAYS ENGLISH; ONLY THE LABEL IS
            TRANSLATED** (`categoryLabel()` in shopping-core.ts). `aisle` is
            shared by a whole kitchen and **two members can have their phones set

@@ -836,9 +836,17 @@ function MetaItem({
 }) {
   if (value == null) return null;
   return (
+    // `shrink` + numberOfLines on the LABEL only: if a translation is still a
+    // shade too wide for its third of the row, the label ellipsises inside its
+    // own column instead of running on and sliding under the next item's icon
+    // – which is what Danish did before the labels were shortened (Thomas, on
+    // the phone 2026-08-17: the flame icon sat on top of "min"). The value
+    // keeps its full width, because a clipped NUMBER would be a lie.
     <View className="flex-1 flex-row items-center gap-layout-xxsmall">
       <MaterialIcons name={icon} size={16} color={ds.colors.icon.default} />
-      <Text className="font-paragraph text-small font-emphasized text-text-default">
+      <Text
+        numberOfLines={1}
+        className="shrink font-paragraph text-small font-emphasized text-text-default">
         {label}
       </Text>
       <Text className="font-paragraph text-small font-default text-text-subtle">

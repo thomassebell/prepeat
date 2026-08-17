@@ -293,13 +293,16 @@ export const da: DeepPartial<typeof en> = {
       addToList: 'Tilføj ingredienser til indkøbslisten',
       edit: 'Rediger opskrift',
       delete: 'Slet opskrift',
-      // ⚠️ THESE THREE ARE MUCH LONGER IN DANISH than in English (Total/Prep/
-      // Cook), and they sit in a three-column flex-1 row beside their own
-      // numbers. Flagged in the backlog: it needs a look on a device, and
-      // whether to stack, shorten or abbreviate is a design call.
+      // ⚠️ ABBREVIATED ON PURPOSE – Thomas's call, 2026-08-17, after seeing the
+      // full words overflow the row on his phone. "Forberedelse" and
+      // "Tilberedning" are the correct words; they do not fit a three-column
+      // flex-1 row next to their own numbers, where English gets away with
+      // Prep and Cook. He chose shortening over restacking the row.
+      // DO NOT "correct" these back to the full words without checking the
+      // layout on a device first.
       total: 'I alt',
-      prep: 'Forberedelse',
-      cook: 'Tilberedning',
+      prep: 'Forbered.',
+      cook: 'Tilbered.',
       minutes: '%{count} min',
       reorderIngredients: 'Sortér ingredienser',
       reorderInstructions: 'Sortér trin',
