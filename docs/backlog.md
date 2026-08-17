@@ -2339,14 +2339,23 @@ Closed 2026-07-27:
            [sign-in-code.html](../supabase/templates/sign-in-code.html).
            `config.toml` points the LOCAL stack at it; the runbook section is in
            [backups-and-local-db.md](backups-and-local-db.md).
-      ✅ **DEV DONE AND CONFIRMED 2026-08-17, Thomas: *"It works when logging
-           in"*.** Real code received at test5@sebell.dk from the dev sender,
-           read on a desktop client AND on the phone; renders correctly on
-           both, code legible, both languages present. That is the **Magic
-           Link** template proven – the one that fires for an address the
-           project already knows.
-      Left: **the Confirm signup template** (being tested now by creating a new
-           user – see below), then **the whole thing again on production**. Claude
+      ✅ **DEV FULLY DONE AND CONFIRMED 2026-08-17 – BOTH TEMPLATES.** Thomas:
+           *"It works when logging in"*, then, after creating a new user,
+           *"everything is working as intented"*. So **Magic Link** (an address
+           the project already knows) AND **Confirm signup** (a brand-new one)
+           are both serving the bilingual mail. Read on a desktop client and on
+           the phone; renders correctly on both, code legible, both languages
+           present.
+      Left: **production – the same two pastes, nothing more.** Real users are
+           still getting the old English email. Nothing is broken there; it is
+           simply not done.
+      ⚠️ **WHEN PRODUCTION LANDS, IT OWES A RELEASE-NOTES LINE** under *Server
+           changes (live for everyone, no build needed)* in
+           [release-notes.md](release-notes.md) – it reaches every installed
+           build the moment it saves, including users on build 12, so it can
+           never belong to a version's notes. Deliberately NOT written yet:
+           that file describes what is live for users, and writing it early is
+           exactly the drift it exists to prevent. Claude
            cannot: there is no management token on this Mac, and the one CLI
            route (`supabase config push`) pushes the WHOLE config.toml, whose
            other values are local – `site_url` 127.0.0.1 and a 2/hour email
