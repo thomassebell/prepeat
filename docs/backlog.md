@@ -2346,16 +2346,22 @@ Closed 2026-07-27:
            are both serving the bilingual mail. Read on a desktop client and on
            the phone; renders correctly on both, code legible, both languages
            present.
-      Left: **production – the same two pastes, nothing more.** Real users are
-           still getting the old English email. Nothing is broken there; it is
-           simply not done.
-      ⚠️ **WHEN PRODUCTION LANDS, IT OWES A RELEASE-NOTES LINE** under *Server
-           changes (live for everyone, no build needed)* in
-           [release-notes.md](release-notes.md) – it reaches every installed
-           build the moment it saves, including users on build 12, so it can
-           never belong to a version's notes. Deliberately NOT written yet:
-           that file describes what is live for users, and writing it early is
-           exactly the drift it exists to prevent. Claude
+      ✅ **PRODUCTION DONE AND TESTED 2026-08-17, Thomas: *"done, both templates
+           updated and tested"*.** So it is live for every installed build,
+           build 12 included. **Release-notes line written** under *Server
+           changes (live for everyone, no build needed)*.
+      ⚠️ **ONE COSMETIC FIX LANDED AFTER THE PASTE, so the live copy is one
+           revision behind the repo.** Thomas, reading it on the phone: *"there
+           is not enough room for the gray background, width wise"*. The outer
+           cell had `padding:24px 0` – VERTICAL ONLY. Above 480px the card is
+           capped and centred so the grey shows either side; at phone width the
+           card takes the full width and the grey has nowhere to go, so the
+           frame vanished on exactly the device most people read mail on.
+           Now `padding:24px 16px` on the `<td>` (not the `<table>` – table
+           padding is unreliable in Outlook), verified at 390px.
+           **Re-pasting is FOUR pastes** – two templates × two projects – and it
+           is cosmetic, so it can wait for a moment when all four get done
+           together. The emails work as they are. Claude
            cannot: there is no management token on this Mac, and the one CLI
            route (`supabase config push`) pushes the WHOLE config.toml, whose
            other values are local – `site_url` 127.0.0.1 and a 2/hour email

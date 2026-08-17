@@ -327,6 +327,19 @@ at launch.
 
 ## Server changes (live for everyone, no build needed)
 
+- **2026-08-17 – the sign-in code email is bilingual.** The email carrying
+  your sign-in code now says the same thing twice, English above Danish, in the
+  app's own look rather than the stock template. **Live for everyone the moment
+  it was saved, including v1.0's build 12** – it is a Supabase template, not
+  app code, so no update is needed to receive it.
+  Both templates were changed (a brand-new address and a returning one use
+  different ones), on the dev project first and then production, each tested by
+  sending a real code and reading it.
+  **Why bilingual rather than following the app's language:** the code is
+  requested BEFORE anyone is signed in, and there is one template per project,
+  so the server cannot know which language the reader wants. Both is the only
+  answer that serves a Danish reader without taking English from everyone else.
+
 - **2026-08-07 – migration 0033.** Guessing an invite code is now genuinely
   limited: the app allows 30 join attempts an hour in total and refuses the
   rest. **Nothing changes for anyone using a code they were given.** The limit
