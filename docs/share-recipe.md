@@ -5,9 +5,13 @@ on 2026-08-17** – teaser, never publish an imported photo, "Save to my recipes
 on an explicit tap. Written the same day as the "do before code" step the
 backlog item asks for.
 
-**What still waits on someone:** the page itself has no design, and its tone is
-load-bearing (see decision 1). Nothing else does – the copyright question is
-deliberately off the critical path, and the build order below can start.
+**A design now exists** – [sketches/share-page-design.html](sketches/share-page-design.html),
+Claude's, reviewed by Thomas on 2026-08-17 across two rounds. It is not a Figma
+frame and does not pretend to be one; what it settles is recorded in the
+decisions below, and what it invented is listed on the page itself.
+
+**What still waits on someone:** nothing blocking. The copyright question is
+deliberately off the critical path and the build order below can start.
 
 The backlog item is the source of the case and the history; this doc is what
 design and build follow so none of it is re-litigated. Two claims in that item
@@ -62,10 +66,45 @@ wall that reads as a gift – *"Pia thinks you'd like this"* – converts very
 differently from one that reads as a paywall, with identical information on it.
 That is a design job, not a build detail.
 
-### ✅ 2. Imported photos – LOCKED: NEVER PUBLISHED (Thomas, 2026-08-17)
+### ✅ 2. Imported content – LOCKED: NEITHER PHOTO NOR TEXT IS PUBLISHED (Thomas, 2026-08-17)
 
-Show the user's own photo. For imported recipes, and for any recipe whose photo
-provenance is unknown, show a generated card instead.
+**A share page carries nothing that came from another site.** Not the photo, not
+the description.
+
+Widened from "photos" during the design round. The description was briefly added
+to the page, and it is scraped verbatim on an imported recipe – JSON-LD, or the
+source's own `<meta name="description">`
+([recipe-import.ts:362](../src/lib/recipe-import.ts:362)). Descriptive prose is
+more clearly protected than a photograph, so it belonged in the same rule.
+Thomas, closing it: *"don't publish the text or the photo."*
+
+So the two variants of the page are:
+
+| | your own recipe | imported recipe |
+|---|---|---|
+| photo | yours, shown | dropped – generated card instead |
+| title | shown | shown (on the card) |
+| description | yours, shown | **dropped** |
+| times | shown | shown |
+| sender's name | shown | shown |
+
+A title is too short to attract copyright, minutes are facts, and the sender's
+name is ours to give. That is the whole published surface.
+
+**🎉 THIS NEEDS NO NEW COLUMN.** An earlier draft of this spec called for a
+`photo_source` field set at import. Unnecessary: **`recipes.source_url` has
+existed since migration 0006** and already answers the question – set means
+imported, null means typed by hand. One item drops off the build order.
+
+*Known edge, deliberately unsolved:* import a recipe and then replace the photo
+with your own, and `source_url` is still set, so your own photo is suppressed.
+That errs in the safe direction. Per-field provenance would fix it if it ever
+matters.
+
+⚠️ **The cost is real and worth watching.** An imported recipe's page is thin –
+a generated card, three times and the ask. Most recipes are probably imported.
+If conversion disappoints, this is the first place to look, and per-field
+provenance is the first thing to try.
 
 This is the sharp edge of the whole feature. An imported recipe **already
 carries a copy of the source site's photograph in our public bucket** –
@@ -208,18 +247,22 @@ needs updating **before this ships**, not after.
 
 ## Build order
 
-1. This doc, agreed.
+1. This doc, agreed. ✅
 2. Migration: `recipe_shares` + RLS. Dev first, then production, `--dry-run`
    read before the production push, `npm run db:reset` before it goes anywhere.
-3. `photo_source` on `recipes`, set at import.
+   The snapshot carries the sharer's **first name**, the title and the times –
+   and the photo URL only when `source_url is null`.
+3. ~~`photo_source` on `recipes`~~ – **dropped, not needed.**
+   `recipes.source_url` already distinguishes imported from hand-written.
 4. The share action in the app: create token, native share sheet, copy link.
 5. The share host: one server-rendered route plus OG tags, on the subdomain.
 6. Universal links: AASA, `associatedDomains`, and a build to verify on device.
 7. "Save to my recipes" for people who have the app.
 8. Privacy policy update; `npm run backup:verify` after the schema change.
 
-Roughly a week of working time for the teaser. Calendar time will be longer,
-because steps 1 and 6 both wait on someone.
+Roughly a week of working time for the teaser, now slightly under it with step 3
+gone. Calendar time will be longer, because step 6 waits on a build and the page
+still waits on a design.
 
 ## Open sub-questions (not blocking)
 

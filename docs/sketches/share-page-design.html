@@ -184,8 +184,12 @@
     font-size: 24px; line-height: 1.2; margin: 0; color: var(--ds-text-default);
     text-wrap: balance;
   }
-  .facts { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13px; color: var(--ds-text-subtle); }
-  .facts span { white-space: nowrap; }
+  .rdesc { margin: 0; font-size: 14px; line-height: 1.5; color: var(--ds-text-subtle); }
+  /* The recipe screen's own three times, same labels and order. */
+  .times { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+  .times div { display: flex; gap: 5px; font-size: 13px; white-space: nowrap; }
+  .times dt { margin: 0; color: var(--ds-text-subtle); }
+  .times dd { margin: 0; color: var(--ds-text-default); font-weight: 700; }
 
   .wall {
     margin-top: 4px; background: var(--ds-primary-lightest);
@@ -383,11 +387,14 @@
             <div class="photo"></div>
             <div class="body">
               <h3 class="rtitle">Pasta al Pomodoro</h3>
-              <div class="facts">
-                <span>30 min total</span><span>&#xB7;</span>
-                <span>12 ingredients</span><span>&#xB7;</span>
-                <span>7 steps</span>
-              </div>
+              <p class="rdesc">A simple pasta dish with a delicious tomato sauce,
+              fresh basil and Parmesan. Quick, easy, and a family favourite on a
+              weeknight.</p>
+              <dl class="times">
+                <div><dt>Total</dt><dd>30 min</dd></div>
+                <div><dt>Prep</dt><dd>10 min</dd></div>
+                <div><dt>Cook</dt><dd>20 min</dd></div>
+              </dl>
               <div class="wall">
                 <h3>The recipe is in the app</h3>
                 <p>Get Prep+Eat and Pia's recipe is waiting for you &#x2013; ingredients,
@@ -398,8 +405,10 @@
             </div>
           </div>
         </div>
-        <figcaption><b>Default.</b> Sender's name first, photo, title, facts,
-        then the wall. The name is doing most of the persuading.</figcaption>
+        <figcaption><b>A recipe you wrote yourself.</b> Everything on it is
+        yours, so it all shows: photo, title, your description, the app's three
+        time labels, then the wall. The name is doing most of the
+        persuading.</figcaption>
       </figure>
 
       <figure>
@@ -412,12 +421,11 @@
               <div class="gc-title">Pasta al Pomodoro</div>
             </div>
             <div class="body">
-              <h3 class="rtitle">Pasta al Pomodoro</h3>
-              <div class="facts">
-                <span>30 min total</span><span>&#xB7;</span>
-                <span>12 ingredients</span><span>&#xB7;</span>
-                <span>7 steps</span>
-              </div>
+              <dl class="times">
+                <div><dt>Total</dt><dd>30 min</dd></div>
+                <div><dt>Prep</dt><dd>10 min</dd></div>
+                <div><dt>Cook</dt><dd>20 min</dd></div>
+              </dl>
               <div class="wall">
                 <h3>The recipe is in the app</h3>
                 <p>Get Prep+Eat and Pia's recipe is waiting for you &#x2013; ingredients,
@@ -428,9 +436,10 @@
             </div>
           </div>
         </div>
-        <figcaption><b>Imported recipe.</b> Same page, generated card instead of
-        the photo. The title appears twice, which is a flaw &#x2013; see
-        below.</figcaption>
+        <figcaption><b>Imported recipe.</b> Neither the photo nor the description
+        is ours to republish, so both are dropped: generated card, times, ask.
+        The card carries the title, so the page drops its own. <b>This is the
+        thin one</b> &#x2013; and it is the honest price of the safe path.</figcaption>
       </figure>
 
       <figure>
@@ -484,7 +493,8 @@
     <dl class="calls">
       <div>
         <dt>The sender's first name, twice</dt>
-        <dd>"<b>Pia</b> shared a recipe with you", and again in the wall. This is
+        <dd>&#x2705; <b>Approved by Thomas, 2026-08-17.</b>
+        "<b>Pia</b> shared a recipe with you", and again in the wall. This is
         the single biggest thing on the page and it is the reason the teaser can
         work at all: the ask comes from a person the reader knows, not from us.
         A wall that says "Get the app to see this" is a paywall; one that says
@@ -496,21 +506,24 @@
       </div>
 
       <div>
-        <dt>The fact strip: 12 ingredients &#xB7; 7 steps</dt>
-        <dd>Facts <em>about</em> the recipe rather than the recipe, so it
-        publishes nothing. It stops the page feeling like an empty tease by
-        proving there is something real behind the wall.</dd>
-        <dd>Argue with it if you think counting the steps reduces a recipe to a
-        chore, or makes a simple recipe look not worth installing for.</dd>
+        <dt>&#x2705; Description + the three time labels &#x2013; Thomas, 2026-08-17</dt>
+        <dd>Replaces a fact strip I had proposed ("12 ingredients &#xB7; 7 steps"),
+        which he did not want. The page carries the recipe's own short
+        description and the same <b>Total / Prep / Cook</b> labels the recipe
+        screen uses, so it reads as a piece of the app rather than a marketing
+        page about it.</dd>
+        <dd><b>On YOUR OWN recipes only.</b> An imported recipe's description is
+        scraped verbatim from the source &#x2013; JSON-LD, or the page's own meta
+        description (<code>recipe-import.ts:362</code>) &#x2013; so it is dropped
+        along with the photo. The times survive either way: minutes are facts,
+        and facts are not anybody's property.</dd>
       </div>
 
       <div>
-        <dt>The title appearing twice on the generated-card version</dt>
-        <dd>A flaw I did not solve. The generated card carries the title because
-        it must work standalone in the chat preview, and then the page repeats it
-        underneath. Options: drop the page's own title when the generated card is
-        used, or make the card wordless and decorative. I would rather you
-        chose.</dd>
+        <dt>&#x2705; No page title on the generated-card version &#x2013; Thomas, 2026-08-17</dt>
+        <dd>The card carries the title because it must stand alone in the chat
+        preview, so the page no longer repeats it underneath and goes straight to
+        the description. The duplicate flagged here before is resolved.</dd>
       </div>
 
       <div>
@@ -542,6 +555,28 @@
         instead &#x2013; the real one is a fixed Apple asset and would be the only
         foreign object on the page), no cookie banner, and no navigation. The
         page has one job.</dd>
+      </div>
+
+      <div>
+        <dt>&#x2705; SETTLED: we republish nothing of an imported recipe &#x2013; Thomas, 2026-08-17</dt>
+        <dd>Briefly reopened and then closed: *"don't publish the text or the
+        photo."* An imported recipe's photo AND its description both belong to
+        the site it came from, so a share page carries neither. Only the title,
+        the times, and the sender's name &#x2013; a title is too short to protect,
+        minutes are facts, and the name is ours to give.</dd>
+        <dd><b>This is why the teaser was chosen</b>, and it holds: the page
+        publishes almost nothing copyrightable, so the unanswered legal question
+        stays off the critical path. The cost is the thin card above, which is a
+        real conversion cost and worth watching once it ships.</dd>
+        <dd><b>&#x1F389; And it needs NO new column.</b> I had specced a
+        <code>photo_source</code> field set at import. Unnecessary:
+        <code>recipes.source_url</code> has existed since migration 0006 and
+        already answers the question &#x2013; set means imported, null means typed by
+        hand. One item removed from the build.</dd>
+        <dd><i>Known edge, not worth solving yet:</i> import a recipe and then
+        replace the photo with your own, and <code>source_url</code> is still set,
+        so your own photo is suppressed. Conservative in the safe direction.
+        Per-field provenance would fix it if it ever matters.</dd>
       </div>
     </dl>
   </section>
