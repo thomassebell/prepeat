@@ -9,6 +9,8 @@
 // did in testing) surface as a friendly error; a hidden-WebView fallback is
 // the known next step if the family's sites need it.
 
+import { t } from "@/lib/i18n";
+
 export interface ImportedRecipe {
   title: string;
   description: string | null;
@@ -50,18 +52,12 @@ export async function importRecipeFromUrl(
     }
     html = await response.text();
   } catch {
-    throw new ImportError(
-      "Couldn’t reach that page – check the link, or the site may be blocking apps.",
-      "fetch",
-    );
+    throw new ImportError(t("recipes.import.fetchFailed"), "fetch");
   }
 
   const recipe = extractJsonLdRecipe(html) ?? extractMicrodataRecipe(html);
   if (recipe == null) {
-    throw new ImportError(
-      "No recipe found on that page – it may not be a recipe page, or the site doesn’t share recipe data.",
-      "no-recipe",
-    );
+    throw new ImportError(t("recipes.import.noRecipe"), "no-recipe");
   }
   return { ...recipe, sourceUrl: normalized };
 }

@@ -20,6 +20,7 @@ import { LoadError } from "@/components/ui/load-error";
 import { ds } from "@/constants/ds";
 import { Spacing, tabBarClearance } from "@/constants/theme";
 import { useHousehold } from "@/lib/household-context";
+import { t } from "@/lib/i18n";
 import {
   fetchRecipes,
   matchesSearch,
@@ -100,12 +101,12 @@ export default function RecipesListScreen() {
     >
       <View className="w-full flex-row items-center gap-comp-small px-layout-small pb-layout-small">
         <Text className="flex-1 font-header text-display-4 font-emphasized leading-medium text-text-subtle">
-          Recipes
+          {t("recipes.title")}
         </Text>
         <Pressable
           onPress={() => router.push("/recipes/new")}
           accessibilityRole="button"
-          accessibilityLabel="Add a recipe"
+          accessibilityLabel={t("recipes.add")}
           hitSlop={8}
         >
           <MaterialIcons
@@ -120,12 +121,12 @@ export default function RecipesListScreen() {
         <SearchField value={query} onChangeText={setQuery} />
         <View className="w-full flex-row gap-comp-small">
           <Chip
-            label="All"
+            label={t("recipes.all")}
             active={!favoritesOnly}
             onPress={() => setFavoritesOnly(false)}
           />
           <Chip
-            label="Favorites"
+            label={t("recipes.favorites")}
             active={favoritesOnly}
             onPress={() => setFavoritesOnly(true)}
           />
@@ -137,8 +138,8 @@ export default function RecipesListScreen() {
         // refocus that fails keeps the recipes already on screen instead –
         // stale rows beat an error block over content that is still good.
         <LoadError
-          title="Can’t load your recipes"
-          message="We couldn’t load your cookbook. Check your connection and try again – none of your recipes are lost."
+          title={t("recipes.error.title")}
+          message={t("recipes.error.message")}
           onRetry={load}
         />
       ) : recipes == null ? (
@@ -169,8 +170,8 @@ export default function RecipesListScreen() {
           ListEmptyComponent={
             <Text className="px-layout-small py-layout-medium text-center font-paragraph text-paragraph font-default text-text-subtle">
               {favoritesOnly
-                ? "No favorites match your search."
-                : "No recipes match your search."}
+                ? t("recipes.noFavoriteMatch")
+                : t("recipes.noMatch")}
             </Text>
           }
         />
@@ -201,9 +202,9 @@ function SearchField({
       <TextInput
         value={value}
         onChangeText={onChangeText}
-        placeholder="Search"
+        placeholder={t("recipes.search")}
         placeholderTextColor={ds.colors.text.disabled}
-        accessibilityLabel="Search recipes"
+        accessibilityLabel={t("recipes.searchRecipes")}
         autoCorrect={false}
         returnKeyType="search"
         onFocus={() => setFocused(true)}
@@ -225,11 +226,10 @@ function EmptyState({ onAdd }: { onAdd: () => void }) {
         />
         <View className="w-full gap-comp-small pt-layout-small">
           <Text className="font-header text-display-5 font-emphasized leading-small text-text-default">
-            Nothing&apos;s cooking yet
+            {t("recipes.empty.title")}
           </Text>
           <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-default">
-            Save the dishes you love – one shared cookbook for everyone in
-            your kitchen.
+            {t("recipes.empty.body")}
           </Text>
         </View>
         <Pressable
@@ -238,7 +238,7 @@ function EmptyState({ onAdd }: { onAdd: () => void }) {
           className="mt-layout-small w-full items-center rounded-medium border-2 border-button-outline-border-enabled py-comp-large"
         >
           <Text className="font-paragraph text-components-button-label font-default text-text-subtle">
-            Add your first recipe
+            {t("recipes.empty.action")}
           </Text>
         </Pressable>
       </View>

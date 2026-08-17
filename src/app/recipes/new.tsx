@@ -33,6 +33,7 @@ import { Input } from "@/components/ui/input";
 import { ds } from "@/constants/ds";
 import { Spacing, tabBarClearance } from "@/constants/theme";
 import { friendlyError } from "@/lib/error-messages";
+import { t } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
 import { useHousehold } from "@/lib/household-context";
 import {
@@ -272,7 +273,7 @@ export default function AddRecipeScreen() {
           onPress={() => router.back()}
           hitSlop={12}
           accessibilityRole="button"
-          accessibilityLabel="Back"
+          accessibilityLabel={t("common.back")}
         >
           <MaterialIcons
             name="arrow-back"
@@ -303,18 +304,17 @@ export default function AddRecipeScreen() {
             />
             <View className="w-full gap-comp-small">
               <Text className="font-header text-display-5 font-emphasized leading-small text-text-default">
-                {editing ? "Edit recipe" : "Add new recipe"}
+                {editing ? t("recipes.form.titleEdit") : t("recipes.form.titleAdd")}
               </Text>
               <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-default">
-                Save the dishes you love – one shared cookbook for everyone in
-                your kitchen.
+                {t("recipes.form.blurb")}
               </Text>
             </View>
 
             {!editing && (
               <OutlineButton
                 icon="link"
-                label="Add from a link"
+                label={t("recipes.form.fromLink")}
                 onPress={() => setImporting(true)}
               />
             )}
@@ -331,24 +331,28 @@ export default function AddRecipeScreen() {
             )}
             <OutlineButton
               icon="add-photo-alternate"
-              label={photoPreview != null ? "Change the image" : "Add an image"}
+              label={
+                photoPreview != null
+                  ? t("recipes.form.changeImage")
+                  : t("recipes.form.addImage")
+              }
               onPress={pickPhoto}
             />
 
-            <Field label="Recipe name">
+            <Field label={t("recipes.form.name")}>
               <Input
                 value={title}
                 onChangeText={setTitle}
-                placeholder="Pasta al Pomodoro"
-                accessibilityLabel="Recipe name"
+                placeholder={t("recipes.form.namePlaceholder")}
+                accessibilityLabel={t("recipes.form.name")}
               />
             </Field>
-            <Field label="Description">
+            <Field label={t("recipes.form.description")}>
               <Input
                 value={description}
                 onChangeText={setDescription}
-                placeholder="A quick weeknight classic"
-                accessibilityLabel="Description"
+                placeholder={t("recipes.form.descriptionPlaceholder")}
+                accessibilityLabel={t("recipes.form.description")}
                 multiline
                 // A recipe blurb runs to a few lines – grow the field into a
                 // text area that starts top-aligned rather than a one-line input.
@@ -356,35 +360,35 @@ export default function AddRecipeScreen() {
                 style={{ minHeight: 96 }}
               />
             </Field>
-            <Field label="Preparation time">
+            <Field label={t("recipes.form.prep")}>
               <Input
                 value={prep}
                 onChangeText={setPrep}
-                placeholder="10 min"
-                accessibilityLabel="Preparation time"
+                placeholder={t("recipes.form.prepPlaceholder")}
+                accessibilityLabel={t("recipes.form.prep")}
               />
             </Field>
-            <Field label="Cooking time">
+            <Field label={t("recipes.form.cook")}>
               <Input
                 value={cook}
                 onChangeText={setCook}
-                placeholder="20 min"
-                accessibilityLabel="Cooking time"
+                placeholder={t("recipes.form.cookPlaceholder")}
+                accessibilityLabel={t("recipes.form.cook")}
               />
             </Field>
-            <Field label="Servings">
+            <Field label={t("recipes.form.servings")}>
               <ServingsCounter value={servings} onChange={setServings} />
             </Field>
             {/* Filled automatically by a link import; editable so a recipe you
                 have made your own can drop or correct the credit (Thomas,
                 2026-07-27). Last of the facts, mirroring where it shows on the
                 detail screen. IMPROVISED – no Figma frame for this field. */}
-            <Field label="Source">
+            <Field label={t("recipes.form.source")}>
               <Input
                 value={sourceUrl}
                 onChangeText={setSourceUrl}
-                placeholder="https://example.com/recipe"
-                accessibilityLabel="Source link"
+                placeholder={t("recipes.form.sourcePlaceholder")}
+                accessibilityLabel={t("recipes.form.sourceLink")}
                 keyboardType="url"
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -406,14 +410,14 @@ export default function AddRecipeScreen() {
                   first section REPLACES this line, so they are one slot and
                   must not change typeface when that happens. */}
               <Text className="flex-1 font-header text-display-6 font-emphasized text-text-default">
-                Ingredients
+                {t("recipes.form.ingredients")}
               </Text>
               {ingredients.length > 1 && (
                 <Pressable
                   onPress={() => setReordering("ingredients")}
                   hitSlop={8}
                   accessibilityRole="button"
-                  accessibilityLabel="Reorder ingredients"
+                  accessibilityLabel={t("recipes.detail.reorderIngredients")}
                 >
                   <MaterialIcons
                     name="drag-handle"
@@ -438,7 +442,9 @@ export default function AddRecipeScreen() {
                         setIngredientSheet({ index: group.section!.index })
                       }
                       accessibilityRole="button"
-                      accessibilityLabel={`Edit section ${group.section.row.name}`}
+                      accessibilityLabel={t("recipes.form.editSection", {
+                        name: group.section.row.name,
+                      })}
                     >
                       <Text className="font-header text-display-6 font-emphasized text-text-default">
                         {group.section.row.name}
@@ -452,7 +458,7 @@ export default function AddRecipeScreen() {
                         onPress={() => setReordering("ingredients")}
                         hitSlop={8}
                         accessibilityRole="button"
-                        accessibilityLabel="Reorder ingredients"
+                        accessibilityLabel={t("recipes.detail.reorderIngredients")}
                       >
                         <MaterialIcons
                           name="drag-handle"
@@ -482,7 +488,7 @@ export default function AddRecipeScreen() {
                               className="min-w-0 flex-1 flex-row items-center gap-layout-small"
                               onPress={() => setIngredientSheet({ index })}
                               accessibilityRole="button"
-                              accessibilityLabel={`Edit ${row.name}`}
+                              accessibilityLabel={t("recipes.form.editRow", { name: row.name })}
                             >
                               <Text className="min-w-0 flex-1 font-paragraph text-paragraph font-default text-text-default">
                                 {row.name}
@@ -504,7 +510,7 @@ export default function AddRecipeScreen() {
             <View className="w-full overflow-hidden rounded-large bg-surface-neutral-white p-layout-small">
               <OutlineButton
                 icon="add"
-                label="Add ingredient"
+                label={t("recipes.form.addIngredient")}
                 onPress={() => setIngredientSheet("add")}
               />
             </View>
@@ -514,14 +520,14 @@ export default function AddRecipeScreen() {
           <View className="w-full gap-comp-xsmall px-layout-small">
             <View className="w-full flex-row items-center">
               <Text className="flex-1 font-paragraph text-paragraph font-emphasized text-text-default">
-                Instructions
+                {t("recipes.form.instructions")}
               </Text>
               {steps.length > 1 && (
                 <Pressable
                   onPress={() => setReordering("steps")}
                   hitSlop={8}
                   accessibilityRole="button"
-                  accessibilityLabel="Reorder instructions"
+                  accessibilityLabel={t("recipes.detail.reorderInstructions")}
                 >
                   <MaterialIcons
                     name="drag-handle"
@@ -539,8 +545,7 @@ export default function AddRecipeScreen() {
               {importHadNoSteps && steps.length === 0 && (
                 <View className="w-full rounded-medium bg-info-lightest px-comp-large py-comp-small">
                   <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-default">
-                    This page didn’t share any instructions – you’ll need to add
-                    them yourself.
+                    {t("recipes.form.noSteps")}
                   </Text>
                 </View>
               )}
@@ -567,7 +572,7 @@ export default function AddRecipeScreen() {
                             className="min-w-0 flex-1 flex-row items-start gap-layout-small"
                             onPress={() => setStepSheet({ index })}
                             accessibilityRole="button"
-                            accessibilityLabel={`Edit step ${index + 1}`}
+                            accessibilityLabel={t("recipes.form.editStep", { number: index + 1 })}
                           >
                             <View className="min-w-[32px] items-center justify-center rounded-xlarge bg-surface-neutral-main px-comp-medium py-comp-small">
                               <Text className="font-paragraph text-small font-emphasized leading-xxsmall text-text-default">
@@ -591,7 +596,7 @@ export default function AddRecipeScreen() {
               )}
               <OutlineButton
                 icon="add"
-                label="Add instruction"
+                label={t("recipes.form.addInstruction")}
                 onPress={() => setStepSheet("add")}
               />
             </View>
@@ -634,7 +639,7 @@ export default function AddRecipeScreen() {
             <ActivityIndicator color={ds.colors.text.inverse} />
           ) : (
             <Text className="font-paragraph text-components-button-label font-default text-button-solid-label-enabled">
-              {editing ? "Save changes" : "Save recipe"}
+              {editing ? t("recipes.form.saveChanges") : t("recipes.form.save")}
             </Text>
           )}
         </Pressable>
@@ -748,10 +753,10 @@ export default function AddRecipeScreen() {
         visible={reordering != null}
         title={
           reordering === "steps"
-            ? "Reorder instructions"
-            : "Reorder ingredients"
+            ? t("recipes.detail.reorderInstructions")
+            : t("recipes.detail.reorderIngredients")
         }
-        hint="Drag to change the order."
+        hint={t("recipes.detail.reorderHint")}
         items={
           reordering === "steps"
             ? steps.map((step, index) => ({

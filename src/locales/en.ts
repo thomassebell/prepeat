@@ -10,6 +10,23 @@
 // every member of a kitchen. Translate the label, never the stored value – see
 // `categoryLabel()` in shopping-core.ts.
 export const en = {
+  common: {
+    done: 'Done',
+    back: 'Back',
+  },
+
+  /**
+   * `friendlyError()` – the plain-language rewrites of technical failures.
+   * Anything it does not recognise passes through as the app wrote it, so
+   * these four are the only ones translatable here.
+   */
+  errors: {
+    generic: 'Something went wrong – please try again',
+    offline: 'You appear to be offline. Check your connection and try again.',
+    badCode: 'That code is wrong or has expired. Ask for a new one below.',
+    rateLimited: 'You’re going a little fast. Wait a minute, then try again.',
+  },
+
   categories: {
     produce: 'Produce',
     dairy: 'Dairy',
@@ -106,6 +123,153 @@ export const en = {
       noRecipes: 'No recipes yet',
       noMatchBody: 'You don’t have this one in your library – add it below.',
       addRecipe: 'Add recipe',
+    },
+  },
+
+  recipes: {
+    title: 'Recipes',
+    add: 'Add a recipe',
+    all: 'All',
+    favorites: 'Favorites',
+    search: 'Search',
+    searchRecipes: 'Search recipes',
+    noMatch: 'No recipes match your search.',
+    noFavoriteMatch: 'No favorites match your search.',
+    /** "Step 3" – shared by the detail rows, the step sheet and the undo toast. */
+    step: 'Step %{number}',
+
+    error: {
+      title: 'Can’t load your recipes',
+      message:
+        'We couldn’t load your cookbook. Check your connection and try again – none of your recipes are lost.',
+    },
+
+    empty: {
+      title: 'Nothing’s cooking yet',
+      body: 'Save the dishes you love – one shared cookbook for everyone in your kitchen.',
+      action: 'Add your first recipe',
+    },
+
+    card: {
+      favorite: 'Favorite %{title}',
+      unfavorite: 'Remove %{title} from favorites',
+    },
+
+    /** The shared swipe row on ingredients and instructions. */
+    row: {
+      edit: 'Edit %{label}',
+      delete: 'Delete %{label}',
+    },
+
+    detail: {
+      error: {
+        title: 'Can’t load this recipe',
+        message:
+          'We couldn’t open this recipe. Check your connection and try again – nothing in it is lost.',
+      },
+      actions: 'Recipe actions',
+      closeMenu: 'Close menu',
+      favoriteAdd: 'Add to favorites',
+      favoriteRemove: 'Remove from favorites',
+      addToPlan: 'Add to weekly plan',
+      addToList: 'Add ingredients to shopping list',
+      edit: 'Edit recipe',
+      delete: 'Delete recipe',
+      total: 'Total',
+      prep: 'Prep',
+      cook: 'Cook',
+      minutes: '%{count} min',
+      reorderIngredients: 'Reorder ingredients',
+      reorderInstructions: 'Reorder instructions',
+      reorderHint: 'Drag to change the order.',
+      noIngredients: 'No ingredients yet – add the first one below.',
+      noInstructions: 'No instructions yet – add the first step below.',
+      source: 'From %{site}',
+      sourceOpen: 'Open the original recipe on %{site}',
+      deleteConfirm:
+        'You are about to delete a recipe from your kitchen. This action cannot be undone.',
+      /** `servings` arrives already counted – "4 servings". */
+      addToListConfirm:
+        'Add this recipe’s ingredients for %{servings} to the shopping list? You can also do this from your weekly plan.',
+      addToListConfirmLabel: 'Add ingredients',
+    },
+
+    form: {
+      titleAdd: 'Add new recipe',
+      titleEdit: 'Edit recipe',
+      blurb: 'Save the dishes you love – one shared cookbook for everyone in your kitchen.',
+      fromLink: 'Add from a link',
+      addImage: 'Add an image',
+      changeImage: 'Change the image',
+      name: 'Recipe name',
+      namePlaceholder: 'Pasta al Pomodoro',
+      description: 'Description',
+      descriptionPlaceholder: 'A quick weeknight classic',
+      prep: 'Preparation time',
+      prepPlaceholder: '10 min',
+      cook: 'Cooking time',
+      cookPlaceholder: '20 min',
+      servings: 'Servings',
+      source: 'Source',
+      sourceLink: 'Source link',
+      sourcePlaceholder: 'https://example.com/recipe',
+      ingredients: 'Ingredients',
+      instructions: 'Instructions',
+      addIngredient: 'Add ingredient',
+      addInstruction: 'Add instruction',
+      editSection: 'Edit section %{name}',
+      editRow: 'Edit %{name}',
+      editStep: 'Edit step %{number}',
+      save: 'Save recipe',
+      saveChanges: 'Save changes',
+      noSteps:
+        'This page didn’t share any instructions – you’ll need to add them yourself.',
+    },
+
+    import: {
+      title: 'Add from a link',
+      blurb:
+        'Paste a link to a recipe page – the ingredients and steps fill in by themselves, ready for you to adjust.',
+      link: 'Recipe link',
+      submit: 'Import recipe',
+      generic: 'Something went wrong – please try again.',
+      fetchFailed:
+        'Couldn’t reach that page – check the link, or the site may be blocking apps.',
+      noRecipe:
+        'No recipe found on that page – it may not be a recipe page, or the site doesn’t share recipe data.',
+    },
+
+    ingredientSheet: {
+      addIngredient: 'Add ingredient',
+      editIngredient: 'Edit ingredient',
+      addSection: 'Add section',
+      editSection: 'Edit section',
+      tabIngredient: 'Ingredient',
+      tabSection: 'Section',
+      name: 'Name',
+      namePlaceholderIngredient: 'e.g. Cherry tomatoes',
+      namePlaceholderSection: 'e.g. Sauce',
+      quantity: 'Quantity',
+      quantityPlaceholder: 'e.g. 250 g',
+      deleteIngredient: 'Delete ingredient',
+      deleteSection: 'Delete section',
+    },
+
+    stepSheet: {
+      titleAdd: 'Add instruction',
+      titleEdit: 'Edit instruction',
+      step: 'Step',
+      instruction: 'Instruction',
+      instructionPlaceholder: 'Add your instruction here',
+      delete: 'Delete instruction',
+    },
+
+    addToPlan: {
+      title: 'Add to weekly plan',
+      subtitle: 'Pick a day.',
+      submit: 'Add to plan',
+      /** Appended to a day name in the picker – " · today". */
+      todaySuffix: ' · today',
     },
   },
 

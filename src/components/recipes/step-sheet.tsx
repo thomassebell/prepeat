@@ -6,6 +6,7 @@ import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { Input } from "@/components/ui/input";
 import { SheetDeleteButton } from "@/components/ui/sheet-delete-button";
 import { ds } from "@/constants/ds";
+import { t } from "@/lib/i18n";
 
 /**
  * Focused add/edit of one instruction. Presentational – emits the text (and,
@@ -42,7 +43,9 @@ export function StepSheet({
   return (
     <BottomSheet
       visible={visible}
-      title={editing ? "Edit instruction" : "Add instruction"}
+      title={
+        editing ? t("recipes.stepSheet.titleEdit") : t("recipes.stepSheet.titleAdd")
+      }
       onClose={onClose}
       scroll
     >
@@ -105,12 +108,12 @@ function SheetContent({
       {!editing && (
         <View className="w-full gap-comp-xsmall">
           <Text className="font-paragraph text-small font-default text-text-subtle">
-            Step
+            {t("recipes.stepSheet.step")}
           </Text>
           <Pressable
             onPress={() => setPickerOpen((open) => !open)}
             accessibilityRole="button"
-            accessibilityLabel={`Step ${position}`}
+            accessibilityLabel={t("recipes.step", { number: position })}
             className="w-full flex-row items-center rounded-medium border border-forms-border-enabled bg-forms-background-default p-comp-large"
           >
             <Text className="flex-1 font-paragraph text-paragraph text-text-default">
@@ -132,7 +135,7 @@ function SheetContent({
                 <Pressable
                   key={option}
                   accessibilityRole="button"
-                  accessibilityLabel={`Step ${option}`}
+                  accessibilityLabel={t("recipes.step", { number: option })}
                   onPress={() => {
                     setPosition(option);
                     setPickerOpen(false);
@@ -158,14 +161,14 @@ function SheetContent({
 
       <View className="w-full gap-comp-xsmall">
         <Text className="font-paragraph text-small font-default text-text-subtle">
-          Instruction
+          {t("recipes.stepSheet.instruction")}
         </Text>
         <Input
           ref={textRef}
           value={text}
           onChangeText={setText}
-          placeholder="Add your instruction here"
-          accessibilityLabel="Instruction"
+          placeholder={t("recipes.stepSheet.instructionPlaceholder")}
+          accessibilityLabel={t("recipes.stepSheet.instruction")}
           multiline
           numberOfLines={4}
           style={{ minHeight: 96, textAlignVertical: "top" }}
@@ -178,11 +181,14 @@ function SheetContent({
         className="w-full items-center rounded-medium bg-button-solid-fill-enabled py-comp-large"
       >
         <Text className="font-paragraph text-components-button-label font-default text-button-solid-label-enabled">
-          Done
+          {t("common.done")}
         </Text>
       </Pressable>
       {onDelete != null && (
-        <SheetDeleteButton label="Delete instruction" onPress={onDelete} />
+        <SheetDeleteButton
+          label={t("recipes.stepSheet.delete")}
+          onPress={onDelete}
+        />
       )}
     </>
   );

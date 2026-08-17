@@ -3,6 +3,7 @@ import { Image } from "expo-image";
 import { Pressable, Text, View } from "react-native";
 
 import { ds } from "@/constants/ds";
+import { t } from "@/lib/i18n";
 import type { RecipeSummary } from "@/lib/recipes";
 
 /**
@@ -49,8 +50,8 @@ export function RecipeCard({
           accessibilityRole="button"
           accessibilityLabel={
             recipe.isFavorite
-              ? `Remove ${recipe.title} from favorites`
-              : `Favorite ${recipe.title}`
+              ? t("recipes.card.unfavorite", { title: recipe.title })
+              : t("recipes.card.favorite", { title: recipe.title })
           }
           className="absolute right-comp-small top-comp-small"
         >

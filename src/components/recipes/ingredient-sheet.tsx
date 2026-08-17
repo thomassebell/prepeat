@@ -5,6 +5,7 @@ import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabItem } from "@/components/ui/tabs";
 import { SheetDeleteButton } from "@/components/ui/sheet-delete-button";
+import { t } from "@/lib/i18n";
 
 /** Which kind of row the sheet is editing. */
 export type IngredientKind = "ingredient" | "section";
@@ -83,11 +84,21 @@ export function IngredientSheet({
     setWasVisible(visible);
     if (visible) setKind(initialKind);
   }
-  const noun = kind === "section" ? "section" : "ingredient";
+  // Four explicit keys rather than "Edit" + " " + noun: gluing a verb to a
+  // noun is the composition that breaks the moment a language declines either
+  // of them, and it costs nothing to avoid here.
+  const sheetTitle =
+    kind === "section"
+      ? editing
+        ? t("recipes.ingredientSheet.editSection")
+        : t("recipes.ingredientSheet.addSection")
+      : editing
+        ? t("recipes.ingredientSheet.editIngredient")
+        : t("recipes.ingredientSheet.addIngredient");
   return (
     <BottomSheet
       visible={visible}
-      title={`${editing ? "Edit" : "Add"} ${noun}`}
+      title={sheetTitle}
       onClose={onClose}
       // ⚠️ WITHOUT `scroll` THIS SHEET HAD NO HEIGHT CAP AT ALL - it simply grew
       // with its body, and with the keyboard up it grew past the top of the
@@ -127,13 +138,13 @@ export function IngredientSheet({
     >
       <Tabs>
         <TabItem
-          label="Ingredient"
+          label={t("recipes.ingredientSheet.tabIngredient")}
           active={kind === "ingredient"}
           divider
           onPress={() => setKind("ingredient")}
         />
         <TabItem
-          label="Section"
+          label={t("recipes.ingredientSheet.tabSection")}
           active={kind === "section"}
           onPress={() => setKind("section")}
         />
@@ -206,16 +217,18 @@ function SheetContent({
     <>
       <View className="w-full gap-comp-xsmall">
         <Text className="font-paragraph text-small font-default text-text-subtle">
-          Name
+          {t("recipes.ingredientSheet.name")}
         </Text>
         <Input
           ref={nameRef}
           value={name}
           onChangeText={setName}
           placeholder={
-            kind === "section" ? "e.g. Sauce" : "e.g. Cherry tomatoes"
+            kind === "section"
+              ? t("recipes.ingredientSheet.namePlaceholderSection")
+              : t("recipes.ingredientSheet.namePlaceholderIngredient")
           }
-          accessibilityLabel="Name"
+          accessibilityLabel={t("recipes.ingredientSheet.name")}
           onSubmitEditing={kind === "section" ? submit : undefined}
           returnKeyType={kind === "section" ? "done" : undefined}
         />
@@ -224,13 +237,13 @@ function SheetContent({
       {kind === "ingredient" && (
         <View className="w-full gap-comp-xsmall">
           <Text className="font-paragraph text-small font-default text-text-subtle">
-            Quantity
+            {t("recipes.ingredientSheet.quantity")}
           </Text>
           <Input
             value={quantity}
             onChangeText={setQuantity}
-            placeholder="e.g. 250 g"
-            accessibilityLabel="Quantity"
+            placeholder={t("recipes.ingredientSheet.quantityPlaceholder")}
+            accessibilityLabel={t("recipes.ingredientSheet.quantity")}
             onSubmitEditing={submit}
             returnKeyType="done"
           />
@@ -242,12 +255,16 @@ function SheetContent({
         className="w-full items-center rounded-medium bg-button-solid-fill-enabled py-comp-large"
       >
         <Text className="font-paragraph text-components-button-label font-default text-button-solid-label-enabled">
-          Done
+          {t("common.done")}
         </Text>
       </Pressable>
       {onDelete != null && (
         <SheetDeleteButton
-          label={kind === "section" ? "Delete section" : "Delete ingredient"}
+          label={
+            kind === "section"
+              ? t("recipes.ingredientSheet.deleteSection")
+              : t("recipes.ingredientSheet.deleteIngredient")
+          }
           onPress={onDelete}
         />
       )}

@@ -2013,11 +2013,12 @@ Closed 2026-07-27:
 - [ ] **⭐ Show the app in Danish when the phone is set to Danish**
       Why: one app, two languages, iOS picks. Not a Danish edition and not a
            market decision – English stays the base language.
-      ✅ **STARTED 2026-08-17: the machinery is in, and the SHOPPING and PLAN
-           tabs are fully translated.** English is unchanged, verified – see
-           below.
-      Left: Recipes and Settings, the TAB BAR itself, the whole first-run and
-           sign-in flow, `friendlyError()` and the OTP email Resend sends.
+      ✅ **STARTED 2026-08-17: the machinery is in, and THREE OF THE FOUR TABS
+           are fully translated** – Shopping, Plan and Recipes. English is
+           unchanged, verified – see below.
+      Left: **Settings and the TAB BAR**, then the whole first-run and sign-in
+           flow, and the OTP email Resend sends. (`friendlyError()` came along
+           with Recipes – see below.)
       Size: incremental – it can ship a screen at a time, and should.
 
       ✅ **WHAT LANDED 2026-08-17**
@@ -2034,7 +2035,11 @@ Closed 2026-07-27:
         and their four swipe actions, the move-day and servings sheets, and the
         635-line add-meal sheet – both its tabs, the recipe picker, the search
         field and the empty-search state.
-      - **86 keys, no English key without a Danish one.**
+      - **The whole Recipes tab** (same day): the cookbook grid and its empty
+        state, the recipe detail with its action menu, both confirm dialogs and
+        both reorder sheets, the 822-line add/edit form, and the ingredient,
+        instruction, import and add-to-plan sheets.
+      - **192 keys, no English key without a Danish one.**
       ⚠️ **DANISH WEEKDAYS ARE LOWER CASE** – "mandag", not "Mandag" – and that
            is grammar there, not a style choice. Verified in both the places it
            has to work: standing alone in the move-day row, and inside a
@@ -2042,9 +2047,30 @@ Closed 2026-07-27:
            both languages, because MAN/TIR/ONS is the design's treatment of the
            day cell rather than a fact about the language.
       **The servings counter came along with Plan** – it is shared with
-           Recipes, so "4 portioner" already shows on a recipe. Harmless: it
-           was going to be translated anyway, and fallback means nothing around
-           it breaks.
+           Recipes, and Recipes has since been done, so that crossing has
+           closed itself.
+      **TWO LIBRARIES CAME ALONG WITH RECIPES**, both because the Recipes tab
+           is where their text surfaces:
+      - `friendlyError()` – its three rewrites (offline, bad code, rate limit)
+        plus the generic fallback. ⚠️ **It still MATCHES on English technical
+        strings** from Supabase and the network stack, which are not localised
+        and must not be; and anything it does not recognise passes through as
+        the app wrote it, so a message thrown by `household.ts` or `auth.ts` is
+        still English until those screens are done.
+      - `recipe-import.ts` – its two user-facing failures ("couldn't reach that
+        page", "no recipe found").
+      ⚠️ **"Fremgangsmåde" AND "trin" ARE TWO WORDS WHERE ENGLISH HAS ONE.**
+           Danish recipes call the method as a whole *fremgangsmåde* and each
+           entry a *trin*, so the heading and the row noun cannot share a key
+           the way "Instructions"/"instruction" does. Worth knowing before
+           anyone "tidies" them into one.
+      ⚠️ **A LAYOUT RISK, FLAGGED RATHER THAN PAPERED OVER: the recipe detail's
+           three time labels get much longer in Danish.** Total/Prep/Cook
+           become I alt / Forberedelse / Tilberedning, in a three-column
+           `flex-1` row that each share with their own number. The correct
+           Danish words are in; **whether that row wraps needs a look on a
+           device**, and if it does, the fix (stack, shorten, or abbreviate) is
+           a design call, not a translation one.
       ⚠️ **THE STORED CATEGORY VALUE STAYS ENGLISH; ONLY THE LABEL IS
            TRANSLATED** (`categoryLabel()` in shopping-core.ts). `aisle` is
            shared by a whole kitchen and **two members can have their phones set
@@ -2058,8 +2084,8 @@ Closed 2026-07-27:
            than looking up a word. The English branch is byte-for-byte what it
            was – the label sits in a one-line slot in Thomas's week switcher.
       **VERIFIED, and how:** `npx tsc --noEmit` and `expo lint` clean; Metro
-           bundles and the app loads with no console errors; every one of the 86
-           keys resolved in both languages through i18n-js, including plurals
+           bundles and the app loads with no console errors; every one of the
+           192 keys resolved in both languages through i18n-js, including plurals
            ("1 vare klaret" / "4 varer klaret", "1 portion" / "4 portioner") and
            fallback; and the REAL `weekRangeLabel`, `DAY_NAMES` and `DAY_LABELS`
            run in both locales over five weeks, including both month boundaries
@@ -2078,20 +2104,26 @@ Closed 2026-07-27:
            feature does nothing at all – no error, no clue. A JS reload is not
            enough.
       ⚠️ **DO NOT SHIP THIS HALF-DONE TO USERS.** Fallback means nothing is
-           broken, but a Danish phone would now get a Danish Plan and Shopping,
-           an English Recipes and Settings, and an English TAB BAR over the lot.
-           That reads as a bug, not as progress. It is safe in a dev build and
-           safe in the repo; it wants at least the four tabs and the tab bar
-           before it goes in a release. **No release note yet, deliberately** –
+           broken, but a Danish phone would now get three Danish tabs, an
+           English Settings, and an English TAB BAR over the lot. That reads as
+           a bug, not as progress. It is safe in a dev build and safe in the
+           repo; it wants Settings and the tab bar before it goes in a
+           release. **No release note yet, deliberately** –
            there is nothing announceable until then.
-      **IMPROVISED COPY, FLAGGED, ONE PLACE:** the empty shopping list says
-           *"Time to prep"*, which has no Danish equivalent that is not either
-           the meal-prep loanword (*"Tid til at prepe"* – plastic tubs and
-           batch-cooking, the exact misreading `2.21` was raised about) or flat
-           (*"Tid til at forberede"*). It currently says **"Klar til ugen"**,
-           which keeps the forward-looking tone and drops the pun. Thomas's
-           call, not Claude's – it is the one line here that is a rewrite rather
-           than a translation.
+      **IMPROVISED COPY, FLAGGED – TWO PLACES, BOTH EMPTY STATES.** Both are
+           English idioms with no Danish equivalent, so both are rewrites rather
+           than translations, and both are Thomas's call rather than Claude's.
+      1. **The empty SHOPPING LIST says *"Time to prep"*.** No Danish
+           equivalent is either the meal-prep loanword (*"Tid til at prepe"* –
+           plastic tubs and batch-cooking, the exact misreading `2.21` was
+           raised about) or flat (*"Tid til at forberede"*). It currently says
+           **"Klar til ugen"**, which keeps the forward-looking tone and drops
+           the pun.
+      2. **The empty COOKBOOK says *"Nothing's cooking yet"*.** The literal
+           Danish (*"Der er ikke noget i gryderne endnu"*) is a joke nobody
+           asked for. It currently says **"Kogebogen er tom endnu"** – states
+           the same fact plainly and picks up "kogebog" from the sentence
+           underneath it.
 
       (Thomas, 2026-08-07, correcting a first write-up that had this far bigger
       than it is: *"I don't want to make a danish app, I just want the app to be

@@ -4,6 +4,8 @@
 // the app throws itself (household.ts, auth.ts) are already friendly and pass
 // through unchanged.
 
+import { t } from '@/lib/i18n';
+
 function messageOf(err: unknown): string {
   if (err instanceof Error) return err.message;
   if (typeof err === 'object' && err != null && 'message' in err) {
@@ -12,7 +14,13 @@ function messageOf(err: unknown): string {
   return '';
 }
 
-const GENERIC = 'Something went wrong – please try again';
+// ⚠️ ONLY THE THREE REWRITES BELOW AND THIS FALLBACK ARE TRANSLATED. Anything
+// this function does not recognise is returned as the app wrote it – so a
+// message thrown by household.ts or auth.ts still comes back in English until
+// those screens are translated too. It matches the raw text against ENGLISH
+// technical strings from Supabase and the network stack, which are not
+// localised and must not be.
+const GENERIC = () => t('errors.generic');
 
 /**
  * Map a caught error to a sentence a non-technical person can act on. Known
@@ -31,18 +39,18 @@ export function friendlyError(err: unknown): string {
       text,
     )
   ) {
-    return "You appear to be offline. Check your connection and try again.";
+    return t('errors.offline');
   }
 
   // A sign-in code that's wrong or past its window (Supabase OTP verify).
   if (/token has expired or is invalid|otp_expired|invalid token|token is invalid|expired or is invalid/.test(text)) {
-    return "That code is wrong or has expired. Ask for a new one below.";
+    return t('errors.badCode');
   }
 
   // Supabase rate-limits code requests (once per 60s) and verify attempts.
   if (/for security purposes|once every|rate limit|too many requests/.test(text)) {
-    return "You’re going a little fast. Wait a minute, then try again.";
+    return t('errors.rateLimited');
   }
 
-  return raw.trim().length === 0 ? GENERIC : raw;
+  return raw.trim().length === 0 ? GENERIC() : raw;
 }

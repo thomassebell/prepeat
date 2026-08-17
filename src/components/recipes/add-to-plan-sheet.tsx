@@ -4,6 +4,7 @@ import { Pressable, Text, View } from "react-native";
 import { ServingsCounter } from "@/components/recipes/servings-counter";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { WeekPicker } from "@/components/ui/week-picker";
+import { t } from "@/lib/i18n";
 import { useCurrentWeekStart, useTodayKey } from "@/lib/use-today";
 import {
   addWeeksKey,
@@ -42,8 +43,8 @@ export function AddToPlanSheet({
   return (
     <BottomSheet
       visible={visible}
-      title="Add to weekly plan"
-      subtitle="Pick a day."
+      title={t("recipes.addToPlan.title")}
+      subtitle={t("recipes.addToPlan.subtitle")}
       onClose={onClose}
       scroll
       // Grow to near full-height so the week nav, all seven days and the
@@ -69,7 +70,7 @@ export function AddToPlanSheet({
                 : "text-text-disabled")
             }
           >
-            Add to plan
+            {t("recipes.addToPlan.submit")}
           </Text>
         </Pressable>
       }
@@ -174,7 +175,7 @@ function SheetContent({
                 }
               >
                 {DAY_NAMES[index]}
-                {date === today ? " · today" : ""}
+                {date === today ? t("recipes.addToPlan.todaySuffix") : ""}
               </Text>
             </Pressable>
           );

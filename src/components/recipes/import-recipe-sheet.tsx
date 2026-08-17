@@ -4,6 +4,7 @@ import { ActivityIndicator, Pressable, Text, View } from "react-native";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { Input } from "@/components/ui/input";
 import { ds } from "@/constants/ds";
+import { t } from "@/lib/i18n";
 import { importRecipeFromUrl, type ImportedRecipe } from "@/lib/recipe-import";
 
 /**
@@ -21,7 +22,7 @@ export function ImportRecipeSheet({
   onImported: (recipe: ImportedRecipe) => void;
 }) {
   return (
-    <BottomSheet visible={visible} title="Add from a link" onClose={onClose}>
+    <BottomSheet visible={visible} title={t("recipes.import.title")} onClose={onClose}>
       <SheetContent onImported={onImported} />
     </BottomSheet>
   );
@@ -47,7 +48,7 @@ function SheetContent({
       setError(
         importError instanceof Error
           ? importError.message
-          : "Something went wrong – please try again.",
+          : t("recipes.import.generic"),
       );
     } finally {
       setBusy(false);
@@ -57,8 +58,7 @@ function SheetContent({
   return (
     <>
       <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-subtle">
-        Paste a link to a recipe page – the ingredients and steps fill in by
-        themselves, ready for you to adjust.
+        {t("recipes.import.blurb")}
       </Text>
       {error != null && (
         <View className="w-full rounded-medium bg-error-lightest px-comp-large py-comp-small">
@@ -75,7 +75,7 @@ function SheetContent({
         autoCapitalize="none"
         autoCorrect={false}
         autoFocus
-        accessibilityLabel="Recipe link"
+        accessibilityLabel={t("recipes.import.link")}
         onSubmitEditing={runImport}
         returnKeyType="go"
       />
@@ -94,7 +94,7 @@ function SheetContent({
           <ActivityIndicator color={ds.colors.text.inverse} />
         ) : (
           <Text className="font-paragraph text-components-button-label font-default text-button-solid-label-enabled">
-            Import recipe
+            {t("recipes.import.submit")}
           </Text>
         )}
       </Pressable>

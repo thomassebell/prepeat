@@ -7,6 +7,7 @@ import ReanimatedSwipeable, {
 
 import { SwipeRowProvider } from "@/components/ui/swipe-hint";
 import { ds } from "@/constants/ds";
+import { t } from "@/lib/i18n";
 
 /**
  * Swipe-left edit/delete actions – the same interaction as the shopping
@@ -34,7 +35,7 @@ export function SwipeActions({
         <View className="flex-row">
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel={`Edit ${label}`}
+            accessibilityLabel={t("recipes.row.edit", { label })}
             onPress={() => {
               swipeable.current?.close();
               onEdit();
@@ -49,7 +50,7 @@ export function SwipeActions({
           </Pressable>
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel={`Delete ${label}`}
+            accessibilityLabel={t("recipes.row.delete", { label })}
             onPress={() => {
               swipeable.current?.close();
               onDelete();

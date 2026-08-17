@@ -15,7 +15,7 @@ export const UNDO_TIMEOUT_MS = 5000;
 
 export function UndoToast({
   name,
-  verb = 'deleted',
+  verb = t('undo.deleted'),
   onUndo,
   onDismiss,
   bottomInset,

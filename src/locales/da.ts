@@ -21,6 +21,18 @@ type DeepPartial<T> = {
 };
 
 export const da: DeepPartial<typeof en> = {
+  common: {
+    done: 'Færdig',
+    back: 'Tilbage',
+  },
+
+  errors: {
+    generic: 'Noget gik galt – prøv igen',
+    offline: 'Du ser ud til at være offline. Tjek din forbindelse, og prøv igen.',
+    badCode: 'Den kode er forkert eller udløbet. Bed om en ny nedenfor.',
+    rateLimited: 'Du går lidt hurtigt frem. Vent et minut, og prøv så igen.',
+  },
+
   categories: {
     produce: 'Frugt & grønt',
     dairy: 'Mejeri',
@@ -120,6 +132,164 @@ export const da: DeepPartial<typeof en> = {
       noRecipes: 'Ingen opskrifter endnu',
       noMatchBody: 'Du har den ikke i dit bibliotek – tilføj den nedenfor.',
       addRecipe: 'Tilføj opskrift',
+    },
+  },
+
+  recipes: {
+    title: 'Opskrifter',
+    add: 'Tilføj en opskrift',
+    all: 'Alle',
+    favorites: 'Favoritter',
+    search: 'Søg',
+    searchRecipes: 'Søg i opskrifter',
+    noMatch: 'Ingen opskrifter matcher din søgning.',
+    noFavoriteMatch: 'Ingen favoritter matcher din søgning.',
+    step: 'Trin %{number}',
+
+    error: {
+      title: 'Kan ikke hente dine opskrifter',
+      message:
+        'Vi kunne ikke hente din kogebog. Tjek din forbindelse, og prøv igen – ingen af dine opskrifter er gået tabt.',
+    },
+
+    empty: {
+      // ⚠️ IMPROVISED, NOT A TRANSLATION – flagged for Thomas, the second such
+      // line after the shopping list's "Time to prep". "Nothing's cooking yet"
+      // is an English idiom; the literal Danish ("Der er ikke noget i gryderne
+      // endnu") is a joke nobody asked for. This states the same fact plainly
+      // and picks up "kogebog" from the sentence underneath it.
+      title: 'Kogebogen er tom endnu',
+      body: 'Gem de retter, I holder af – én fælles kogebog for alle i dit køkken.',
+      action: 'Tilføj din første opskrift',
+    },
+
+    card: {
+      favorite: 'Marker %{title} som favorit',
+      unfavorite: 'Fjern %{title} fra favoritter',
+    },
+
+    row: {
+      edit: 'Rediger %{label}',
+      delete: 'Slet %{label}',
+    },
+
+    detail: {
+      error: {
+        title: 'Kan ikke åbne denne opskrift',
+        message:
+          'Vi kunne ikke åbne denne opskrift. Tjek din forbindelse, og prøv igen – intet i den er gået tabt.',
+      },
+      actions: 'Handlinger for opskrift',
+      closeMenu: 'Luk menu',
+      favoriteAdd: 'Tilføj til favoritter',
+      favoriteRemove: 'Fjern fra favoritter',
+      addToPlan: 'Tilføj til ugeplan',
+      addToList: 'Tilføj ingredienser til indkøbslisten',
+      edit: 'Rediger opskrift',
+      delete: 'Slet opskrift',
+      // ⚠️ THESE THREE ARE MUCH LONGER IN DANISH than in English (Total/Prep/
+      // Cook), and they sit in a three-column flex-1 row beside their own
+      // numbers. Flagged in the backlog: it needs a look on a device, and
+      // whether to stack, shorten or abbreviate is a design call.
+      total: 'I alt',
+      prep: 'Forberedelse',
+      cook: 'Tilberedning',
+      minutes: '%{count} min',
+      reorderIngredients: 'Sortér ingredienser',
+      reorderInstructions: 'Sortér trin',
+      reorderHint: 'Træk for at ændre rækkefølgen.',
+      noIngredients: 'Ingen ingredienser endnu – tilføj den første nedenfor.',
+      noInstructions: 'Ingen fremgangsmåde endnu – tilføj det første trin nedenfor.',
+      source: 'Fra %{site}',
+      sourceOpen: 'Åbn den originale opskrift på %{site}',
+      deleteConfirm:
+        'Du er ved at slette en opskrift fra dit køkken. Det kan ikke fortrydes.',
+      addToListConfirm:
+        'Tilføj denne opskrifts ingredienser til %{servings} til indkøbslisten? Du kan også gøre det fra din ugeplan.',
+      addToListConfirmLabel: 'Tilføj ingredienser',
+    },
+
+    form: {
+      titleAdd: 'Tilføj ny opskrift',
+      titleEdit: 'Rediger opskrift',
+      blurb: 'Gem de retter, I holder af – én fælles kogebog for alle i dit køkken.',
+      fromLink: 'Tilføj fra et link',
+      addImage: 'Tilføj et billede',
+      changeImage: 'Skift billede',
+      name: 'Opskriftens navn',
+      namePlaceholder: 'Pasta al Pomodoro',
+      description: 'Beskrivelse',
+      descriptionPlaceholder: 'En hurtig hverdagsklassiker',
+      prep: 'Forberedelsestid',
+      prepPlaceholder: '10 min',
+      cook: 'Tilberedningstid',
+      cookPlaceholder: '20 min',
+      servings: 'Portioner',
+      source: 'Kilde',
+      sourceLink: 'Kildelink',
+      sourcePlaceholder: 'https://example.com/recipe',
+      ingredients: 'Ingredienser',
+      // Danish recipes call the method "fremgangsmåde" as a heading and each
+      // entry a "trin" – so the heading and the row noun are different words,
+      // where English reuses "instruction" for both.
+      instructions: 'Fremgangsmåde',
+      addIngredient: 'Tilføj ingrediens',
+      addInstruction: 'Tilføj trin',
+      editSection: 'Rediger sektion %{name}',
+      editRow: 'Rediger %{name}',
+      editStep: 'Rediger trin %{number}',
+      save: 'Gem opskrift',
+      saveChanges: 'Gem ændringer',
+      noSteps:
+        'Denne side delte ingen fremgangsmåde – du skal selv tilføje den.',
+    },
+
+    import: {
+      title: 'Tilføj fra et link',
+      blurb:
+        'Indsæt et link til en opskriftsside – ingredienser og fremgangsmåde udfylder sig selv, klar til at du retter til.',
+      link: 'Opskriftslink',
+      submit: 'Importér opskrift',
+      generic: 'Noget gik galt – prøv igen.',
+      fetchFailed:
+        'Kunne ikke nå den side – tjek linket, eller siden blokerer måske for apps.',
+      noRecipe:
+        'Ingen opskrift fundet på den side – det er måske ikke en opskriftsside, eller siden deler ikke opskriftsdata.',
+    },
+
+    ingredientSheet: {
+      addIngredient: 'Tilføj ingrediens',
+      editIngredient: 'Rediger ingrediens',
+      addSection: 'Tilføj sektion',
+      editSection: 'Rediger sektion',
+      tabIngredient: 'Ingrediens',
+      tabSection: 'Sektion',
+      name: 'Navn',
+      namePlaceholderIngredient: 'f.eks. Cherrytomater',
+      namePlaceholderSection: 'f.eks. Sauce',
+      quantity: 'Mængde',
+      quantityPlaceholder: 'f.eks. 250 g',
+      deleteIngredient: 'Slet ingrediens',
+      deleteSection: 'Slet sektion',
+    },
+
+    stepSheet: {
+      titleAdd: 'Tilføj trin',
+      titleEdit: 'Rediger trin',
+      step: 'Trin',
+      // Deliberately NOT "Trin" as well: the number picker above this field is
+      // already labelled "Trin", and two fields with one label is worse than a
+      // slightly formal word.
+      instruction: 'Instruktion',
+      instructionPlaceholder: 'Skriv dit trin her',
+      delete: 'Slet trin',
+    },
+
+    addToPlan: {
+      title: 'Tilføj til ugeplan',
+      subtitle: 'Vælg en dag.',
+      submit: 'Tilføj til plan',
+      todaySuffix: ' · i dag',
     },
   },
 

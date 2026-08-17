@@ -34,6 +34,7 @@ import { Spacing, tabBarClearance } from "@/constants/theme";
 import { AddToPlanSheet } from "@/components/recipes/add-to-plan-sheet";
 import { useAuth } from "@/lib/auth";
 import { useHousehold } from "@/lib/household-context";
+import { t } from "@/lib/i18n";
 import { addRecipeToPlan } from "@/lib/meal-plan";
 import {
   addIngredient,
@@ -144,7 +145,7 @@ export default function RecipeDetailScreen() {
             onPress={() => router.back()}
             hitSlop={12}
             accessibilityRole="button"
-            accessibilityLabel="Back"
+            accessibilityLabel={t("common.back")}
           >
             <MaterialIcons
               name="arrow-back"
@@ -155,8 +156,8 @@ export default function RecipeDetailScreen() {
         </View>
         {failed ? (
           <LoadError
-            title="Can’t load this recipe"
-            message="We couldn’t open this recipe. Check your connection and try again – nothing in it is lost."
+            title={t("recipes.detail.error.title")}
+            message={t("recipes.detail.error.message")}
             onRetry={reload}
           />
         ) : (
@@ -240,17 +241,19 @@ export default function RecipeDetailScreen() {
   }[] = [
     {
       icon: recipe.isFavorite ? "favorite" : "favorite-border",
-      label: recipe.isFavorite ? "Remove from favorites" : "Add to favorites",
+      label: recipe.isFavorite
+        ? t("recipes.detail.favoriteRemove")
+        : t("recipes.detail.favoriteAdd"),
       onPress: toggleFavorite,
     },
     {
       icon: "date-range",
-      label: "Add to weekly plan",
+      label: t("recipes.detail.addToPlan"),
       onPress: () => setPlanSheetOpen(true),
     },
     {
       icon: "shopping-bag",
-      label: "Add ingredients to shopping list",
+      label: t("recipes.detail.addToList"),
       onPress: () => setDialog("shopping"),
     },
     // "Add ingredient/instruction" left this menu 2026-07-16 (feedback):
@@ -259,12 +262,12 @@ export default function RecipeDetailScreen() {
     // page too, so it is reachable without scrolling the whole recipe.
     {
       icon: "edit-note",
-      label: "Edit recipe",
+      label: t("recipes.detail.edit"),
       onPress: openEdit,
     },
     {
       icon: "delete",
-      label: "Delete recipe",
+      label: t("recipes.detail.delete"),
       onPress: () => setDialog("delete"),
     },
   ];
@@ -279,7 +282,7 @@ export default function RecipeDetailScreen() {
           onPress={() => router.back()}
           hitSlop={12}
           accessibilityRole="button"
-          accessibilityLabel="Back"
+          accessibilityLabel={t("common.back")}
         >
           <MaterialIcons
             name="arrow-back"
@@ -292,7 +295,7 @@ export default function RecipeDetailScreen() {
           onPress={toggleMenu}
           hitSlop={12}
           accessibilityRole="button"
-          accessibilityLabel="Recipe actions"
+          accessibilityLabel={t("recipes.detail.actions")}
         >
           <MaterialIcons
             name="more-horiz"
@@ -322,7 +325,9 @@ export default function RecipeDetailScreen() {
             hitSlop={8}
             accessibilityRole="button"
             accessibilityLabel={
-              recipe.isFavorite ? "Remove from favorites" : "Add to favorites"
+              recipe.isFavorite
+                ? t("recipes.detail.favoriteRemove")
+                : t("recipes.detail.favoriteAdd")
             }
             style={{ position: "absolute", top: 16, right: 16 }}
           >
@@ -346,15 +351,15 @@ export default function RecipeDetailScreen() {
               </Text>
             )}
             <View className="w-full flex-row gap-comp-small">
-              <MetaItem icon="schedule" label="Total" value={total} />
+              <MetaItem icon="schedule" label={t("recipes.detail.total")} value={total} />
               <MetaItem
                 icon="restaurant"
-                label="Prep"
+                label={t("recipes.detail.prep")}
                 value={recipe.prepMinutes}
               />
               <MetaItem
                 icon="local-fire-department"
-                label="Cook"
+                label={t("recipes.detail.cook")}
                 value={recipe.cookMinutes}
               />
             </View>
@@ -379,7 +384,7 @@ export default function RecipeDetailScreen() {
                   onPress={() => setReordering("ingredients")}
                   hitSlop={8}
                   accessibilityRole="button"
-                  accessibilityLabel="Reorder ingredients"
+                  accessibilityLabel={t("recipes.detail.reorderIngredients")}
                 >
                   <MaterialIcons
                     name="drag-handle"
@@ -404,7 +409,7 @@ export default function RecipeDetailScreen() {
                         onPress={() => setReordering("ingredients")}
                         hitSlop={8}
                         accessibilityRole="button"
-                        accessibilityLabel="Reorder ingredients"
+                        accessibilityLabel={t("recipes.detail.reorderIngredients")}
                       >
                         <MaterialIcons
                           name="drag-handle"
@@ -453,7 +458,7 @@ export default function RecipeDetailScreen() {
             ))}
             {recipe.ingredients.length === 0 && (
               <View className="w-full overflow-hidden rounded-large">
-                <EmptyRowHint text="No ingredients yet – add the first one below." />
+                <EmptyRowHint text={t("recipes.detail.noIngredients")} />
               </View>
             )}
           </View>
@@ -468,7 +473,7 @@ export default function RecipeDetailScreen() {
                   onPress={() => setReordering("steps")}
                   hitSlop={8}
                   accessibilityRole="button"
-                  accessibilityLabel="Reorder instructions"
+                  accessibilityLabel={t("recipes.detail.reorderInstructions")}
                 >
                   <MaterialIcons
                     name="drag-handle"
@@ -500,7 +505,7 @@ export default function RecipeDetailScreen() {
                 </Fragment>
               ))}
               {recipe.steps.length === 0 && (
-                <EmptyRowHint text="No instructions yet – add the first step below." />
+                <EmptyRowHint text={t("recipes.detail.noInstructions")} />
               )}
             </View>
           </View>
@@ -521,11 +526,13 @@ export default function RecipeDetailScreen() {
                 )
               }
               accessibilityRole="link"
-              accessibilityLabel={`Open the original recipe on ${sourceLabel(sourceUrl)}`}
+              accessibilityLabel={t("recipes.detail.sourceOpen", {
+                site: sourceLabel(sourceUrl),
+              })}
               hitSlop={8}
             >
               <Text className="font-paragraph text-paragraph font-default text-text-subtle underline">
-                {`From ${sourceLabel(sourceUrl)}`}
+                {t("recipes.detail.source", { site: sourceLabel(sourceUrl) })}
               </Text>
             </Pressable>
           )}
@@ -543,7 +550,7 @@ export default function RecipeDetailScreen() {
               color={ds.colors.icon.default}
             />
             <Text className="font-paragraph text-components-button-label font-default text-text-subtle">
-              Edit recipe
+              {t("recipes.detail.edit")}
             </Text>
           </Pressable>
         </View>
@@ -553,7 +560,7 @@ export default function RecipeDetailScreen() {
         <Pressable
           style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
           onPress={() => setMenuOpen(false)}
-          accessibilityLabel="Close menu"
+          accessibilityLabel={t("recipes.detail.closeMenu")}
         />
       )}
       {menuOpen && (
@@ -599,15 +606,21 @@ export default function RecipeDetailScreen() {
         visible={dialog != null}
         title={
           dialog === "delete"
-            ? "Delete recipe"
-            : "Add ingredients to shopping list"
+            ? t("recipes.detail.delete")
+            : t("recipes.detail.addToList")
         }
         body={
           dialog === "delete"
-            ? "You are about to delete a recipe from your kitchen. This action cannot be undone."
-            : `Add this recipe’s ingredients for ${chosenServings} ${chosenServings === 1 ? "serving" : "servings"} to the shopping list? You can also do this from your weekly plan.`
+            ? t("recipes.detail.deleteConfirm")
+            : t("recipes.detail.addToListConfirm", {
+                servings: t("plan.servings.count", { count: chosenServings }),
+              })
         }
-        confirmLabel={dialog === "delete" ? "Delete recipe" : "Add ingredients"}
+        confirmLabel={
+          dialog === "delete"
+            ? t("recipes.detail.delete")
+            : t("recipes.detail.addToListConfirmLabel")
+        }
         destructive={dialog === "delete"}
         onCancel={() => setDialog(null)}
         onConfirm={confirmDialog}
@@ -617,10 +630,10 @@ export default function RecipeDetailScreen() {
         visible={reordering != null}
         title={
           reordering === "steps"
-            ? "Reorder instructions"
-            : "Reorder ingredients"
+            ? t("recipes.detail.reorderInstructions")
+            : t("recipes.detail.reorderIngredients")
         }
-        hint="Drag to change the order."
+        hint={t("recipes.detail.reorderHint")}
         items={
           reordering === "steps"
             ? recipe.steps.map((step) => ({
@@ -794,7 +807,7 @@ export default function RecipeDetailScreen() {
           name={
             undoTarget.kind === "ingredient"
               ? undoTarget.snapshot.name
-              : `Step ${undoTarget.snapshot.stepNumber}`
+              : t("recipes.step", { number: undoTarget.snapshot.stepNumber })
           }
           onUndo={undoDelete}
           onDismiss={dismissUndo}
@@ -829,7 +842,7 @@ function MetaItem({
         {label}
       </Text>
       <Text className="font-paragraph text-small font-default text-text-subtle">
-        {value} min
+        {t("recipes.detail.minutes", { count: value })}
       </Text>
     </View>
   );
@@ -928,7 +941,7 @@ function StepRow({
           onPress={onToggle}
           accessibilityRole="checkbox"
           accessibilityState={{ checked: done }}
-          accessibilityLabel={`Step ${step.stepNumber}`}
+          accessibilityLabel={t("recipes.step", { number: step.stepNumber })}
           className="w-full flex-row items-start gap-comp-small bg-surface-neutral-white p-layout-small"
         >
           <View
