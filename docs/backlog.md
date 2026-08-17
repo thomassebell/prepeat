@@ -2178,6 +2178,18 @@ Closed 2026-07-27:
            byte-identical to what shipped.
            **That is the first screenshot-level proof of the translation**, as
            opposed to keys resolving in a harness.
+      ⚠️ **CHECKING WHICH JS A DEVICE BUILD SHIPPED: `strings | grep` LIES ABOUT
+           DANISH.** The 16:32 build took 35 seconds (native code unchanged),
+           which looked too fast to have rebuilt the bundle – so it was checked
+           rather than assumed, and the first check said the Danish onboarding
+           strings were ABSENT. They were not. Two reasons stacked: `strings`
+           only emits ASCII runs, so "Fortsæt" splits at the æ; and **Hermes
+           stores pure-ASCII strings as UTF-8 but anything with a non-ASCII
+           character as UTF-16LE**, so even `grep -a` misses them. Measured:
+           "Fortsæt med e-mail" utf8=0 / utf16le=1, "Forberedelse" utf8=1 /
+           utf16le=0. **Count both encodings in python** – or probe with an
+           all-ASCII string, which is enough on its own to prove freshness.
+           Worth knowing before someone rebuilds a perfectly good bundle.
       ⚠️ **THE PLUGIN CHANGE NEEDED A NATIVE REBUILD, AND IT HAD NOT HAPPENED
            – CONFIRMED, NOT THEORISED.** Before the rebuild, `Info.plist` had
            **no `CFBundleLocalizations` key at all**: the app.json edit had been
