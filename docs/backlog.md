@@ -4200,10 +4200,11 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
       any of this. Note also that fixing the importer does NOT repair recipes
       already imported: there is still no re-import action.
 
-- [x] **BUILT 2026-08-17. Stop the screen dimming while you cook from a recipe**
-      Not yet seen running: the web preview cannot reach either screen (the auth
-      gate replaces every route when signed out, `/ds-check` included), so this
-      wants a dev build on the phone before it counts as done.
+- [x] **SHIPPED TO TESTFLIGHT 2026-08-17 (build 20). Stop the screen dimming
+      while you cook from a recipe**
+      Confirmed on Thomas's phone through three dev builds, then out on build 20
+      with the rest of 1.1.0. Not in the App Store release – users stay on build
+      12 until 1.1.0 is submitted for review.
 
       **THE THREE DECISIONS, all answered by Thomas 2026-08-17.** He designed
       both surfaces rather than picking from the options offered, which settled
@@ -4291,6 +4292,24 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
       **If it should look tappable at rest**, that same token is the answer and
       it is a one-line change – worth deciding, because an inert-looking link is
       only found by accident.
+
+- [ ] **`eas-submit-ios.sh` reports the wrong build as proof**
+      Why: it ends by asking App Store Connect for the newest VALID build and
+           printing it as the headline. On 2026-08-17 that printed **"Build 17
+           is VALID on TestFlight"** immediately after submitting build 20 –
+           build 17 being ten days old and nothing to do with the run. It reads
+           exactly like confirmation.
+      Risk: this is the failure the two-source check exists to prevent, arriving
+           through the check itself. Taking the headline at face value records a
+           stale build as today's result, and the opposite error (a wrong
+           "Apple never received it") already happened once, on 2026-08-03.
+      Fix: pass the build number being submitted and report on THAT – "build 20:
+           not listed yet" is honest and actionable, "build 17 is VALID" is not.
+           Apple listed 20 three minutes later, so polling for the specific
+           build would have confirmed it cleanly.
+      Size: small, in `scripts/asc-build-state.mjs` plus its caller.
+
+      (Found 2026-08-17 shipping build 20.)
 
 - [ ] **The other Settings frame still has the old switch row**
       Why: Thomas rewrote the row in `default 3` (684:3866 – the empty-People
@@ -4900,7 +4919,12 @@ Not work. Kept so a cold thread can pick things up without re-litigating them.
 
 ### In flight (built, not yet live)
 
-- [x] **THE APP IN DANISH – BUILT 2026-08-17, IN NOBODY'S HANDS.** 310 keys
+- [x] **THE APP IN DANISH – ON TESTFLIGHT 2026-08-17 (build 20), STILL NOT
+      LIVE.** Testers with Danish phones have it as of build 20; App Store users
+      do not, and will not until 1.1.0 is submitted for review. The paragraph
+      below was written when it was on nobody's device at all, and its two-kinds
+      warning still holds – the gap has narrowed by one step, not closed.
+      310 keys
       across all four tabs, the tab bar and the whole first-run flow. Confirmed
       on Thomas's phone and on a simulator in both languages; English output
       unchanged throughout, which is the half that matters while users are on

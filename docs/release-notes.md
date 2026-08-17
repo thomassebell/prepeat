@@ -5,12 +5,16 @@ is always something ready to post. Started 2026-08-03 – earlier builds are
 reconstructed from the backlog and git history.
 
 > **🎉 LIVE ON THE APP STORE: 1.0.0** (build 12), released 2026-08-13 ·
-> **NEXT VERSION: 1.1.0** · `app.json` still says 1.0.0, correctly – it is
-> bumped at submission, not now.
+> **NEXT VERSION: 1.1.0, BUILT AND ON TESTFLIGHT as build 20** (2026-08-17,
+> VALID) · `app.json` says 1.1.0, correctly – that is the version build 20
+> carries.
 >
 > From here the first rule below stops being theoretical: **real users are on
-> build 12**, which was frozen on 2026-07-30. Everything in builds 13–17 is
-> written but NOT in anyone's hands.
+> build 12**, which was frozen on 2026-07-30. Everything in builds 13–20 is
+> written, and build 20 is in testers' hands, but NONE of it is in the App
+> Store release. **1.1.0 has not been submitted for review** – that is a
+> separate decision, and until it is taken, users have none of the last
+> eighteen days of work.
 >
 > Thomas does not track the number; keeping these two lines true is Claude's
 > job (agreed 2026-08-03). The rule below decides the next number, so this is
@@ -60,45 +64,58 @@ Two more rules this file exists to keep straight:
 More goes in before this ships, so this section grows. On the dev build only:
 not on TestFlight, not in review, and it needs a build to reach anyone.
 
-> **☠️ BUILD 18 IS DEAD. SUPERSEDED BY BUILD 19** (2026-08-16). It was parked
-> on 2026-08-11 waiting for the Kitchen→Settings tab, that tab landed in code
-> on 08-13, and a build that predates what it was waiting for can never ship.
-> Do not submit it; the entry is kept only so nobody rediscovers it and
-> wonders.
->
-> **☠️ BUILD 19 IS ALSO DEAD** – 1.1.0, built 2026-08-16, never submitted, one
-> fix behind within the hour (the People ordering fix below). Do not submit it.
->
-> **⏸ 1.1.0 IS HELD FOR THE SETTINGS REDESIGN** (Thomas, 2026-08-16). He is
-> redoing the screen – *"this whole page is messy design vise"* – and chose one
-> update over two, with the trade-off stated: everything else in this section
-> stays undelivered for as long as the redesign takes, and real users have been
-> on build 12 since 2026-07-30. **So `2.27` is the critical path to 1.1.0 for
-> the second time.**
->
-> ⚠️ **DO NOT PRE-BUILD IT THIS TIME.** Builds 18 and 19 both died parked, 19
-> within an hour, and that is now three in this file. **A build is only ever a
-> snapshot: build when you are ready to submit, not before.** There is nothing
-> to preserve by building early – EAS takes about twenty minutes whenever the
-> moment comes.
->
-> **`app.json` says 1.1.0 while nothing is shipping**, deliberately: it is the
-> version the next submission carries, and App Store Connect binds a release to
-> the string inside the build. **If a 1.0.1 hotfix is ever needed BEFORE the
-> redesign lands**, drop it back to 1.0.1 for that build – the digit follows
-> what is being submitted, not what is in the repo.
+**Empty as of 2026-08-17.** Everything that was accumulating here went out in
+build 20, below. The next change lands here.
 
-**This will be 1.1.0** under the rule above – a new capability (moving
-leftovers between weeks, and now ingredient sections) alongside the fixes, and
-a feature makes it MINOR. It stays unnumbered in `app.json` until it is
-actually being prepared for submission, and v1.0.0 has to be approved and
-released first either way.
+> ⚠️ **BUILD WHEN YOU ARE READY TO SUBMIT, NOT BEFORE.** Three builds in this
+> file died parked: 18 (2026-08-16, superseded by 19 before it shipped), 19
+> (1.1.0, built 2026-08-16, one fix behind within the hour), and 11 before
+> them. Nothing is preserved by building early – EAS takes about twenty
+> minutes whenever the moment comes, and a build is only ever a snapshot.
+> **Build 20 is the rule working:** 1.1.0 was held from 2026-08-16 for the
+> Settings redesign (`2.27`), nothing was pre-built, and the build was made the
+> day the redesign closed. It shipped.
+>
+> **The version digit follows what is being SUBMITTED, not what is in the
+> repo.** `app.json` is 1.1.0 because that is what build 20 carries. If a 1.0.1
+> hotfix is ever needed before 1.1.0 goes to review, drop it back to 1.0.1 for
+> that build – App Store Connect binds a release to the string inside the
+> binary.
 
-**Version re-checked 2026-08-10 against the rule above: still 1.1.0.** Today is
-copy and polish plus one small capability (forms now say what is missing), and
-neither outranks the MINOR already set by leftovers and ingredient sections.
+## Build 20 – TestFlight 2026-08-17 (VALID, not in review)
 
-### Dev builds, 2026-08-17
+**1.1.0**, from commit `7c8d829`. Uploaded 20:07 CEST, VALID three minutes
+later – the fastest of any build so far, against build 17's forty.
+
+**The first build to reach testers since build 12**, which was frozen
+2026-07-30. Eighteen days of work arrives at once: the kitchen/Settings
+rewording, leftovers, ingredient sections, the recipe-import fixes, the
+Settings redesign, THE WHOLE APP IN DANISH, and keep-screen-on.
+
+**The App Store review is untouched.** v1.0 stays on build 12, so real users
+have none of this. It reaches them only when 20 is submitted for review, which
+is a separate decision.
+
+**The hold is over, and it was honoured.** 1.1.0 had been held since 2026-08-16
+for the Settings redesign, with a standing warning not to pre-build. `2.27`
+closed, and only then was this built – so unlike builds 18 and 19, which both
+died parked, this one was built at the moment it could ship. **The rule earned
+its keep: build when you are ready to submit, not before.**
+
+**`app.json` says 1.1.0 and that is correct here**, unlike builds 13 through 17
+which stayed 1.0.0. Those were TestFlight snapshots of a version already in
+review; this is the version the next submission will carry.
+
+⚠️ **THE SUCCESS MESSAGE LIED, AND THE TWO-SOURCE CHECK CAUGHT IT.**
+`eas-submit-ios.sh` finished by printing *"Build 17 is VALID on TestFlight"* –
+which reads as confirmation and is not: it reports the newest build APPLE HAS
+LISTED, and at that moment that was still the one from ten days earlier. Expo
+said the submission was `finished` (delivery proven) while Apple had not listed
+20 yet (processing not done). Reading only the script's headline would have
+recorded a ten-day-old build as today's result. The script should name the
+build it just submitted; that is in the backlog.
+
+### 2026-08-17
 
 - **The screen no longer dims while you cook.** Open a recipe and the phone
   stays lit until you leave it, so you can prop it up on the worktop and stop
@@ -116,7 +133,7 @@ neither outranks the MINOR already set by leftovers and ingredient sections.
   Recipes themselves are never translated – a recipe you typed or imported
   stays in the language you saved it in, whichever way your phone is set.
 
-### Dev builds, 2026-08-16
+### 2026-08-16
 
 - **Importing a recipe from a link brings more of it across.** Some sites
   hid their ingredients behind a link or wrote their method in a way the
@@ -157,7 +174,7 @@ neither outranks the MINOR already set by leftovers and ingredient sections.
   panel on top that never closed. It now closes and puts you in your other
   kitchen.
 
-### Dev builds, 2026-08-13
+### 2026-08-13
 
 - **The Kitchen tab is now Settings, and it holds more.** Plan, Recipes and
   Shopping all live inside your kitchen, so a fourth tab called Kitchen sat
@@ -173,7 +190,7 @@ neither outranks the MINOR already set by leftovers and ingredient sections.
   own you get a proper prompt explaining what a second person gets you; once
   somebody else has joined, it settles down into a single quiet line.
 
-### Dev builds, 2026-08-11
+### 2026-08-11
 
 - **Not every meal has to be a recipe, and the app finally says so.** When you
   add a meal, the second tab is now called **"Anything else"** instead of
@@ -181,7 +198,7 @@ neither outranks the MINOR already set by leftovers and ingredient sections.
   by typing a name. Nothing changed about how it works; it was there all along
   and called something nobody read as permission.
 
-### Dev builds, 2026-08-10 – the wording round
+### 2026-08-10 – the wording round
 
 Came out of a synthetic user panel run against the first-run screens: seven
 readers out of seven could not say what a "household" was in the product.

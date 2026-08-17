@@ -79,7 +79,7 @@
 <main>
   <header>
     <h1>Prep+Eat – open backlog</h1>
-    <p class="meta">79 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
+    <p class="meta">80 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
   </header>
   <div class="filter"><input id="q" type="search" placeholder="Filter tasks…" autocomplete="off"></div>
   <section class="waiting">
@@ -546,7 +546,7 @@
     </article>
     </section>
     <section>
-      <h2>Someday – not committed <span class="count" data-total="25">25</span></h2>
+      <h2>Someday – not committed <span class="count" data-total="26">26</span></h2>
       <h4>Ideas – not yet committed</h4>
     <article class="item">
       <h3>
@@ -628,6 +628,15 @@
       </h3>
       <dl><dt>Needs</dt><dd>Thomas – the app deviates from the frames here and it was my call.</dd><dt>Why</dt><dd>the frames read "Screen on while cooking" / "Screen dimes while cooking". The app ships "Screen stays on" / "Screen dims", trimmed for the same reason Thomas trimmed the Settings label from "Keep the screen on in recipes" to "Keep screen on" – <em>"otherwise this will be very long in danish"</em>. That reason applies harder here: an icon and TWO texts share one 16px line.</dd><dt>Measured</dt><dd>the Danish pair plus the icon is ~291pt of the 370pt available, so it fits today. The hint truncates rather than overflowing if a future translation is longer.</dd><dt>Decide</dt><dd>accept the trim (and update the frames), or restore the full phrase and let the line wrap to two rows in Danish.</dd></dl>
       <details><summary>Full note</summary><p>(2026-08-17.)</p></details>
+    </article>
+    <article class="item">
+      <h3>
+        
+        
+        <span><strong><code>eas-submit-ios.sh</code> reports the wrong build as proof</strong></span>
+      </h3>
+      <dl><dt>Why</dt><dd>it ends by asking App Store Connect for the newest VALID build and printing it as the headline. On 2026-08-17 that printed <strong>"Build 17 is VALID on TestFlight"</strong> immediately after submitting build 20 – build 17 being ten days old and nothing to do with the run. It reads exactly like confirmation.</dd><dt>Risk</dt><dd>this is the failure the two-source check exists to prevent, arriving through the check itself. Taking the headline at face value records a stale build as today's result, and the opposite error (a wrong "Apple never received it") already happened once, on 2026-08-03.</dd><dt>Fix</dt><dd>pass the build number being submitted and report on THAT – "build 20: not listed yet" is honest and actionable, "build 17 is VALID" is not. Apple listed 20 three minutes later, so polling for the specific build would have confirmed it cleanly.</dd><dt>Size</dt><dd>small, in <code>scripts/asc-build-state.mjs</code> plus its caller.</dd></dl>
+      <details><summary>Full note</summary><p>(Found 2026-08-17 shipping build 20.)</p></details>
     </article>
     <article class="item">
       <h3>
