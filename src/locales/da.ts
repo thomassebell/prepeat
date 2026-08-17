@@ -49,9 +49,77 @@ export const da: DeepPartial<typeof en> = {
     deleted: 'slettet',
     cleared: 'ryddet',
     moved: 'flyttet',
+    removed: 'fjernet',
     itemCount: {
       one: '%{count} vare',
       other: '%{count} varer',
+    },
+  },
+
+  plan: {
+    title: 'Ugeplan',
+    listNote: 'Din indkøbsliste opdaterer sig, mens du planlægger.',
+
+    error: {
+      title: 'Kan ikke hente din plan',
+      message:
+        'Vi kunne ikke hente din ugeplan. Tjek din forbindelse, og prøv igen – intet i din plan er gået tabt.',
+    },
+
+    day: {
+      addMeal: 'Tilføj måltid',
+      noMeal: 'Intet måltid tilføjet',
+    },
+
+    meal: {
+      open: 'Åbn %{title}',
+      move: 'Flyt til en anden dag',
+      swap: 'Byt måltid',
+      servings: 'Skift portioner',
+      remove: 'Fjern måltid',
+    },
+
+    move: {
+      title: 'Flyt til en anden dag',
+      subtitle: 'Har du lyst til dette måltid en anden dag?',
+      to: 'Flyt måltid til %{day}',
+      already: 'Allerede på denne dag',
+    },
+
+    servings: {
+      title: 'Skift portioner',
+      subtitle: 'Får I gæster?',
+      submit: 'Skift portioner',
+      fewer: 'Færre portioner',
+      more: 'Flere portioner',
+      count: {
+        one: '%{count} portion',
+        other: '%{count} portioner',
+      },
+    },
+
+    add: {
+      // Danish weekdays are lower case, so this reads "Tilføj til mandag" –
+      // see the note on DAY_NAMES in week.ts.
+      titleAdd: 'Tilføj til %{day}',
+      titleDayFallback: 'dagen',
+      titleSwap: 'Byt måltid',
+      subtitleSwap: 'Har du lyst til noget andet?',
+      tabRecipes: 'Opskrifter',
+      tabManual: 'Noget andet',
+      mealName: 'Måltidets navn',
+      mealNamePlaceholder: 'F.eks. rester',
+      all: 'Alle',
+      favorites: 'Favoritter',
+      submitAdd: 'Tilføj til plan',
+      submitSwap: 'Byt måltid',
+      search: 'Søg',
+      searchRecipes: 'Søg i opskrifter',
+      clearSearch: 'Ryd søgning',
+      noMatch: 'Ingen opskrift til “%{query}” endnu',
+      noRecipes: 'Ingen opskrifter endnu',
+      noMatchBody: 'Du har den ikke i dit bibliotek – tilføj den nedenfor.',
+      addRecipe: 'Tilføj opskrift',
     },
   },
 

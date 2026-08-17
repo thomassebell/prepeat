@@ -27,6 +27,7 @@ import { ServingsCounter } from "@/components/recipes/servings-counter";
 import { ds } from "@/constants/ds";
 import { useKeyboardHeight } from "@/hooks/use-keyboard-height";
 import { useHousehold } from "@/lib/household-context";
+import { t } from "@/lib/i18n";
 import { fetchRecentlyPlannedRecipeIds } from "@/lib/meal-plan";
 import {
   fetchRecipes,
@@ -87,8 +88,14 @@ export function AddMealSheet({
   return (
     <BottomSheet
       visible={visible}
-      title={mode === "add" ? `Add to ${dayName ?? "day"}` : "Swap meal"}
-      subtitle={mode === "swap" ? "Feeling for something else?" : undefined}
+      title={
+        mode === "add"
+          ? t("plan.add.titleAdd", {
+              day: dayName ?? t("plan.add.titleDayFallback"),
+            })
+          : t("plan.add.titleSwap")
+      }
+      subtitle={mode === "swap" ? t("plan.add.subtitleSwap") : undefined}
       onClose={onClose}
     >
       {visible && (
@@ -141,7 +148,7 @@ function SheetTabs({
   return (
     <View className="my-layout-xsmall w-full flex-row overflow-hidden rounded-small bg-surface-neutral-white">
       <TabItem
-        label="Recipes"
+        label={t("plan.add.tabRecipes")}
         active={tab === "recipes"}
         divider
         onPress={() => onChange("recipes")}
@@ -152,7 +159,7 @@ function SheetTabs({
         // you type it yourself; nobody scanning for "can I just put pasta on
         // Tuesday" reads that as yes. Paired with "Recipes" it now reads as a
         // complete set: a meal is one of your recipes, or it is anything else.
-        label="Anything else"
+        label={t("plan.add.tabManual")}
         active={tab === "manual"}
         onPress={() => onChange("manual")}
       />
@@ -185,15 +192,15 @@ function ManualContent({
     <View className="w-full gap-layout-medium">
       <View className="w-full gap-comp-small">
         <Text className="font-paragraph text-components-label font-default leading-xxsmall text-text-subtle">
-          Name of meal
+          {t("plan.add.mealName")}
         </Text>
         <Input
           value={title}
           onChangeText={setTitle}
           // Reworded from the frame's Danish "Fx Pasta al Pomodoro"
           // (approved by Thomas 2026-07-18) – update the Figma copy too.
-          placeholder="E.g. leftovers"
-          accessibilityLabel="Name of meal"
+          placeholder={t("plan.add.mealNamePlaceholder")}
+          accessibilityLabel={t("plan.add.mealName")}
           returnKeyType="done"
           onSubmitEditing={submit}
         />
@@ -404,12 +411,12 @@ function SheetContent({
             <SearchField value={query} onChangeText={setQuery} />
             <View className="w-full flex-row gap-comp-small">
               <Chip
-                label="All"
+                label={t("plan.add.all")}
                 active={!favoritesOnly}
                 onPress={() => setFavoritesOnly(false)}
               />
               <Chip
-                label="Favorites"
+                label={t("plan.add.favorites")}
                 active={favoritesOnly}
                 onPress={() => setFavoritesOnly(true)}
               />
@@ -469,7 +476,9 @@ function SheetContent({
                   : "text-text-disabled")
               }
             >
-              {mode === "add" ? "Add to plan" : "Swap meal"}
+              {mode === "add"
+                ? t("plan.add.submitAdd")
+                : t("plan.add.submitSwap")}
             </Text>
           </Pressable>
         </>
@@ -565,10 +574,12 @@ function EmptySearch({
       />
       <View className="w-full gap-comp-small pt-layout-small">
         <Text className="font-header text-display-5 font-emphasized leading-small text-text-default">
-          {query ? `No recipe for “${query}” yet` : "No recipes yet"}
+          {query
+            ? t("plan.add.noMatch", { query })
+            : t("plan.add.noRecipes")}
         </Text>
         <Text className="font-paragraph text-small font-default leading-xxsmall text-text-default">
-          You don&apos;t have this one in your library – add it below.
+          {t("plan.add.noMatchBody")}
         </Text>
       </View>
       <Pressable
@@ -577,7 +588,7 @@ function EmptySearch({
         className="mt-layout-small w-full items-center rounded-medium border-2 border-button-outline-border-enabled py-comp-large"
       >
         <Text className="font-paragraph text-components-button-label font-default text-text-subtle">
-          Add recipe
+          {t("plan.add.addRecipe")}
         </Text>
       </Pressable>
     </View>
@@ -607,9 +618,9 @@ function SearchField({
       <TextInput
         value={value}
         onChangeText={onChangeText}
-        placeholder="Search"
+        placeholder={t("plan.add.search")}
         placeholderTextColor={ds.colors.text.disabled}
-        accessibilityLabel="Search recipes"
+        accessibilityLabel={t("plan.add.searchRecipes")}
         autoCorrect={false}
         returnKeyType="search"
         onFocus={() => setFocused(true)}
@@ -621,7 +632,7 @@ function SearchField({
           onPress={() => onChangeText("")}
           hitSlop={8}
           accessibilityRole="button"
-          accessibilityLabel="Clear search"
+          accessibilityLabel={t("plan.add.clearSearch")}
         >
           <MaterialIcons
             name="close"

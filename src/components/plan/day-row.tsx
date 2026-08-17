@@ -3,6 +3,7 @@ import { Pressable, Text, View } from "react-native";
 
 import { MealRow } from "@/components/plan/meal-row";
 import { ds } from "@/constants/ds";
+import { t } from "@/lib/i18n";
 import { type PlanEntry } from "@/lib/meal-plan";
 
 /**
@@ -74,14 +75,14 @@ export function DayRow({
           entries.length === 0 && (
             <View className="w-full flex-row items-center gap-comp-small p-layout-small">
               <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-disabled">
-                No meal added
+                {t("plan.day.noMeal")}
               </Text>
             </View>
           )
         ) : (
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel={`Add meal`}
+            accessibilityLabel={t("plan.day.addMeal")}
             onPress={onAddMeal}
             className="w-full flex-row items-center gap-comp-small p-layout-small"
           >
@@ -91,7 +92,7 @@ export function DayRow({
               color={ds.colors.surface.primary.main}
             />
             <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-default">
-              Add meal
+              {t("plan.day.addMeal")}
             </Text>
           </Pressable>
         )}

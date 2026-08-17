@@ -4,7 +4,14 @@
 // time; the plan is a family calendar, not a timezone puzzle.
 import { locale } from "@/lib/i18n";
 
-export const DAY_NAMES = [
+// ⚠️ DANISH WRITES WEEKDAYS IN LOWER CASE – "mandag", not "Mandag" – and it is
+// not a style choice there the way capitalising is in English. It reads
+// correctly both standing alone in a row and inside a sentence ("Tilføj til
+// mandag"), which is every place these are used.
+//
+// The short labels stay upper case in both languages: that is the design's
+// treatment of the day cell, not a fact about the language.
+const DAY_NAMES_EN = [
   "Monday",
   "Tuesday",
   "Wednesday",
@@ -12,17 +19,26 @@ export const DAY_NAMES = [
   "Friday",
   "Saturday",
   "Sunday",
-] as const;
+];
 
-export const DAY_LABELS = [
-  "MON",
-  "TUE",
-  "WED",
-  "THU",
-  "FRI",
-  "SAT",
-  "SUN",
-] as const;
+const DAY_NAMES_DA = [
+  "mandag",
+  "tirsdag",
+  "onsdag",
+  "torsdag",
+  "fredag",
+  "lørdag",
+  "søndag",
+];
+
+const DAY_LABELS_EN = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+const DAY_LABELS_DA = ["MAN", "TIR", "ONS", "TOR", "FRE", "LØR", "SØN"];
+
+// Picked once at module load. `locale` cannot change while the app runs – iOS
+// restarts it when the phone's language changes – so these stay plain arrays
+// and every call site keeps indexing them by weekday.
+export const DAY_NAMES = locale === "da" ? DAY_NAMES_DA : DAY_NAMES_EN;
+export const DAY_LABELS = locale === "da" ? DAY_LABELS_DA : DAY_LABELS_EN;
 
 
 const MONTHS = [

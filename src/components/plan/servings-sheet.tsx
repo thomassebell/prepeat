@@ -3,6 +3,7 @@ import { Pressable, Text, View } from "react-native";
 
 import { ServingsCounter } from "@/components/recipes/servings-counter";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
+import { t } from "@/lib/i18n";
 
 /**
  * Swipe action "servings" (Figma "Change servings" 147:27195). The linked
@@ -22,8 +23,8 @@ export function ServingsSheet({
   return (
     <BottomSheet
       visible={visible}
-      title="Change servings"
-      subtitle="Having friends over?"
+      title={t("plan.servings.title")}
+      subtitle={t("plan.servings.subtitle")}
       onClose={onClose}
     >
       {visible && (
@@ -59,7 +60,7 @@ function SheetContent({
         className="w-full items-center rounded-medium bg-button-solid-fill-enabled py-comp-large"
       >
         <Text className="font-paragraph text-components-button-label font-default text-button-solid-label-enabled">
-          Change servings
+          {t("plan.servings.submit")}
         </Text>
       </Pressable>
     </View>

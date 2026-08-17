@@ -8,6 +8,7 @@ import ReanimatedSwipeable, {
 
 import { SwipeHint, SwipeRowProvider } from "@/components/ui/swipe-hint";
 import { ds } from "@/constants/ds";
+import { t } from "@/lib/i18n";
 import { type PlanEntry } from "@/lib/meal-plan";
 
 /**
@@ -72,20 +73,24 @@ export function MealRow({
         <View className="flex-row">
           <SwipeAction
             icon="edit-calendar"
-            label="Move to another day"
+            label={t("plan.meal.move")}
             onPress={act(onMove)}
           />
-          <SwipeAction icon="repeat" label="Swap meal" onPress={act(onSwap)} />
+          <SwipeAction
+            icon="repeat"
+            label={t("plan.meal.swap")}
+            onPress={act(onSwap)}
+          />
           {!isManual && (
             <SwipeAction
               icon="people-alt"
-              label="Change servings"
+              label={t("plan.meal.servings")}
               onPress={act(onServings)}
             />
           )}
           <SwipeAction
             icon="delete"
-            label="Remove meal"
+            label={t("plan.meal.remove")}
             destructive
             onPress={act(onRemove)}
           />
@@ -97,7 +102,9 @@ export function MealRow({
           onPress={handlePress}
           accessibilityRole="button"
           accessibilityLabel={
-            isManual ? entry.recipeTitle : `Open ${entry.recipeTitle}`
+            isManual
+              ? entry.recipeTitle
+              : t("plan.meal.open", { title: entry.recipeTitle })
           }
           className="w-full flex-row items-center gap-comp-small border-b border-border-subtle bg-surface-neutral-white py-comp-small pl-comp-small pr-comp-large"
         >
@@ -131,7 +138,7 @@ export function MealRow({
                   color={ds.colors.icon.default}
                 />
                 <Text className="font-paragraph text-small font-default leading-xxsmall text-text-default">
-                  {entry.servings} {entry.servings === 1 ? "serving" : "servings"}
+                  {t("plan.servings.count", { count: entry.servings })}
                 </Text>
               </View>
             )}

@@ -2013,10 +2013,11 @@ Closed 2026-07-27:
 - [ ] **⭐ Show the app in Danish when the phone is set to Danish**
       Why: one app, two languages, iOS picks. Not a Danish edition and not a
            market decision – English stays the base language.
-      ✅ **STARTED 2026-08-17: the machinery is in and the SHOPPING TAB is
-           fully translated.** English is unchanged, verified – see below.
-      Left: the other three tabs (Plan, Recipes, Settings), the whole first-run
-           and sign-in flow, `friendlyError()` and the OTP email Resend sends.
+      ✅ **STARTED 2026-08-17: the machinery is in, and the SHOPPING and PLAN
+           tabs are fully translated.** English is unchanged, verified – see
+           below.
+      Left: Recipes and Settings, the TAB BAR itself, the whole first-run and
+           sign-in flow, `friendlyError()` and the OTP email Resend sends.
       Size: incremental – it can ship a screen at a time, and should.
 
       ✅ **WHAT LANDED 2026-08-17**
@@ -2028,7 +2029,22 @@ Closed 2026-07-27:
         rather than `[missing "da.x" translation]` on a phone. Danish is a deep
         partial of English: a missing key is allowed, a misspelled one is not.
       - The whole shopping tab, its ten components, the week switcher and the
-        undo toast. 46 keys, no English key without a Danish one.
+        undo toast.
+      - **The whole Plan tab** (same day): the week view, day rows, meal rows
+        and their four swipe actions, the move-day and servings sheets, and the
+        635-line add-meal sheet – both its tabs, the recipe picker, the search
+        field and the empty-search state.
+      - **86 keys, no English key without a Danish one.**
+      ⚠️ **DANISH WEEKDAYS ARE LOWER CASE** – "mandag", not "Mandag" – and that
+           is grammar there, not a style choice. Verified in both the places it
+           has to work: standing alone in the move-day row, and inside a
+           sentence ("Tilføj til mandag"). The SHORT labels stay upper case in
+           both languages, because MAN/TIR/ONS is the design's treatment of the
+           day cell rather than a fact about the language.
+      **The servings counter came along with Plan** – it is shared with
+           Recipes, so "4 portioner" already shows on a recipe. Harmless: it
+           was going to be translated anyway, and fallback means nothing around
+           it breaks.
       ⚠️ **THE STORED CATEGORY VALUE STAYS ENGLISH; ONLY THE LABEL IS
            TRANSLATED** (`categoryLabel()` in shopping-core.ts). `aisle` is
            shared by a whole kitchen and **two members can have their phones set
@@ -2042,13 +2058,15 @@ Closed 2026-07-27:
            than looking up a word. The English branch is byte-for-byte what it
            was – the label sits in a one-line slot in Thomas's week switcher.
       **VERIFIED, and how:** `npx tsc --noEmit` and `expo lint` clean; Metro
-           bundles all 1905 modules and the app loads with no console errors;
-           every key resolved in both languages through i18n-js, including
-           plurals ("1 vare klaret" / "4 varer klaret") and fallback; and the
-           REAL `weekRangeLabel` run in both locales over five weeks, including
-           both month boundaries and "25.-31. maj" (Danish abbreviates with a
-           full stop except "maj", which is why the short months are written out
-           rather than sliced).
+           bundles and the app loads with no console errors; every one of the 86
+           keys resolved in both languages through i18n-js, including plurals
+           ("1 vare klaret" / "4 varer klaret", "1 portion" / "4 portioner") and
+           fallback; and the REAL `weekRangeLabel`, `DAY_NAMES` and `DAY_LABELS`
+           run in both locales over five weeks, including both month boundaries
+           and "25.-31. maj" (Danish abbreviates with a full stop except "maj",
+           which is why the short months are written out rather than sliced).
+           **English output is unchanged in every one of those checks** – that
+           is the thing being protected, since it is what real users are on.
       **NOT YET SEEN RUNNING IN DANISH.** Everything above is verified off the
            device. Seeing it needs a native rebuild with the simulator set to
            Dansk – see the warning below, which is the reason.
@@ -2060,12 +2078,12 @@ Closed 2026-07-27:
            feature does nothing at all – no error, no clue. A JS reload is not
            enough.
       ⚠️ **DO NOT SHIP THIS HALF-DONE TO USERS.** Fallback means nothing is
-           broken, but a Danish phone would get a Danish shopping tab, a Danish
-           week strip on Plan, and English everywhere else. That reads as a bug,
-           not as progress. It is safe in a dev build and safe in the repo;
-           it wants at least the four tabs before it goes in a release. **No
-           release note yet, deliberately** – there is nothing announceable
-           until then.
+           broken, but a Danish phone would now get a Danish Plan and Shopping,
+           an English Recipes and Settings, and an English TAB BAR over the lot.
+           That reads as a bug, not as progress. It is safe in a dev build and
+           safe in the repo; it wants at least the four tabs and the tab bar
+           before it goes in a release. **No release note yet, deliberately** –
+           there is nothing announceable until then.
       **IMPROVISED COPY, FLAGGED, ONE PLACE:** the empty shopping list says
            *"Time to prep"*, which has no Danish equivalent that is not either
            the meal-prep loanword (*"Tid til at prepe"* – plastic tubs and

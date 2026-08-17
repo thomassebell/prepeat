@@ -35,9 +35,77 @@ export const en = {
     deleted: 'deleted',
     cleared: 'cleared',
     moved: 'moved',
+    removed: 'removed',
     itemCount: {
       one: '%{count} item',
       other: '%{count} items',
+    },
+  },
+
+  plan: {
+    title: 'Weekly plan',
+    listNote: 'Your shopping list updates as you plan.',
+
+    error: {
+      title: 'Can’t load your plan',
+      message:
+        'We couldn’t load your weekly plan. Check your connection and try again – nothing in your plan is lost.',
+    },
+
+    day: {
+      addMeal: 'Add meal',
+      noMeal: 'No meal added',
+    },
+
+    meal: {
+      open: 'Open %{title}',
+      move: 'Move to another day',
+      swap: 'Swap meal',
+      servings: 'Change servings',
+      remove: 'Remove meal',
+    },
+
+    move: {
+      title: 'Move to another day',
+      subtitle: 'Feel like having this meal on another day?',
+      to: 'Move meal to %{day}',
+      already: 'Already on this day',
+    },
+
+    servings: {
+      title: 'Change servings',
+      subtitle: 'Having friends over?',
+      submit: 'Change servings',
+      fewer: 'Fewer servings',
+      more: 'More servings',
+      count: {
+        one: '%{count} serving',
+        other: '%{count} servings',
+      },
+    },
+
+    add: {
+      /** "Add to Monday" – the day name comes from DAY_NAMES. */
+      titleAdd: 'Add to %{day}',
+      /** Stands in for the day when the sheet was opened without one. */
+      titleDayFallback: 'day',
+      titleSwap: 'Swap meal',
+      subtitleSwap: 'Feeling for something else?',
+      tabRecipes: 'Recipes',
+      tabManual: 'Anything else',
+      mealName: 'Name of meal',
+      mealNamePlaceholder: 'E.g. leftovers',
+      all: 'All',
+      favorites: 'Favorites',
+      submitAdd: 'Add to plan',
+      submitSwap: 'Swap meal',
+      search: 'Search',
+      searchRecipes: 'Search recipes',
+      clearSearch: 'Clear search',
+      noMatch: 'No recipe for “%{query}” yet',
+      noRecipes: 'No recipes yet',
+      noMatchBody: 'You don’t have this one in your library – add it below.',
+      addRecipe: 'Add recipe',
     },
   },
 

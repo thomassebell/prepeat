@@ -2,6 +2,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Pressable, Text, View } from "react-native";
 
 import { ds } from "@/constants/ds";
+import { t } from "@/lib/i18n";
 
 /**
  * The servings counter from the Figma frames: − / value / + in one
@@ -14,7 +15,7 @@ export function ServingsCounter({
   min = 1,
   max = 99,
   // "Servings" everywhere, not "people" (Plan design decision, 2026-07-16).
-  formatLabel = (count: number) => `${count} ${count === 1 ? "serving" : "servings"}`,
+  formatLabel = (count: number) => t("plan.servings.count", { count }),
 }: {
   value: number;
   onChange: (next: number) => void;
@@ -28,7 +29,7 @@ export function ServingsCounter({
     <View className="h-[56px] w-full flex-row items-center gap-comp-large overflow-hidden rounded-medium border border-forms-border-enabled bg-forms-background-default px-comp-large">
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel="Fewer servings"
+        accessibilityLabel={t("plan.servings.fewer")}
         disabled={value <= min}
         hitSlop={12}
         onPress={() => onChange(Math.max(min, value - 1))}
@@ -48,7 +49,7 @@ export function ServingsCounter({
       <View className="h-full w-px bg-forms-border-enabled" />
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel="More servings"
+        accessibilityLabel={t("plan.servings.more")}
         disabled={value >= max}
         hitSlop={12}
         onPress={() => onChange(Math.min(max, value + 1))}

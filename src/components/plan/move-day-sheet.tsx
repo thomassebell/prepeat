@@ -3,6 +3,7 @@ import { Pressable, Text, View } from "react-native";
 
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { ds } from "@/constants/ds";
+import { t } from "@/lib/i18n";
 import { DAY_LABELS, DAY_NAMES, weekDates } from "@/lib/week";
 
 /**
@@ -28,8 +29,8 @@ export function MoveDaySheet({
   return (
     <BottomSheet
       visible={visible}
-      title="Move to another day"
-      subtitle="Feel like having this meal on another day?"
+      title={t("plan.move.title")}
+      subtitle={t("plan.move.subtitle")}
       onClose={onClose}
     >
       <View className="w-full gap-comp-small">
@@ -39,7 +40,7 @@ export function MoveDaySheet({
             <Pressable
               key={date}
               accessibilityRole="button"
-              accessibilityLabel={`Move meal to ${DAY_NAMES[index]}`}
+              accessibilityLabel={t("plan.move.to", { day: DAY_NAMES[index] })}
               disabled={disabled}
               onPress={() => {
                 onMove(date);
@@ -63,7 +64,7 @@ export function MoveDaySheet({
               {/* Day name only – "Move to Monday" doubled the chip
                   (feedback 2026-07-16). */}
               <Text className="flex-1 font-paragraph text-paragraph font-default leading-xsmall text-text-default">
-                {disabled ? "Already on this day" : DAY_NAMES[index]}
+                {disabled ? t("plan.move.already") : DAY_NAMES[index]}
               </Text>
             </Pressable>
           );

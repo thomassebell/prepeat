@@ -16,6 +16,7 @@ import { WeekPicker } from "@/components/ui/week-picker";
 import { ds } from "@/constants/ds";
 import { Spacing, tabBarClearance } from "@/constants/theme";
 import { useHousehold } from "@/lib/household-context";
+import { t } from "@/lib/i18n";
 import {
   MealPlanProvider,
   useMealPlan,
@@ -144,7 +145,7 @@ function PlanContent() {
           tabs. */}
       <View className="w-full px-layout-small pb-layout-medium">
         <Text className="font-header text-display-4 font-emphasized leading-medium text-text-subtle">
-          Weekly plan
+          {t("plan.title")}
         </Text>
       </View>
       {/* The shared week switcher (Figma weekNav 163:38970). "›" past the
@@ -166,8 +167,8 @@ function PlanContent() {
           // spinner that never stops – the tab also retries itself on
           // foreground once the connection is back.
           <LoadError
-            title="Can’t load your plan"
-            message="We couldn’t load your weekly plan. Check your connection and try again – nothing in your plan is lost."
+            title={t("plan.error.title")}
+            message={t("plan.error.message")}
             onRetry={plan.retry}
           />
         ) : (
@@ -213,7 +214,7 @@ function PlanContent() {
               that is when it sets the expectation. IMPROVISED placement and
               copy, both Thomas's call, no Figma frame. */}
           <Text className="mt-comp-small font-paragraph text-paragraph font-default text-text-subtle">
-            Your shopping list updates as you plan.
+            {t("plan.listNote")}
           </Text>
         </ScrollView>
       )}
@@ -288,7 +289,7 @@ function PlanContent() {
         <UndoToast
           key={plan.undoEntry.id}
           name={plan.undoEntry.recipeTitle}
-          verb="removed"
+          verb={t("undo.removed")}
           onUndo={plan.undoRemoveEntry}
           onDismiss={plan.dismissUndoEntry}
           bottomInset={tabBarClearance(insets, Spacing.three)}
