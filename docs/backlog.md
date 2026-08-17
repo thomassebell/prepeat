@@ -2057,7 +2057,12 @@ Closed 2026-07-27:
 
 ### Later (v1.1+)
 
-- [ ] **⭐ Show the app in Danish when the phone is set to Danish**
+- [x] **⭐ DONE 2026-08-17 – the app shows in Danish when the phone is set to
+      Danish.** Built and confirmed on Thomas's phone the same day it was
+      started. **The OTP EMAIL is split out as its own item below** – it is a
+      Supabase/Resend template, not app code, and holding a finished item open
+      on work in another system hides that the app half is finished.
+      **⭐ Show the app in Danish when the phone is set to Danish**
       Why: one app, two languages, iOS picks. Not a Danish edition and not a
            market decision – English stays the base language.
       ✅ **DONE IN THE APP, 2026-08-17 – ALL FOUR TABS, THE TAB BAR AND THE
@@ -2166,6 +2171,9 @@ Closed 2026-07-27:
            fit**, so they are now **"Forb." and "Tilb."** (capitalised to match
            "I alt" beside them). Two rounds of guessing at a width nobody could
            measure.
+           ✅ **CONFIRMED ON DEVICE by Thomas 2026-08-17 – *"It works and the
+           meaning is preserved"*.** So the row is settled at three columns on
+           one line, and the abbreviations are ACCEPTED COPY, not a stopgap.
            **The lesson, which is worth more than the fix:** this exact risk was
            flagged in writing when the words went in, and it still shipped to a
            phone before anyone saw it – because the only screen that shows it
@@ -2249,6 +2257,12 @@ Closed 2026-07-27:
            phone. For the simulator the command is
            `LANG=en_US.UTF-8 npx expo run:ios --device <SIM-UDID>`, and the
            failure looks like a CocoaPods bug rather than a missing env var.
+      ✅ **THE SHIPPING WARNING BELOW IS NOW SPENT** – it applied while the app
+           was part-translated, which lasted about a day. It is kept because it
+           is the reasoning that decided when to ship, not just a status line.
+           **A release note now exists** in
+           [release-notes.md](release-notes.md) under Dev builds 2026-08-17;
+           there was deliberately none until the app was whole.
       ⚠️ **DO NOT SHIP THIS HALF-DONE TO USERS.** Fallback means nothing is
            broken, but a Danish phone would now get a fully Danish app that
            was SET UP in English – first run and sign-in are the whole
@@ -2318,6 +2332,24 @@ Closed 2026-07-27:
       **THE ONE REAL DECISION LEFT:** whether an in-app override is ever wanted –
       a Dane who prefers the app in English, or the reverse. Not needed for this,
       and adding it later costs little once the strings are extracted.
+
+- [ ] **Translate the sign-in code EMAIL – the last place a Danish user meets
+      English**
+      Why: the app is fully Danish since 2026-08-17, so the one email it sends
+           is now the only English a Danish user sees – and it arrives at the
+           most fragile moment there is, before they are in.
+      ⚠️ **NOT APP CODE, and not in this repo.** It is the Supabase auth email
+           template (delivered via Resend), so it changes on the SERVER and
+           reaches every installed build the moment it is saved – no build, no
+           release. Same class as a migration: live for everyone at once.
+      ⚠️ **THE APP CANNOT TELL SUPABASE WHICH LANGUAGE TO SEND.** There is one
+           template per project, so the honest options are a bilingual mail
+           (Danish under English, or the reverse) or leaving it English. There
+           is no per-user switch to build here without a lot more machinery.
+      Size: small, but it needs the dashboard, and a test send to check the
+           code still renders.
+      Needs: Thomas – whether one bilingual email is acceptable, since it is
+           the only route that serves both without a rebuild of the auth flow.
 
 - [ ] **Let someone join a kitchen by tapping a link, not typing a code**
       Why: today you create an account, then have to find and remember a code.

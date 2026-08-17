@@ -98,6 +98,16 @@ released first either way.
 copy and polish plus one small capability (forms now say what is missing), and
 neither outranks the MINOR already set by leftovers and ingredient sections.
 
+### Dev builds, 2026-08-17
+
+- **The app speaks Danish.** If your phone is set to Danish, Prep+Eat is now in
+  Danish – the plan, your recipes, the shopping list, settings and the whole
+  set-up flow. Set to anything else, it is in English exactly as before. There
+  is no setting to find: the phone decides. You can also switch just this app
+  in iOS Settings → Prep+Eat → Language.
+  Recipes themselves are never translated – a recipe you typed or imported
+  stays in the language you saved it in, whichever way your phone is set.
+
 ### Dev builds, 2026-08-16
 
 - **Importing a recipe from a link brings more of it across.** Some sites
