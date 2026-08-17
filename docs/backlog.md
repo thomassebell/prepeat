@@ -2333,8 +2333,11 @@ Closed 2026-07-27:
       a Dane who prefers the app in English, or the reverse. Not needed for this,
       and adding it later costs little once the strings are extracted.
 
-- [ ] **Translate the sign-in code EMAIL – the last place a Danish user meets
-      English. ✍️ WRITTEN 2026-08-17; NEEDS THOMAS TO PASTE IT IN.**
+- [x] **DONE 2026-08-17 – the sign-in code email is bilingual, on both projects,
+      confirmed on the phone.** *"updated all four, looks right on the phone
+      now."* With this the LAST place a Danish user met English is gone: the
+      app and the one email it sends are both bilingual.
+      **Translate the sign-in code EMAIL**
       Done: the bilingual text is written, rendered and checked, and lives at
            [sign-in-code.html](../supabase/templates/sign-in-code.html).
            `config.toml` points the LOCAL stack at it; the runbook section is in
@@ -2359,9 +2362,13 @@ Closed 2026-07-27:
            frame vanished on exactly the device most people read mail on.
            Now `padding:24px 16px` on the `<td>` (not the `<table>` – table
            padding is unreliable in Outlook), verified at 390px.
-           **Re-pasting is FOUR pastes** – two templates × two projects – and it
-           is cosmetic, so it can wait for a moment when all four get done
-           together. The emails work as they are. Claude
+           ✅ **ALL FOUR RE-PASTED AND CONFIRMED the same day**, so the live
+           copies and the repo agree again. Worth noting for next time: a
+           one-line style fix cost four manual pastes, because the template
+           lives in two dashboards and there is no safe CLI path to either.
+           **The cost of changing this email is four pastes, whatever the size
+           of the change** – so batch edits to it rather than making them one
+           at a time. Claude
            cannot: there is no management token on this Mac, and the one CLI
            route (`supabase config push`) pushes the WHOLE config.toml, whose
            other values are local – `site_url` 127.0.0.1 and a 2/hour email
