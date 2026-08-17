@@ -43,12 +43,7 @@ export const en = {
      * is the only way they ever reach a Danish reader.
      */
     nameRequired: 'Please enter your name',
-    /**
-     * ⚠️ SAYS "household", NOT "kitchen" – shipped English, left as it is.
-     * Same 2026-08-10 rename miss as `settings.editKitchenSheet.nameLabel`,
-     * and logged with it. Danish says køkken, having no wrong string to keep.
-     */
-    kitchenNameRequired: 'Please give your household a name',
+    kitchenNameRequired: 'Please give your kitchen a name',
     inviteCodeRequired: 'Please enter an invite code',
     inviteCodeInvalid:
       'That code is not valid – check it with the person who sent it',
@@ -122,12 +117,7 @@ export const en = {
 
     ready: {
       title: 'Your kitchen is ready',
-      /**
-       * ⚠️ SAYS "the Kitchen tab", WHICH NO LONGER EXISTS – it became Settings
-       * on 2026-08-13. Shipped English, left as it is and logged with the other
-       * two rename misses. Danish names Indstillinger, which is what is there.
-       */
-      body: 'Share this code and they’ll see the same recipes, plan and list. You can also do this later from the Kitchen tab.',
+      body: 'Share this code and they’ll see the same recipes, plan and list. You can also do this later from Settings.',
       copyCode: 'Copy the code',
       share: 'Share the code',
       continue: 'Continue',
@@ -421,16 +411,7 @@ export const en = {
 
     editKitchenSheet: {
       title: 'Edit kitchen',
-      /**
-       * ⚠️ SAYS "Household", NOT "Kitchen", AND THAT IS THE SHIPPED ENGLISH –
-       * left exactly as it is. The 2026-08-10 rename missed this one visible
-       * label, while the accessibility label beside it already says "Kitchen
-       * name". Danish says køkken, because there is no Danish string to
-       * preserve. Flagged in the backlog as an English copy bug; fixing it is
-       * a copy change, not a translation.
-       */
-      nameLabel: 'Household name',
-      nameA11y: 'Kitchen name',
+      nameLabel: 'Kitchen name',
       deleteKitchen: 'Delete kitchen',
     },
 

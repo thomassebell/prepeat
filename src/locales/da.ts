@@ -45,8 +45,6 @@ export const da: DeepPartial<typeof en> = {
     rateLimited: 'Du går lidt hurtigt frem. Vent et minut, og prøv så igen.',
 
     nameRequired: 'Indtast dit navn',
-    // Danish says køkken – the English above still says "household", which is
-    // a rename miss being kept deliberately, not one to copy.
     kitchenNameRequired: 'Giv dit køkken et navn',
     inviteCodeRequired: 'Indtast en invitationskode',
     inviteCodeInvalid:
@@ -121,8 +119,6 @@ export const da: DeepPartial<typeof en> = {
 
     ready: {
       title: 'Dit køkken er klar',
-      // Names Indstillinger – which is what the tab is actually called. The
-      // English still says "the Kitchen tab", a rename miss kept on purpose.
       body: 'Del denne kode, så ser de de samme opskrifter, den samme plan og den samme liste. Du kan også gøre det senere under Indstillinger.',
       copyCode: 'Kopiér koden',
       share: 'Del koden',
@@ -293,16 +289,17 @@ export const da: DeepPartial<typeof en> = {
       addToList: 'Tilføj ingredienser til indkøbslisten',
       edit: 'Rediger opskrift',
       delete: 'Slet opskrift',
-      // ⚠️ ABBREVIATED ON PURPOSE – Thomas's call, 2026-08-17, after seeing the
-      // full words overflow the row on his phone. "Forberedelse" and
-      // "Tilberedning" are the correct words; they do not fit a three-column
-      // flex-1 row next to their own numbers, where English gets away with
-      // Prep and Cook. He chose shortening over restacking the row.
+      // ⚠️ ABBREVIATED ON PURPOSE, AND SHORTENED TWICE – Thomas's call, both
+      // rounds on 2026-08-17 from his phone. The correct words are
+      // "Forberedelse" and "Tilberedning"; they overflowed the row, and
+      // "Forbered."/"Tilbered." still did. English gets away with Prep and
+      // Cook in the same three-column flex-1 space.
+      // Capitalised to match "I alt" beside them.
       // DO NOT "correct" these back to the full words without checking the
       // layout on a device first.
       total: 'I alt',
-      prep: 'Forbered.',
-      cook: 'Tilbered.',
+      prep: 'Forb.',
+      cook: 'Tilb.',
       minutes: '%{count} min',
       reorderIngredients: 'Sortér ingredienser',
       reorderInstructions: 'Sortér trin',
@@ -427,10 +424,7 @@ export const da: DeepPartial<typeof en> = {
 
     editKitchenSheet: {
       title: 'Rediger køkken',
-      // Danish says køkken in both, unlike the English pair above – there is
-      // no shipped Danish string to preserve, so the miss is not inherited.
       nameLabel: 'Køkkenets navn',
-      nameA11y: 'Køkkenets navn',
       deleteKitchen: 'Slet køkken',
     },
 

@@ -84,7 +84,7 @@ function SheetContent({
         <ClearableInput
           value={name}
           onChangeText={setName}
-          accessibilityLabel={t("settings.editKitchenSheet.nameA11y")}
+          accessibilityLabel={t("settings.editKitchenSheet.nameLabel")}
           autoCorrect={false}
           returnKeyType="done"
           onSubmitEditing={save}

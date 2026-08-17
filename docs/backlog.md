@@ -702,8 +702,9 @@ Committed work for the first update after launch. Panel findings default here un
 
 ### Known bugs (open)
 
-- [ ] **THREE PLACES STILL SAY "household" OR "Kitchen tab". The 2026-08-10
-      and 08-13 renames missed them.** Found 2026-08-17 while translating.
+- [x] **FIXED 2026-08-17, on Thomas's "fix the three rename misses". THREE
+      PLACES SAID "household" OR "Kitchen tab"** – the 2026-08-10 and 08-13
+      renames missed them; found the same day while translating.
       Where: [edit-household-sheet.tsx](../src/components/household/edit-household-sheet.tsx)
            – the visible field label above the input. **The accessibility
            label on the very same input already says "Kitchen name"**, which is
@@ -731,11 +732,22 @@ Committed work for the first update after launch. Panel findings default here un
            `Køkkenets navn` in both places** – there was no shipped Danish
            string to preserve, so the miss is not inherited into the new
            language.
-      Fix: edit those three English values and delete the ⚠️ comments above
-           them. **Danish needs nothing** – it already says `køkken` and
-           `Indstillinger` in all three, because there was no shipped Danish
-           string to preserve. So the Danish app is already right and only
-           English carries the misses.
+      ✅ Done: "Kitchen name", "Please give your kitchen a name", and "You can
+           also do this later from **Settings**". Danish needed nothing – it
+           already said `køkken` and `Indstillinger` in all three, because
+           there was no shipped Danish string to preserve.
+      ✅ **AND ONE KEY DELETED WITH THEM:** `editKitchenSheet.nameA11y` existed
+           ONLY to hold the right word while `nameLabel` held the wrong one.
+           With both saying "Kitchen name" a second key is a trap – two strings
+           for one field, free to drift again. The sheet now reads `nameLabel`
+           for the label AND the accessibility label. 310 keys.
+      **WHY THEY SHIPPED WRONG FOR A WEEK, worth keeping:** a rename is a
+           find-and-replace over a word that also appears in code, in file
+           names and in a legitimate DIFFERENT sense – `categories.household`
+           is the cleaning-products aisle and must NOT change. So the sweep
+           that catches 95% leaves exactly the residue that reads as a bug to a
+           new user. The invite one was the worst: it pointed at a tab that had
+           not existed since 08-13, in the first five minutes of the app.
 
 - [x] **SWITCHING KITCHEN TOOK YOU OFF SETTINGS. Found by Thomas on the phone
       2026-08-16, fixed the same hour.** *"If you shift to a kitchen without
@@ -2150,10 +2162,16 @@ Closed 2026-07-27:
            too-long translation can never again slide under the next item's
            icon. The VALUE keeps its full width – a clipped number would be a
            lie, and that is the one thing in the row that must stay readable.
+           **SHORTENED AGAIN, SAME DAY: "Forbered."/"Tilbered." STILL did not
+           fit**, so they are now **"Forb." and "Tilb."** (capitalised to match
+           "I alt" beside them). Two rounds of guessing at a width nobody could
+           measure.
            **The lesson, which is worth more than the fix:** this exact risk was
            flagged in writing when the words went in, and it still shipped to a
            phone before anyone saw it – because the only screen that shows it
-           sits behind a sign-in Claude will not do. **A flag is not a check.**
+           sits behind a sign-in Claude will not do. **A flag is not a check** –
+           and neither is a second guess. If a third round is ever needed, stop
+           shortening and restack the row.
       ⚠️ **THE STORED CATEGORY VALUE STAYS ENGLISH; ONLY THE LABEL IS
            TRANSLATED** (`categoryLabel()` in shopping-core.ts). `aisle` is
            shared by a whole kitchen and **two members can have their phones set
