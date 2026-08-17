@@ -108,10 +108,10 @@ the index below.
 Nothing moves on these until Thomas decides or draws something.
 Everything else in this file is Claude's to get on with.
 
-- **Let the household teach the app that two ingredient names mean the same thing** – design the "same as…" action, and settle whether an alias is one-directional.
-  <sub>Next – v1.1</sub>
 - **⭐ Share a recipe with someone – FIRST ITEM IN v1.1** – how much of a recipe a stranger sees before installing.
   <sub>Next – v1.1</sub>
+- **⭐ Let the household teach the app that two ingredient names mean the same thing** – design the "same as…" action, and settle whether an alias is one-directional.
+  <sub>Someday – not committed</sub>
 - **Stop the screen dimming while you cook from a recipe** – whole recipe or a cook mode, steps or everything, visible or silent.
   <sub>Someday – not committed</sub>
 - **Let people leave a kitchen from the switcher** – a frame for the leave affordance, and whether it belongs there at all.
@@ -1197,12 +1197,25 @@ Committed work for the first update after launch. Panel findings default here un
       ever wanted for the cases 0028 deliberately leaves alone – a decrease, a
       hand-edited line, a pantry unit – it still has to be designed and built.
 
-- [ ] **Stop the same ingredient appearing twice on the shopping list**
-      Why: the store page promises the list "builds itself from the plan", and
-           a shopper seeing garlic twice reads that as broken.
-      Left: only the synonym half – `onion` vs `yellow onion`, `coriander` vs
-           `cilantro`. No mechanical rule settles those, so it is now a product
-           decision, written up as "Teach-a-synonym" under Later.
+- [x] **CLOSED 2026-08-17 – every MECHANICAL cause is fixed and shipped, and the
+      one remaining cause moved to Someday with the item that owns it.**
+      ⚠️ **THE SYMPTOM IS NOT GONE.** A shopper can still see `onion` and
+           `yellow onion` as two rows. This entry is finished; the bug is not.
+           Closing it is bookkeeping, not a claim about the app.
+      Why closed: the two entries were tracking one job, which Thomas spotted –
+           *"are they the same"*. They were, and both said so already: this one
+           pointed at "Teach-a-synonym" under Later, and that one said it
+           **supersedes** the synonym note here. Two open entries for one piece
+           of work is the drift this file has spent the week correcting.
+      Where it went: **[Let the household teach the app that two ingredient
+           names mean the same thing](#)**, now under *Someday – not committed*
+           (moved out of v1.1 the same day). It carries the data model, the
+           design gap and the wireframes.
+      ⚠️ **CARRIED ACROSS, because it was the strongest argument here and was
+           missing there:** the store page promises the list *"builds itself
+           from the plan"*, so a shopper seeing garlic twice reads the app as
+           broken even when the quantities are right.
+      **Stop the same ingredient appearing twice on the shopping list**
       Size: the mechanical causes are all fixed and shipped.
 
       (Thomas, 2026-07-29, looking at the week-32 demo list: *"a lot of item
@@ -2560,50 +2573,6 @@ are not a queue this project can work through.
         the part that is easy to get wrong, and `.app` being on the HSTS
         preload list makes a mistake unfixable-looking in the browser.
 
-- [ ] **Let the household teach the app that two ingredient names mean the same thing**
-      Needs: Thomas – design the "same as…" action, and settle whether an alias is one-directional.
-      Why: a real list showed three un-merged Parmesans and onion split three
-           ways. No parser rule can settle these – `cream cheese` is not
-           `cream` – so the household has to decide.
-      Blocked by: the "same as…" action on the shopping-list edit sheet has no
-           Figma design. Backend and merge logic can be built without it.
-      Open question: is an alias one-directional (B → A) or a group of equal
-           names? One-directional matches how categories already learn.
-
-      This is the "advanced ingredient normalization (onion vs
-      yellow onion)" line already in foundation.md under Later (v1.1+) –
-      written up here 2026-07-30 after it showed on a real list as three
-      un-merged Parmesans (`Parmesan`, `Parmesan cheese`, `shaved Parmesan
-      cheese`) and onion split three ways (`onion` / `small onion` /
-      `yellow onion`). See also the synonym note under Known bugs, which this
-      supersedes.
-      WHY IT CANNOT BE A PARSER RULE: these are genuinely different strings,
-      and no mechanical rule settles them without breaking real distinctions –
-      you cannot strip "cheese" (`cream cheese` ≠ `cream`), and `small onion`
-      may be a deliberate distinction. The household has to decide.
-      SHAPE (mirrors the learned-category pattern, decision #7, which is the
-      precedent Thomas keeps pointing at):
-      - A new per-household table, e.g. `item_name_alias(household_id,
-        alias_name normalized, canonical_name normalized, primary key
-        (household_id, alias_name))`, RLS `is_household_member` like
-        `item_category_memory`. New numbered migration; never edit an applied
-        one.
-      - Fold the alias into the merge key: `norm_item_name` (or the merge
-        step) resolves an alias to its canonical name BEFORE
-        `item_merge_key`, so aliased rows merge and the canonical display name
-        wins. Touches migration 0013's reconciler – needs care and re-test.
-      - Teaching UI: on the shopping-list edit sheet, a "same as…" action that
-        points item B at an existing item A. This is the ONLY genuinely new
-        surface. NO FIGMA DESIGN EXISTS – must be designed before it is built
-        (the multi-day-sheets rule: build Thomas's design, never an
-        improvisation). Backend + merge logic can be built design-free; the
-        sheet cannot.
-      - Realtime: like categories, no realtime on the alias table itself – the
-        visible effect is the shopping_list_items rows merging, already a
-        realtime surface.
-      Decision needed before any UI work: is an alias one-directional (B → A)
-      or a group of equal names? One-directional is simpler and matches the
-      category-memory precedent; start there unless Thomas wants groups.
 - [ ] **Teach the recipe importer languages beyond English and Danish**
       Why: recipe sites are overwhelmingly local-language, so this hits a new
            user on their very first import. `2 EL Olivenöl` currently files
@@ -3926,6 +3895,64 @@ are just sentences, and were missed on the first pass through these findings.
 Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attached to it.
 
 ### Ideas – not yet committed
+
+- [ ] **⭐ Let the household teach the app that two ingredient names mean the same thing**
+      Needs: Thomas – design the "same as…" action, and settle whether an alias is one-directional.
+      Moved: out of v1.1 scope 2026-08-17, Thomas's call.
+      Sketch: ✏️ **WIREFRAMES EXIST, AND THEY ARE CLAUDE'S, NOT DESIGN** –
+           [ingredient-alias-wireframes.html](sketches/ingredient-alias-wireframes.html),
+           drawn 2026-08-17 at Thomas's request (*"can you draw what you think
+           it is. Just wireframes"*) and kept on his call (*"save that sketch,
+           it's great"*). Two ways in – a row in the edit sheet, or the app
+           asking in place when it spots two near-identical names – plus the
+           four decisions either one forces. **Nothing in it has been near
+           Figma or the DS.** It is there to be argued with, not built from.
+      Why: a real list showed three un-merged Parmesans and onion split three
+           ways. No parser rule can settle these – `cream cheese` is not
+           `cream` – so the household has to decide.
+           **And the store page promises the list "builds itself from the
+           plan"** – a shopper seeing garlic twice reads that as broken even
+           when the quantities are right. (Carried over 2026-08-17 from the
+           Known-bugs entry this closed.)
+      Blocked by: the "same as…" action on the shopping-list edit sheet has no
+           Figma design. Backend and merge logic can be built without it.
+      Open question: is an alias one-directional (B → A) or a group of equal
+           names? One-directional matches how categories already learn.
+
+      This is the "advanced ingredient normalization (onion vs
+      yellow onion)" line already in foundation.md under Later (v1.1+) –
+      written up here 2026-07-30 after it showed on a real list as three
+      un-merged Parmesans (`Parmesan`, `Parmesan cheese`, `shaved Parmesan
+      cheese`) and onion split three ways (`onion` / `small onion` /
+      `yellow onion`). See also the synonym note under Known bugs, which this
+      supersedes.
+      WHY IT CANNOT BE A PARSER RULE: these are genuinely different strings,
+      and no mechanical rule settles them without breaking real distinctions –
+      you cannot strip "cheese" (`cream cheese` ≠ `cream`), and `small onion`
+      may be a deliberate distinction. The household has to decide.
+      SHAPE (mirrors the learned-category pattern, decision #7, which is the
+      precedent Thomas keeps pointing at):
+      - A new per-household table, e.g. `item_name_alias(household_id,
+        alias_name normalized, canonical_name normalized, primary key
+        (household_id, alias_name))`, RLS `is_household_member` like
+        `item_category_memory`. New numbered migration; never edit an applied
+        one.
+      - Fold the alias into the merge key: `norm_item_name` (or the merge
+        step) resolves an alias to its canonical name BEFORE
+        `item_merge_key`, so aliased rows merge and the canonical display name
+        wins. Touches migration 0013's reconciler – needs care and re-test.
+      - Teaching UI: on the shopping-list edit sheet, a "same as…" action that
+        points item B at an existing item A. This is the ONLY genuinely new
+        surface. NO FIGMA DESIGN EXISTS – must be designed before it is built
+        (the multi-day-sheets rule: build Thomas's design, never an
+        improvisation). Backend + merge logic can be built design-free; the
+        sheet cannot.
+      - Realtime: like categories, no realtime on the alias table itself – the
+        visible effect is the shopping_list_items rows merging, already a
+        realtime surface.
+      Decision needed before any UI work: is an alias one-directional (B → A)
+      or a group of equal names? One-directional is simpler and matches the
+      category-memory precedent; start there unless Thomas wants groups.
 
 - [ ] **Show amounts in the units the household actually uses**
       Why: recipes arrive in whatever the source used – a Danish site gives dl
