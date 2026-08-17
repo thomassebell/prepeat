@@ -11,10 +11,12 @@ import { InviteSomeoneSheet } from "@/components/household/invite-someone-sheet"
 import { CreateHouseholdModal } from "@/components/household/create-household-modal";
 import { JoinHouseholdModal } from "@/components/household/join-household-modal";
 import { LeaveHouseholdSheet } from "@/components/household/leave-household-sheet";
+import { Switch } from "@/components/ui/switch";
 import { ds } from "@/constants/ds";
 import { Spacing, tabBarClearance } from "@/constants/theme";
 import { useAuth } from "@/lib/auth";
 import { useHouseholdSwitcher } from "@/lib/household-context";
+import { usePreferences } from "@/lib/preferences";
 import { t } from "@/lib/i18n";
 import {
   deleteHousehold,
@@ -62,6 +64,7 @@ export default function SettingsScreen() {
     applyHouseholdUpdate,
     removeHousehold,
   } = useHouseholdSwitcher();
+  const { keepScreenAwake, setKeepScreenAwake } = usePreferences();
 
   const [members, setMembers] = useState<HouseholdMember[]>([]);
   const [invite, setInvite] = useState<Invite | null>(null);
@@ -188,6 +191,12 @@ export default function SettingsScreen() {
         </SettingsGroup>
 
         <SettingsGroup title={t("settings.groupApp")}>
+          <SwitchRow
+            icon="light-mode"
+            label={t("settings.keepScreenOn")}
+            value={keepScreenAwake}
+            onValueChange={setKeepScreenAwake}
+          />
           <ActionRow
             icon="help"
             label={t("settings.help")}
@@ -416,6 +425,55 @@ function KitchenRow({
               <MaterialIcons name="more-vert" size={24} color={ds.colors.icon.subtle} />
             </Pressable>
           )}
+        </View>
+      )}
+    </Pressable>
+  );
+}
+
+/**
+ * A settings row whose trailing control is a switch (Figma 709:7582, the new
+ * first row of the App group). Same skeleton as ActionRow – it is the same row
+ * with a different trailing element – but its own component because the whole
+ * row is the switch's tap target and so it carries the `switch` role.
+ *
+ * THE LABEL AND ICON DO NOT CHANGE WITH STATE (Thomas, 2026-08-17). A row like
+ * this names what the switch CONTROLS; the switch shows the state. Flipping the
+ * label to "Screen dims while cooking" would make the row read as a statement
+ * of fact and the switch as "turn dimming on", which is the opposite of what it
+ * does. The recipe screen's own line is where the state is spelled out, because
+ * that one is a status, not a control.
+ */
+function SwitchRow({
+  icon,
+  label,
+  value,
+  onValueChange,
+  isLast = false,
+}: {
+  icon: keyof typeof MaterialIcons.glyphMap;
+  label: string;
+  value: boolean;
+  onValueChange: (next: boolean) => void;
+  isLast?: boolean;
+}) {
+  return (
+    <Pressable
+      accessibilityRole="switch"
+      accessibilityLabel={label}
+      accessibilityState={{ checked: value }}
+      onPress={() => onValueChange(!value)}
+    >
+      {({ pressed }) => (
+        <View className={`${rowBase} ${rowFill(pressed)} ${rowBorder(isLast)}`}>
+          <MaterialIcons name={icon} size={24} color={ds.colors.icon.subtle} />
+          <Text className="min-w-0 flex-1 font-paragraph text-paragraph font-default leading-xsmall text-text-default">
+            {label}
+          </Text>
+          {/* The switch is presentational – the row above is the one target, so
+              a tap cannot double-toggle, and `pressed` carries the row's press
+              into the DS pressed track. */}
+          <Switch value={value} pressed={pressed} />
         </View>
       )}
     </Pressable>

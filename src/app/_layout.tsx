@@ -27,6 +27,7 @@ import { LoadError } from '@/components/ui/load-error';
 import { AuthProvider, useAuth } from '@/lib/auth';
 import { fetchMyHouseholds, type Household } from '@/lib/household';
 import { HouseholdProvider } from '@/lib/household-context';
+import { PreferencesProvider } from '@/lib/preferences';
 
 // The device-local pick of which household is showing. Device-local (not a
 // DB column) matches the existing AsyncStorage patterns; a cross-device
@@ -60,11 +61,16 @@ export default function TabLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <AuthProvider>
-        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          <RootGate />
-        </ThemeProvider>
-      </AuthProvider>
+      {/* Outside AuthProvider: preferences are device-local, so they are just
+          as valid on the sign-in screens as inside the app, and they must not
+          be thrown away and re-read on a sign-out. */}
+      <PreferencesProvider>
+        <AuthProvider>
+          <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+            <RootGate />
+          </ThemeProvider>
+        </AuthProvider>
+      </PreferencesProvider>
     </GestureHandlerRootView>
   );
 }

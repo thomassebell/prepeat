@@ -31,7 +31,40 @@ interface ChipStates {
   'active-pressed': string;
 }
 
+// Forms state recipe. `hover` and `focused` exist for the web; native maps
+// `:active` to pressed and has no hover or focus ring (CLAUDE.md). Added when
+// the DS switch was ported for "Keep screen on" (2026-08-17) – input.tsx had
+// been reaching these tokens through Tailwind classes only.
+interface FormsTokens {
+  background: {
+    default: string;
+    active: string;
+    pressed: string;
+    off: string;
+    DEFAULT: string;
+  };
+  border: {
+    enabled: string;
+    hover: string;
+    pressed: string;
+    focused: string;
+    error: string;
+    subdued: string;
+  };
+  surface: {
+    enabled: string;
+    active: string;
+    hover: string;
+    pressed: string;
+    error: string;
+  };
+}
+
 interface DsTheme {
+  /** Spacing tokens, keyed as `layout-small` / `comp-large` – the same names
+   *  the Tailwind classes use. Values carry their `px` unit, so a component
+   *  needing arithmetic (the switch handle's travel) must parseFloat them. */
+  spacing: Record<string, string>;
   colors: {
     surface: {
       primary: ColorScale;
@@ -85,6 +118,7 @@ interface DsTheme {
         label: ChipStates;
       };
     };
+    forms: FormsTokens;
   };
 }
 

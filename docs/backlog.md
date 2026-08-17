@@ -112,7 +112,7 @@ Everything else in this file is Claude's to get on with.
   <sub>Next – v1.1</sub>
 - **⭐ Let the household teach the app that two ingredient names mean the same thing** – design the "same as…" action, and settle whether an alias is one-directional.
   <sub>Someday – not committed</sub>
-- **Stop the screen dimming while you cook from a recipe** – whole recipe or a cook mode, steps or everything, visible or silent.
+- **Confirm the shortened recipe status copy against the frames** – the app deviates from the frames here and it was my call.
   <sub>Someday – not committed</sub>
 
 <!-- WAITING-ON-THOMAS:END -->
@@ -4200,32 +4200,96 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
       any of this. Note also that fixing the importer does NOT repair recipes
       already imported: there is still no re-import action.
 
-- [ ] **Stop the screen dimming while you cook from a recipe**
-      Needs: Thomas – whole recipe or a cook mode, steps or everything, visible or silent.
-      Why: sticky hands and a phone that dims every 30 seconds. This is the one
-           screen propped up and read from across a worktop.
-      Decide first (none of it technical): the whole recipe or a deliberate
-           "cook mode"? The steps only, or the ingredients too? And should the
-           user be able to see it is on – an unexplained always-on screen reads
-           as a bug.
-      Size: tiny to build – `useKeepAwake()` is roughly the whole change.
-      Blocked by: no design exists for any of the three decisions.
+- [x] **BUILT 2026-08-17. Stop the screen dimming while you cook from a recipe**
+      Not yet seen running: the web preview cannot reach either screen (the auth
+      gate replaces every route when signed out, `/ds-check` included), so this
+      wants a dev build on the phone before it counts as done.
 
-      (Thomas, 2026-08-07.)
-      Cheap: `expo-keep-awake` ships with the SDK, and `useKeepAwake()` in
-      [src/app/recipes/[id].tsx](../src/app/recipes/[id].tsx) is roughly the
-      whole build - it activates on mount and releases on unmount, so leaving
-      the screen restores normal behaviour by itself.
-      **THREE THINGS TO DECIDE, none of them technical:**
-      1. **The detail screen only, or a deliberate "cook mode"?** Always-on for
-         anyone who merely opens a recipe to read it will flatten batteries for
-         a benefit they did not ask for.
-      2. **Does it belong to the whole screen or to the steps?** Arguably the
-         instructions are where you are hands-busy; the ingredients you read
-         once.
-      3. **Should it be visible?** An always-on screen that the user did not ask
-         for and cannot see the reason for reads as a bug, not a feature.
-      No design exists for any of that.
+      **THE THREE DECISIONS, all answered by Thomas 2026-08-17.** He designed
+      both surfaces rather than picking from the options offered, which settled
+      the trigger and the visibility question together:
+      1. **Where** – a `Keep screen on` switch in Settings → App, above Help
+         (Figma 709:7582), plus a status line on the recipe screen
+         (709:6812 on / 709:6855 off). Not a cook mode, not an implicit trigger.
+      2. **Scope** – the whole recipe screen, not the steps only. It survives
+         scrolling up to re-check a quantity, which is what happens with sticky
+         hands.
+      3. **Visible** – yes, in BOTH states. The off state is also where anyone
+         who wants the feature finds out it exists.
+
+      **Default is ON.** The feature exists because the phone dims every 30
+      seconds mid-recipe, and a fix nobody finds is not a fix. The cost –
+      someone merely browsing recipes also gets a lit screen – is what the
+      visible line pays for.
+
+      **Tied to FOCUS, not mount.** `useKeepAwake()` was billed here as
+      "roughly the whole change" and it would have been wrong: expo-router keeps
+      a stack screen mounted while you are away on another tab, so a mount hook
+      would have held the phone lit while you stood in the shop on Shopping.
+      `activateKeepAwakeAsync` in a `useFocusEffect` instead. The screen is also
+      mounted in TWO stacks at once (`/recipes/[id]` and `/recipe/[id]` in the
+      Plan tab) and keep-awake locks are keyed by tag, so the tag is per route +
+      recipe – one shared tag would let the copy that just blurred release the
+      lock the focused copy is holding.
+
+      **⚠️ THE SWITCH IS A PORTED DS COMPONENT, and that is a standing gap, not
+      a one-off.** `src/components/ui/switch.tsx` is a transcription of the DS
+      `switch`, because `@ds/react` is web and has no delivery path into React
+      Native. Every value came from the DS's own authored CSS on
+      storybook.sebell.dk (brand `prep-eat`) – all 13 geometry and colour values
+      verified equal to it – but the DS's stylelint semantic-token rule, its
+      cross-brand parity check and its TWO DENSITY MODES are enforced in DS CI
+      and cannot run from here. A wrong density binding is invisible at the
+      default one. Treat the file as unverified against all three.
+
+      **HOW THE SPEC WAS ACTUALLY FOUND, worth keeping:** searching the APP file
+      for "switch / toggle / form control / checkbox / radio / selection"
+      returned only Material icons and `counter`, which reads exactly like "the
+      DS does not have it" – the same false negative as the alert/banner case.
+      Searching the DS file (`65DhWI9kmp9ee9wzoIfTMM`) found `switch` AND
+      `switchField`, both component sets. And the frames only ever showed the
+      switch ON, so the off, pressed and disabled states came from Storybook,
+      which Thomas supplied. **Storybook is a better source than Figma for a
+      component's states** – it carries the authored CSS in token names.
+
+      (Item raised Thomas, 2026-08-07; built 2026-08-17.)
+
+- [ ] **Fix the "Screen dimes while cooking" typo in Figma**
+      Why: it is "dims". Figma 709:6858 (recipe – servings 3) and the same text
+           in any sibling frame. Cosmetic, but the file is the source of truth,
+           so leaving it means the frame and the app disagree on purpose.
+      Size: one text layer.
+
+      (Found 2026-08-17 while implementing the item above. The app ships "Screen
+      dims", so this is the frame catching up, not a code change.)
+
+- [ ] **Confirm the shortened recipe status copy against the frames**
+      Needs: Thomas – the app deviates from the frames here and it was my call.
+      Why: the frames read "Screen on while cooking" / "Screen dimes while
+           cooking". The app ships "Screen stays on" / "Screen dims", trimmed
+           for the same reason Thomas trimmed the Settings label from "Keep the
+           screen on in recipes" to "Keep screen on" – *"otherwise this will be
+           very long in danish"*. That reason applies harder here: an icon and
+           TWO texts share one 16px line.
+      Measured: the Danish pair plus the icon is ~291pt of the 370pt available,
+           so it fits today. The hint truncates rather than overflowing if a
+           future translation is longer.
+      Decide: accept the trim (and update the frames), or restore the full
+           phrase and let the line wrap to two rows in Danish.
+
+      (2026-08-17.)
+
+- [ ] **Should "Change in settings" be tappable?**
+      Why: the frames draw it as plain text in `text/default`, the same colour
+           as the status beside it – no link treatment – so the app ships it
+           plain, faithfully. But it names a destination two taps away and sits
+           on the screen people are looking at when they wonder why the phone
+           stayed lit.
+      Size: trivial to build; it changes no pixel. That is exactly why it needs
+           deciding rather than quietly adding – behaviour the design does not
+           draw is still design.
+
+      (2026-08-17.)
 
 - [ ] **⚠️ Put a height cap on the nine sheets that still lack one**
       Why: an uncapped sheet grows with its content until the close button goes
@@ -5241,6 +5305,58 @@ Not work. Kept so a cold thread can pick things up without re-litigating them.
             missing radius is not evidence of radius 0. `ds-theme.cjs` decides.
 
 ### Decisions log (recent)
+
+- **2026-08-17 – A SETTINGS SWITCH ROW NAMES WHAT IT CONTROLS, NOT ITS STATE.**
+  Thomas asked for help with the Settings copy in the off state and chose to
+  keep the label and the icon FIXED in both states – `Keep screen on` with
+  `light_mode`, whether it is on or off.
+  **Why, because it generalises:** a switch row's label is the name of the
+  thing the switch governs; the switch is what shows the state. Flip the label
+  to "Screen dims while cooking" and the row reads as a statement of fact while
+  the switch beside it reads as "turn dimming on" – the opposite of what it
+  does. Flipping the icon to `mode_night` at the same time makes it worse,
+  because then both halves of the row have changed meaning.
+  **The distinction that resolves it:** the recipe screen's line DOES change
+  with state, and correctly, because it is a STATUS and not a control. Controls
+  name; statuses report. Applies to any switch row this app grows.
+
+- **2026-08-17 – SHORT COPY BEATS ACCURATE COPY WHEN DANISH HAS TO FIT.** Given
+  the choice between "Screen on while cooking" (warm, but names something the
+  app cannot detect – it knows a recipe is open, not that you are at the hob)
+  and "Keep the screen on in recipes" (exact), Thomas took neither in full:
+  *"Keep screen on, otherwise this will be very long in danish"*.
+  **Why:** every string in this app is now two strings. "Hold skærmen tændt"
+  already runs half again as long as the English, and the row has a 40pt switch
+  to clear on a 402pt screen. Length is a design constraint here, not a detail
+  to sort out at translation time – which is a change from how the English was
+  written before 2026-08-17.
+
+- **2026-08-17 – SEARCH THE DS FILE, NOT THE APP FILE, BEFORE DECLARING A
+  COMPONENT MISSING.** Searching the app's own Figma file for "switch / toggle
+  / form control / checkbox / radio / selection" returned only Material icons
+  and `counter`. That reads as proof the DS has no switch. It is not: the same
+  search against the DS file (`65DhWI9kmp9ee9wzoIfTMM`) returned `switch` and
+  `switchField`, both component sets.
+  **Why it matters:** this is the alert/banner false negative repeating with a
+  different component, and the rule in CLAUDE.md – *"a single failed search is
+  not evidence of absence"* – held only because it was followed. The concrete
+  addition: an app file's library search sees what that file has INSTANCES of,
+  which is not what the library contains.
+
+- **2026-08-17 – STORYBOOK BEATS FIGMA FOR A COMPONENT'S STATES.** The Settings
+  frames contain a `switch` instance, but only ever ON – no off, pressed or
+  disabled state is drawn anywhere in the app file, and `get_design_context`'s
+  CSS fallbacks were wrong by a mile (`#476b4a` for the handle against the real
+  `#56C91D`). Thomas supplied storybook.sebell.dk, which serves the DS's own
+  authored CSS in TOKEN names: `forms/background/off` for the off track,
+  `forms/surface/enabled` for the off handle, a 2px `forms/border/pressed` ring
+  while pressed, 0.56 opacity disabled, and the geometry as formulae
+  (`components/large + 2×layout/xxsmall` for the track height) rather than the
+  numbers they happen to evaluate to.
+  **How to apply:** for a DS component's states, read Storybook with
+  `?globals=brand:prep-eat` and pull the CSS rules, not just computed styles –
+  the rules carry the token names, and the token names are what survives a
+  retune. Figma stays the source of truth for what the SCREEN does with it.
 
 - **2026-08-17 – THE NAME STAYS. `2.21` IS RETIRED.** Thomas: *"retire 2.21 as
   well."* Prep+Eat, the wordmark, the tagline, the domains and the handles are

@@ -285,6 +285,14 @@ export const en = {
       prep: 'Prep',
       cook: 'Cook',
       minutes: '%{count} min',
+      // ⚠️ SHORTENED FROM THE FRAMES, and worth a look: Figma 709:6812/709:6855
+      // read "Screen on while cooking" / "Screen dimes while cooking" (the
+      // second is also a typo for "dims"). Trimmed here for the same reason
+      // Thomas trimmed the Settings label – two texts and an icon share one
+      // 16px line, and the Danish of the full phrase crowds it.
+      keepAwakeOn: 'Screen stays on',
+      keepAwakeOff: 'Screen dims',
+      keepAwakeHint: 'Change in settings',
       reorderIngredients: 'Reorder ingredients',
       reorderInstructions: 'Reorder instructions',
       reorderHint: 'Drag to change the order.',
@@ -382,6 +390,10 @@ export const en = {
     groupKitchens: 'Kitchens',
     groupPeople: 'People',
     groupApp: 'App',
+    // Fixed in both states – the switch carries the state, not the label.
+    // Kept short at Thomas's request (2026-08-17): the Danish of anything
+    // longer crowds the switch off a narrow phone.
+    keepScreenOn: 'Keep screen on',
     joinKitchen: 'Join an existing kitchen',
     createKitchen: 'Create a new kitchen',
     inviteSomeone: 'Invite someone',

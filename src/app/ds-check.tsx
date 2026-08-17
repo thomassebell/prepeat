@@ -5,12 +5,14 @@
 // below comes from the Sebell DS Prep+Eat theme fragment.
 import { Redirect } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 
 import { Chip } from '@/components/ui/chip';
+import { Switch } from '@/components/ui/switch';
 
 export default function DsCheck() {
   const [picked, setPicked] = useState<string[]>(['Veggie']);
+  const [switched, setSwitched] = useState(true);
   const toggle = (tag: string) =>
     setPicked((p) => (p.includes(tag) ? p.filter((t) => t !== tag) : [...p, tag]));
   // __DEV__ is true in the dev client and false in Release builds, so a
@@ -59,6 +61,32 @@ export default function DsCheck() {
               onPress={() => toggle(tag)}
             />
           ))}
+        </View>
+      </View>
+
+      {/* Switch – every state the RN port carries, so it can be held next to
+          the DS's own Storybook (Components / Switch, brand prep-eat) and
+          checked. The port cannot run the DS's CI checks; this is the only
+          place in the app where its states are visible side by side. */}
+      <View className="gap-comp-small rounded-medium bg-surface-neutral-white p-comp-small">
+        <Text className="font-header text-paragraph font-emphasized text-text-default">
+          switch · off / on / pressed / disabled
+        </Text>
+        <View className="flex-row items-center gap-comp-small">
+          <Switch value={false} />
+          <Switch value={true} />
+          <Switch value={false} pressed />
+          <Switch value={true} pressed />
+          <Switch value={false} disabled />
+          <Switch value={true} disabled />
+        </View>
+        <Text className="font-paragraph text-small font-default text-text-subtle">
+          Tap to drive the real thing:
+        </Text>
+        <View className="flex-row items-center gap-comp-small">
+          <Pressable onPress={() => setSwitched((on) => !on)}>
+            {({ pressed }) => <Switch value={switched} pressed={pressed} />}
+          </Pressable>
         </View>
       </View>
 

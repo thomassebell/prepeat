@@ -1,5 +1,6 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
+import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
 import {
   useFocusEffect,
   useLocalSearchParams,
@@ -21,6 +22,7 @@ import {
 } from "react-native-safe-area-context";
 
 import { IngredientSheet } from "@/components/recipes/ingredient-sheet";
+import { KeepAwakeNote } from "@/components/recipes/keep-awake-note";
 import { StepSheet } from "@/components/recipes/step-sheet";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { LoadError } from "@/components/ui/load-error";
@@ -36,6 +38,7 @@ import { useAuth } from "@/lib/auth";
 import { useHousehold } from "@/lib/household-context";
 import { t } from "@/lib/i18n";
 import { addRecipeToPlan } from "@/lib/meal-plan";
+import { usePreferences } from "@/lib/preferences";
 import {
   addIngredient,
   addIngredientsToShoppingList,
@@ -75,6 +78,12 @@ export default function RecipeDetailScreen() {
   // the Recipes tab and /recipe/[id] inside the Plan tab.
   const inPlanTab = usePathname().startsWith("/recipe/");
   const insets = useSafeAreaInsets();
+  const { keepScreenAwake } = usePreferences();
+  // Because of those two stacks this component can be mounted TWICE at once,
+  // and expo-keep-awake locks are keyed by tag: one shared tag would let the
+  // copy that just blurred release the lock the focused copy is holding. Tag
+  // per route + recipe so each instance only ever releases its own.
+  const keepAwakeTag = `prepeat.recipe.${inPlanTab ? "plan" : "recipes"}.${id}`;
 
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [failed, setFailed] = useState(false);
@@ -132,6 +141,27 @@ export default function RecipeDetailScreen() {
     useCallback(() => {
       reload();
     }, [reload]),
+  );
+
+  // Hold the screen awake for as long as this recipe is the screen you are
+  // LOOKING AT. Tied to focus rather than to mount deliberately: expo-router
+  // keeps a stack screen mounted while you are away on another tab, so
+  // `useKeepAwake()` (a mount hook, and otherwise the whole change) would have
+  // kept the phone lit while you stood in the shop on the Shopping tab.
+  // Pushing the edit screen on top also blurs this one, which is right – the
+  // keyboard is up and you are not cooking.
+  useFocusEffect(
+    useCallback(() => {
+      if (!keepScreenAwake) return;
+      activateKeepAwakeAsync(keepAwakeTag).catch((error) =>
+        console.warn("[recipes] could not keep the screen awake", error),
+      );
+      return () => {
+        // Nothing to report if this fails: the OS reclaims the lock when the
+        // app backgrounds, so the worst case is one recipe's worth of screen.
+        deactivateKeepAwake(keepAwakeTag).catch(() => {});
+      };
+    }, [keepScreenAwake, keepAwakeTag]),
   );
 
   if (recipe == null) {
@@ -366,6 +396,8 @@ export default function RecipeDetailScreen() {
           </View>
 
           <ServingsCounter value={chosenServings} onChange={setServings} />
+
+          <KeepAwakeNote />
 
           <View className="w-full gap-layout-small">
             {/* IMPROVISED, and marked as such: Thomas designed sections for the

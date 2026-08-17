@@ -100,6 +100,14 @@ neither outranks the MINOR already set by leftovers and ingredient sections.
 
 ### Dev builds, 2026-08-17
 
+- **The screen no longer dims while you cook.** Open a recipe and the phone
+  stays lit until you leave it, so you can prop it up on the worktop and stop
+  poking it with wet hands. A line under the servings counter tells you whether
+  it is on, and there is a **Keep screen on** switch in Settings → App if you
+  would rather it behaved as usual. It is on to begin with.
+  Only recipes hold the screen: switch to your plan or the shopping list and
+  the phone dims normally again.
+
 - **The app speaks Danish.** If your phone is set to Danish, Prep+Eat is now in
   Danish – the plan, your recipes, the shopping list, settings and the whole
   set-up flow. Set to anything else, it is in English exactly as before. There
