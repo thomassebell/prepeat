@@ -18,7 +18,13 @@ import { SharedRecipeScreen } from "@/components/shared-recipe";
 export default function SharedRecipeRoute() {
   const { token } = useLocalSearchParams<{ token: string }>();
   const router = useRouter();
+  // Back, not replace: with `initialRouteName` on the Recipes layout there is
+  // always a list underneath, even when the app was opened straight onto this
+  // screen by a link. The fallback covers the case where there genuinely is not.
   return (
-    <SharedRecipeScreen token={token} onClose={() => router.replace("/recipes")} />
+    <SharedRecipeScreen
+      token={token}
+      onClose={() => (router.canGoBack() ? router.back() : router.replace("/recipes"))}
+    />
   );
 }
