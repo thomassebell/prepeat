@@ -22,6 +22,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import AppTabs from '@/components/app-tabs';
+import { DeepLinkHandler } from '@/components/deep-link-handler';
 import { OnboardingFlow } from '@/components/onboarding/onboarding-flow';
 import { LoadError } from '@/components/ui/load-error';
 import { AuthProvider, useAuth } from '@/lib/auth';
@@ -236,6 +237,10 @@ function RootGate() {
           re-ran. That reset now lives on those providers, keyed individually,
           so the data starts clean without the navigator losing its place. */}
       <AppTabs />
+      {/* Mounted BESIDE the tabs, not above them: it needs a navigator to
+          navigate into, and the gate above renders nothing until the household
+          is loaded. See the file for what this is working around. */}
+      <DeepLinkHandler />
     </HouseholdProvider>
   );
 }
