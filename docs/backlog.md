@@ -4388,17 +4388,20 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
            7px on screen, and some apps crop to a square, which takes ~285px off
            each side.
 
-- [ ] **A dev-app share link cannot be opened on the live share host**
-      Why: the dev build writes shares to the DEV database; share.prepeat.app
-           reads PRODUCTION. So a link made on Thomas's phone 404s on the web,
-           and a link made against production says "This link doesn't lead
-           anywhere" in the app. Both are correct, and both look like bugs.
-      Fix: a Vercel PREVIEW deployment of prepeat-share pointed at dev (the env
-           vars already override the in-code production defaults), so the dev app
-           has a host that matches it.
-      Size: small – one preview deployment and two environment variables.
-
-      (Found 2026-08-18, after two confusing test rounds.)
+- [x] **DONE 2026-08-18. Dev-app share links work end to end.**
+      `share-dev.prepeat.app` is the SAME deployment reading the dev project,
+      chosen by hostname (`credentialsFor(host)` in prepeat-share), and dev
+      builds produce those links. One deployment rather than a second project:
+      two copies of the same code drift, and the only difference is two
+      constants, neither secret.
+      **Why it mattered:** the dev app wrote to dev while the host read
+      production, so a phone-made link 404'd on the web and a production link
+      said "This link doesn't lead anywhere" in the app. Both were correct and
+      both looked like bugs; it cost two rounds of confusing screenshots before
+      anyone worked out the flow was never actually being tested end to end.
+      **Gotcha for the next subdomain:** the certificate did NOT self-provision
+      the way share.prepeat.app's did. HTTP worked while HTTPS hung for six
+      minutes; `npx vercel certs issue <domain>` fixed it in seconds.
 
 - [ ] **⚠️ UNGATE "Share recipe" when the share page ships**
       Needs: nothing – it is one `__DEV__` check to delete, in the same change

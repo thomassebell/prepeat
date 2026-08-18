@@ -8,8 +8,14 @@ Working today, confirmed on the device: migration 0034 is live on dev and
 production, the app creates shares, `share.prepeat.app` serves the page, and a
 shared link opens the APP on the recipe – cold start and warm, in Danish.
 
-**THE LOOP IS COMPLETE** – share, send, open the page or the app, save it into
-your own kitchen, and back out to Recipes. All of it confirmed on the device.
+**THE LOOP IS COMPLETE AND CONFIRMED END TO END ON A PHONE** (Thomas,
+2026-08-18: *"the whole chain works now"*) – share a recipe, a card appears in
+the chat, tapping it opens the app on that recipe, saving copies it into your
+kitchen, and back lands on Recipes. The web page serves anyone without the app.
+
+⚠️ **Until 2026-08-18 that chain had never actually been tested end to end**,
+because the dev app's links pointed at a host reading production. Every earlier
+"it works" and "it doesn't" was partly an artefact of that.
 
 **What remains, and both are decisions rather than work:**
 - **Ungate the Share action** (`IS_DEV_APP` in `recipes/[id].tsx`). One check to

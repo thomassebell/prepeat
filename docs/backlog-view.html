@@ -79,7 +79,7 @@
 <main>
   <header>
     <h1>Prep+Eat – open backlog</h1>
-    <p class="meta">83 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
+    <p class="meta">82 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
   </header>
   <div class="filter"><input id="q" type="search" placeholder="Filter tasks…" autocomplete="off"></div>
   <section class="waiting">
@@ -554,7 +554,7 @@
     </article>
     </section>
     <section>
-      <h2>Someday – not committed <span class="count" data-total="29">29</span></h2>
+      <h2>Someday – not committed <span class="count" data-total="28">28</span></h2>
       <h4>Ideas – not yet committed</h4>
     <article class="item">
       <h3>
@@ -645,15 +645,6 @@
       </h3>
       <dl><dt>Needs</dt><dd>Thomas – a frame for the 1200&amp;times;630 chat card.</dd><dt>Why</dt><dd>the card shipped 2026-08-18 is Claude's mocha design, chosen as an interim "till my design lands". It is the thing every recipient decides from, so it is worth drawing properly.</dd><dt>Where</dt><dd><code>api/og/[token].js</code> in prepeat-share – the layout only. Fetching, fonts, type-size stepping, caching and the safe area stay.</dd></dl>
       <details><summary>Full note</summary><p>Known constraints, all measured: titles run 6&amp;ndash;72 characters (median 19), the card renders about 236px wide in a chat so 26px of caption is 7px on screen, and some apps crop to a square, which takes ~285px off each side.</p></details>
-    </article>
-    <article class="item">
-      <h3>
-        
-        
-        <span><strong>A dev-app share link cannot be opened on the live share host</strong></span>
-      </h3>
-      <dl><dt>Why</dt><dd>the dev build writes shares to the DEV database; share.prepeat.app reads PRODUCTION. So a link made on Thomas's phone 404s on the web, and a link made against production says "This link doesn't lead anywhere" in the app. Both are correct, and both look like bugs.</dd><dt>Fix</dt><dd>a Vercel PREVIEW deployment of prepeat-share pointed at dev (the env vars already override the in-code production defaults), so the dev app has a host that matches it.</dd><dt>Size</dt><dd>small – one preview deployment and two environment variables.</dd></dl>
-      <details><summary>Full note</summary><p>(Found 2026-08-18, after two confusing test rounds.)</p></details>
     </article>
     <article class="item">
       <h3>
