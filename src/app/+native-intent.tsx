@@ -1,6 +1,10 @@
 /**
  * Rewrites incoming deep links to routes that exist.
  *
+ * Host-agnostic on purpose: the same path arrives from share.prepeat.app and
+ * from share-dev.prepeat.app (the dev app's host), and only the PATH matters
+ * here.
+ *
  * `share.prepeat.app/r/<token>` is the PUBLIC URL – short, and already live on
  * links that have been sent. But `/r/...` cannot be a route at the top level:
  * the root layout renders the tab navigator directly, so a root route can only

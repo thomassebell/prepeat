@@ -15,7 +15,8 @@
         "ITSAppUsesNonExemptEncryption": false
       },
       "associatedDomains": [
-        "applinks:share.prepeat.app"
+        "applinks:share.prepeat.app",
+        "applinks:share-dev.prepeat.app"
       ]
     },
     "android": {

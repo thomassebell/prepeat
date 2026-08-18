@@ -1,3 +1,4 @@
+import { IS_DEV_APP } from '@/constants/build-variant';
 import { supabase } from './supabase';
 
 /**
@@ -24,7 +25,17 @@ import { supabase } from './supabase';
  * The `/r/` path is short because it is read aloud and typed by hand more often
  * than a URL usually is.
  */
-const SHARE_BASE = 'https://share.prepeat.app/r';
+/**
+ * ⚠️ THE DEV APP GETS A DIFFERENT HOST, and it is not cosmetic. The dev build
+ * writes shares to the DEV database, so a `share.prepeat.app` link it created
+ * would 404 on the web - that host reads production. `share-dev.prepeat.app` is
+ * the same deployment reading dev, so a link made on the phone actually works
+ * end to end (found 2026-08-18, after two rounds of confusing test results
+ * where both the app and the web were answering correctly).
+ */
+const SHARE_BASE = IS_DEV_APP
+  ? 'https://share-dev.prepeat.app/r'
+  : 'https://share.prepeat.app/r';
 
 export function shareUrlForToken(token: string): string {
   return `${SHARE_BASE}/${token}`;
