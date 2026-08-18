@@ -1,6 +1,6 @@
 # Prep+Eat – Privacy Policy
 
-**Last updated: 27 July 2026**
+**Last updated: 18 August 2026**
 
 Prep+Eat is a meal-planning app for families: you collect recipes, plan the
 week's meals, and share a shopping list that updates on everyone's phone at
@@ -74,6 +74,42 @@ off.
 
 Only invite the people you want to share a kitchen with.
 
+## Sharing a recipe outside your household
+
+You can create a **link to a recipe** and send it to anyone. This is the only
+way anything from your kitchen becomes readable outside it, and it only ever
+happens because you tapped Share.
+
+**What the link shows.** The recipe's title, its prep and cook times, and your
+first name – "Thomas shared a recipe with you". It shows the photo and the
+description **only if the recipe is your own**. If you added the recipe from a
+website, both are left out, because they belong to that site.
+
+**What it never shows.** The public page never shows the ingredients or the
+method. Not for any recipe, ever.
+
+**Who can see it.** Anyone who has the link – no account, no app needed. The
+link contains 32 random characters, so it cannot be guessed, and we do not list
+these pages anywhere. But it is an ordinary web address: anyone you send it to
+can pass it on, and a link posted somewhere public could be found by a search
+engine.
+
+**Someone with the app can take the whole recipe.** If a person opens your link
+in Prep+Eat, they can save a copy into their own kitchen – and that copy
+includes the ingredients and the method, not only what the public page shows.
+So share with people you are happy to give the recipe to.
+
+**A link is a snapshot.** It records the recipe as it was when you tapped
+Share. Editing the recipe afterwards does not change a link you have already
+sent.
+
+**Turning a link off.** Deleting the recipe takes its page down straight away.
+If you want a link turned off without deleting the recipe, write to us at the
+address at the end of this policy and we will do it.
+
+**Why we are allowed to publish it.** Because you asked us to: the page exists
+only because you chose to create it, and it stops existing when you say so.
+
 ## Who else handles your data
 
 We use three companies to run the service. All of them act on our instructions.
@@ -115,6 +151,9 @@ processed by Resend, which is also covered by those clauses.
 - If you **leave a household**, you keep a copy of its recipes in a new
   personal kitchen, and the household keeps its own copy. The two are separate
   from that point on.
+- A **share link** and its snapshot are kept until you delete the recipe or ask
+  us to turn the link off. Copies other people saved into their own kitchens
+  are theirs and stay with them.
 
 ## Your rights
 
