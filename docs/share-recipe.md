@@ -1,14 +1,22 @@
 # Share a recipe – spec
 
-Status: **BUILT AND PROVEN, WAITING ON TWO CLICKS.** All three decisions were
-locked by Thomas on 2026-08-17 – teaser, never publish imported photo *or* text,
-"Save to my recipes" on an explicit tap – and steps 1-5 of the build order are
-done: migration 0034 is live on dev and production, the app can create a share,
-and the host renders correctly against PRODUCTION data.
-**What remains:** Thomas creates the Vercel project and points
-`share.prepeat.app` at it (the token available to Claude cannot create
-projects), then the app's Share action is ungated. Step 7 ("Save to my recipes")
-and the PNG preview card are still to build.
+Status: **STEPS 1–6 DONE. THE LOOP WORKS END TO END EXCEPT SAVING.** All three
+decisions were locked by Thomas on 2026-08-17 – teaser, never publish imported
+photo *or* text, "Save to my recipes" on an explicit tap.
+
+Working today, confirmed on the device: migration 0034 is live on dev and
+production, the app creates shares, `share.prepeat.app` serves the page, and a
+shared link opens the APP on the recipe – cold start and warm, in Danish.
+
+**What remains:**
+- **Step 7, "Save to my recipes"** – needs its own database function, because
+  the share snapshot deliberately carries no ingredients or steps. Until it
+  exists the in-app screen is honest about it rather than offering a dead
+  button.
+- **Ungate the Share action** (`IS_DEV_APP` in `recipes/[id].tsx`) once saving
+  works, which is what puts sharing in front of TestFlight.
+- **The PNG preview card**, parked by Thomas – and the biggest lever on whether
+  any of this converts, since 93 of 97 recipes cannot show a photo.
 
 **A design now exists** – [sketches/share-page-design.html](sketches/share-page-design.html),
 Claude's, reviewed by Thomas on 2026-08-17 across two rounds. It is not a Figma
