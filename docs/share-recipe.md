@@ -375,7 +375,11 @@ needs updating **before this ships**, not after.
    `app.prepeat.dev`. `associatedDomains` in `app.json`. The screen is
    `src/app/recipes/shared/[token].tsx`, and `src/app/+native-intent.tsx`
    rewrites the public `/r/<token>` path onto it.
-   ⚠️ **That screen is PROVISIONAL and says so on screen** – see step 7.
+   ✅ **That screen stays sparse, deliberately** (Thomas, 2026-08-18). It is
+   reached by someone who has already converted, so it only has to confirm and
+   save – see the decisions log. An imported recipe showing only title and times
+   there is fine: it is the same snapshot the web page reads, and Save hands over
+   the full description and photo a tap later anyway.
 
 7. ✅ **DONE 2026-08-18.** `save_shared_recipe()` (migration 0035) copies the
    real recipe – ingredients, steps and section headers – into the recipient's

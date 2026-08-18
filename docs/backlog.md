@@ -5480,6 +5480,27 @@ Not work. Kept so a cold thread can pick things up without re-litigating them.
 
 ### Decisions log (recent)
 
+- **2026-08-18 – THE IN-APP SHARED-RECIPE SCREEN STAYS SPARSE, AND THAT IS NOT A
+  GAP.** Claude's flow review called it a problem that the same shared recipe
+  looks like two different things – a designed web page for someone without the
+  app, four elements on white for someone with it – and proposed enriching the
+  in-app screen. Thomas: *"it is overkill to show all that data as the user have
+  accepted to receive the recipe."*
+  **Why that is right, and worth keeping:** the two surfaces have different
+  JOBS. The web page has to persuade a stranger, so it needs the photo, the
+  times and the ask. The in-app screen is reached by someone who already has the
+  app and has already tapped the link – they have converted, and the screen only
+  has to confirm what they are getting and let them save it. Enriching it is
+  selling to someone who has already bought.
+  **The corollary, which also settles a copyright question:** it does not matter
+  that an imported recipe shows only title and times there. It is the same
+  snapshot the web page reads, and one tap later `save_shared_recipe` hands over
+  the full description and photo anyway as a private copy. So the restriction on
+  that screen protects nothing and costs nothing – leave it.
+  **The general lesson:** judging two surfaces by the same yardstick invents
+  problems. Ask what each one is FOR first.
+
+
 - **2026-08-18 – A ROUTE THE TAB BAR WILL NOT SHOW IS A ROUTE THAT DOES NOT
   EXIST.** Universal links took SIX device builds, and five of them were spent
   on the wrong layer. What actually happened: `/r/[token]` was added as a
