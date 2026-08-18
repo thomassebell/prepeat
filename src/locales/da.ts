@@ -27,6 +27,7 @@ export const da: DeepPartial<typeof en> = {
     cancel: 'Annuller',
     save: 'Gem',
     saving: 'Gemmer…',
+    tryAgain: 'Prøv igen',
   },
 
   tabs: {
@@ -556,12 +557,14 @@ export const da: DeepPartial<typeof en> = {
   },
 
   share: {
-    sharedWithYou: '%{name} har delt denne opskrift med dig',
+    /** Se kommentaren i en.ts: navnet står fed lige før denne streng. */
+    sharedWithYou: 'har delt en opskrift med dig',
     save: 'Gem i mine opskrifter',
     saving: 'Gemmer…',
+    decline: 'Nej tak',
     saveFailedTitle: 'Kunne ikke gemme opskriften',
     revokedTitle: '%{name} deler ikke længere denne',
-    revokedBody: 'Linket er slået fra. Bed om et nyt.',
+    revokedBody: 'Linket er slået fra. Bed om et nyt – det tager kun et øjeblik.',
     notFoundTitle: 'Linket fører ingen steder hen',
     notFoundBody: 'Det kan være skrevet forkert eller blevet klippet over. Bed afsenderen om at dele det igen.',
     errorTitle: 'Kan ikke åbne opskriften',

@@ -64,8 +64,22 @@ Two more rules this file exists to keep straight:
 More goes in before this ships, so this section grows. On the dev build only:
 not on TestFlight, not in review, and it needs a build to reach anyone.
 
-**Empty as of 2026-08-17.** Everything that was accumulating here went out in
-build 20, below. The next change lands here.
+### Dev build 2026-08-18 – the shared-recipe screens
+
+⚠️ **NOT USER-VISIBLE YET.** The Share action is still gated to the dev app, so
+nobody outside this Mac can create a link, and these screens are only reachable
+from a link one of us made. Nothing here needs App Store notes until sharing is
+ungated – at which point it is a **MINOR** bump, because it is a new capability.
+
+- Opening a shared recipe link now shows the designed screen: who sent it, the
+  title and the times, then Save to my recipes or No thanks.
+- A link that has been turned off, one that leads nowhere, and a failure to
+  reach Prep+Eat each say what happened, instead of one generic error.
+- **Fixed: a mistyped or shortened link showed a developer error screen.** The
+  app only recognised a perfectly formed link, so the very case the "link
+  doesn't lead anywhere" screen was written for could never reach it. Found on
+  the device – it typechecks, lints and works for every link the app itself
+  creates.
 
 > ⚠️ **BUILD WHEN YOU ARE READY TO SUBMIT, NOT BEFORE.** Three builds in this
 > file died parked: 18 (2026-08-16, superseded by 19 before it shipped), 19

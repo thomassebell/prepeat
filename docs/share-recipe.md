@@ -26,10 +26,106 @@ because the dev app's links pointed at a host reading production. Every earlier
 ⚠️ **Ungating first means testers judge the placeholder version**, which is also
 the version the growth idea would be judged on.
 
-**A design now exists** – [sketches/share-page-design.html](sketches/share-page-design.html),
-Claude's, reviewed by Thomas on 2026-08-17 across two rounds. It is not a Figma
-frame and does not pretend to be one; what it settles is recorded in the
-decisions below, and what it invented is listed on the page itself.
+**THOMAS'S FIGMA DESIGN LANDED 2026-08-18**, and it supersedes Claude's
+interim sketch for everything it covers. Three sections:
+
+| | node | covers |
+|---|---|---|
+| Messages | `725:7752` | the chat bubble, own-recipe and imported variants |
+| Share site | `726:8992` | own recipe, imported recipe, revoked |
+| In-app receive | `725:8341` | accepting, revoked, unknown token |
+
+*(The older interim design, [sketches/share-page-design.html](sketches/share-page-design.html),
+was Claude's – reviewed by Thomas across two rounds on 2026-08-17. It stands only
+where the Figma set is silent.)*
+
+**Copy corrected in the Figma file itself on 2026-08-18**, at Thomas's
+instruction, after a review round before any building: `methode`→`method` (×2),
+`Aks`→`Ask` plus a stray space before a manual line break (×2), "Go to Apple
+Store…"→"Download Prep+Eat free from the App Store." (the App Store is the
+software store; the Apple Store is the retail shop), and `Get Prep+Eat App`→`Get
+Prep+Eat` (×3). All six were made through DS button `label` properties or plain
+text nodes, so no instance was detached.
+
+**"Cancel" became "No thanks"** (Thomas, 2026-08-18: the secondary action should
+let you *opt out of the share*, and "Cancel" reads as abandoning a task rather
+than declining a gift). **Declining writes nothing** – the recipe was never
+saved, so there is nothing to undo, and it goes exactly where the back arrow
+goes. A stronger meaning (mark the link declined so re-tapping does not reopen
+it) would be a database change and a new state to design; not chosen.
+
+**Two gaps recorded rather than filled** while implementing the in-app screens:
+
+- **The ⋯ button** (`725:8349`) is drawn on the receive screen with no menu
+  behind it, and there is nothing it could do on a recipe you do not own yet.
+  **Left out of the build**, with a comment in the code saying so.
+- **The frame binds `color/text/light` for the "shared a recipe with you" line,
+  and the DS bridge does not export a `text/light`.** `text/subtle` is the same
+  value today (`#5F503A`) and is what the code uses – but that is a
+  substitution, not a match, and it drifts silently if the two ever diverge.
+  Either the frame should bind `text/subtle`, or `text/light` needs adding to
+  the DS export list.
+
+**SECOND REVIEW PASS, 2026-08-18 – the design set is now complete on phone AND
+desktop.** Thomas added the missing states after the first pass: a 404 ("link
+broken") and a 503 screen to the phone site, the whole desktop set, and a
+connection-error state to the in-app screens. All five web states and all four
+in-app states now exist.
+
+Ten more copy fixes were applied in Figma, all of them the SAME three errors
+recurring in the newly added frames (they were drawn from the pre-correction
+version): "Go to Apple Store…" ×4, "Get Prep+Eat App" ×3 plus one more, and the
+stray space before a manual line break on both 503 screens.
+
+Three rulings from Thomas on the new in-app connection-error frame:
+- **"Can't load your recipes" → "Can't open this recipe."** The old title was
+  pasted from the Recipes list; this screen never loads your recipes.
+- **A "Try again" button was added**, and it is the right call: the other two
+  dead ends are permanent, but this one is a transient network failure, and
+  without a button the only way out was backing out and re-tapping the link.
+- **The three identically named frames were renamed** – "recipe – revoked
+  recipe", "recipe – link broken", "recipe – connection error". All three had
+  been called "recipe – recipe revokes".
+
+⚠️ **ONE INCONSISTENCY LEFT IN THE FILE, NORMALISED IN CODE AND FLAGGED.** The
+connection-error frame insets its text a further 16px and puts 16px under the
+icon; the revoked and link-broken frames use the card's own padding and 24px.
+Adding the button made it visible, since the button sits at the card's padding
+and the text does not line up with it. The code builds all three the way the two
+agreeing frames are drawn. **If the odd one out is deliberate, the code is
+wrong** – see the note on `Notice` in `shared-recipe.tsx`.
+
+**Also found: `LoadError` hardcodes the English "Try again"** on three other
+screens (household lookup, shopping, plan). A `common.tryAgain` key now exists
+and the share screen uses it; the shared component was left alone because it is
+outside this work.
+
+⚠️ **TWO DEVICE-ONLY BUGS, BOTH FOUND BY THOMAS ON THE PHONE 2026-08-18.**
+Neither could have been caught by a typecheck, a lint or a review:
+
+1. **A mistyped or shortened link hit expo-router's "Unmatched Route" screen.**
+   `+native-intent`'s `SHARE_PATH` required exactly `[0-9a-f]{32}` – the shape
+   `create_recipe_share` mints. It read as sensible validation and it made the
+   **"This link doesn't lead anywhere" state unreachable in the case its own
+   copy describes**: a cut-short token is by definition not 32 hex characters,
+   so it never matched and fell through untouched. Only a *well-formed but
+   unknown* token could reach the screen – the rarest version of the problem.
+   Fixed by loosening the pattern: deciding whether a token is REAL is
+   `share_by_token()`'s job, and this only has to decide whether a URL is ours.
+2. **The back arrow was brown.** Built as `icon/default` (#4F4230) because the
+   colour was taken from a `get_variable_defs` dump. The frames bind
+   `tab-bar/item/icon/active`, which is an **alias** – the dump reported the
+   alias's own value while the arrow resolves through it to `icon/brand`
+   (#47A518). **The rendered screenshot showed a green arrow the whole time.**
+   Read the resolved fill, not the token dump. (A worse second error followed:
+   the same bad number was used to "prove" the rest of the app was wrong, which
+   it was not – every back arrow in Figma and the app is green.)
+
+⚠️ **The Figma CSS fallbacks were stale again, exactly as CLAUDE.md warns** –
+`get_design_context` returned Noto Serif/Noto Sans and `#476b4a` buttons. The
+real values from `get_variable_defs` are Montserrat/IBM Plex Sans and `#83E651`
+solid fill with a `#4F4230` label. **`ds-theme.cjs` agreed with Figma on every
+token checked**, so the bridge is in sync; only that one output lies.
 
 **What still waits on someone:** nothing blocking. The copyright question is
 deliberately off the critical path and the build order below can start.
@@ -270,6 +366,54 @@ equivalent), and leave `prepeat-web` untouched on GitHub Pages. Universal links
 work from a subdomain as long as the AASA file is served from the host the link
 actually uses. This isolates the risk completely and keeps two very different
 kinds of site from sharing a deploy.
+
+## ⚠️ The share site must be built from DS components
+
+**Thomas, 2026-08-18: "When building web stuff you should always use the DS
+components – they are there for that reason."** This overrides the "no build
+step" instinct recorded under *Hosting* above, and it changes the shape of
+`prepeat-share`.
+
+`prepeat-share` today is hand-written HTML template strings in
+`lib/render.mjs`, with no dependencies beyond `@vercel/og`. Every button on it
+is a hand-rolled `<a class="btn">`. That has to become `@ds/react`, which ships
+exactly what these pages need: `Button`, `Icon`, `Stack`, `Text`.
+
+**What that costs, so nobody is surprised:** React and `react-dom` as
+dependencies, `renderToStaticMarkup` in the Vercel function, `@ds/react`'s
+`styles.css` inlined into the page, and therefore a build step in a project
+that deliberately had none. The server rendering itself is unaffected – it is
+already server-rendered, which is the whole reason the project exists.
+
+**One blocker, needing a decision:**
+
+**`@ds/react` is not published.** The DS root `package.json` is `"private": true`
+with npm workspaces, neither package has `publishConfig`, CI has no publish step,
+and `@ds/react` depends on `"@ds/tokens": "*"`. So `prepeat-share` cannot install
+it as things stand. It needs a registry (npm private, or GitHub Packages) or a
+git dependency. **This is DS-repo work, not share-site work.**
+
+⚠️ **AND A SECURITY POINT THAT DECIDES PART OF THE ROUTE** (found by the DS
+session, 2026-08-18): the dependency is a plain `"*"` wildcard, not
+`workspace:*`. Practically the same locally – an outside `npm install` cannot
+resolve it either way – but `"*"` would silently reach for the PUBLIC registry,
+and **the `@ds` scope on npm is currently unclaimed**. Publishing as-is is a
+dependency-confusion swap waiting to happen. Whatever route is picked, that
+dependency must be pinned to a real published version.
+
+Figma defines six button states (`enabled, hover, pressed, focused, loading,
+disabled`). Whether `@ds/react` implements all six is unverified and worth
+checking before the page is built – hover in particular, since desktop needs it
+and no hover state is drawn on the share frames.
+
+⚠️ **THE DESIGN SYSTEM IS AT `~/Documents/Sebell Design System/design-system`.**
+There is a STALE CLONE at `~/Documents/Claude/Projects/Sebell Design System/` –
+a different GitHub account (`sebellDS` vs `thomassebell`), 22 commits, last
+touched 2026-04-15, four months behind. Reading it on 2026-08-18 produced two
+confident and completely wrong claims: that the DS button exports `ghost` rather
+than `text` (it exports `text`; `variant="text"` works today and the "Already
+have it? Open the recipe" link is fine), and that the DS repo has no `CLAUDE.md`
+(it has one, 13,930 bytes, at its root – read it before any DS work).
 
 ## Universal links
 

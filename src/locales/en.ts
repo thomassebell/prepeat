@@ -16,6 +16,9 @@ export const en = {
     cancel: 'Cancel',
     save: 'Save',
     saving: 'Saving…',
+    /** ⚠️ `LoadError` still hardcodes the English of this – see load-error.tsx.
+     *  Anything new should use this key. */
+    tryAgain: 'Try again',
   },
 
   /** The four tab-bar labels. Short – they sit under an icon. */
@@ -563,13 +566,22 @@ export const en = {
    *  Saving a copy is not built yet – the share snapshot deliberately carries no
    *  ingredients or steps, so there is nothing to copy from here. */
   share: {
-    sharedWithYou: '%{name} shared this recipe with you',
+    /** ⚠️ The NAME IS RENDERED SEPARATELY, in bold, immediately before this
+     *  – that is the design (Figma 726:10545), not a shortcut. So this string
+     *  is the REMAINDER of the sentence and must read naturally after a name.
+     *  A language that cannot open with the name needs this reworked into a
+     *  single interpolated string, not a translation of this fragment. */
+    sharedWithYou: 'shared a recipe with you',
     /** The conversion moment: a link becomes a recipe you own. */
     save: 'Save to my recipes',
     saving: 'Saving…',
+    /** Declining is just leaving: nothing was saved, so there is nothing to
+     *  undo. Named "No thanks" rather than "Cancel" because you are turning
+     *  down a gift, not abandoning a task (Thomas, 2026-08-18). */
+    decline: 'No thanks',
     saveFailedTitle: 'Couldn’t save this recipe',
     revokedTitle: '%{name} isn’t sharing this one any more',
-    revokedBody: 'The link has been turned off. Ask them for a new one.',
+    revokedBody: 'The link has been turned off. Ask for a new one – it only takes a second.',
     notFoundTitle: 'This link doesn’t lead anywhere',
     notFoundBody: 'It may have been mistyped or cut short. Ask whoever sent it to share it again.',
     errorTitle: 'Can’t open this recipe',
