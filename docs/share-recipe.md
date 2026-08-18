@@ -326,8 +326,18 @@ needs updating **before this ships**, not after.
    One route, no npm dependencies, holds no secrets: it calls `share_by_token()`
    with the anon key. All five states verified against the DEV database through
    the real code – 200 own, 200 imported, 410 revoked, 404 unknown, 503 down.
-   **Needs Thomas:** a GitHub repo, a Vercel project, `share.prepeat.app` pointed
-   at it, and the env vars set to PRODUCTION Supabase.
+   **Deployed anonymously 2026-08-17 and VERIFIED AGAINST PRODUCTION**: a real
+   share of a real recipe rendered with the sharer's name and no description
+   (imported); unknown and malformed tokens 404; the root redirects to
+   prepeat.app; and revoking took the page down 36 seconds later.
+   **Still needs Thomas:** the Vercel token here can read the team but cannot
+   create a project (`403 forbidden`), so he must create `prepeat-share` (or
+   grant the right) and point `share.prepeat.app` at it. No env vars needed –
+   the production URL and publishable key are defaults in the code, neither
+   being a secret.
+   ⚠️ **Revocation is not instant:** live pages are edge-cached for 60 seconds,
+   so a revoked link keeps working for up to a minute. Deliberate; the
+   alternative sends every unfurl bot straight through to Supabase.
    **⚠️ AND THE ONE THING THAT SHOULD CHANGE A DECISION – see below.**
 6. Universal links: AASA, `associatedDomains`, and a build to verify on device.
 7. "Save to my recipes" for people who have the app.

@@ -79,11 +79,11 @@
 <main>
   <header>
     <h1>Prep+Eat – open backlog</h1>
-    <p class="meta">81 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
+    <p class="meta">83 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
   </header>
   <div class="filter"><input id="q" type="search" placeholder="Filter tasks…" autocomplete="off"></div>
   <section class="waiting">
-      <h2>Waiting on you <span class="count" data-total="4">4</span></h2>
+      <h2>Waiting on you <span class="count" data-total="6">6</span></h2>
       <p class="lede">Nothing moves on these until you decide or draw something. Everything else is mine.</p>
       <article class="item">
         <h3><span><strong>⭐ Share a recipe with someone – FIRST ITEM IN v1.1</strong></span></h3>
@@ -96,6 +96,14 @@
       </article><article class="item">
         <h3><span><strong>Confirm the shortened recipe status copy against the frames</strong></span></h3>
         <dl><dt>Needs</dt><dd>Thomas – the app deviates from the frames here and it was my call.</dd></dl>
+        <p class="from">Someday – not committed</p>
+      </article><article class="item">
+        <h3><span><strong>⚠️ Finish deploying the share host (needs Thomas for two clicks)</strong></span></h3>
+        <dl><dt>Needs</dt><dd>Thomas – a Vercel project, then the DNS. Nothing else is blocking.</dd></dl>
+        <p class="from">Someday – not committed</p>
+      </article><article class="item">
+        <h3><span><strong>Generate the share preview card as a PNG (<code>og:image</code>)</strong></span></h3>
+        <dl><dt>Needs</dt><dd>nothing – parked by Thomas on 2026-08-17 (<em>"save the PNG for later"</em>), to be picked up after the host is live.</dd></dl>
         <p class="from">Someday – not committed</p>
       </article><article class="item">
         <h3><span><strong>⚠️ UNGATE "Share recipe" when the share page ships</strong></span></h3>
@@ -550,7 +558,7 @@
     </article>
     </section>
     <section>
-      <h2>Someday – not committed <span class="count" data-total="27">27</span></h2>
+      <h2>Someday – not committed <span class="count" data-total="29">29</span></h2>
       <h4>Ideas – not yet committed</h4>
     <article class="item">
       <h3>
@@ -632,6 +640,24 @@
       </h3>
       <dl><dt>Needs</dt><dd>Thomas – the app deviates from the frames here and it was my call.</dd><dt>Why</dt><dd>the frames read "Screen on while cooking" / "Screen dimes while cooking". The app ships "Screen stays on" / "Screen dims", trimmed for the same reason Thomas trimmed the Settings label from "Keep the screen on in recipes" to "Keep screen on" – <em>"otherwise this will be very long in danish"</em>. That reason applies harder here: an icon and TWO texts share one 16px line.</dd><dt>Measured</dt><dd>the Danish pair plus the icon is ~291pt of the 370pt available, so it fits today. The hint truncates rather than overflowing if a future translation is longer.</dd><dt>Decide</dt><dd>accept the trim (and update the frames), or restore the full phrase and let the line wrap to two rows in Danish.</dd></dl>
       <details><summary>Full note</summary><p>(2026-08-17.)</p></details>
+    </article>
+    <article class="item">
+      <h3>
+        
+        
+        <span><strong>⚠️ Finish deploying the share host (needs Thomas for two clicks)</strong></span>
+      </h3>
+      <dl><dt>Needs</dt><dd>Thomas – a Vercel project, then the DNS. Nothing else is blocking.</dd><dt>Why</dt><dd>the host is BUILT and PROVEN – deployed anonymously on 2026-08-17 and verified against PRODUCTION: a real share of a real recipe rendered with the sharer's name and, being imported, no description; unknown and malformed tokens 404; revoking took the page down 36 seconds later. But the Vercel token available to Claude can read the team and <strong>cannot create a project</strong> (<code>403 forbidden</code>), and the temporary deployment expires in 60 minutes.</dd><dt>Steps</dt><dd>(1) create a <code>prepeat-share</code> project on Vercel, or grant project-creation rights; (2) point <code>share.prepeat.app</code> at it; (3) then the ungate item below.</dd><dt>Where</dt><dd><code>~/Documents/Claude/Projects/prepeat-share</code> (local git, no remote). Its README carries the deploy notes.</dd></dl>
+      <details><summary>Full note</summary><p>(2026-08-17.)</p></details>
+    </article>
+    <article class="item">
+      <h3>
+        
+        
+        <span><strong>Generate the share preview card as a PNG (<code>og:image</code>)</strong></span>
+      </h3>
+      <dl><dt>Needs</dt><dd>nothing – parked by Thomas on 2026-08-17 (<em>"save the PNG for later"</em>), to be picked up after the host is live.</dd><dt>Why</dt><dd><strong>93 of 97 production recipes cannot show a photo</strong>, because they were imported and the photo is not ours to publish. On the PAGE that is fine – the generated title card is CSS. In the CHAT it is not: unfurl bots need a real raster image and never render CSS, so those shares preview as a bare text card.</dd><dt>Size</dt><dd>the only piece of this feature needing a dependency and a build step (<code>satori</code> + <code>resvg</code>, or <code>@vercel/og</code>).</dd><dt>Watch</dt><dd>this is the growth mechanic's weakest link, and it is the common case rather than the edge case. Measure the install rate before AND after, or the work cannot be judged.</dd></dl>
+      <details><summary>Full note</summary><p>Alternatives worth weighing first, all cheaper: **ask for a photo at share time** ("add a photo and this looks like yours") which produces content unambiguously ours; per-field provenance so a replaced photo can travel; or attribution ("recipe from foodsite.com") instead of content. (2026-08-17, after measuring the ratio.)</p></details>
     </article>
     <article class="item">
       <h3>
