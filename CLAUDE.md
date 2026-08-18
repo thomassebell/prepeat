@@ -68,11 +68,23 @@ Eat. Repeat." The old working name "Madapp" may linger in docs/foundation.md.
   copy, because macOS forbids background jobs from reading `~/Documents`.
 
 - `npm run hooks:install` – install the git hooks from `scripts/git-hooks/`.
-  **ALL FOUR REPOS NOW CARRY THIS HOOK** – prepeat, design-system, prepeat-web
-  and synthetic-user-panel (swept 2026-08-11, after a commit was found four
-  days unpushed in design-system: fixing only the repo that got caught moves
-  the failure to the next one). The three others have no package.json wrapper,
-  so there it is `./scripts/install-git-hooks.sh` directly.
+  **ALL FIVE REPOS NOW CARRY THIS HOOK** – prepeat, design-system, prepeat-web,
+  synthetic-user-panel and prepeat-share (swept 2026-08-11, after a commit was
+  found four days unpushed in design-system: fixing only the repo that got
+  caught moves the failure to the next one). The four others have no
+  package.json wrapper, so there it is `./scripts/install-git-hooks.sh`
+  directly. Verified installed and everything pushed in all five, 2026-08-18.
+  ⚠️ **`prepeat-share` was added on 2026-08-18 and it was the worst case yet:
+  EIGHT COMMITS AND NO REMOTE AT ALL.** The live share host existed only on
+  this Mac – Vercel had the deployed copy, nothing had the source. The 08-11
+  sweep covered the repos that existed then; this one was created afterwards
+  and inherited nothing. **A NEW REPO STARTS WITH NO REMOTE AND NO HOOK, so
+  creating one is not done until both exist.**
+  ⚠️ **The DS is at `~/Documents/Sebell Design System/`, NOT under
+  `Claude/Projects/`.** There is a stale April clone of a different account
+  handle at `Claude/Projects/Sebell Design System/`; reading it on 2026-08-18
+  produced two confident wrong findings. Confirm the remote is
+  `thomassebell/design-system` before trusting a DS checkout.
   ⚠️ A fresh clone has NO hooks – `.git/hooks/` is not version controlled.
   Currently one: **every commit on `main` pushes to GitHub automatically**, in
   the background, never forced. Added 2026-08-10 after pushing silently stopped
