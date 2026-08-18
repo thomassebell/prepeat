@@ -286,7 +286,7 @@ export default function RecipeDetailScreen() {
     }
     try {
       await Share.share({
-        message: t("recipes.detail.shareMessage", { title: recipe.title, url }),
+        message: t("recipes.detail.shareMessage", { url }),
       });
     } catch {
       // Sharing cancelled – nothing to do.

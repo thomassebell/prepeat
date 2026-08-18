@@ -282,10 +282,13 @@ export const en = {
       edit: 'Edit recipe',
       delete: 'Delete recipe',
       share: 'Share recipe',
-      // Title on its own line so the link sits alone – some apps only unfurl a
-      // URL into a preview card when nothing follows it on the same line, and
-      // that card is the entire point of the feature.
-      shareMessage: '%{title}\n%{url}',
+      // ⚠️ THE LINK AND NOTHING ELSE. Messages splits a message that ends in a
+      // URL into a text bubble PLUS a link bubble, so the old
+      // "%{title}\n%{url}" arrived as a stray-looking title followed by a link
+      // (Thomas's screenshot, 2026-08-18) - and text alongside a URL is also
+      // what stops iMessage building a rich preview at all. The preview carries
+      // the title; the sender types whatever they want around it.
+      shareMessage: '%{url}',
       shareFailedTitle: 'Couldn’t create the link',
       total: 'Total',
       prep: 'Prep',
