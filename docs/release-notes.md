@@ -5,8 +5,8 @@ is always something ready to post. Started 2026-08-03 – earlier builds are
 reconstructed from the backlog and git history.
 
 > **🎉 LIVE ON THE APP STORE: 1.0.0** (build 12), released 2026-08-13 ·
-> **NEXT VERSION: 1.1.0, BUILT AND ON TESTFLIGHT as build 20** (2026-08-17,
-> VALID) · `app.json` says 1.1.0, correctly – that is the version build 20
+> **NEXT VERSION: 1.1.0, ON TESTFLIGHT as build 24** (2026-08-18, VALID –
+> supersedes build 20; build 24 is the first with sharing ungated) · `app.json` says 1.1.0, correctly – that is the version build 20
 > carries.
 >
 > From here the first rule below stops being theoretical: **real users are on
@@ -64,7 +64,7 @@ Two more rules this file exists to keep straight:
 More goes in before this ships, so this section grows. On the dev build only:
 not on TestFlight, not in review, and it needs a build to reach anyone.
 
-### 1.1.0 – Share a recipe (going to TestFlight 2026-08-18)
+### 1.1.0 – Share a recipe (BUILD 24, VALID ON TESTFLIGHT 2026-08-18)
 
 **Sharing is UNGATED as of 2026-08-18** and is in the next production build. It
 is the MINOR feature this version carries. The web page it needs is live at
