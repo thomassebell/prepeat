@@ -1,9 +1,14 @@
 # Share a recipe – spec
 
-Status: **NOT BUILT, BUT NO LONGER BLOCKED. All three decisions locked by Thomas
-on 2026-08-17** – teaser, never publish an imported photo, "Save to my recipes"
-on an explicit tap. Written the same day as the "do before code" step the
-backlog item asks for.
+Status: **BUILT AND PROVEN, WAITING ON TWO CLICKS.** All three decisions were
+locked by Thomas on 2026-08-17 – teaser, never publish imported photo *or* text,
+"Save to my recipes" on an explicit tap – and steps 1-5 of the build order are
+done: migration 0034 is live on dev and production, the app can create a share,
+and the host renders correctly against PRODUCTION data.
+**What remains:** Thomas creates the Vercel project and points
+`share.prepeat.app` at it (the token available to Claude cannot create
+projects), then the app's Share action is ungated. Step 7 ("Save to my recipes")
+and the PNG preview card are still to build.
 
 **A design now exists** – [sketches/share-page-design.html](sketches/share-page-design.html),
 Claude's, reviewed by Thomas on 2026-08-17 across two rounds. It is not a Figma
@@ -130,23 +135,16 @@ one item from "later" to "the main case":
 4. **Attribution instead of content** – "recipe from foodsite.com" – which
    publishes a link rather than someone's work.
 
-This is the sharp edge of the whole feature. An imported recipe **already
-carries a copy of the source site's photograph in our public bucket** –
+**Why this is the sharp edge.** An imported recipe **already carries a copy of
+the source site's photograph in our public bucket** –
 [new.tsx:169](../src/app/recipes/new.tsx:169) puts the scraped `imageUrl` into
-`photoUri` and [new.tsx:204](../src/app/recipes/new.tsx:204) uploads it. That is
-invisible while private. On a page with our name on it, it is the single most
-complaint-prone thing we could publish, and it makes **Prep+Eat the publisher**.
+`photoUri` and [new.tsx:204](../src/app/recipes/new.tsx:204) uploads it. Harmless
+while private; on a page with our name on it, it is the most complaint-prone
+thing we could publish, and it makes **Prep+Eat the publisher**.
 
-Today a scraped photo and one you shot with your phone are indistinguishable
-uploads in the same bucket. So this needs **photo provenance recorded**: a
-`photo_source` column on `recipes`, set at import time. Existing recipes have no
-provenance and must be treated as unknown, therefore not published.
-
-The cost is real: most recipes are probably imported, so most share cards would
-lose their photo, and the photo is what makes the card worth tapping. The
-mitigation is a **generated card** – the recipe title set in Montserrat on a DS
-lime background – which is safe, on-brand, and still far better than a grey
-generic unfurl.
+*(An earlier draft of this section argued for a `photo_source` column here. It
+was written before anyone checked, and it is wrong: `source_url` already answers
+the question. Left out rather than left in, so nobody builds it.)*
 
 ### ✅ 3. Recipient with the app – LOCKED: "SAVE TO MY RECIPES" (Thomas, 2026-08-17)
 
