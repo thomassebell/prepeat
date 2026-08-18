@@ -91,6 +91,9 @@ declare
   v_count integer;
   v_msg text;
   v_snapshot jsonb;
+  h_sam uuid;
+  saved uuid;
+  v_saved recipes%rowtype;
 begin
   -- ==== setup: one kitchen, two recipes ====
   perform pg_temp.as_user(pia);
@@ -113,6 +116,12 @@ begin
   values (h_pia, pia, 'Borrowed Bolognese', 'Scraped prose from someone else.',
           15, 90, 'https://cdn.example/theirs.jpg', 'https://food.example/bolognese')
     returning id into r_imported;
+
+  insert into recipe_ingredients (recipe_id, name, quantity, unit, sort_order, is_section)
+  values (r_imported, 'SAUCE', null, null, 0, true),
+         (r_imported, 'Tinned tomatoes', 2, 'tins', 1, false);
+  insert into recipe_steps (recipe_id, step_number, text)
+  values (r_imported, 1, 'Simmer for an hour.');
 
   -- ==== 1. Creating a share works for a member ====
   t_own := public.create_recipe_share(r_own);
@@ -240,6 +249,66 @@ begin
   perform pg_temp.check('revoked share still names the sender', v_row.shared_by = 'Pia');
   perform pg_temp.check('revoked share hides the title', v_row.title is null);
   perform pg_temp.check('revoked share hides the photo', v_row.image_url is null);
+
+  -- ==== 6b. SAVE TO MY RECIPES (0035) ====
+  --
+  -- Sam is in a different kitchen and saves Pia's shared recipe into it.
+  perform pg_temp.as_user(stranger);
+  insert into households (name, created_by_user_id) values ('Sam''s Kitchen', stranger)
+    returning id into h_sam;
+  insert into household_members (household_id, user_id) values (h_sam, stranger)
+    on conflict do nothing;
+
+  saved := public.save_shared_recipe(t_imported, h_sam);
+  perform pg_temp.check('a member can save a shared recipe into their kitchen',
+    saved is not null);
+
+  select * into v_saved from recipes where id = saved;
+  perform pg_temp.check('the copy lands in the SAVER''s kitchen',
+    v_saved.household_id = h_sam);
+  perform pg_temp.check('the copy is owned by the saver',
+    v_saved.created_by_user_id = stranger);
+  perform pg_temp.check('the copy links back to the original',
+    v_saved.forked_from_recipe_id = r_imported);
+  perform pg_temp.check('the copy is NOT inherited as a favourite',
+    v_saved.is_favorite = false);
+
+  -- Private copying is not publishing: the copy DOES carry the imported text
+  -- and photo, unlike the public page.
+  perform pg_temp.check('the copy keeps the description (private copy)',
+    v_saved.description = 'Scraped prose from someone else.');
+  perform pg_temp.check('the copy keeps the photo (private copy)',
+    v_saved.image_url = 'https://cdn.example/theirs.jpg');
+  -- ...and provenance follows, so the recipient's OWN share of it stays safe.
+  perform pg_temp.check('source_url follows the copy, so re-sharing stays safe',
+    v_saved.source_url = 'https://food.example/bolognese');
+
+  select count(*) into v_count from recipe_ingredients where recipe_id = saved;
+  perform pg_temp.check('ingredients came across', v_count = 2);
+  select count(*) into v_count from recipe_ingredients
+    where recipe_id = saved and is_section;
+  perform pg_temp.check('the SECTION HEADER stayed a heading (0015 loses this)',
+    v_count = 1);
+  select count(*) into v_count from recipe_steps where recipe_id = saved;
+  perform pg_temp.check('steps came across', v_count = 1);
+
+  -- Saving twice must not duplicate the cookbook.
+  perform pg_temp.check('saving the same share twice returns the same copy',
+    public.save_shared_recipe(t_imported, h_sam) = saved);
+
+  -- Saving your OWN recipe back into your OWN kitchen returns the original.
+  perform pg_temp.as_user(pia);
+  perform pg_temp.check('saving into the kitchen it already lives in is a no-op',
+    public.save_shared_recipe(t_imported, h_pia) = r_imported);
+
+  -- You cannot save into a kitchen you are not in.
+  perform pg_temp.as_user(stranger);
+  begin
+    perform public.save_shared_recipe(t_imported, h_pia);
+    perform pg_temp.check('cannot save into someone else''s kitchen', false);
+  exception when others then
+    perform pg_temp.check('cannot save into someone else''s kitchen', true);
+  end;
 
   -- ==== 7. Soft-deleting the recipe takes its page down too ====
   perform pg_temp.as_user(pia);
