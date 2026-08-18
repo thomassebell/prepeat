@@ -43,7 +43,7 @@ Design gets better when it's built precisely, because only then can you see what
 
 The system came first. The product is what tests it. Neither is much good alone.
 
-Prep+Eat is free on the App Store.
+Prep+Eat is free on the App Store, link in the comments.
 
 ---
 
@@ -57,17 +57,20 @@ were edited independently on 2026-08-14 and had to be reconciled**; the wording
 above was brought into line with the publishing file, not the other way round,
 because its version was later and better informed. Change one, change the other.
 
-- ⚠️ **No link in the body, and no mention of one either** (Thomas,
-  2026-08-15): LinkedIn does not favour posts carrying links. The close is just
-  *"Prep+Eat is free on the App Store."* – the "link in the comments" signpost
-  was removed too. **Thomas posts the comment with the URL himself once the
-  post is live.** Do not reinstate either.
+- ⚠️ **No URL in the body – but do signpost the comment.** LinkedIn does not
+  favour posts carrying links, so the URL never goes in the post. The close is
+  *"Prep+Eat is free on the App Store, link in the comments."* and **Thomas
+  posts that comment with the URL himself once the post is live.**
+  **Settled on the second pass** (Thomas, 2026-08-15): the signpost was removed
+  earlier the same day and then asked back. The line that holds is between the
+  **URL**, which costs reach and stays out, and the **six words saying where it
+  is**, which cost nothing and are the only way a reader knows to look.
 - ⚠️ **The App Store link must use an EU storefront.** v1.0 ships to EU-27 only,
   so `apple.com/us/...` **404s** – checked 2026-08-14, `/dk/` returns 200. The
   first comment reads "(EU for now)" to save non-EU readers a dead end. Verify
   with `curl -s -o /dev/null -w "%{http_code}" <url>` after any edit: this is
   the post's entire call to action and it fails silently.
-- ~2,850 characters, so most of it sits behind LinkedIn's "see more" fold.
+- ~2,870 characters, so most of it sits behind LinkedIn's "see more" fold.
   **The opening was rebuilt for that fold on 2026-08-14** (Thomas's call, after
   a cold reader filed the old first line as promo). *"I'm a designer. I don't
   write code by hand"* is the most clickable sentence in the post and was
