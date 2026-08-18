@@ -127,7 +127,7 @@ Everything else in this file is Claude's to get on with.
   <sub>Someday – not committed</sub>
 - **Confirm the shortened recipe status copy against the frames** – the app deviates from the frames here and it was my call.
   <sub>Someday – not committed</sub>
-- **Generate the share preview card as a PNG (`og:image`)** – nothing – parked by Thomas on 2026-08-17 (*"save the PNG for later"*), to be picked up after the host is live.
+- **⚠️ Generate the share preview card as a PNG (`og:image`) – REQUIRED, not polish** – Thomas to pick the card design (see the flow review); the build is then contained and needs no app release.
   <sub>Someday – not committed</sub>
 - **⚠️ Every SECURITY DEFINER function is executable by `anon`** – nothing – but it wants the household-boundary test as a safety net, which is why it was not swept up mid-feature.
   <sub>Someday – not committed</sub>
@@ -4369,14 +4369,19 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
 
       (2026-08-17.)
 
-- [ ] **Generate the share preview card as a PNG (`og:image`)**
-      Needs: nothing – parked by Thomas on 2026-08-17 (*"save the PNG for
-           later"*), to be picked up after the host is live.
-      Why: **93 of 97 production recipes cannot show a photo**, because they were
-           imported and the photo is not ours to publish. On the PAGE that is
-           fine – the generated title card is CSS. In the CHAT it is not: unfurl
-           bots need a real raster image and never render CSS, so those shares
-           preview as a bare text card.
+- [ ] **⚠️ Generate the share preview card as a PNG (`og:image`) – REQUIRED, not polish**
+      Needs: Thomas to pick the card design (see the flow review); the build is
+           then contained and needs no app release.
+      Why: **without `og:image` there is NO CARD AT ALL.** Proved on the device
+           2026-08-18 by sending two share links from the same server with
+           identical tags: the one for a recipe WITH a photo previewed properly
+           on both sides; the one without showed "Tap to Load Preview" and,
+           when tapped, collapsed to a grey bubble reading `share.prepeat.app`.
+           iMessage's rich link is image-led – a title and description alone do
+           not earn a card.
+           **93 of 97 production recipes have no publishable photo**, so 93 of 97
+           shares currently arrive as a bare grey link. This was filed as polish
+           on 2026-08-17 and that was wrong.
       Size: the only piece of this feature needing a dependency and a build step
            (`satori` + `resvg`, or `@vercel/og`).
       Watch: this is the growth mechanic's weakest link, and it is the common

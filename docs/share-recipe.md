@@ -134,9 +134,17 @@ mouth-to-mouth growth, the weak version is not an edge case, it is the product.
 sites' photos and prose is real, and Thomas closed it deliberately. But it moves
 one item from "later" to "the main case":
 
-1. **Generate the title card as a PNG** so imported shares get a designed
-   preview card instead of a bare text one (`satori`/`@vercel/og`). I previously
-   called this a later optimisation. At 93 in 97, it is the primary path.
+1. ⚠️ **GENERATE THE TITLE CARD AS A PNG. THIS IS NOT POLISH – IT IS WHAT MAKES
+   A PREVIEW EXIST AT ALL.** Proved on the device 2026-08-18: two share pages
+   from the same server with identical tags, one WITH `og:image` and one without.
+   The one with an image previewed with a picture on both sides. The one without
+   showed "Tap to Load Preview", and tapping it produced **no card at all** –
+   just a grey bubble reading `share.prepeat.app` with a Safari icon.
+   **iMessage's rich link is image-led:** a title and a description alone do not
+   earn a card. So 93 of 97 recipes currently arrive as a bare domain, which is
+   worse than an ugly card and invisible from any amount of reading the HTML.
+   Everything else about the flow works. This is the last thing standing between
+   sharing and being worth judging (`satori`/`@vercel/og`).
 2. **Ask for a photo at share time.** "Add a photo and this looks like yours" –
    turns the constraint into a prompt, and produces content that is
    unambiguously ours to publish. Untested idea, cheap to try.

@@ -98,8 +98,8 @@
         <dl><dt>Needs</dt><dd>Thomas – the app deviates from the frames here and it was my call.</dd></dl>
         <p class="from">Someday – not committed</p>
       </article><article class="item">
-        <h3><span><strong>Generate the share preview card as a PNG (<code>og:image</code>)</strong></span></h3>
-        <dl><dt>Needs</dt><dd>nothing – parked by Thomas on 2026-08-17 (<em>"save the PNG for later"</em>), to be picked up after the host is live.</dd></dl>
+        <h3><span><strong>⚠️ Generate the share preview card as a PNG (<code>og:image</code>) – REQUIRED, not polish</strong></span></h3>
+        <dl><dt>Needs</dt><dd>Thomas to pick the card design (see the flow review); the build is then contained and needs no app release.</dd></dl>
         <p class="from">Someday – not committed</p>
       </article><article class="item">
         <h3><span><strong>⚠️ Every SECURITY DEFINER function is executable by <code>anon</code></strong></span></h3>
@@ -645,9 +645,9 @@
       <h3>
         
         
-        <span><strong>Generate the share preview card as a PNG (<code>og:image</code>)</strong></span>
+        <span><strong>⚠️ Generate the share preview card as a PNG (<code>og:image</code>) – REQUIRED, not polish</strong></span>
       </h3>
-      <dl><dt>Needs</dt><dd>nothing – parked by Thomas on 2026-08-17 (<em>"save the PNG for later"</em>), to be picked up after the host is live.</dd><dt>Why</dt><dd><strong>93 of 97 production recipes cannot show a photo</strong>, because they were imported and the photo is not ours to publish. On the PAGE that is fine – the generated title card is CSS. In the CHAT it is not: unfurl bots need a real raster image and never render CSS, so those shares preview as a bare text card.</dd><dt>Size</dt><dd>the only piece of this feature needing a dependency and a build step (<code>satori</code> + <code>resvg</code>, or <code>@vercel/og</code>).</dd><dt>Watch</dt><dd>this is the growth mechanic's weakest link, and it is the common case rather than the edge case. Measure the install rate before AND after, or the work cannot be judged.</dd></dl>
+      <dl><dt>Needs</dt><dd>Thomas to pick the card design (see the flow review); the build is then contained and needs no app release.</dd><dt>Why</dt><dd><strong>without <code>og:image</code> there is NO CARD AT ALL.</strong> Proved on the device 2026-08-18 by sending two share links from the same server with identical tags: the one for a recipe WITH a photo previewed properly on both sides; the one without showed "Tap to Load Preview" and, when tapped, collapsed to a grey bubble reading <code>share.prepeat.app</code>. iMessage's rich link is image-led – a title and description alone do not earn a card. <strong>93 of 97 production recipes have no publishable photo</strong>, so 93 of 97 shares currently arrive as a bare grey link. This was filed as polish on 2026-08-17 and that was wrong.</dd><dt>Size</dt><dd>the only piece of this feature needing a dependency and a build step (<code>satori</code> + <code>resvg</code>, or <code>@vercel/og</code>).</dd><dt>Watch</dt><dd>this is the growth mechanic's weakest link, and it is the common case rather than the edge case. Measure the install rate before AND after, or the work cannot be judged.</dd></dl>
       <details><summary>Full note</summary><p>Alternatives worth weighing first, all cheaper: **ask for a photo at share time** ("add a photo and this looks like yours") which produces content unambiguously ours; per-field provenance so a replaced photo can travel; or attribution ("recipe from foodsite.com") instead of content. (2026-08-17, after measuring the ratio.)</p></details>
     </article>
     <article class="item">
