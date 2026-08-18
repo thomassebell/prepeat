@@ -33,7 +33,6 @@ import { ServingsCounter } from "@/components/recipes/servings-counter";
 import { SwipeActions } from "@/components/recipes/swipe-actions";
 import { SwipeHint } from "@/components/ui/swipe-hint";
 import { UndoToast } from "@/components/ui/undo-toast";
-import { IS_DEV_APP } from "@/constants/build-variant";
 import { ds } from "@/constants/ds";
 import { Spacing, tabBarClearance } from "@/constants/theme";
 import { AddToPlanSheet } from "@/components/recipes/add-to-plan-sheet";
@@ -315,24 +314,18 @@ export default function RecipeDetailScreen() {
       label: t("recipes.detail.addToList"),
       onPress: () => setDialog("shopping"),
     },
-    // ⚠️ THE DEV APP ONLY, and it must stay that way until the share PAGE is
-    // deployed (spec step 5). The link a share produces resolves to nothing
-    // today, and a share that hands someone a dead link is worse than no share
-    // at all – a tester would send it to family. UNGATE THIS IN THE SAME CHANGE
-    // THAT SHIPS THE PAGE; there is a backlog item so it is not forgotten.
-    //
-    // `IS_DEV_APP`, NOT `__DEV__`: `__DEV__` is false in a Release build, which
-    // is exactly what goes on Thomas's phone, so gating on it would have hidden
-    // this from the one device it needs trying on. See build-variant.ts.
-    ...(IS_DEV_APP
-      ? [
-          {
-            icon: "ios-share" as keyof typeof MaterialIcons.glyphMap,
-            label: t("recipes.detail.share"),
-            onPress: shareRecipe,
-          },
-        ]
-      : []),
+    // Ungated 2026-08-18, once the share page shipped on share.prepeat.app and
+    // the production database carried the functions a link needs. A production
+    // build now points at share.prepeat.app (see SHARE_BASE), which reads
+    // production, which is where a TestFlight share writes – the whole chain is
+    // consistent, verified end to end before this gate came off. It was
+    // `IS_DEV_APP`-only before then, because a link to a page that did not exist
+    // is worse than no share at all.
+    {
+      icon: "ios-share" as keyof typeof MaterialIcons.glyphMap,
+      label: t("recipes.detail.share"),
+      onPress: shareRecipe,
+    },
     // "Add ingredient/instruction" left this menu 2026-07-16 (feedback):
     // ingredients and steps are edited inline on the lists below. Edit recipe
     // joined it 2026-07-27 (Thomas) – it keeps its button at the bottom of the

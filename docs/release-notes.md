@@ -64,22 +64,30 @@ Two more rules this file exists to keep straight:
 More goes in before this ships, so this section grows. On the dev build only:
 not on TestFlight, not in review, and it needs a build to reach anyone.
 
-### Dev build 2026-08-18 – the shared-recipe screens
+### 1.1.0 – Share a recipe (going to TestFlight 2026-08-18)
 
-⚠️ **NOT USER-VISIBLE YET.** The Share action is still gated to the dev app, so
-nobody outside this Mac can create a link, and these screens are only reachable
-from a link one of us made. Nothing here needs App Store notes until sharing is
-ungated – at which point it is a **MINOR** bump, because it is a new capability.
+**Sharing is UNGATED as of 2026-08-18** and is in the next production build. It
+is the MINOR feature this version carries. The web page it needs is live at
+share.prepeat.app, and the production database carries the functions a link
+depends on – the whole chain was verified before the gate came off.
 
-- Opening a shared recipe link now shows the designed screen: who sent it, the
-  title and the times, then Save to my recipes or No thanks.
-- A link that has been turned off, one that leads nowhere, and a failure to
-  reach Prep+Eat each say what happened, instead of one generic error.
+User-facing lines, App Store voice:
+
+- **Share a recipe with anyone.** Send a link from a recipe's ⋯ menu. Whoever
+  opens it sees the dish, and if they have Prep+Eat it opens right there with a
+  tap to save it to their own kitchen.
+- Opening a shared link shows who sent it, the title and the times, then Save
+  to my recipes.
+- A link that has been turned off, one that leads nowhere, or a connection that
+  drops each says what happened, instead of one generic error.
+
+Under the hood, not for notes:
 - **Fixed: a mistyped or shortened link showed a developer error screen.** The
   app only recognised a perfectly formed link, so the very case the "link
   doesn't lead anywhere" screen was written for could never reach it. Found on
-  the device – it typechecks, lints and works for every link the app itself
-  creates.
+  the device.
+- A share made by a production build points at share.prepeat.app and writes to
+  the production database, which that host reads – consistent end to end.
 
 > ⚠️ **BUILD WHEN YOU ARE READY TO SUBMIT, NOT BEFORE.** Three builds in this
 > file died parked: 18 (2026-08-16, superseded by 19 before it shipped), 19
