@@ -558,8 +558,9 @@ export const da: DeepPartial<typeof en> = {
 
   share: {
     sharedWithYou: '%{name} har delt denne opskrift med dig',
-    savingComing:
-      'At gemme den i dine egne opskrifter kommer i næste opdatering. Indtil da kan du bede %{name} om at tilføje dig til deres køkken, hvis I skal lave den sammen.',
+    save: 'Gem i mine opskrifter',
+    saving: 'Gemmer…',
+    saveFailedTitle: 'Kunne ikke gemme opskriften',
     revokedTitle: '%{name} deler ikke længere denne',
     revokedBody: 'Linket er slået fra. Bed om et nyt.',
     notFoundTitle: 'Linket fører ingen steder hen',

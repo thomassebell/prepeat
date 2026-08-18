@@ -1,11 +1,18 @@
 import { Image } from "expo-image";
+import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Pressable, ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, Alert, Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { LoadError } from "@/components/ui/load-error";
+import { friendlyError } from "@/lib/error-messages";
+import { useHousehold } from "@/lib/household-context";
 import { t } from "@/lib/i18n";
-import { fetchSharedRecipe, type SharedRecipe } from "@/lib/recipe-shares";
+import {
+  fetchSharedRecipe,
+  saveSharedRecipe,
+  type SharedRecipe,
+} from "@/lib/recipe-shares";
 
 /**
  * Where a shared recipe link lands when the recipient HAS Prep+Eat.
@@ -33,9 +40,37 @@ import { fetchSharedRecipe, type SharedRecipe } from "@/lib/recipe-shares";
  * Nothing reaches users meanwhile: the Share action is still gated to the dev
  * app, so the only way to arrive here is a link one of us made.
  */
+/** Total / Prep / Cook, the same three the recipe screen and the web page use.
+ *  Total is only shown when it is the SUM of two numbers - otherwise it just
+ *  repeats the single one, which is a flaw the live web page taught us. */
+function Times({ prep, cook }: { prep: number | null; cook: number | null }) {
+  const rows: [string, number][] = [];
+  if (prep != null && cook != null) rows.push([t("recipes.detail.total"), prep + cook]);
+  if (prep != null) rows.push([t("recipes.detail.prep"), prep]);
+  if (cook != null) rows.push([t("recipes.detail.cook"), cook]);
+  if (rows.length === 0) return null;
+  return (
+    <View className="w-full flex-row flex-wrap gap-layout-small">
+      {rows.map(([label, minutes]) => (
+        <View key={label} className="flex-row gap-comp-xsmall">
+          <Text className="font-paragraph text-small font-default leading-xxsmall text-text-subtle">
+            {label}
+          </Text>
+          <Text className="font-paragraph text-small font-emphasized leading-xxsmall text-text-default">
+            {t("recipes.detail.minutes", { count: minutes })}
+          </Text>
+        </View>
+      ))}
+    </View>
+  );
+}
+
 export function SharedRecipeScreen({ token, onClose }: { token: string; onClose: () => void }) {
+  const household = useHousehold();
+  const router = useRouter();
   const [share, setShare] = useState<SharedRecipe | null | "missing">(null);
   const [failed, setFailed] = useState(false);
+  const [saving, setSaving] = useState(false);
   // Bumped by "Try again" so the effect re-runs; resetting `share` alone would
   // not, since the effect keys on the token.
   const [attempt, setAttempt] = useState(0);
@@ -57,6 +92,25 @@ export function SharedRecipeScreen({ token, onClose }: { token: string; onClose:
       cancelled = true;
     };
   }, [token, attempt]);
+
+  // Saves into the kitchen you are currently in. The database decides what that
+  // means: a recipe already here returns the original, and saving the same share
+  // twice returns the copy you already have - so this cannot duplicate a
+  // cookbook however many times it is tapped.
+  const save = async () => {
+    if (saving) return;
+    setSaving(true);
+    try {
+      const recipeId = await saveSharedRecipe(token, household.id);
+      // replace, not push: the shared-recipe screen has done its job and should
+      // not sit in the back stack behind the recipe you now own.
+      router.replace(`/recipes/${recipeId}`);
+    } catch (error) {
+      console.warn("[share] could not save shared recipe", error);
+      Alert.alert(t("share.saveFailedTitle"), friendlyError(error));
+      setSaving(false);
+    }
+  };
 
   if (failed) {
     return (
@@ -136,13 +190,32 @@ export function SharedRecipeScreen({ token, onClose }: { token: string; onClose:
                 {share.description}
               </Text>
             )}
-            {/* Honest placeholder rather than a button that cannot work yet –
-                the snapshot has no ingredients or steps to copy. */}
-            <View className="rounded-medium bg-surface-primary-lightest p-layout-small">
-              <Text className="font-paragraph text-paragraph font-default text-text-default">
-                {t("share.savingComing", { name: share.sharedBy ?? "them" })}
-              </Text>
-            </View>
+            <Times prep={share.prepMinutes} cook={share.cookMinutes} />
+            {/* The conversion moment: a stranger's link becomes a recipe you
+                own. An explicit tap, never automatic - opening a link must not
+                put things in someone's cookbook (Thomas, 2026-08-17). */}
+            <Pressable
+              accessibilityRole="button"
+              accessibilityState={{ disabled: saving, busy: saving }}
+              disabled={saving}
+              onPress={save}
+            >
+              {({ pressed }) => (
+                <View
+                  className={`w-full items-center rounded-medium p-layout-small ${
+                    saving
+                      ? "bg-button-solid-fill-pressed"
+                      : pressed
+                        ? "bg-button-solid-fill-pressed"
+                        : "bg-button-solid-fill-enabled"
+                  }`}
+                >
+                  <Text className="font-paragraph text-paragraph font-emphasized text-button-solid-label-enabled">
+                    {saving ? t("share.saving") : t("share.save")}
+                  </Text>
+                </View>
+              )}
+            </Pressable>
           </View>
         )}
       </ScrollView>

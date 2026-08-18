@@ -561,8 +561,10 @@ export const en = {
    *  ingredients or steps, so there is nothing to copy from here. */
   share: {
     sharedWithYou: '%{name} shared this recipe with you',
-    savingComing:
-      'Saving this to your own recipes is coming in the next update. For now, ask %{name} to add you to their kitchen if you want to cook it together.',
+    /** The conversion moment: a link becomes a recipe you own. */
+    save: 'Save to my recipes',
+    saving: 'Saving…',
+    saveFailedTitle: 'Couldn’t save this recipe',
     revokedTitle: '%{name} isn’t sharing this one any more',
     revokedBody: 'The link has been turned off. Ask them for a new one.',
     notFoundTitle: 'This link doesn’t lead anywhere',

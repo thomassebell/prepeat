@@ -92,3 +92,31 @@ export async function fetchSharedRecipe(token: string): Promise<SharedRecipe | n
     imageUrl: row.image_url ?? null,
   };
 }
+
+/**
+ * Copy a shared recipe into a household you belong to, and return the id of the
+ * recipe you now own.
+ *
+ * The database does the copying (`save_shared_recipe`, migration 0035), because
+ * the share snapshot holds no ingredients and no steps – the teaser is the whole
+ * point – so a copy can only be made server-side from the real recipe.
+ *
+ * Two results are indistinguishable to the caller ON PURPOSE, and both are
+ * correct: saving a recipe that already lives in this kitchen returns the
+ * original, and saving the same share twice returns the copy you already have.
+ * Either way you get an id worth opening, and no duplicate is created.
+ */
+export async function saveSharedRecipe(
+  token: string,
+  householdId: string,
+): Promise<string> {
+  const { data, error } = await supabase.rpc('save_shared_recipe', {
+    p_token: token,
+    p_household_id: householdId,
+  });
+  if (error) throw error;
+  if (typeof data !== 'string' || data.length === 0) {
+    throw new Error('No recipe returned');
+  }
+  return data;
+}
