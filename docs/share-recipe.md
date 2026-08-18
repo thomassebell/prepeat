@@ -8,15 +8,17 @@ Working today, confirmed on the device: migration 0034 is live on dev and
 production, the app creates shares, `share.prepeat.app` serves the page, and a
 shared link opens the APP on the recipe – cold start and warm, in Danish.
 
-**What remains:**
-- **Step 7, "Save to my recipes"** – needs its own database function, because
-  the share snapshot deliberately carries no ingredients or steps. Until it
-  exists the in-app screen is honest about it rather than offering a dead
-  button.
-- **Ungate the Share action** (`IS_DEV_APP` in `recipes/[id].tsx`) once saving
-  works, which is what puts sharing in front of TestFlight.
+**THE LOOP IS COMPLETE** – share, send, open the page or the app, save it into
+your own kitchen, and back out to Recipes. All of it confirmed on the device.
+
+**What remains, and both are decisions rather than work:**
+- **Ungate the Share action** (`IS_DEV_APP` in `recipes/[id].tsx`). One check to
+  delete; it is what puts sharing in front of TestFlight.
 - **The PNG preview card**, parked by Thomas – and the biggest lever on whether
-  any of this converts, since 93 of 97 recipes cannot show a photo.
+  any of this converts, since 93 of 97 recipes cannot show a photo and therefore
+  preview in a chat as a bare text card.
+⚠️ **Ungating first means testers judge the placeholder version**, which is also
+the version the growth idea would be judged on.
 
 **A design now exists** – [sketches/share-page-design.html](sketches/share-page-design.html),
 Claude's, reviewed by Thomas on 2026-08-17 across two rounds. It is not a Figma
@@ -361,7 +363,17 @@ needs updating **before this ships**, not after.
    rewrites the public `/r/<token>` path onto it.
    ⚠️ **That screen is PROVISIONAL and says so on screen** – see step 7.
 
-7. "Save to my recipes" for people who have the app.
+7. ✅ **DONE 2026-08-18.** `save_shared_recipe()` (migration 0035) copies the
+   real recipe – ingredients, steps and section headers – into the recipient's
+   kitchen; the button is on the shared-recipe screen. Saving a recipe already
+   in your kitchen returns the original, and saving the same share twice returns
+   the copy you have, so it cannot duplicate a cookbook.
+   **A bug this exposed, worth keeping:** a deep link opens
+   `recipes/shared/<token>` with nothing beneath it, so `router.back()` dropped
+   out of the tab entirely and Recipes became unreachable. Fixed with
+   `unstable_settings.initialRouteName` on the Recipes layout. It needed a deep
+   link AND a navigation on top of it, so nothing before step 7 could have found
+   it.
 8. Privacy policy update; `npm run backup:verify` after the schema change.
 
 Roughly a week of working time for the teaser, now slightly under it with step 3
