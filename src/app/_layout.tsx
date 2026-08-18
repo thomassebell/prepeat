@@ -22,8 +22,6 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import AppTabs from '@/components/app-tabs';
-import { useShareLink } from '@/components/deep-link-handler';
-import { SharedRecipeScreen } from '@/components/shared-recipe';
 import { OnboardingFlow } from '@/components/onboarding/onboarding-flow';
 import { LoadError } from '@/components/ui/load-error';
 import { AuthProvider, useAuth } from '@/lib/auth';
@@ -94,8 +92,6 @@ type Membership =
 
 function RootGate() {
   const { session, firstName } = useAuth();
-  // A link tapped while signed out is held until there is somewhere to show it.
-  const { token: shareToken, clear: clearShareLink } = useShareLink();
   const [membership, setMembership] = useState<Membership | null>(null);
   // Which household is showing (id). Restored from AsyncStorage at load, then
   // driven by the switcher. Held separately from `membership` so switching
@@ -239,13 +235,7 @@ function RootGate() {
           would otherwise show the previous household's data until their effects
           re-ran. That reset now lives on those providers, keyed individually,
           so the data starts clean without the navigator losing its place. */}
-      {/* A shared recipe REPLACES the tabs rather than being navigated to.
-          See use-share-link for why: the navigator silently refused. */}
-      {shareToken != null ? (
-        <SharedRecipeScreen token={shareToken} onClose={clearShareLink} />
-      ) : (
-        <AppTabs />
-      )}
+      <AppTabs />
     </HouseholdProvider>
   );
 }
