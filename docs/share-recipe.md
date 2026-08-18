@@ -415,6 +415,33 @@ than `text` (it exports `text`; `variant="text"` works today and the "Already
 have it? Open the recipe" link is fine), and that the DS repo has no `CLAUDE.md`
 (it has one, 13,930 bytes, at its root – read it before any DS work).
 
+## ✅ The share page is LIVE on the design system (2026-08-18)
+
+`prepeat-share` is rebuilt on `@sebellds/react` and deployed. Verified live on
+both domains: `share-dev.prepeat.app/r/<dev token>` renders 200 with the real
+recipe, revoked → 410, unknown → 404; the production 404 page also carries the
+new DS markup and the AASA still serves `application/json` (deep links intact).
+
+What shipped:
+- **Every control is a DS component** – Button, Text, Stack, Icon from
+  `@sebellds/react`. The only CSS the repo owns is page layout (shell, card,
+  image ratio), written in DS tokens.
+- **Both CTAs navigate**, once Button 0.3.0 made the component polymorphic
+  (`as="a"` takes href). The "Already have it? Open the recipe" link now
+  re-attempts the app's own scheme instead of pointing at the App Store.
+- **Icons are exported from the Figma frames**, not a Material set, and live in
+  `lib/icons.mjs` because the DS does not own icons yet (Thomas's call).
+  ⚠️ The DS Icon is built for STROKED icons (viewBox 24, fill:none, a stroke);
+  these are filled, so each overrides fill/stroke/viewBox.
+- **A build step, `scripts/build-css.mjs`**, bakes the DS stylesheets into an
+  importable module so the Vercel function bundles them. Generated, gitignored.
+- **Deploys are automatic now** – Vercel Git integration is connected; a push to
+  `main` deploys to both domains. No more `vercel deploy --prod`.
+
+The DS gained four things while building this, each because a real page needed
+it: `display1…display6` + inline emphasis on Text (0.2.0), and `as` on Button /
+IconButton (0.3.0). The app being the DS's testbed, working as intended.
+
 ## Universal links
 
 `app.json` has no `associatedDomains` today (scheme `prepeat`, bundle

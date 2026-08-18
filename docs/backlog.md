@@ -4402,7 +4402,12 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
            else – imported, or owned without a photo – falls back to this card
            (Thomas, 2026-08-18). That is what the code already does.
 
-- [ ] **Connect Vercel Git integration for prepeat-share**
+- [x] **DONE 2026-08-18. Vercel Git integration connected for prepeat-share.**
+      Thomas connected it after Button 0.3.0 landed and the page was verified.
+      main auto-deploys to production now; the first Git deploy was 4c59f90,
+      the working DS page. Deploys are NO LONGER manual - a push to main is the
+      deploy. Both share.prepeat.app and share-dev.prepeat.app serve it.
+      Original note kept below for the record:
       Blocked: DO THIS AFTER the share page actually works (Thomas, 2026-08-18).
       Why: deploys are manual (`npx vercel deploy --prod` from the linked
            folder) because there was no repo to connect. There is one now –
