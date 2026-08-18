@@ -213,10 +213,28 @@ name is ours to give. That is the whole published surface.
 existed since migration 0006** and already answers the question – set means
 imported, null means typed by hand. One item drops off the build order.
 
-*Known edge, deliberately unsolved:* import a recipe and then replace the photo
-with your own, and `source_url` is still set, so your own photo is suppressed.
-That errs in the safe direction. Per-field provenance would fix it if it ever
-matters.
+*Known edge, RE-EXAMINED AND DELIBERATELY LEFT AS IS (2026-08-18).* The edge is
+wider than first written: it is not only "import then replace the photo", it is
+**any hand-written recipe that credits a source**. The manual form's "Source
+link" field and the importer write the same `source_url`, so citing where an
+idea came from suppresses a photo you took yourself. Thomas hit exactly this on
+a real TestFlight share.
+
+Measured that day: 91 of 97 live recipes have a source URL and a photo, so all
+91 fall back to the generic card; 4 publish a photo.
+
+**Per-field provenance does NOT fix it, which is why the rule stands.** Every
+proposed signal - a photo-provenance column, a `created_via` flag, or reading
+the photo's URI at save time (`http…` = imported, `file://` = picked) - fails on
+one case Thomas named: *"you copied the recipe and copied the photo."* Save a
+site's image to the camera roll, pick it, and it is indistinguishable from a
+photograph of your own dinner. **A client can know the mechanism but never the
+ownership**, so a flag would encode a guess while reading as a fact. The blunt
+rule is at least honest about being blunt.
+
+The accepted cost is a conversion cost, and it is not small - see the backlog
+entry. If it is ever worth solving, only non-guessing routes qualify: asking for
+a photo at share time, or publishing attribution instead of content.
 
 ⚠️ **THE COST IS NOT "WORTH WATCHING", IT IS THE NORM. MEASURED 2026-08-17:**
 

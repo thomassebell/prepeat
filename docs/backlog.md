@@ -4375,6 +4375,50 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
       **Filed as polish on 2026-08-17, which was wrong** – it was the
       precondition for the feature working at all.
 
+- [ ] **Imported-content rule: the photo of a hand-written recipe that credits a source**
+      Decided: **THE RULE STANDS** (Thomas, 2026-08-18). No change. Logged so it
+           is not re-litigated, and so the cost is visible if it ever is.
+      What happened: Thomas shared a recipe he wrote himself, with a photo he
+           took, and pasted the original as a "Source link". The share fell back
+           to the generic card. `create_recipe_share` publishes the photo and
+           description only when `source_url is null` (0034), and the manual
+           form and the importer write that SAME field - one field, two
+           meanings: "scraped from here" and "here is where I got the idea".
+      Measured on production 2026-08-18: 97 live recipes, **91 have a source
+           URL and a photo, so all 91 fall back to the generic card**; 4 publish
+           a photo. How many of the 91 are hand-written-with-credit is
+           unknowable - the thing that would distinguish them is what is not
+           recorded.
+      ⚠️ **WHY THE PROPOSED FIXES WERE REJECTED, which is the part worth
+           keeping.** Three were considered: (1) a per-field photo-provenance
+           column set at write time; (2) a `created_via: import | manual` flag;
+           (3) no schema change at all, inferring from the photo's URI at save
+           time - an imported photo arrives as `http…`, a picked one as
+           `file://`. **All three fail on the same case, Thomas's:** *"you
+           copied the recipe and copied the photo."* Save a site's photo to the
+           camera roll, then pick it, and it arrives as `file://` on a manually
+           created recipe - indistinguishable from a photograph of your own
+           dinner. The mechanism is knowable; the OWNERSHIP is not. A client can
+           never establish provenance, so a flag would only encode a guess while
+           looking like a fact - worse than the blunt rule, because the blunt
+           rule is honest about being blunt.
+      The cost, kept visible: 91 of 97 shares show an identical wordmark card,
+           and the spec's own argument is that the preview card is the product
+           and the photo is what gets a link tapped. That is a real conversion
+           cost, accepted deliberately in exchange for never publishing someone
+           else's photograph.
+      If it ever needs solving, only routes that do NOT guess are worth it:
+           **ask at share time** ("Add a photo and this looks like yours" -
+           already an idea in share-recipe.md, and it produces content that is
+           unambiguously ours to publish), or **attribution instead of content**
+           ("recipe from foodsite.com"), which publishes a link rather than
+           someone's work.
+      The description stays stricter regardless: descriptive prose is the more
+           clearly copyrightable half, so suppressing it whenever a source is
+           cited costs little - it never appears in the chat card, only on the
+           page.
+      <sub>Someday – not committed</sub>
+
 - [x] **DONE 2026-08-18. The chat card is Thomas's design and it is LIVE.**
       Shipped in prepeat-share 450e266, verified by fetching the live PNG from
       share.prepeat.app (1200&times;630, correct layout). **The trigger was a real

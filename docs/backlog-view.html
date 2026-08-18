@@ -79,7 +79,7 @@
 <main>
   <header>
     <h1>Prep+Eat – open backlog</h1>
-    <p class="meta">81 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
+    <p class="meta">82 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
   </header>
   <div class="filter"><input id="q" type="search" placeholder="Filter tasks…" autocomplete="off"></div>
   <section class="waiting">
@@ -550,7 +550,7 @@
     </article>
     </section>
     <section>
-      <h2>Someday – not committed <span class="count" data-total="27">27</span></h2>
+      <h2>Someday – not committed <span class="count" data-total="28">28</span></h2>
       <h4>Ideas – not yet committed</h4>
     <article class="item">
       <h3>
@@ -632,6 +632,15 @@
       </h3>
       <dl><dt>Needs</dt><dd>Thomas – the app deviates from the frames here and it was my call.</dd><dt>Why</dt><dd>the frames read "Screen on while cooking" / "Screen dimes while cooking". The app ships "Screen stays on" / "Screen dims", trimmed for the same reason Thomas trimmed the Settings label from "Keep the screen on in recipes" to "Keep screen on" – <em>"otherwise this will be very long in danish"</em>. That reason applies harder here: an icon and TWO texts share one 16px line.</dd><dt>Measured</dt><dd>the Danish pair plus the icon is ~291pt of the 370pt available, so it fits today. The hint truncates rather than overflowing if a future translation is longer.</dd><dt>Decide</dt><dd>accept the trim (and update the frames), or restore the full phrase and let the line wrap to two rows in Danish.</dd></dl>
       <details><summary>Full note</summary><p>(2026-08-17.)</p></details>
+    </article>
+    <article class="item">
+      <h3>
+        
+        
+        <span><strong>Imported-content rule: the photo of a hand-written recipe that credits a source</strong></span>
+      </h3>
+      <dl><dt>Decided</dt><dd><strong>THE RULE STANDS</strong> (Thomas, 2026-08-18). No change. Logged so it is not re-litigated, and so the cost is visible if it ever is.</dd><dt>What happened</dt><dd>Thomas shared a recipe he wrote himself, with a photo he took, and pasted the original as a "Source link". The share fell back to the generic card. <code>create_recipe_share</code> publishes the photo and description only when <code>source_url is null</code> (0034), and the manual form and the importer write that SAME field - one field, two meanings: "scraped from here" and "here is where I got the idea".</dd></dl>
+      <details><summary>Full note</summary><p>Measured on production 2026-08-18: 97 live recipes, **91 have a source URL and a photo, so all 91 fall back to the generic card**; 4 publish a photo. How many of the 91 are hand-written-with-credit is unknowable - the thing that would distinguish them is what is not recorded. ⚠️ **WHY THE PROPOSED FIXES WERE REJECTED, which is the part worth keeping.** Three were considered: (1) a per-field photo-provenance column set at write time; (2) a <code>created_via: import | manual</code> flag; (3) no schema change at all, inferring from the photo's URI at save time - an imported photo arrives as <code>http…</code>, a picked one as <code>file://</code>. <strong>All three fail on the same case, Thomas's:</strong> *"you copied the recipe and copied the photo."* Save a site's photo to the camera roll, then pick it, and it arrives as <code>file://</code> on a manually created recipe - indistinguishable from a photograph of your own dinner. The mechanism is knowable; the OWNERSHIP is not. A client can never establish provenance, so a flag would only encode a guess while looking like a fact - worse than the blunt rule, because the blunt rule is honest about being blunt. The cost, kept visible: 91 of 97 shares show an identical wordmark card, and the spec's own argument is that the preview card is the product and the photo is what gets a link tapped. That is a real conversion cost, accepted deliberately in exchange for never publishing someone else's photograph. If it ever needs solving, only routes that do NOT guess are worth it: <strong>ask at share time</strong> ("Add a photo and this looks like yours" - already an idea in share-recipe.md, and it produces content that is unambiguously ours to publish), or <strong>attribution instead of content</strong> ("recipe from foodsite.com"), which publishes a link rather than someone's work. The description stays stricter regardless: descriptive prose is the more clearly copyrightable half, so suppressing it whenever a source is cited costs little - it never appears in the chat card, only on the page. &lt;sub&gt;Someday – not committed&lt;/sub&gt;</p></details>
     </article>
     <article class="item">
       <h3>
