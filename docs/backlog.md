@@ -5465,6 +5465,35 @@ Not work. Kept so a cold thread can pick things up without re-litigating them.
 
 ### Decisions log (recent)
 
+- **2026-08-18 – A ROUTE THE TAB BAR WILL NOT SHOW IS A ROUTE THAT DOES NOT
+  EXIST.** Universal links took SIX device builds, and five of them were spent
+  on the wrong layer. What actually happened: `/r/[token]` was added as a
+  top-level route and registered as a HIDDEN `NativeTabs.Trigger`, because
+  `app/_layout.tsx` renders `<AppTabs />` directly, so a root route can only be
+  a tab. expo-router matched the URL and called `router.replace` – and a native
+  tab bar will not switch to a tab it is not showing, so the call was accepted
+  and silently ignored. The app landed on Plan every time.
+  **Removing the route made it worse** ("Unmatched Route" on the device), which
+  is the useful half: it proves **expo-router OWNS the incoming URL** and will
+  match it as a route or fail visibly. Rendering the screen instead of the tabs
+  – an attempt to dodge the navigator – never got a look in and froze the cold
+  start behind the splash.
+  **The fix:** put the screen in a VISIBLE tab's stack
+  (`app/recipes/shared/[token].tsx`) and use `app/+native-intent.tsx` to rewrite
+  the public `/r/<token>` onto it. That is exactly what `+native-intent` is for,
+  it keeps the short public URL, and links already sent still work.
+  **The lesson that generalises:** ⚠️ **INSTRUMENT BEFORE THE THIRD ATTEMPT.**
+  Three reasoned fixes failed. A throwaway on-screen banner showing what the app
+  received answered it in ONE build – "matched: b90b78f8…" – proving the URL
+  arrived, parsed and matched, so the fault had to be downstream of routing.
+  Every earlier theory had been about getting the URL *in*.
+  **And the near-miss worth keeping:** the path rewrite was wrong on first write
+  for `prepeat://r/<token>` – a custom scheme has no host, so host-stripping ate
+  the `r/` segment. Caught by testing the logic before spending a build.
+  `scripts/test-native-intent.mjs` reads the real file rather than copying it,
+  so the test cannot drift.
+
+
 - **2026-08-17 – SCOPE GOES IN THE HINT, NOT THE LABEL.** `Keep screen on` shipped
   to the phone as a label with nothing under it, and Thomas read it as an
   app-wide setting: *"I'm missing the cooking part… the user must [know] when the
