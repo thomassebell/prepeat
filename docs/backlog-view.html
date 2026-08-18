@@ -79,11 +79,11 @@
 <main>
   <header>
     <h1>Prep+Eat – open backlog</h1>
-    <p class="meta">84 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
+    <p class="meta">83 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
   </header>
   <div class="filter"><input id="q" type="search" placeholder="Filter tasks…" autocomplete="off"></div>
   <section class="waiting">
-      <h2>Waiting on you <span class="count" data-total="6">6</span></h2>
+      <h2>Waiting on you <span class="count" data-total="5">5</span></h2>
       <p class="lede">Nothing moves on these until you decide or draw something. Everything else is mine.</p>
       <article class="item">
         <h3><span><strong>⭐ Share a recipe with someone – FIRST ITEM IN v1.1</strong></span></h3>
@@ -98,12 +98,8 @@
         <dl><dt>Needs</dt><dd>Thomas – the app deviates from the frames here and it was my call.</dd></dl>
         <p class="from">Someday – not committed</p>
       </article><article class="item">
-        <h3><span><strong>⚠️ Generate the share preview card as a PNG (<code>og:image</code>) – REQUIRED, not polish</strong></span></h3>
-        <dl><dt>Needs</dt><dd>Thomas to pick the card design (see the flow review); the build is then contained and needs no app release.</dd></dl>
-        <p class="from">Someday – not committed</p>
-      </article><article class="item">
-        <h3><span><strong>⚠️ Every SECURITY DEFINER function is executable by <code>anon</code></strong></span></h3>
-        <dl><dt>Needs</dt><dd>nothing – but it wants the household-boundary test as a safety net, which is why it was not swept up mid-feature.</dd></dl>
+        <h3><span><strong>Replace the interim preview card with Thomas's design</strong></span></h3>
+        <dl><dt>Needs</dt><dd>Thomas – a frame for the 1200&amp;times;630 chat card.</dd></dl>
         <p class="from">Someday – not committed</p>
       </article><article class="item">
         <h3><span><strong>⚠️ UNGATE "Share recipe" when the share page ships</strong></span></h3>
@@ -558,7 +554,7 @@
     </article>
     </section>
     <section>
-      <h2>Someday – not committed <span class="count" data-total="30">30</span></h2>
+      <h2>Someday – not committed <span class="count" data-total="29">29</span></h2>
       <h4>Ideas – not yet committed</h4>
     <article class="item">
       <h3>
@@ -645,28 +641,19 @@
       <h3>
         
         
-        <span><strong>⚠️ Generate the share preview card as a PNG (<code>og:image</code>) – REQUIRED, not polish</strong></span>
+        <span><strong>Replace the interim preview card with Thomas's design</strong></span>
       </h3>
-      <dl><dt>Needs</dt><dd>Thomas to pick the card design (see the flow review); the build is then contained and needs no app release.</dd><dt>Why</dt><dd><strong>without <code>og:image</code> there is NO CARD AT ALL.</strong> Proved on the device 2026-08-18 by sending two share links from the same server with identical tags: the one for a recipe WITH a photo previewed properly on both sides; the one without showed "Tap to Load Preview" and, when tapped, collapsed to a grey bubble reading <code>share.prepeat.app</code>. iMessage's rich link is image-led – a title and description alone do not earn a card. <strong>93 of 97 production recipes have no publishable photo</strong>, so 93 of 97 shares currently arrive as a bare grey link. This was filed as polish on 2026-08-17 and that was wrong.</dd><dt>Size</dt><dd>the only piece of this feature needing a dependency and a build step (<code>satori</code> + <code>resvg</code>, or <code>@vercel/og</code>).</dd><dt>Watch</dt><dd>this is the growth mechanic's weakest link, and it is the common case rather than the edge case. Measure the install rate before AND after, or the work cannot be judged.</dd></dl>
-      <details><summary>Full note</summary><p>Alternatives worth weighing first, all cheaper: **ask for a photo at share time** ("add a photo and this looks like yours") which produces content unambiguously ours; per-field provenance so a replaced photo can travel; or attribution ("recipe from foodsite.com") instead of content. (2026-08-17, after measuring the ratio.)</p></details>
+      <dl><dt>Needs</dt><dd>Thomas – a frame for the 1200&amp;times;630 chat card.</dd><dt>Why</dt><dd>the card shipped 2026-08-18 is Claude's mocha design, chosen as an interim "till my design lands". It is the thing every recipient decides from, so it is worth drawing properly.</dd><dt>Where</dt><dd><code>api/og/[token].js</code> in prepeat-share – the layout only. Fetching, fonts, type-size stepping, caching and the safe area stay.</dd></dl>
+      <details><summary>Full note</summary><p>Known constraints, all measured: titles run 6&amp;ndash;72 characters (median 19), the card renders about 236px wide in a chat so 26px of caption is 7px on screen, and some apps crop to a square, which takes ~285px off each side.</p></details>
     </article>
     <article class="item">
       <h3>
         
         
-        <span><strong>⚠️ Every SECURITY DEFINER function is executable by <code>anon</code></strong></span>
+        <span><strong>A dev-app share link cannot be opened on the live share host</strong></span>
       </h3>
-      <dl><dt>Needs</dt><dd>nothing – but it wants the household-boundary test as a safety net, which is why it was not swept up mid-feature.</dd><dt>Why</dt><dd>Postgres grants EXECUTE to PUBLIC on every new function, and Supabase ALSO grants directly to <code>anon</code> by default privilege. So <code>delete_profile</code>, <code>delete_household</code>, <code>join_household_with_code</code>, <code>leave_household</code>, <code>rotate_invite_code</code>, <code>is_household_member</code> and the rest are all callable with the public anon key today.</dd></dl>
-      <details><summary>Full note</summary><p>Exploitable? Mostly no – each one gates on <code>is_household_member()</code> or <code>auth.uid()</code>, which is null for anon, so the call raises instead of doing anything. **The one that matters is <code>join_household_with_code</code>:** an anon caller can reach it and burn the GLOBAL invite-guess budget from 0033, which is a denial-of-service on joining, not a way in. Careful: <code>is_household_member</code> is called from inside RLS policies, so revoking it changes behaviour for every policy that uses it. Do it with <code>supabase/tests/household-boundary.sql</code> running before and after. Pattern to copy: migrations 0036 and 0037 did exactly this for the three sharing functions – revoke from <code>public</code> AND from <code>anon</code> by name, then check the LIVE ACL, because a local <code>db:reset</code> cannot prove a grant change. (Found 2026-08-18 while pushing 0035, by checking the live grants instead of trusting the grant statement.)</p></details>
-    </article>
-    <article class="item">
-      <h3>
-        
-        
-        <span><strong>Copy-on-leave loses ingredient section headers</strong></span>
-      </h3>
-      <dl><dt>Why</dt><dd><code>leave_household()</code> (migration 0015) copies recipe_ingredients without <code>is_section</code>, which arrived later in 0031. So a section header like "DOUGH" is copied as an ordinary ingredient – and becomes a tickable line in the leaver's cookbook, which is the exact thing sections exist to prevent.</dd><dt>Size</dt><dd>one column in one INSERT ... SELECT.</dd><dt>Note</dt><dd><code>save_shared_recipe()</code> (0035) copies it correctly; this is the older twin that was never updated.</dd></dl>
-      <details><summary>Full note</summary><p>(Found 2026-08-18 while writing 0035, by diffing the live column list against the one 0015 copies.)</p></details>
+      <dl><dt>Why</dt><dd>the dev build writes shares to the DEV database; share.prepeat.app reads PRODUCTION. So a link made on Thomas's phone 404s on the web, and a link made against production says "This link doesn't lead anywhere" in the app. Both are correct, and both look like bugs.</dd><dt>Fix</dt><dd>a Vercel PREVIEW deployment of prepeat-share pointed at dev (the env vars already override the in-code production defaults), so the dev app has a host that matches it.</dd><dt>Size</dt><dd>small – one preview deployment and two environment variables.</dd></dl>
+      <details><summary>Full note</summary><p>(Found 2026-08-18, after two confusing test rounds.)</p></details>
     </article>
     <article class="item">
       <h3>

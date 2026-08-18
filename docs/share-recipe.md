@@ -134,17 +134,17 @@ mouth-to-mouth growth, the weak version is not an edge case, it is the product.
 sites' photos and prose is real, and Thomas closed it deliberately. But it moves
 one item from "later" to "the main case":
 
-1. ⚠️ **GENERATE THE TITLE CARD AS A PNG. THIS IS NOT POLISH – IT IS WHAT MAKES
-   A PREVIEW EXIST AT ALL.** Proved on the device 2026-08-18: two share pages
-   from the same server with identical tags, one WITH `og:image` and one without.
-   The one with an image previewed with a picture on both sides. The one without
-   showed "Tap to Load Preview", and tapping it produced **no card at all** –
-   just a grey bubble reading `share.prepeat.app` with a Safari icon.
-   **iMessage's rich link is image-led:** a title and a description alone do not
-   earn a card. So 93 of 97 recipes currently arrive as a bare domain, which is
-   worse than an ugly card and invisible from any amount of reading the HTML.
-   Everything else about the flow works. This is the last thing standing between
-   sharing and being worth judging (`satori`/`@vercel/og`).
+1. ✅ **DONE 2026-08-18 – and it was the difference between working and not.**
+   Without `og:image` iMessage builds NO CARD AT ALL: proved on the device by
+   sending two links from the same server that differed only in having one. So
+   every share page now carries an image – the recipe's own photo when it is
+   ours to publish, otherwise one generated at `/og/<token>.png` (`@vercel/og`
+   on the edge). Confirmed by Thomas in Messages: *"it works, the card shows
+   up."*
+   ⚠️ **The card's DESIGN is an interim** – the mocha card from the flow review,
+   chosen "till my design lands". Replacing it is a layout change in one file;
+   the plumbing stays.
+
 2. **Ask for a photo at share time.** "Add a photo and this looks like yours" –
    turns the constraint into a prompt, and produces content that is
    unambiguously ours to publish. Untested idea, cheap to try.
