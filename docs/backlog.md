@@ -4375,8 +4375,25 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
       **Filed as polish on 2026-08-17, which was wrong** – it was the
       precondition for the feature working at all.
 
-- [ ] **Replace the interim preview card with Thomas's design**
-      Blocked: public npm, like all share-site work (Thomas, 2026-08-18).
+- [x] **DONE 2026-08-18. The chat card is Thomas's design and it is LIVE.**
+      Shipped in prepeat-share 450e266, verified by fetching the live PNG from
+      share.prepeat.app (1200&times;630, correct layout). **The trigger was a real
+      TestFlight share:** the bubble carried the recipe title TWICE – once burnt
+      into the interim card and once as the link title underneath – which is
+      exactly what a card with no title on it avoids.
+      **The generator did go**, as anticipated below: no token lookup, no
+      `share_by_token` call, no type-sizing. Every card is byte-identical and
+      cached `immutable`. The route still ACCEPTS a token and ignores it, so
+      links already sent keep resolving. `@vercel/og` stays (it renders the
+      wordmark and fetches Montserrat once per edge instance) – making it a
+      truly static PNG in `public/` is still possible but was not worth the
+      binary in the repo.
+      ⚠️ **ONE PART OF THE MESSAGE DESIGN IS NOT IN OUR GIFT.** The Figma bubble
+      shows three lines – title, "Pia shared a recipe with you", domain. We DO
+      send that middle line as `og:description`, but iMessage decided not to
+      display it and showed title + domain only. Not a bug and not fixable from
+      here; worth knowing before it reads as one.
+      Original entry kept below for the reasoning:
       ✅ **THE DESIGN LANDED 2026-08-18** – Figma "The chat card" on page
            Recipes, 1200&times;630. Background `color/surface/secondary/main`
            (#6F5D44), the wordmark in Montserrat Bold 200px, "prep" and "eat"

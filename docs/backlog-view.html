@@ -79,7 +79,7 @@
 <main>
   <header>
     <h1>Prep+Eat – open backlog</h1>
-    <p class="meta">82 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
+    <p class="meta">81 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
   </header>
   <div class="filter"><input id="q" type="search" placeholder="Filter tasks…" autocomplete="off"></div>
   <section class="waiting">
@@ -550,7 +550,7 @@
     </article>
     </section>
     <section>
-      <h2>Someday – not committed <span class="count" data-total="28">28</span></h2>
+      <h2>Someday – not committed <span class="count" data-total="27">27</span></h2>
       <h4>Ideas – not yet committed</h4>
     <article class="item">
       <h3>
@@ -632,15 +632,6 @@
       </h3>
       <dl><dt>Needs</dt><dd>Thomas – the app deviates from the frames here and it was my call.</dd><dt>Why</dt><dd>the frames read "Screen on while cooking" / "Screen dimes while cooking". The app ships "Screen stays on" / "Screen dims", trimmed for the same reason Thomas trimmed the Settings label from "Keep the screen on in recipes" to "Keep screen on" – <em>"otherwise this will be very long in danish"</em>. That reason applies harder here: an icon and TWO texts share one 16px line.</dd><dt>Measured</dt><dd>the Danish pair plus the icon is ~291pt of the 370pt available, so it fits today. The hint truncates rather than overflowing if a future translation is longer.</dd><dt>Decide</dt><dd>accept the trim (and update the frames), or restore the full phrase and let the line wrap to two rows in Danish.</dd></dl>
       <details><summary>Full note</summary><p>(2026-08-17.)</p></details>
-    </article>
-    <article class="item">
-      <h3>
-        
-        
-        <span><strong>Replace the interim preview card with Thomas's design</strong></span>
-      </h3>
-      <dl><dt>Blocked</dt><dd>public npm, like all share-site work (Thomas, 2026-08-18).</dd></dl>
-      <details><summary>Full note</summary><p>✅ <strong>THE DESIGN LANDED 2026-08-18</strong> – Figma "The chat card" on page Recipes, 1200&amp;times;630. Background <code>color/surface/secondary/main</code> (#6F5D44), the wordmark in Montserrat Bold 200px, "prep" and "eat" white, the "+" in <code>text/link</code> (#56C91D), right-aligned with 168px of padding. <strong>No title, no times, no sender.</strong> Why: the card shipped 2026-08-18 is Claude's mocha design, chosen as an interim "till my design lands". It is the thing every recipient decides from, so it is worth drawing properly. Where: <code>api/og/[token].js</code> in prepeat-share – the layout only. Fetching, fonts, type-size stepping, caching and the safe area stay. ⚠️ <strong>THE DESIGN CARRIES NOTHING PER-RECIPE, SO THE GENERATOR CAN GO.</strong> Every card is byte-identical, so <code>/og/&amp;lt;token&amp;gt;.png</code> can become one static PNG in <code>public/</code> – no <code>@vercel/og</code>, no fonts fetched at the edge, no per-request render, and the token stops leaking into an image URL. The measured constraints below stop mattering for the same reason. <strong>Raise before deleting the generator</strong>, since restoring it is work if a title is ever wanted on the card. The constraints that shaped the interim card, kept in case a title returns: titles run 6&amp;ndash;72 characters (median 19), the card renders about 236px wide in a chat so 26px of caption is 7px on screen, and some apps crop to a square, which takes ~285px off each side. When it lands: an owned recipe WITH a photo uses that photo; everything else – imported, or owned without a photo – falls back to this card (Thomas, 2026-08-18). That is what the code already does.</p></details>
     </article>
     <article class="item">
       <h3>
