@@ -1,5 +1,4 @@
 import { Image } from "expo-image";
-import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -15,6 +14,14 @@ import { fetchSharedRecipe, type SharedRecipe } from "@/lib/recipe-shares";
  * (app.json `associatedDomains` + the AASA file on the share host), so iOS opens
  * this instead of Safari. Without the app, the same URL is the web page.
  *
+ * ⚠️ NOT A ROUTE, and that is the point. It was `app/r/[token].tsx` first, and
+ * the link never arrived: the URL parsed and matched (proved on the device with
+ * a diagnostic banner - "matched: b90b78f8…") and `router.replace` still left
+ * the app on the Plan tab. `/r` was a HIDDEN NativeTabs trigger, and a native
+ * tab bar will not switch to a tab it is not showing. So the app renders this
+ * INSTEAD of the tabs while a share link is open - no navigator involved, and
+ * nothing that can silently swallow it.
+ *
  * ⚠️ PROVISIONAL, AND DELIBERATELY SO. This shows the same teaser the web page
  * shows and stops there, because **the snapshot contains no ingredients and no
  * steps** – that is the whole point of the teaser – so there is nothing here to
@@ -26,9 +33,7 @@ import { fetchSharedRecipe, type SharedRecipe } from "@/lib/recipe-shares";
  * Nothing reaches users meanwhile: the Share action is still gated to the dev
  * app, so the only way to arrive here is a link one of us made.
  */
-export default function SharedRecipeScreen() {
-  const { token } = useLocalSearchParams<{ token: string }>();
-  const router = useRouter();
+export function SharedRecipeScreen({ token, onClose }: { token: string; onClose: () => void }) {
   const [share, setShare] = useState<SharedRecipe | null | "missing">(null);
   const [failed, setFailed] = useState(false);
   // Bumped by "Try again" so the effect re-runs; resetting `share` alone would
@@ -90,7 +95,7 @@ export default function SharedRecipeScreen() {
             accessibilityRole="button"
             accessibilityLabel={t("common.back")}
             hitSlop={8}
-            onPress={() => router.replace("/recipes")}
+            onPress={onClose}
           >
             <Text className="font-paragraph text-paragraph font-emphasized text-text-brand">
               {t("common.back")}

@@ -41,15 +41,6 @@ export default function AppTabs() {
         <NativeTabs.Trigger.Icon sf={{ default: 'gearshape', selected: 'gearshape.fill' }} />
       </NativeTabs.Trigger>
 
-      {/* ⚠️ NOT OPTIONAL, AND NOT DEV-ONLY. A universal link to
-          share.prepeat.app/r/<token> is routed by expo-router into this
-          navigator, and NativeTabs only renders routes registered as a trigger.
-          Without this line the URL is silently ignored and the app opens on
-          Plan instead – which is exactly what happened on the first device test
-          (Thomas, 2026-08-18: "The link opened the app in on the plan page.
-          Nothing else"). Hidden, because it is a destination, not a tab. */}
-      <NativeTabs.Trigger name="r" hidden />
-
       {/* DS token verification screen – development builds only. The route
           itself also redirects away in production (see app/ds-check.tsx). */}
       {__DEV__ && <NativeTabs.Trigger name="ds-check" hidden />}
