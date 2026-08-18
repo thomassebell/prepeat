@@ -79,7 +79,7 @@
 <main>
   <header>
     <h1>Prep+Eat – open backlog</h1>
-    <p class="meta">82 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
+    <p class="meta">83 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
   </header>
   <div class="filter"><input id="q" type="search" placeholder="Filter tasks…" autocomplete="off"></div>
   <section class="waiting">
@@ -550,7 +550,7 @@
     </article>
     </section>
     <section>
-      <h2>Someday – not committed <span class="count" data-total="28">28</span></h2>
+      <h2>Someday – not committed <span class="count" data-total="29">29</span></h2>
       <h4>Ideas – not yet committed</h4>
     <article class="item">
       <h3>
@@ -641,6 +641,15 @@
       </h3>
       <dl><dt>Blocked</dt><dd>public npm, like all share-site work (Thomas, 2026-08-18).</dd></dl>
       <details><summary>Full note</summary><p>✅ <strong>THE DESIGN LANDED 2026-08-18</strong> – Figma "The chat card" on page Recipes, 1200&amp;times;630. Background <code>color/surface/secondary/main</code> (#6F5D44), the wordmark in Montserrat Bold 200px, "prep" and "eat" white, the "+" in <code>text/link</code> (#56C91D), right-aligned with 168px of padding. <strong>No title, no times, no sender.</strong> Why: the card shipped 2026-08-18 is Claude's mocha design, chosen as an interim "till my design lands". It is the thing every recipient decides from, so it is worth drawing properly. Where: <code>api/og/[token].js</code> in prepeat-share – the layout only. Fetching, fonts, type-size stepping, caching and the safe area stay. ⚠️ <strong>THE DESIGN CARRIES NOTHING PER-RECIPE, SO THE GENERATOR CAN GO.</strong> Every card is byte-identical, so <code>/og/&amp;lt;token&amp;gt;.png</code> can become one static PNG in <code>public/</code> – no <code>@vercel/og</code>, no fonts fetched at the edge, no per-request render, and the token stops leaking into an image URL. The measured constraints below stop mattering for the same reason. <strong>Raise before deleting the generator</strong>, since restoring it is work if a title is ever wanted on the card. The constraints that shaped the interim card, kept in case a title returns: titles run 6&amp;ndash;72 characters (median 19), the card renders about 236px wide in a chat so 26px of caption is 7px on screen, and some apps crop to a square, which takes ~285px off each side. When it lands: an owned recipe WITH a photo uses that photo; everything else – imported, or owned without a photo – falls back to this card (Thomas, 2026-08-18). That is what the code already does.</p></details>
+    </article>
+    <article class="item">
+      <h3>
+        
+        
+        <span><strong>Connect Vercel Git integration for prepeat-share</strong></span>
+      </h3>
+      <dl><dt>Blocked</dt><dd>DO THIS AFTER the share page actually works (Thomas, 2026-08-18).</dd><dt>Why</dt><dd>deploys are manual (<code>npx vercel deploy --prod</code> from the linked folder) because there was no repo to connect. There is one now – github.com/thomassebell/prepeat-share, created 2026-08-18.</dd></dl>
+      <details><summary>Full note</summary><p>⚠️ <strong>ORDER MATTERS, AND GETTING IT WRONG BREAKS THE LIVE SITE.</strong> As of 2026-08-18 <code>main</code> holds the DS rewrite whose two calls to action do not navigate (waiting on <code>Button as="a"</code>), while the LIVE site is still the old hand-rolled page. Verified by fetching share-dev.prepeat.app and seeing <code>class="btn"</code>. Connecting Git with <code>main</code> as the production branch would deploy the WIP straight over a working site, and every share link already sent would land on it. ⚠️ <strong>THERE IS NO SAFE PREVIEW DOMAIN.</strong> <code>share.prepeat.app</code> AND <code>share-dev.prepeat.app</code> are both production targets on this one Vercel project – the dev/production split is decided by HOSTNAME inside the code, not by two projects. So whatever lands on <code>main</code> goes to both at once. Needs Thomas: the last step is a browser flow. Linking a repo to an existing project requires authorising the Vercel GitHub App on <code>thomassebell/prepeat-share</code>, which cannot be done from here. Steps, once the page works and has been deployed manually once: 1. vercel.com → the <code>prepeat-share</code> project → Settings → Git 2. "Connect Git Repository" → GitHub → <code>thomassebell/prepeat-share</code> 3. Authorise the Vercel GitHub App if it asks 4. Confirm the production branch is <code>main</code> 5. Push a trivial commit and check it deploys, then check share-dev.prepeat.app still renders a real share</p></details>
     </article>
     <article class="item">
       <h3>

@@ -4402,6 +4402,34 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
            else – imported, or owned without a photo – falls back to this card
            (Thomas, 2026-08-18). That is what the code already does.
 
+- [ ] **Connect Vercel Git integration for prepeat-share**
+      Blocked: DO THIS AFTER the share page actually works (Thomas, 2026-08-18).
+      Why: deploys are manual (`npx vercel deploy --prod` from the linked
+           folder) because there was no repo to connect. There is one now –
+           github.com/thomassebell/prepeat-share, created 2026-08-18.
+      ⚠️ **ORDER MATTERS, AND GETTING IT WRONG BREAKS THE LIVE SITE.** As of
+           2026-08-18 `main` holds the DS rewrite whose two calls to action do
+           not navigate (waiting on `Button as="a"`), while the LIVE site is
+           still the old hand-rolled page. Verified by fetching
+           share-dev.prepeat.app and seeing `class="btn"`. Connecting Git with
+           `main` as the production branch would deploy the WIP straight over a
+           working site, and every share link already sent would land on it.
+      ⚠️ **THERE IS NO SAFE PREVIEW DOMAIN.** `share.prepeat.app` AND
+           `share-dev.prepeat.app` are both production targets on this one
+           Vercel project – the dev/production split is decided by HOSTNAME
+           inside the code, not by two projects. So whatever lands on `main`
+           goes to both at once.
+      Needs Thomas: the last step is a browser flow. Linking a repo to an
+           existing project requires authorising the Vercel GitHub App on
+           `thomassebell/prepeat-share`, which cannot be done from here.
+      Steps, once the page works and has been deployed manually once:
+           1. vercel.com → the `prepeat-share` project → Settings → Git
+           2. "Connect Git Repository" → GitHub → `thomassebell/prepeat-share`
+           3. Authorise the Vercel GitHub App if it asks
+           4. Confirm the production branch is `main`
+           5. Push a trivial commit and check it deploys, then check
+              share-dev.prepeat.app still renders a real share
+
 - [x] **DONE 2026-08-18. Dev-app share links work end to end.**
       `share-dev.prepeat.app` is the SAME deployment reading the dev project,
       chosen by hostname (`credentialsFor(host)` in prepeat-share), and dev
