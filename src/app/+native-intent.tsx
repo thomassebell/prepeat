@@ -18,7 +18,21 @@
  * ⚠️ Throwing in here can crash the app, so everything is inside a try/catch and
  * anything unrecognised is passed through untouched.
  */
-const SHARE_PATH = /^\/?r\/([0-9a-f]{32})\/?$/;
+/**
+ * ⚠️ DELIBERATELY LOOSE, AND IT IS A BUG FIX. This was `([0-9a-f]{32})` – the
+ * exact shape `create_recipe_share` mints (a uuid with the dashes taken out,
+ * migration 0034). That looked like sensible validation and it silently broke
+ * the case the design exists for: **a mistyped or truncated token is, by
+ * definition, not 32 hex characters**, so it never matched, fell through
+ * untouched, and landed on expo-router's black "Unmatched Route" developer
+ * screen instead of "This link doesn't lead anywhere". Found on the device
+ * 2026-08-18.
+ *
+ * Deciding whether a token is real is the DATABASE's job – `share_by_token()`
+ * returns no row and the screen says so, warmly. This only has to decide
+ * whether a URL is ours. The bound is a sanity limit, not validation.
+ */
+const SHARE_PATH = /^\/?r\/([A-Za-z0-9_-]{1,128})\/?$/;
 
 export function redirectSystemPath({ path }: { path: string; initial: boolean }): string {
   try {
