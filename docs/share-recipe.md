@@ -344,7 +344,18 @@ needs updating **before this ships**, not after.
    so a revoked link keeps working for up to a minute. Deliberate; the
    alternative sends every unfurl bot straight through to Supabase.
    **⚠️ AND THE ONE THING THAT SHOULD CHANGE A DECISION – see below.**
-6. Universal links: AASA, `associatedDomains`, and a build to verify on device.
+6. ⏳ **IN TESTING 2026-08-17.** AASA live at
+   `share.prepeat.app/.well-known/apple-app-site-association` – 200,
+   `application/json`, zero redirects, and it names BOTH `app.prepeat` and
+   `app.prepeat.dev`, so the device build opens links too rather than only a
+   future App Store build. `associatedDomains` added to `app.json` (the dev
+   variant inherits it, since `app.config.js` spreads `config.ios`). The app
+   lands on `src/app/r/[token].tsx`.
+   ⚠️ **That screen is PROVISIONAL and says so on screen.** The snapshot holds no
+   ingredients and no steps – that is the point of the teaser – so there is
+   nothing to save a copy from. "Save to my recipes" needs its own database
+   function that copies the real recipe server-side; until then the screen is
+   honest rather than offering a button that cannot work.
 7. "Save to my recipes" for people who have the app.
 8. Privacy policy update; `npm run backup:verify` after the schema change.
 

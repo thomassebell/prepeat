@@ -555,4 +555,20 @@ export const en = {
       categoryLabel: 'Category: %{value}',
     },
   },
+
+  /** Landing screen for a shared-recipe link opened by someone who has the app.
+   *  Saving a copy is not built yet – the share snapshot deliberately carries no
+   *  ingredients or steps, so there is nothing to copy from here. */
+  share: {
+    sharedWithYou: '%{name} shared this recipe with you',
+    savingComing:
+      'Saving this to your own recipes is coming in the next update. For now, ask %{name} to add you to their kitchen if you want to cook it together.',
+    revokedTitle: '%{name} isn’t sharing this one any more',
+    revokedBody: 'The link has been turned off. Ask them for a new one.',
+    notFoundTitle: 'This link doesn’t lead anywhere',
+    notFoundBody: 'It may have been mistyped or cut short. Ask whoever sent it to share it again.',
+    errorTitle: 'Can’t open this recipe',
+    errorBody: 'We couldn’t reach Prep+Eat. Check your connection and try again.',
+  },
+
 };

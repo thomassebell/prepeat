@@ -555,4 +555,17 @@ export const da: DeepPartial<typeof en> = {
       categoryLabel: 'Kategori: %{value}',
     },
   },
+
+  share: {
+    sharedWithYou: '%{name} har delt denne opskrift med dig',
+    savingComing:
+      'At gemme den i dine egne opskrifter kommer i næste opdatering. Indtil da kan du bede %{name} om at tilføje dig til deres køkken, hvis I skal lave den sammen.',
+    revokedTitle: '%{name} deler ikke længere denne',
+    revokedBody: 'Linket er slået fra. Bed om et nyt.',
+    notFoundTitle: 'Linket fører ingen steder hen',
+    notFoundBody: 'Det kan være skrevet forkert eller blevet klippet over. Bed afsenderen om at dele det igen.',
+    errorTitle: 'Kan ikke åbne opskriften',
+    errorBody: 'Vi kunne ikke få fat i Prep+Eat. Tjek din forbindelse, og prøv igen.',
+  },
+
 };

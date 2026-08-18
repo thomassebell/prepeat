@@ -54,3 +54,41 @@ export async function createRecipeShare(recipeId: string): Promise<string> {
   }
   return shareUrlForToken(data);
 }
+
+/** What a share page shows. Mirrors `share_by_token`'s columns (migration 0034). */
+export interface SharedRecipe {
+  status: 'live' | 'revoked';
+  sharedBy: string | null;
+  title: string | null;
+  description: string | null;
+  prepMinutes: number | null;
+  cookMinutes: number | null;
+  imageUrl: string | null;
+}
+
+/**
+ * Look up what is behind a share token.
+ *
+ * `null` means the token is unknown – a mistyped or truncated link. That is
+ * deliberately different from a `revoked` status: a revoked share still has a
+ * row, so we still know who shared it and can say so by name.
+ *
+ * ⚠️ THIS RETURNS A TEASER, NOT A RECIPE. The snapshot holds no ingredients and
+ * no steps by design, so it is not enough to save a copy from – "Save to my
+ * recipes" will need its own function that copies the real recipe server-side.
+ */
+export async function fetchSharedRecipe(token: string): Promise<SharedRecipe | null> {
+  const { data, error } = await supabase.rpc('share_by_token', { p_token: token });
+  if (error) throw error;
+  const row = Array.isArray(data) ? data[0] : null;
+  if (row == null) return null;
+  return {
+    status: row.status === 'live' ? 'live' : 'revoked',
+    sharedBy: row.shared_by ?? null,
+    title: row.title ?? null,
+    description: row.description ?? null,
+    prepMinutes: row.prep_minutes ?? null,
+    cookMinutes: row.cook_minutes ?? null,
+    imageUrl: row.image_url ?? null,
+  };
+}

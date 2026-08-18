@@ -13,7 +13,10 @@
       "appleTeamId": "Z58TG8X9KB",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
-      }
+      },
+      "associatedDomains": [
+        "applinks:share.prepeat.app"
+      ]
     },
     "android": {
       "package": "app.prepeat",
@@ -50,7 +53,10 @@
       [
         "expo-localization",
         {
-          "supportedLocales": ["en", "da"]
+          "supportedLocales": [
+            "en",
+            "da"
+          ]
         }
       ],
       [
