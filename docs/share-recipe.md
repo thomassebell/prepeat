@@ -324,7 +324,14 @@ needs updating **before this ships**, not after.
    One route, no npm dependencies, holds no secrets: it calls `share_by_token()`
    with the anon key. All five states verified against the DEV database through
    the real code – 200 own, 200 imported, 410 revoked, 404 unknown, 503 down.
-   **Deployed anonymously 2026-08-17 and VERIFIED AGAINST PRODUCTION**: a real
+   ✅ **LIVE AT https://share.prepeat.app SINCE 2026-08-17.** DNS is a CNAME on
+   `share` at Porkbun; the certificate issued about a minute after it propagated;
+   Deployment Protection confirmed OFF by fetching anonymously, which is the one
+   check Thomas cannot do himself from a signed-in browser. Deploys are manual
+   (`npx vercel deploy --prod` from the linked folder) – **no Git integration
+   yet**.
+   *Earlier note, kept because it explains the odd project history:* first
+   deployed anonymously and VERIFIED AGAINST PRODUCTION: a real
    share of a real recipe rendered with the sharer's name and no description
    (imported); unknown and malformed tokens 404; the root redirects to
    prepeat.app; and revoking took the page down 36 seconds later.
