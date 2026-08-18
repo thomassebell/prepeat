@@ -137,6 +137,12 @@ and this is not the project's first web deployment (see *Hosting*), and the
 import photo path has moved to [new.tsx:169](../src/app/recipes/new.tsx:169)
 and [new.tsx:204](../src/app/recipes/new.tsx:204).
 
+**Test cases: [share-test-plan.md](share-test-plan.md)** – the manual ones only.
+The database layer already has 29 automated checks in
+`supabase/tests/recipe-shares.sql`; the plan covers what those cannot reach (the
+chat card, universal links, the two hosts, the screens) and lists the four
+false-failure traps that have each already cost a round.
+
 ## Goal
 
 Let someone send a recipe to a person who does not have Prep+Eat, in a way that
