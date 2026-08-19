@@ -79,11 +79,11 @@
 <main>
   <header>
     <h1>Prep+Eat – open backlog</h1>
-    <p class="meta">83 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
+    <p class="meta">84 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
   </header>
   <div class="filter"><input id="q" type="search" placeholder="Filter tasks…" autocomplete="off"></div>
   <section class="waiting">
-      <h2>Waiting on you <span class="count" data-total="5">5</span></h2>
+      <h2>Waiting on you <span class="count" data-total="6">6</span></h2>
       <p class="lede">Nothing moves on these until you decide or draw something. Everything else is mine.</p>
       <article class="item">
         <h3><span><strong>⭐ Share a recipe with someone – FIRST ITEM IN v1.1</strong></span></h3>
@@ -100,6 +100,10 @@
       </article><article class="item">
         <h3><span><strong>⭐ FOR THE MORNING: publish the privacy policy, then submit 1.1.0</strong></span></h3>
         <dl><dt>Needs</dt><dd>Thomas – three reviews, in this order. Everything else is done.</dd></dl>
+        <p class="from">Someday – not committed</p>
+      </article><article class="item">
+        <h3><span><strong>⭐ Share links: 30-day expiry + "Stop sharing" in the menu</strong></span></h3>
+        <dl><dt>Needs</dt><dd>Thomas – a Figma frame for the EXPIRED state (web + in-app), or a ruling to reuse the revoked layout with new words. Plus a nod to the confirmation wording. Everything else is decided.</dd></dl>
         <p class="from">Someday – not committed</p>
       </article><article class="item">
         <h3><span><strong>⚠️ UNGATE "Share recipe" when the share page ships</strong></span></h3>
@@ -554,7 +558,7 @@
     </article>
     </section>
     <section>
-      <h2>Someday – not committed <span class="count" data-total="29">29</span></h2>
+      <h2>Someday – not committed <span class="count" data-total="30">30</span></h2>
       <h4>Ideas – not yet committed</h4>
     <article class="item">
       <h3>
@@ -645,6 +649,15 @@
       </h3>
       <dl><dt>Needs</dt><dd>Thomas – three reviews, in this order. Everything else is done.</dd></dl>
       <details><summary>Full note</summary><p>1. <strong>Read and publish the privacy policy.</strong> <code>prepeat-web/privacy.html</code> has a new "Sharing a recipe outside your household" section **prepared but NOT committed** – committing there auto-deploys to the live site Apple links to, so it needs your eyes first. <code>docs/privacy-policy.md</code> (same wording) is already committed, so nothing is lost. Publish with: `cd ~/Documents/Claude/Projects/prepeat-web &amp;&amp; git add privacy.html &amp;&amp; git commit -m "..."` – the hook pushes and GitHub Pages deploys. 2. <strong>Review the What's New, then submit 1.1.0.</strong> Already created in App Store Connect: **1.1.0, PREPARE_FOR_SUBMISSION, MANUAL release, build 24 attached, release notes set and read back from Apple.** Claude did NOT submit – that reaches real users and is Thomas's call. 3. <strong>Proof-read the Danish</strong> – the spreadsheet Claude sent: 281 unique strings, duplicates removed, 11 flagged, no placeholder mismatches. ⚠️ <strong>A gap the policy exposed:</strong> there is no way for a user to turn a share link off themselves, so the policy has to say "write to us and we will do it". Honest, but weak as a GDPR withdrawal route – it makes the in-app revoke more than a nicety. Order matters: the policy must be LIVE before 1.1.0 goes to review, since sharing is the headline feature and that URL is what Apple links to.</p></details>
+    </article>
+    <article class="item">
+      <h3>
+        
+        
+        <span><strong>⭐ Share links: 30-day expiry + "Stop sharing" in the menu</strong></span>
+      </h3>
+      <dl><dt>Needs</dt><dd>Thomas – a Figma frame for the EXPIRED state (web + in-app), or a ruling to reuse the revoked layout with new words. Plus a nod to the confirmation wording. Everything else is decided.</dd></dl>
+      <details><summary>Full note</summary><p>📄 <strong>THE SPEC IS THE ENTRY: share-expiry-and-stop-sharing.md.</strong> Read it rather than this summary – it carries the reasoning so the numbers are not re-argued. Why: writing the privacy policy exposed that a user cannot turn a share link off. The policy had to say "write to us", which is weak as a GDPR withdrawal route, and it is the gap Thomas was most worried about. Decided 2026-08-18: <strong>30 days, absolute from creation</strong> (48h breaks a link sent Friday and opened Monday; 90 was Claude's and leaned on expiry carrying the whole burden, which Stop sharing removes). <strong>Stop sharing revokes EVERY link for that recipe</strong> – the only honest option, because the OS share sheet means we never learn who a link went to. <strong>It does not recall copies people already saved</strong>, and the dialog must say so. Size: migration 0038 (0036/0037 are already live), one app build, and a same-day deploy of the share site. A new status degrades safely – both readers treat anything not <code>live</code> as gone – so the database can go first and the app can catch up. After it ships: replace the "write to us" line in BOTH copies of the privacy policy. Not before – a policy promising a control the app lacks is worse than one admitting the limitation.</p></details>
     </article>
     <article class="item">
       <h3>

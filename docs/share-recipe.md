@@ -494,6 +494,14 @@ risk explicitly.
 Still worth putting to the attorney alongside the trademark clearance, because
 it becomes blocking the moment anyone wants the full-recipe version.
 
+## Turning a link off – expiry and Stop sharing
+
+**[share-expiry-and-stop-sharing.md](share-expiry-and-stop-sharing.md)** – a
+30-day expiry plus a "Stop sharing" item in the recipe menu, decided 2026-08-18
+after the privacy policy exposed that a user has no way to withdraw a link. Not
+built yet. The spec carries the reasoning behind the number and behind revoking
+per recipe rather than per person.
+
 ## Privacy policy
 
 A share page makes household content readable outside the household for the
