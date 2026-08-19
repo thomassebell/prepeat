@@ -135,6 +135,96 @@ migration can go live immediately; the app catches up.**
 - Render `expired` with its own copy instead of falling through to revoked.
 - The web can be accurate the same day the migration lands.
 
+## The copy, ready to use
+
+Danish is a **draft for Thomas to check** – he is the native speaker and is
+proof-reading the translation sheet anyway.
+
+### The expired page (web) and screen (in-app)
+
+| | English | Dansk (draft) |
+|---|---|---|
+| Heading | This link has expired | Linket er udløbet |
+| Body | Links stop working after 30 days. Ask for a new one – it only takes a second. | Links holder op med at virke efter 30 dage. Bed om et nyt – det tager kun et øjeblik. |
+
+⚠️ **It does NOT name the sender, and that is deliberate.** Revoked says
+*"Pia isn't sharing this one any more"* because that was Pia's decision. Expiry
+is not anyone's decision – naming her would imply she did something. Nobody is
+at fault here, so the sentence has no subject.
+
+The body says **why**, unlike the other dead ends, because "expired" invites the
+question and a reader who does not get an answer assumes something is broken.
+It closes on the same "ask for a new one" as the revoked copy, because the way
+out is identical.
+
+**Web:** same words, plus the standard "See what Prep+Eat is" card and the
+**Get Prep+Eat** button, exactly as revoked / link broken / 503 already do.
+
+**In-app:** same words, the same white card with the broken heart, no button –
+matching the other two permanent dead ends.
+
+### Stop sharing (in-app only)
+
+| key | English | Dansk (draft) |
+|---|---|---|
+| menu item | Stop sharing | Stop deling |
+| dialog title | Stop sharing this recipe? | Stop med at dele opskriften? |
+| dialog body | Anyone you've sent it to won't be able to open the link any more. People who already saved it keep their copy. | Alle du har sendt den til, kan ikke længere åbne linket. De, der allerede har gemt den, beholder deres kopi. |
+| confirm | Stop sharing | Stop deling |
+| cancel | (existing `common.cancel`) | (findes) |
+
+The second sentence of the body is the one that earns its place: **"stop
+sharing" sounds like taking the recipe back, and it is not.** Without it a user
+would believe they had retrieved something they had not.
+
+### Suggested keys
+
+```
+share.expiredTitle   'This link has expired'
+share.expiredBody    'Links stop working after 30 days. Ask for a new one – it only takes a second.'
+recipes.detail.stopSharing        'Stop sharing'
+recipes.detail.stopSharingTitle   'Stop sharing this recipe?'
+recipes.detail.stopSharingBody    'Anyone you’ve sent it to won’t be able to open the link any more. People who already saved it keep their copy.'
+```
+
+## The privacy policy replacement, ready to paste
+
+⚠️ **NOT APPLIED, AND ON PURPOSE.** The policy being published 2026-08-19 says a
+link can be turned off by writing to us, which is true today. Publishing the
+wording below before the feature exists would promise a control the app does not
+have – worse than admitting the limitation. **Apply it in the same change that
+ships the feature**, to BOTH `docs/privacy-policy.md` and
+`prepeat-web/privacy.html`.
+
+**Replace this paragraph:**
+
+> **Turning a link off.** Deleting the recipe takes its page down straight away.
+> If you want a link turned off without deleting the recipe, write to us at the
+> address at the end of this policy and we will do it.
+
+**With these two:**
+
+> **How long a link lasts.** A share link stops working 30 days after you
+> created it. You do not have to do anything – it simply stops.
+>
+> **Turning a link off sooner.** Open the recipe and choose Stop sharing. Every
+> link you have made for that recipe stops working straight away, and so does
+> deleting the recipe. One thing it does not do: anyone who already saved the
+> recipe into their own kitchen keeps their copy. Stopping sharing ends the
+> link, it does not take the recipe back.
+
+**And in "How long we keep it", replace the share bullet:**
+
+> - A **share link** and its snapshot are kept until you delete the recipe or
+>   ask us to turn the link off. Copies other people saved into their own
+>   kitchens are theirs and stay with them.
+
+**with:**
+
+> - A **share link** and its snapshot stop working 30 days after you create the
+>   link, or sooner if you stop sharing or delete the recipe. Copies other
+>   people saved into their own kitchens are theirs and stay with them.
+
 ## Needs Thomas
 
 - **A Figma frame for the expired state**, web and in-app – or a ruling to reuse
