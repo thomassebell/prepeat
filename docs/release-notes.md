@@ -69,24 +69,35 @@ Everything the release depends on outside the binary is already live: migration
 0038 on production, the share site deployed, and the privacy policy published
 and dated 19 August.
 
-⚠️ **THE "WHAT'S NEW" IN APP STORE CONNECT WAS WRITTEN FOR BUILD 24 AND DOES NOT
-MENTION EXPIRY OR STOP SHARING.** It is 1125 characters covering sharing, Danish,
-the screen staying on, imports and settings – all accurate, but silent on the
-two things build 25 added. So the release notes users read describe links
-without saying they lapse after 30 days or that they can be turned off. The
-privacy policy says both. Worth fixing while the version is still
-WAITING_FOR_REVIEW; once it is IN_REVIEW the text is normally frozen.
-The two lines it is missing are the first two below.
+✅ **The What's New now covers expiry and Stop sharing.** It was written for
+build 24 and was silent on both – users would have been told they could share
+and not told that a link lapses after 30 days, while the privacy policy
+published the same day said so. Fixed 2026-08-19 while the version was still
+WAITING_FOR_REVIEW, by adding one section after the sharing one. **The
+submission survived the edit** – same submission id, still WAITING_FOR_REVIEW,
+checked immediately afterwards. Now 1411 characters.
+
+The added section, as it will appear:
+
+> **You can stop sharing at any time**
+>
+> Choose Stop sharing from a recipe's menu and every link you've made for it
+> stops working straight away. Links also stop on their own 30 days after you
+> make them, so nothing stays open by accident. Anyone who already saved the
+> recipe keeps their copy.
+
+It leads with the CONTROL, not the expiry: the control is the reassuring half,
+and the expiry is the part that would otherwise surprise someone whose link had
+quietly stopped working. Written as a heading plus a paragraph because that is
+what the other five sections are – not as bullets.
 
 User-facing lines, App Store voice:
 
 - **Share links now stop working after 30 days.** Nothing to do and nothing to
   remember – a link you sent simply lapses, and the page says so plainly.
-  *(NOT in the submitted What's New.)*
 - **Stop sharing a recipe whenever you want.** Choose Stop sharing from a
   recipe's ⋯ menu and every link you have made for it stops working straight
   away. Anyone who already saved the recipe keeps their copy.
-  *(NOT in the submitted What's New.)*
 - **Share a recipe with anyone.** Send a link from a recipe's ⋯ menu. Whoever
   opens it sees the dish, and if they have Prep+Eat it opens right there with a
   tap to save it to their own kitchen.
