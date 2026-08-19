@@ -79,11 +79,11 @@
 <main>
   <header>
     <h1>Prep+Eat – open backlog</h1>
-    <p class="meta">81 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
+    <p class="meta">80 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
   </header>
   <div class="filter"><input id="q" type="search" placeholder="Filter tasks…" autocomplete="off"></div>
   <section class="waiting">
-      <h2>Waiting on you <span class="count" data-total="4">4</span></h2>
+      <h2>Waiting on you <span class="count" data-total="5">5</span></h2>
       <p class="lede">Nothing moves on these until you decide or draw something. Everything else is mine.</p>
       <article class="item">
         <h3><span><strong>The share site has no DESKTOP design, no 404 frame, and no ⋯ ruling</strong></span></h3>
@@ -101,6 +101,10 @@
         <h3><span><strong>Confirm the shortened recipe status copy against the frames</strong></span></h3>
         <dl><dt>Needs</dt><dd>Thomas – the app deviates from the frames here and it was my call.</dd></dl>
         <p class="from">Someday – not committed</p>
+      </article><article class="item">
+        <h3><span><strong>🚨 THE REVIEWER'S DEMO PLAN IS EMPTY, AND 1.1.0 IS WAITING FOR REVIEW</strong></span></h3>
+        <dl><dt>Needs</dt><dd>Thomas for the mailbox check; the re-seed is Claude's.</dd></dl>
+        <p class="from">Standing – recurring</p>
       </article>
     </section>
   <div id="list">
@@ -550,7 +554,7 @@
     </article>
     </section>
     <section>
-      <h2>Someday – not committed <span class="count" data-total="27">27</span></h2>
+      <h2>Someday – not committed <span class="count" data-total="26">26</span></h2>
       <h4>Ideas – not yet committed</h4>
     <article class="item">
       <h3>
@@ -641,15 +645,6 @@
       </h3>
       <dl><dt>Decided</dt><dd><strong>THE RULE STANDS</strong> (Thomas, 2026-08-18). No change. Logged so it is not re-litigated, and so the cost is visible if it ever is.</dd><dt>What happened</dt><dd>Thomas shared a recipe he wrote himself, with a photo he took, and pasted the original as a "Source link". The share fell back to the generic card. <code>create_recipe_share</code> publishes the photo and description only when <code>source_url is null</code> (0034), and the manual form and the importer write that SAME field - one field, two meanings: "scraped from here" and "here is where I got the idea".</dd></dl>
       <details><summary>Full note</summary><p>Measured on production 2026-08-18: 97 live recipes, **91 have a source URL and a photo, so all 91 fall back to the generic card**; 4 publish a photo. How many of the 91 are hand-written-with-credit is unknowable - the thing that would distinguish them is what is not recorded. ⚠️ **WHY THE PROPOSED FIXES WERE REJECTED, which is the part worth keeping.** Three were considered: (1) a per-field photo-provenance column set at write time; (2) a <code>created_via: import | manual</code> flag; (3) no schema change at all, inferring from the photo's URI at save time - an imported photo arrives as <code>http…</code>, a picked one as <code>file://</code>. <strong>All three fail on the same case, Thomas's:</strong> *"you copied the recipe and copied the photo."* Save a site's photo to the camera roll, then pick it, and it arrives as <code>file://</code> on a manually created recipe - indistinguishable from a photograph of your own dinner. The mechanism is knowable; the OWNERSHIP is not. A client can never establish provenance, so a flag would only encode a guess while looking like a fact - worse than the blunt rule, because the blunt rule is honest about being blunt. The cost, kept visible: 91 of 97 shares show an identical wordmark card, and the spec's own argument is that the preview card is the product and the photo is what gets a link tapped. That is a real conversion cost, accepted deliberately in exchange for never publishing someone else's photograph. If it ever needs solving, only routes that do NOT guess are worth it: <strong>ask at share time</strong> ("Add a photo and this looks like yours" - already an idea in share-recipe.md, and it produces content that is unambiguously ours to publish), or <strong>attribution instead of content</strong> ("recipe from foodsite.com"), which publishes a link rather than someone's work. The description stays stricter regardless: descriptive prose is the more clearly copyrightable half, so suppressing it whenever a source is cited costs little - it never appears in the chat card, only on the page. &lt;sub&gt;Someday – not committed&lt;/sub&gt;</p></details>
-    </article>
-    <article class="item">
-      <h3>
-        
-        
-        <span><strong><code>eas-submit-ios.sh</code> reports the wrong build as proof</strong></span>
-      </h3>
-      <dl><dt>Why</dt><dd>it ends by asking App Store Connect for the newest VALID build and printing it as the headline. On 2026-08-17 that printed <strong>"Build 17 is VALID on TestFlight"</strong> immediately after submitting build 20 – build 17 being ten days old and nothing to do with the run. It reads exactly like confirmation.</dd><dt>Risk</dt><dd>this is the failure the two-source check exists to prevent, arriving through the check itself. Taking the headline at face value records a stale build as today's result, and the opposite error (a wrong "Apple never received it") already happened once, on 2026-08-03.</dd><dt>Fix</dt><dd>pass the build number being submitted and report on THAT – "build 20: not listed yet" is honest and actionable, "build 17 is VALID" is not. Apple listed 20 three minutes later, so polling for the specific build would have confirmed it cleanly.</dd><dt>Size</dt><dd>small, in <code>scripts/asc-build-state.mjs</code> plus its caller.</dd></dl>
-      <details><summary>Full note</summary><p>(Found 2026-08-17 shipping build 20.)</p></details>
     </article>
     <article class="item">
       <h3>
@@ -803,10 +798,10 @@
       <h3>
         
         
-        <span><strong>Re-check the reviewer's demo mailbox before every submission</strong></span>
+        <span><strong>🚨 THE REVIEWER'S DEMO PLAN IS EMPTY, AND 1.1.0 IS WAITING FOR REVIEW</strong></span>
       </h3>
-      <dl><dt>Trigger</dt><dd>submitting any build for App Review – not just a first release. An update goes through the same sign-in.</dd><dt>Steps</dt><dd>1. sign in to <code>appreview@sebell.dk</code> webmail with the password Apple holds and confirm a one-time code still arrives (that is the whole reviewer path, end to end); 2. re-run the seed generator <code>scratchpad/gen-demo.ts</code> so the plan is populated for the CURRENT week; 3. confirm the App Review Information in App Store Connect still matches – username, mailbox password, §3 notes with the webmail URL.</dd></dl>
-      <details><summary>Full note</summary><p>Why it cannot be ticked off: the seeded weeks are <code>date_trunc('week', now())</code>, so a demo account nobody re-seeds shows a reviewer an empty plan – the app looking broken at exactly the moment it is being judged. And a mailbox password can be changed or a mailbox left to lapse between releases. Do not: use the Postgres test-OTP trigger. It writes into Supabase's internal auth schema, is a permanent known-code backdoor, and rots silently. Fallback only if Apple pushes back, never the opening move. History: built and seeded 2026-07-30, confirmed working 2026-08-07, carried the v1.0 review (approved, live 2026-08-13). The closed entry with the full build detail is under the v1 pre-launch checklist.</p></details>
+      <dl><dt>Needs</dt><dd>Thomas for the mailbox check; the re-seed is Claude's.</dd></dl>
+      <details><summary>Full note</summary><p>**Found 2026-08-19, an hour after submitting 1.1.0 – this check was NOT run before the submission.** Read from production: | week | planned meals | |---|---| | <strong>2026-08-17 (current)</strong> | <strong>no plan row at all</strong> | | 2026-08-10 | a row, but <strong>0 entries</strong> | | 2026-08-03 | 7 | | 2026-07-27 | 7 | <strong>The last week with actual meals was 2026-08-03.</strong> A reviewer signing in today opens the app on an empty plan – the app looking broken at exactly the moment it is being judged, which is the precise failure this standing item exists to prevent. The account itself is fine: 9 recipes, household intact. ⚠️ <strong>AND THE SEED GENERATOR IS GONE.</strong> The procedure said to re-run <code>scratchpad/gen-demo.ts</code>. It lived in a scratchpad, is not in git and is not on disk. So "re-run the generator" is not a step anyone can take – it has to be rewritten, and this time committed. Not blocked by the submission: seeding is a database write and touches no metadata, so it can be done while the version sits in the queue. Steps now: 1. <strong>Claude</strong> rewrites the seeder, commits it, and seeds the current week; 2. <strong>Thomas</strong> signs in to <code>appreview@sebell.dk</code> webmail and confirms a one-time code still arrives (that is the whole reviewer path, and only he has the password); 3. <strong>Thomas</strong> confirms the App Review Information in App Store Connect still matches. ⚠️ <strong>WHY IT KEEPS SLIPPING, and the fix that is not "remember".</strong> The seeded weeks are <code>date_trunc('week', now())</code>, so this decays on a timer with nothing to show for it until a reviewer sees it. It went unrun before this submission despite being written down as a standing pre-submission task. A seeder that seeds the CURRENT week whenever it runs, plus running it as part of the submit script, would remove the remembering. Do not: use the Postgres test-OTP trigger. It writes into Supabase's internal auth schema, is a permanent known-code backdoor, and rots silently. Fallback only if Apple pushes back, never the opening move. History: built and seeded 2026-07-30, confirmed working 2026-08-07, carried the v1.0 review (approved, live 2026-08-13).</p></details>
     </article>
     <article class="item">
       <h3>
