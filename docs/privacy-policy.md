@@ -1,6 +1,6 @@
 # Prep+Eat – Privacy Policy
 
-**Last updated: 18 August 2026**
+**Last updated: 19 August 2026**
 
 Prep+Eat is a meal-planning app for families: you collect recipes, plan the
 week's meals, and share a shopping list that updates on everyone's phone at
