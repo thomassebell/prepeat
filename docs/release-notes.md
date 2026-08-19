@@ -66,10 +66,12 @@ not on TestFlight, not in review, and it needs a build to reach anyone.
 
 ### Share links expire, and you can stop sharing (NOT IN ANY BUILD, 2026-08-19)
 
-⚠️ **IN THE WORKING TREE ONLY.** The migration is on the DEV database; production
-has not had it, the share site is not deployed, and **build 24 – the one attached
-to 1.1.0 – does not contain any of this.** It needs its own build, and the
-version it lands in is an open decision (backlog: "What is live and what is not").
+⚠️ **GOING OUT IN 1.1.0 – NEEDS BUILD 25.** Decided by Thomas 2026-08-19.
+Migration 0038 is live on **production**, and the share site is deployed. But
+**build 24, the one attached to the 1.1.0 record, contains none of the app
+changes**, so the record needs a new build before it is submitted. Verified on
+the device after a clean install: share, Stop sharing, and the revoked link all
+behave.
 
 User-facing lines, App Store voice:
 

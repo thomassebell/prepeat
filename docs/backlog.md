@@ -129,7 +129,7 @@ Everything else in this file is Claude's to get on with.
   <sub>Someday – not committed</sub>
 - **⭐ FOR THE MORNING: publish the privacy policy, then submit 1.1.0** – three reviews, in this order. Everything else is done.
   <sub>Someday – not committed</sub>
-- **⚠️ What is live and what is not, for share expiry + Stop sharing** – two decisions, below. Nothing is broken meanwhile.
+- **⭐ Ship share expiry + Stop sharing as part of 1.1.0** – two actions, both his: publish the policy, and submit.
   <sub>Someday – not committed</sub>
 - **⚠️ UNGATE "Share recipe" when the share page ships** – nothing – it is one `__DEV__` check to delete, in the same change that deploys the page.
   <sub>Someday – not committed</sub>
@@ -4506,30 +4506,37 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
            and the heading, the button and the menu item now all read the same
            three words.
 
-- [ ] **⚠️ What is live and what is not, for share expiry + Stop sharing**
-      Needs: Thomas – two decisions, below. Nothing is broken meanwhile.
-      **On dev only.** Migration 0038 is applied to the dev database. Production
-           has NOT had it, the share site is NOT deployed, and no build carries
-           the app changes.
-      1. **Production migration – when?** It degrades safely on its own: both
-           readers treat an unknown status as gone, so shipping it before the
-           app only means an expired link shows the revoked wording. The
-           expiry clock starts for links created after it lands, which is the
-           half that protects users without needing a build.
-      2. **Which release carries the app half?** 1.1.0 has **build 24 already
-           attached** and is waiting to be submitted – this is not in it. Either
-           a new build goes onto that record before submitting, or Stop sharing
-           waits for 1.2.0.
-      ⚠️ **THE PRIVACY POLICY MUST NOT BE UPDATED YET, and the spec's own
-           instruction is the trap.** It says to apply the new wording "in the
-           same change that ships the feature". But *ships* means a build in
-           users' hands, not a commit: real users are on build 12. A policy
-           saying "Open the recipe and choose Stop sharing" would be describing a
-           control nobody has. **The 30-day sentences become true the moment the
-           production migration lands; the Stop sharing paragraph only when a
-           release carrying it is live.** They can be published separately, and
-           the spec's two versions of the replacement wording disagree with each
-           other – use the "ready to paste" one.
+- [ ] **⭐ Ship share expiry + Stop sharing as part of 1.1.0**
+      Needs: Thomas – two actions, both his: publish the policy, and submit.
+      **Decided 2026-08-19 (Thomas): this goes out IN 1.1.0, with the new
+           privacy policy.** So 1.1.0 needs a NEW BUILD – build 24 is attached to
+           that record and predates all of this.
+      ✅ **Verified on the device 2026-08-19** – Thomas, after a clean delete and
+           reinstall: *"everything is ok."* Share → Stop sharing appears → the
+           sheet → the link dies and reads "isn't sharing this one any more".
+           This was the last unproven part: everything else had been checked by
+           test suite or by curl, and the screens themselves had never run on a
+           phone against a link that resolved.
+      **What is already live and needs nothing:**
+      - Migration 0038 on **production** (and dev). Verified in the schema dump,
+           not just the ledger: `expires_at` NOT NULL, the `expired` branch in
+           `share_by_token`, and `stop_sharing_recipe` with no anon grant.
+      - The share site (`ea45f52`): the expired page, and the AASA split.
+      **What is left, in order:**
+      1. **Publish `prepeat-web/privacy.html`.** Already carries the new wording,
+           deliberately uncommitted – committing auto-deploys to the live site
+           Apple links to, so it needs Thomas's eyes first. `docs/privacy-policy.md`
+           already has the same wording (committed, publishes nothing).
+      2. **Build 25**, swap it onto the 1.1.0 record in App Store Connect.
+      3. **Submit.** Reaches real users – Thomas's call, always.
+      ⚠️ **THE POLICY CAN GO OUT WITH THE RELEASE, NOT BEFORE IT, AND THE REASON
+           CHANGED.** The earlier worry – that the policy would describe a control
+           users lack – turned out to be narrower than it looked: the live policy
+           has **no sharing section at all**, and sharing was `__DEV__`-gated
+           until build 24, so no App Store user can create a share link today.
+           The whole section is therefore inapplicable to anyone on build 12.
+           That means the weak "write to us and we will do it" wording **never
+           has to be published** – it goes out once, already correct.
 
 - [ ] **Imported-content rule: the photo of a hand-written recipe that credits a source**
       Decided: **THE RULE STANDS** (Thomas, 2026-08-18). No change. Logged so it
