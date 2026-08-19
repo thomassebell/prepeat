@@ -67,6 +67,13 @@ wait $SUBMIT_PID
 STATUS=$?
 kill $WATCHDOG_PID 2>/dev/null
 
+# The build number `--latest` actually picked, read back from the submit's own
+# output. Needed for the check at the bottom: without it that check waits for
+# "the newest build App Store Connect knows about", which for the first few
+# minutes after an upload is the PREVIOUS build - so it passes instantly and
+# names the wrong one (seen 2026-08-19, build 25 uploaded, "Build 24 is VALID").
+BUILD_NUMBER=$(grep -E "Build number:" "$LOG" | tail -1 | tr -dc '0-9')
+
 rm -f "$LOG"
 
 if (( STATUS != 0 )); then
@@ -94,5 +101,14 @@ echo "==> Uploaded. Waiting for Apple to finish processing it."
 echo "    (The CLI's success message is not proof – it has spun long after a"
 echo "     successful upload AND during a stuck one. Apple's own answer is.)"
 
-# The real done-signal: the build showing VALID in App Store Connect.
-node scripts/asc-build-state.mjs --wait 20
+# The real done-signal: THIS build showing VALID in App Store Connect.
+if [[ -n "$BUILD_NUMBER" ]]; then
+  echo "    (waiting specifically for build $BUILD_NUMBER)"
+  node scripts/asc-build-state.mjs --wait 20 --expect "$BUILD_NUMBER"
+else
+  # Should not happen, but a missing number must not turn into a silent false
+  # pass on the previous build - say so rather than checking the wrong thing.
+  echo "    ⚠️ Could not read the build number from the submit output, so the"
+  echo "       check below is about the NEWEST build, which may not be yours."
+  node scripts/asc-build-state.mjs --wait 20
+fi

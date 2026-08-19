@@ -5751,6 +5751,22 @@ Not work. Kept so a cold thread can pick things up without re-litigating them.
 
 ### Decisions log (recent)
 
+- **2026-08-19 – THE "IS IT VALID?" CHECK COULD PASS ON THE WRONG BUILD, AND
+  DOES NOT ANY MORE.** `asc-build-state.mjs --wait` waited for *the newest build
+  App Store Connect lists* to be VALID. But a build Apple has not finished
+  ingesting is not in that list at all, so for the first few minutes after an
+  upload the PREVIOUS build is the newest one - and the check exits 0 with a
+  cheerful "Build 24 is VALID" seconds after you uploaded build 25. Seen live on
+  build 25's submit: `--wait 12` returned instantly, naming 24.
+  **Why this one matters more than its size:** that line exists precisely
+  because `eas submit` cannot be trusted in either direction, and it is the
+  sentence everyone reads as proof. A false pass there is worse than having no
+  check, because it launders a guess into a fact.
+  **Fixed:** `--expect <build>` waits for that specific number and nothing else;
+  `eas-submit-ios.sh` reads the number out of the submit's own output and passes
+  it. If the number cannot be read, the script now SAYS the check is about the
+  newest build rather than quietly checking the wrong thing.
+
 - **2026-08-19 – EACH BUILD CLAIMS ONLY ITS OWN SHARE HOST.** The dev app now
   claims `share-dev.prepeat.app` and nothing else; the production app claims
   `share.prepeat.app` and nothing else; each host's AASA lists only the matching

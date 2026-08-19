@@ -8,10 +8,20 @@
 // rather than a hopeful message.
 //
 // Usage (config comes from scripts/eas-env.sh):
-//   node scripts/asc-build-state.mjs              # print the latest builds
-//   node scripts/asc-build-state.mjs --wait 10    # poll until VALID, max 10 min
+//   node scripts/asc-build-state.mjs                    # print the latest builds
+//   node scripts/asc-build-state.mjs --wait 10          # poll until VALID
+//   node scripts/asc-build-state.mjs --wait 10 --expect 25   # ...for build 25
 //
-// Exit 0 when the newest build is VALID (or when just listing), 1 otherwise.
+// Exit 0 when the awaited build is VALID (or when just listing), 1 otherwise.
+//
+// ⚠️ ALWAYS PASS --expect AFTER A SUBMIT. Without it this waits for whatever
+// build App Store Connect currently calls newest, and a build Apple has not
+// finished ingesting IS NOT IN THAT LIST YET - so the PREVIOUS build satisfies
+// the check and the script exits 0 with a cheerful "Build 24 is VALID" seconds
+// after you uploaded build 25. Seen 2026-08-19, on the very run this file
+// exists to make trustworthy: `--wait 12` returned instantly and said 24.
+// A false pass here is worse than no check, because it is the line everyone
+// reads as proof.
 import { createSign } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 
@@ -30,6 +40,13 @@ if (!KEY_PATH || !KEY_ID || !ISSUER) {
 
 const waitFlag = process.argv.indexOf('--wait');
 const waitMinutes = waitFlag === -1 ? 0 : Number(process.argv[waitFlag + 1] ?? 15);
+
+// The build number we are actually waiting for. Without it, "newest" is
+// whatever Apple already has, which is the previous build until ingestion
+// finishes - see the warning above.
+const expectFlag = process.argv.indexOf('--expect');
+const expectBuild =
+  expectFlag === -1 ? null : String(process.argv[expectFlag + 1] ?? '').trim();
 
 const b64url = (input) =>
   Buffer.from(typeof input === 'string' ? input : JSON.stringify(input))
@@ -95,15 +112,23 @@ do {
     // A transient API blip should not fail the whole submit – keep polling.
     console.warn(`  (could not reach App Store Connect: ${error.message})`);
   }
-  const newest = builds[0];
-  if (newest?.state === 'VALID') {
-    console.log(`==> Build ${newest.number} is VALID on TestFlight.`);
+  // With --expect, ONLY that build can satisfy the wait. Without it, the
+  // newest one Apple lists does - fine for a bare listing, a false pass after
+  // a submit.
+  const target = expectBuild
+    ? builds.find((b) => String(b.number) === expectBuild)
+    : builds[0];
+  if (target?.state === 'VALID') {
+    console.log(`==> Build ${target.number} is VALID on TestFlight.`);
     print(builds);
     process.exit(0);
   }
   if (waitMinutes > 0 && Date.now() < deadline) {
-    if (newest) {
-      console.log(`  build ${newest.number}: ${newest.state} – waiting…`);
+    if (target) {
+      console.log(`  build ${target.number}: ${target.state} – waiting…`);
+    } else if (expectBuild) {
+      // The normal state for the first few minutes after an upload.
+      console.log(`  build ${expectBuild} not in App Store Connect yet – waiting…`);
     } else {
       console.log('  not in App Store Connect yet – waiting…');
     }
@@ -117,7 +142,8 @@ if (waitMinutes === 0) {
 }
 
 console.log(
-  `==> Not VALID after ${waitMinutes} min. Apple is usually 5-15; check`,
+  `==> ${expectBuild ? `Build ${expectBuild}` : 'Newest build'} not VALID after ` +
+    `${waitMinutes} min. Apple is usually 5-15; check`,
 );
 console.log('    https://appstoreconnect.apple.com/apps/6793690543/testflight/ios');
 print(builds);

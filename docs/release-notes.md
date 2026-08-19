@@ -64,14 +64,16 @@ Two more rules this file exists to keep straight:
 More goes in before this ships, so this section grows. On the dev build only:
 not on TestFlight, not in review, and it needs a build to reach anyone.
 
-### Share links expire, and you can stop sharing (NOT IN ANY BUILD, 2026-08-19)
+### Share links expire, and you can stop sharing (BUILD 25, VALID ON TESTFLIGHT 2026-08-19)
 
-⚠️ **GOING OUT IN 1.1.0 – NEEDS BUILD 25.** Decided by Thomas 2026-08-19.
-Migration 0038 is live on **production**, and the share site is deployed. But
-**build 24, the one attached to the 1.1.0 record, contains none of the app
-changes**, so the record needs a new build before it is submitted. Verified on
-the device after a clean install: share, Stop sharing, and the revoked link all
-behave.
+**Build 25 is VALID on TestFlight** – confirmed by App Store Connect, not by the
+CLI. Migration 0038 is live on **production** and the share site is deployed, so
+the whole chain is consistent for anyone on build 25. Verified on the device
+before building: share, Stop sharing, and the revoked link all behave.
+
+⚠️ **THE 1.1.0 RECORD STILL POINTS AT BUILD 24** unless someone changes it.
+Build 24 predates every app change here. Swapping build 25 onto the record, and
+submitting, are both still to do.
 
 User-facing lines, App Store voice:
 
