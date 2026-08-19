@@ -5,19 +5,16 @@ is always something ready to post. Started 2026-08-03 – earlier builds are
 reconstructed from the backlog and git history.
 
 > **🎉 LIVE ON THE APP STORE: 1.0.0** (build 12), released 2026-08-13 ·
-> **NEXT VERSION: 1.1.0, ON TESTFLIGHT as build 24** (2026-08-18, VALID –
-> supersedes build 20; build 24 is the first with sharing ungated) · `app.json` says 1.1.0, correctly – that is the version build 20
-> carries.
+> **1.1.0 IS WITH APPLE: WAITING_FOR_REVIEW since 2026-08-19 20:32 UTC,
+> carrying build 25.** Release is **MANUAL**, so approval does not put it in
+> front of anyone – Thomas presses release. The last review took 13 days.
 >
-> From here the first rule below stops being theoretical: **real users are on
-> build 12**, which was frozen on 2026-07-30. Everything in builds 13–20 is
-> written, and build 20 is in testers' hands, but NONE of it is in the App
-> Store release. **1.1.0 has not been submitted for review** – that is a
-> separate decision, and until it is taken, users have none of the last
-> eighteen days of work.
+> Until he does, **real users are still on build 12**, frozen 2026-07-30.
+> Everything in builds 13–25 is written and tested and none of it has reached
+> them. That gap is the whole reason this file exists.
 >
-> Thomas does not track the number; keeping these two lines true is Claude's
-> job (agreed 2026-08-03). The rule below decides the next number, so this is
+> Thomas does not track the number; keeping these lines true is Claude's job
+> (agreed 2026-08-03). The rule below decides the next number, so this is
 > bookkeeping, not a judgement: re-read it whenever a change is added under
 > "Accumulating", and raise it if what landed outranks it – a feature turns a
 > pending 1.0.1 into 1.1.0, and it never goes back down within one release.
@@ -61,69 +58,78 @@ Two more rules this file exists to keep straight:
 
 ## Accumulating toward the next version
 
-More goes in before this ships, so this section grows. On the dev build only:
-not on TestFlight, not in review, and it needs a build to reach anyone.
+Nothing yet – 1.1.0 went to review on 2026-08-19 and this section starts again
+from the next change. Anything added here is on the dev build only: not on
+TestFlight, not in review, and it needs a build to reach anyone.
 
-### Share links expire, and you can stop sharing (BUILD 25, VALID ON TESTFLIGHT 2026-08-19)
+## 1.1.0 – SUBMITTED FOR REVIEW 2026-08-19 (build 25)
 
-**Build 25 is VALID on TestFlight** – confirmed by App Store Connect, not by the
-CLI. Migration 0038 is live on **production** and the share site is deployed, so
-the whole chain is consistent for anyone on build 25. Verified on the device
-before building: share, Stop sharing, and the revoked link all behave.
+WAITING_FOR_REVIEW since 20:32 UTC, carrying **build 25**. MANUAL release.
+Everything the release depends on outside the binary is already live: migration
+0038 on production, the share site deployed, and the privacy policy published
+and dated 19 August.
 
-🚀 **1.1.0 IS SUBMITTED FOR REVIEW** – WAITING_FOR_REVIEW with build 25, sent
-2026-08-19 20:32 UTC at Thomas's instruction, after he tested build 25 on
-TestFlight. Read back from Apple, not inferred from the API's response.
-**Release is MANUAL**, so approval does NOT put it in front of users – Thomas
-still presses release. The privacy policy went live the same day.
-Last review took 13 days.
-
-⚠️ **UPLOADING TO TESTFLIGHT DOES NOT ATTACH A BUILD TO THE VERSION RECORD.**
-Build 25 was VALID on TestFlight while 1.1.0 still pointed at build 24, and
-nothing warns you - submitting then would have shipped the OLD binary under the
-new release notes. Check the record, every release:
-`zsh -c 'source scripts/eas-env.sh && node scripts/asc-attach-build.mjs'`
+⚠️ **THE "WHAT'S NEW" IN APP STORE CONNECT WAS WRITTEN FOR BUILD 24 AND DOES NOT
+MENTION EXPIRY OR STOP SHARING.** It is 1125 characters covering sharing, Danish,
+the screen staying on, imports and settings – all accurate, but silent on the
+two things build 25 added. So the release notes users read describe links
+without saying they lapse after 30 days or that they can be turned off. The
+privacy policy says both. Worth fixing while the version is still
+WAITING_FOR_REVIEW; once it is IN_REVIEW the text is normally frozen.
+The two lines it is missing are the first two below.
 
 User-facing lines, App Store voice:
 
 - **Share links now stop working after 30 days.** Nothing to do and nothing to
   remember – a link you sent simply lapses, and the page says so plainly.
+  *(NOT in the submitted What's New.)*
 - **Stop sharing a recipe whenever you want.** Choose Stop sharing from a
   recipe's ⋯ menu and every link you have made for it stops working straight
   away. Anyone who already saved the recipe keeps their copy.
-
-Under the hood, not for notes:
-- A lapsed link says *"This link has expired"* and does NOT name the sender –
-  turning a link off is a decision, running out is not, and naming someone would
-  imply they did something.
-- The database withholds the whole snapshot on an expired link, not just the
-  status: `share_by_token` is readable without a login by design, so an expired
-  token has to stop returning the recipe, not merely be labelled dead.
-
-### 1.1.0 – Share a recipe (BUILD 24, VALID ON TESTFLIGHT 2026-08-18)
-
-**Sharing is UNGATED as of 2026-08-18** and is in the next production build. It
-is the MINOR feature this version carries. The web page it needs is live at
-share.prepeat.app, and the production database carries the functions a link
-depends on – the whole chain was verified before the gate came off.
-
-User-facing lines, App Store voice:
-
+  *(NOT in the submitted What's New.)*
 - **Share a recipe with anyone.** Send a link from a recipe's ⋯ menu. Whoever
   opens it sees the dish, and if they have Prep+Eat it opens right there with a
   tap to save it to their own kitchen.
 - Opening a shared link shows who sent it, the title and the times, then Save
   to my recipes.
-- A link that has been turned off, one that leads nowhere, or a connection that
-  drops each says what happened, instead of one generic error.
+- A link that has been turned off, one that has expired, one that leads
+  nowhere, or a connection that drops each says what happened, instead of one
+  generic error.
+- **The app speaks Danish** when the phone is set to Danish; your own recipes
+  are never translated.
+- **The screen stays on while you cook**, with a switch in Settings.
+- **Better recipe imports** – ingredients that used to go missing now arrive,
+  and amounts read properly on the shopping list.
+- **Tidier settings**, and polish on leftovers and ingredient sections.
 
 Under the hood, not for notes:
+- A lapsed link says *"This link has expired"* and does **not** name the sender.
+  Turning a link off is a decision; running out is not, and naming someone
+  would imply they did something.
+- The database withholds the whole snapshot on an expired link, not just the
+  status. `share_by_token` is readable without a login by design, so an expired
+  token has to stop returning the recipe rather than merely being labelled dead.
+- **Stop sharing revokes every link for that recipe**, because the OS share
+  sheet means we never learn who a link went to. It does not recall copies
+  people already saved.
+- **Each build now claims only its own share host.** Both used to claim both, so
+  a share link could open in the dev app, which reads a different database and
+  showed "this link doesn't lead anywhere". Only ever visible to someone with
+  both apps installed.
 - **Fixed: a mistyped or shortened link showed a developer error screen.** The
   app only recognised a perfectly formed link, so the very case the "link
-  doesn't lead anywhere" screen was written for could never reach it. Found on
-  the device.
-- A share made by a production build points at share.prepeat.app and writes to
-  the production database, which that host reads – consistent end to end.
+  doesn't lead anywhere" screen was written for could never reach it.
+
+⚠️ **Shipped unverified, deliberately, and worth knowing:** the Danish for the
+four new sharing strings is Claude's draft and was never proof-read, and the
+in-app **expired** screen has never run on a phone because no link is old
+enough. Its web counterpart was checked against the deployed host.
+
+⚠️ **UPLOADING TO TESTFLIGHT DOES NOT ATTACH A BUILD TO THE VERSION RECORD.**
+Build 25 was VALID on TestFlight while 1.1.0 still pointed at build 24, and
+nothing warns you – submitting then would have shipped the OLD binary under the
+new release notes. Check the record, every release:
+`zsh -c 'source scripts/eas-env.sh && node scripts/asc-attach-build.mjs'`
 
 > ⚠️ **BUILD WHEN YOU ARE READY TO SUBMIT, NOT BEFORE.** Three builds in this
 > file died parked: 18 (2026-08-16, superseded by 19 before it shipped), 19

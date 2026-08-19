@@ -79,11 +79,11 @@
 <main>
   <header>
     <h1>Prep+Eat – open backlog</h1>
-    <p class="meta">83 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
+    <p class="meta">84 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
   </header>
   <div class="filter"><input id="q" type="search" placeholder="Filter tasks…" autocomplete="off"></div>
   <section class="waiting">
-      <h2>Waiting on you <span class="count" data-total="5">5</span></h2>
+      <h2>Waiting on you <span class="count" data-total="6">6</span></h2>
       <p class="lede">Nothing moves on these until you decide or draw something. Everything else is mine.</p>
       <article class="item">
         <h3><span><strong>⭐ Share a recipe with someone – FIRST ITEM IN v1.1</strong></span></h3>
@@ -100,6 +100,10 @@
       </article><article class="item">
         <h3><span><strong>⭐ FOR THE MORNING: publish the privacy policy, then submit 1.1.0</strong></span></h3>
         <dl><dt>Needs</dt><dd>Thomas – three reviews, in this order. Everything else is done.</dd></dl>
+        <p class="from">Someday – not committed</p>
+      </article><article class="item">
+        <h3><span><strong>⚠️ The submitted "What's New" does not mention expiry or Stop sharing</strong></span></h3>
+        <dl><dt>Needs</dt><dd>Thomas – decide whether to edit it, and it is time-limited.</dd></dl>
         <p class="from">Someday – not committed</p>
       </article><article class="item">
         <h3><span><strong>⚠️ UNGATE "Share recipe" when the share page ships</strong></span></h3>
@@ -554,7 +558,7 @@
     </article>
     </section>
     <section>
-      <h2>Someday – not committed <span class="count" data-total="29">29</span></h2>
+      <h2>Someday – not committed <span class="count" data-total="30">30</span></h2>
       <h4>Ideas – not yet committed</h4>
     <article class="item">
       <h3>
@@ -645,6 +649,15 @@
       </h3>
       <dl><dt>Needs</dt><dd>Thomas – three reviews, in this order. Everything else is done.</dd></dl>
       <details><summary>Full note</summary><p>1. <strong>Read and publish the privacy policy.</strong> <code>prepeat-web/privacy.html</code> has a new "Sharing a recipe outside your household" section **prepared but NOT committed** – committing there auto-deploys to the live site Apple links to, so it needs your eyes first. <code>docs/privacy-policy.md</code> (same wording) is already committed, so nothing is lost. Publish with: `cd ~/Documents/Claude/Projects/prepeat-web &amp;&amp; git add privacy.html &amp;&amp; git commit -m "..."` – the hook pushes and GitHub Pages deploys. 2. <strong>Review the What's New, then submit 1.1.0.</strong> Already created in App Store Connect: **1.1.0, PREPARE_FOR_SUBMISSION, MANUAL release, build 24 attached, release notes set and read back from Apple.** Claude did NOT submit – that reaches real users and is Thomas's call. 3. <strong>Proof-read the Danish</strong> – the spreadsheet Claude sent: 281 unique strings, duplicates removed, 11 flagged, no placeholder mismatches. ⚠️ <strong>A gap the policy exposed:</strong> there is no way for a user to turn a share link off themselves, so the policy has to say "write to us and we will do it". Honest, but weak as a GDPR withdrawal route – it makes the in-app revoke more than a nicety. Order matters: the policy must be LIVE before 1.1.0 goes to review, since sharing is the headline feature and that URL is what Apple links to.</p></details>
+    </article>
+    <article class="item">
+      <h3>
+        
+        
+        <span><strong>⚠️ The submitted "What's New" does not mention expiry or Stop sharing</strong></span>
+      </h3>
+      <dl><dt>Needs</dt><dd>Thomas – decide whether to edit it, and it is time-limited.</dd></dl>
+      <details><summary>Full note</summary><p>The App Store release notes attached to 1.1.0 were written for <strong>build 24</strong> and never revised. 1125 characters covering sharing, Danish, the screen staying on, imports and settings – all accurate, and silent on the two things build 25 actually added. **So users are told they can share, and not told that links lapse after 30 days or that they can be turned off.** The privacy policy, published the same day, says both. Why it matters more than a missing bullet: expiry makes something a user did stop working later. Finding that out from the policy rather than the release notes is a poor way to learn it, and "Stop sharing" is the answer to the question the feature raises. ⚠️ <strong>TIME-LIMITED.</strong> Metadata is normally editable while a version is WAITING_FOR_REVIEW and frozen once it is IN_REVIEW. Editing may also bounce the submission back, so the trade is: two better sentences against possibly re-queueing behind a 13-day review. The two missing lines are written and ready in release-notes.md under 1.1.0, marked *(NOT in the submitted What's New)*.</p></details>
     </article>
     <article class="item">
       <h3>
