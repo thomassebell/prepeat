@@ -102,8 +102,8 @@
         <dl><dt>Needs</dt><dd>Thomas – three reviews, in this order. Everything else is done.</dd></dl>
         <p class="from">Someday – not committed</p>
       </article><article class="item">
-        <h3><span><strong>⭐ Share links: 30-day expiry + "Stop sharing" in the menu</strong></span></h3>
-        <dl><dt>Needs</dt><dd>Thomas – a Figma frame for the EXPIRED state (web + in-app), or a ruling to reuse the revoked layout with new words. Plus a nod to the confirmation wording. Everything else is decided.</dd></dl>
+        <h3><span><strong>⚠️ What is live and what is not, for share expiry + Stop sharing</strong></span></h3>
+        <dl><dt>Needs</dt><dd>Thomas – two decisions, below. Nothing is broken meanwhile.</dd></dl>
         <p class="from">Someday – not committed</p>
       </article><article class="item">
         <h3><span><strong>⚠️ UNGATE "Share recipe" when the share page ships</strong></span></h3>
@@ -654,10 +654,10 @@
       <h3>
         
         
-        <span><strong>⭐ Share links: 30-day expiry + "Stop sharing" in the menu</strong></span>
+        <span><strong>⚠️ What is live and what is not, for share expiry + Stop sharing</strong></span>
       </h3>
-      <dl><dt>Needs</dt><dd>Thomas – a Figma frame for the EXPIRED state (web + in-app), or a ruling to reuse the revoked layout with new words. Plus a nod to the confirmation wording. Everything else is decided.</dd></dl>
-      <details><summary>Full note</summary><p>📄 <strong>THE SPEC IS THE ENTRY: share-expiry-and-stop-sharing.md.</strong> Read it rather than this summary – it carries the reasoning so the numbers are not re-argued. Why: writing the privacy policy exposed that a user cannot turn a share link off. The policy had to say "write to us", which is weak as a GDPR withdrawal route, and it is the gap Thomas was most worried about. Decided 2026-08-18: <strong>30 days, absolute from creation</strong> (48h breaks a link sent Friday and opened Monday; 90 was Claude's and leaned on expiry carrying the whole burden, which Stop sharing removes). <strong>Stop sharing revokes EVERY link for that recipe</strong> – the only honest option, because the OS share sheet means we never learn who a link went to. <strong>It does not recall copies people already saved</strong>, and the dialog must say so. Size: migration 0038 (0036/0037 are already live), one app build, and a same-day deploy of the share site. A new status degrades safely – both readers treat anything not <code>live</code> as gone – so the database can go first and the app can catch up. After it ships: replace the "write to us" line in BOTH copies of the privacy policy. Not before – a policy promising a control the app lacks is worse than one admitting the limitation.</p></details>
+      <dl><dt>Needs</dt><dd>Thomas – two decisions, below. Nothing is broken meanwhile.</dd></dl>
+      <details><summary>Full note</summary><p><strong>On dev only.</strong> Migration 0038 is applied to the dev database. Production has NOT had it, the share site is NOT deployed, and no build carries the app changes. 1. <strong>Production migration – when?</strong> It degrades safely on its own: both readers treat an unknown status as gone, so shipping it before the app only means an expired link shows the revoked wording. The expiry clock starts for links created after it lands, which is the half that protects users without needing a build. 2. <strong>Which release carries the app half?</strong> 1.1.0 has **build 24 already attached** and is waiting to be submitted – this is not in it. Either a new build goes onto that record before submitting, or Stop sharing waits for 1.2.0. ⚠️ **THE PRIVACY POLICY MUST NOT BE UPDATED YET, and the spec's own instruction is the trap.** It says to apply the new wording "in the same change that ships the feature". But <em>ships</em> means a build in users' hands, not a commit: real users are on build 12. A policy saying "Open the recipe and choose Stop sharing" would be describing a control nobody has. **The 30-day sentences become true the moment the production migration lands; the Stop sharing paragraph only when a release carrying it is live.** They can be published separately, and the spec's two versions of the replacement wording disagree with each other – use the "ready to paste" one.</p></details>
     </article>
     <article class="item">
       <h3>

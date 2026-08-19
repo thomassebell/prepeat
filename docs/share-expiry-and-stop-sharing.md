@@ -1,7 +1,33 @@
 # Share links: expiry + Stop sharing
 
-Build spec. Decided with Thomas 2026-08-18, not yet built. Parent spec:
+Build spec. Decided with Thomas 2026-08-18, **built 2026-08-19**. Parent spec:
 [share-recipe.md](share-recipe.md).
+
+> **STATUS: on dev, nowhere else.** Migration 0038 is applied to the dev
+> database. Production has not had it, the share site is not deployed, and no
+> build carries the app changes – 1.1.0's build 24 predates all of this.
+>
+> **Two corrections this spec needed, kept here so they are not repeated:**
+>
+> 1. **"Add an `expired` branch to `share_by_token`" was not enough.** 0034
+>    gates every recipe field on a second test – `revoked_at is null and
+>    deleted_at is null` – written out once per field, and an expired row passes
+>    it. Following this spec literally would have reported `expired` while still
+>    returning the title, description, photo and times to any anon caller of the
+>    RPC. 0038 computes the status once and gates every field on it.
+> 2. **`stop_sharing_recipe` needed the anon revoke by name**, per 0036/0037.
+>    This spec did not mention grants at all.
+>
+> **The EXPIRED state still has no Figma frame.** The design Thomas linked on
+> 2026-08-19 (Figma section 742:11146) covers share and stop sharing only. The
+> expired dead end is built on this document's own ruling – the revoked layout
+> with new words – and that is the one improvisation in the change.
+>
+> **The design changed two things below.** The sheet's heading is "Stop
+> sharing", not "Stop sharing this recipe?", and it has **no Cancel button** –
+> the ✕ and the backdrop are the way out. The frame is newer than this text, so
+> the frame won. The frame's body string also has the Danish pasted into the
+> middle of the English; the build uses the clean copy from the table below.
 
 ## Why this exists
 
@@ -188,6 +214,14 @@ recipes.detail.stopSharingBody    'Anyone you’ve sent it to won’t be able to
 ```
 
 ## The privacy policy replacement, ready to paste
+
+⚠️ **STILL NOT APPLIED, AND THE INSTRUCTION BELOW NEEDS A CORRECTION.** It says
+to apply this "in the same change that ships the feature". *Ships* means a build
+in users' hands, not a commit – real users are on build 12, and 1.1.0's build 24
+does not contain Stop sharing either. The two halves become true at different
+moments and can be published separately: **the 30-day sentences the moment the
+production migration lands, the "choose Stop sharing" paragraph only when a
+release carrying it is live.**
 
 ⚠️ **NOT APPLIED, AND ON PURPOSE.** The policy being published 2026-08-19 says a
 link can be turned off by writing to us, which is true today. Publishing the

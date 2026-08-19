@@ -103,9 +103,14 @@ So share with people you are happy to give the recipe to.
 Share. Editing the recipe afterwards does not change a link you have already
 sent.
 
-**Turning a link off.** Deleting the recipe takes its page down straight away.
-If you want a link turned off without deleting the recipe, write to us at the
-address at the end of this policy and we will do it.
+**How long a link lasts.** A share link stops working 30 days after you
+created it. You do not have to do anything – it simply stops.
+
+**Turning a link off sooner.** Open the recipe and choose Stop sharing. Every
+link you have made for that recipe stops working straight away, and so does
+deleting the recipe. One thing it does not do: anyone who already saved the
+recipe into their own kitchen keeps their copy. Stopping sharing ends the link,
+it does not take the recipe back.
 
 **Why we are allowed to publish it.** Because you asked us to: the page exists
 only because you chose to create it, and it stops existing when you say so.
@@ -151,9 +156,9 @@ processed by Resend, which is also covered by those clauses.
 - If you **leave a household**, you keep a copy of its recipes in a new
   personal kitchen, and the household keeps its own copy. The two are separate
   from that point on.
-- A **share link** and its snapshot are kept until you delete the recipe or ask
-  us to turn the link off. Copies other people saved into their own kitchens
-  are theirs and stay with them.
+- A **share link** and its snapshot stop working 30 days after you create the
+  link, or sooner if you stop sharing or delete the recipe. Copies other people
+  saved into their own kitchens are theirs and stay with them.
 
 ## Your rights
 

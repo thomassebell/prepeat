@@ -293,6 +293,17 @@ export const en = {
       // the title; the sender types whatever they want around it.
       shareMessage: '%{url}',
       shareFailedTitle: 'Couldn’t create the link',
+      // ⚠️ ONE STRING, THREE PLACES – the ⋯ menu item, the sheet's heading and
+      // its confirm button all say exactly this, which is the design
+      // (Figma 742:12329 and 742:25388), not a shortcut. A language that needs
+      // an imperative in the button and a noun in the heading has to split it.
+      stopSharing: 'Stop sharing',
+      // The second sentence is the one that earns its place: "stop sharing"
+      // sounds like taking the recipe back, and it is not. Without it a user
+      // would believe they had retrieved something they had not.
+      stopSharingBody:
+        'Anyone you’ve sent it to won’t be able to open the link any more. People who already saved it keep their copy.',
+      stopSharingFailedTitle: 'Couldn’t stop sharing',
       total: 'Total',
       prep: 'Prep',
       cook: 'Cook',
@@ -586,6 +597,17 @@ export const en = {
     notFoundBody: 'It may have been mistyped or cut short. Ask whoever sent it to share it again.',
     errorTitle: 'Can’t open this recipe',
     errorBody: 'We couldn’t reach Prep+Eat. Check your connection and try again.',
+    // ⚠️ NO SENDER, AND DELIBERATELY SO. `revokedTitle` names them because
+    // turning a link off was their decision; a link that merely lapsed was
+    // nobody's decision, and naming them would imply they did something. The
+    // database withholds the name for this status (0038) so the sentence
+    // cannot accidentally acquire a subject.
+    expiredTitle: 'This link has expired',
+    // Says WHY, unlike the other dead ends: "expired" invites the question, and
+    // a reader who gets no answer assumes something is broken. Closes on the
+    // same "ask for a new one" as revoked, because the way out is identical.
+    expiredBody:
+      'Links stop working after 30 days. Ask for a new one – it only takes a second.',
   },
 
 };

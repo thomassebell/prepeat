@@ -2,13 +2,13 @@ import { IS_DEV_APP } from '@/constants/build-variant';
 import { supabase } from './supabase';
 
 /**
- * Sharing a recipe by link. Spec: docs/share-recipe.md, migration 0034.
+ * Sharing a recipe by link. Specs: docs/share-recipe.md (the feature),
+ * docs/share-expiry-and-stop-sharing.md (expiry + Stop sharing). Migrations
+ * 0034, 0035, 0038.
  *
- * ⚠️ THE PAGE THESE LINKS POINT AT DOES NOT EXIST YET. Step 5 of the spec's
- * build order (a server-rendered route with OG tags, on its own subdomain) is
- * still to come, so a link created today resolves to nothing. That is why the
- * share action is gated behind `__DEV__` in the recipe screen – see the note
- * there – and it must be ungated in the same change that deploys the page.
+ * The page these links point at shipped 2026-08-18 on share.prepeat.app, and
+ * the `__DEV__` gate on the share action came off with it. The note that used to
+ * sit here – "the page does not exist yet" – outlived the thing it warned about.
  */
 
 /**
@@ -66,9 +66,18 @@ export async function createRecipeShare(recipeId: string): Promise<string> {
   return shareUrlForToken(data);
 }
 
-/** What a share page shows. Mirrors `share_by_token`'s columns (migration 0034). */
+/**
+ * What a share page shows. Mirrors `share_by_token`'s columns (0034, 0038).
+ *
+ * ⚠️ `expired` AND `revoked` ARE NOT INTERCHANGEABLE, even though both mean the
+ * link is dead. Revoked is a decision someone made, so the page names them -
+ * *"Pia isn't sharing this one any more"*. Expiry is nobody's decision, so the
+ * sentence has no subject and the database withholds `shared_by` entirely
+ * (0038). Naming her for a link that merely lapsed would imply she did
+ * something.
+ */
 export interface SharedRecipe {
-  status: 'live' | 'revoked';
+  status: 'live' | 'revoked' | 'expired';
   sharedBy: string | null;
   title: string | null;
   description: string | null;
@@ -94,7 +103,12 @@ export async function fetchSharedRecipe(token: string): Promise<SharedRecipe | n
   const row = Array.isArray(data) ? data[0] : null;
   if (row == null) return null;
   return {
-    status: row.status === 'live' ? 'live' : 'revoked',
+    // ⚠️ ANY UNKNOWN STATUS FALLS BACK TO `revoked`, and that is the safety net
+    // that let 0038 ship before this build did: a status this version has never
+    // heard of reads as gone rather than as live. Keep the fallback that way
+    // round when the next one is added.
+    status:
+      row.status === 'live' ? 'live' : row.status === 'expired' ? 'expired' : 'revoked',
     sharedBy: row.shared_by ?? null,
     title: row.title ?? null,
     description: row.description ?? null,
@@ -130,4 +144,57 @@ export async function saveSharedRecipe(
     throw new Error('No recipe returned');
   }
   return data;
+}
+
+/**
+ * Does this recipe have any link that still works?
+ *
+ * Drives whether "Stop sharing" appears in the ⋯ menu at all – offering it on a
+ * recipe that was never shared is an offer to undo something that never
+ * happened.
+ *
+ * Reads the table directly rather than through a function, which is safe here
+ * and only here: `recipe_shares` has a member-only SELECT policy (0034), and
+ * the tokens never leave this query. `anon` has no policy at all, so the same
+ * read from the share page is impossible – that is what makes the token a
+ * secret.
+ *
+ * "Live" is the same three-part test `share_by_token` makes, minus the deleted
+ * recipe: you cannot be looking at the menu of a recipe that is deleted.
+ */
+export async function recipeHasLiveShares(recipeId: string): Promise<boolean> {
+  const { data, error } = await supabase
+    .from('recipe_shares')
+    .select('token')
+    .eq('recipe_id', recipeId)
+    .is('revoked_at', null)
+    .gt('expires_at', new Date().toISOString())
+    .limit(1);
+  if (error) throw error;
+  return Array.isArray(data) && data.length > 0;
+}
+
+/**
+ * Turn off EVERY live link for this recipe.
+ *
+ * Per recipe, not per person, and that is the only honest option rather than a
+ * compromise: the OS share sheet does the sending, so we never learn who a link
+ * went to. "Stop sharing with Mum" is unimplementable – we do not know which
+ * link went to Mum, or that Mum exists. The alternative, revoking one link, is
+ * meaningless to someone looking at a list of indistinguishable 32-character
+ * strings.
+ *
+ * ⚠️ IT DOES NOT RECALL WHAT WAS ALREADY SAVED. Anyone who tapped *Save to my
+ * recipes* owns an independent copy in their own kitchen, and it stays theirs.
+ * The confirmation dialog says so, because it is the assumption a user could
+ * otherwise act on wrongly.
+ *
+ * A share that had already lapsed is left alone, so its page keeps reading
+ * "expired" rather than being rewritten into a decision nobody made.
+ */
+export async function stopSharingRecipe(recipeId: string): Promise<void> {
+  const { error } = await supabase.rpc('stop_sharing_recipe', {
+    p_recipe_id: recipeId,
+  });
+  if (error) throw error;
 }

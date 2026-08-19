@@ -64,6 +64,29 @@ Two more rules this file exists to keep straight:
 More goes in before this ships, so this section grows. On the dev build only:
 not on TestFlight, not in review, and it needs a build to reach anyone.
 
+### Share links expire, and you can stop sharing (NOT IN ANY BUILD, 2026-08-19)
+
+⚠️ **IN THE WORKING TREE ONLY.** The migration is on the DEV database; production
+has not had it, the share site is not deployed, and **build 24 – the one attached
+to 1.1.0 – does not contain any of this.** It needs its own build, and the
+version it lands in is an open decision (backlog: "What is live and what is not").
+
+User-facing lines, App Store voice:
+
+- **Share links now stop working after 30 days.** Nothing to do and nothing to
+  remember – a link you sent simply lapses, and the page says so plainly.
+- **Stop sharing a recipe whenever you want.** Choose Stop sharing from a
+  recipe's ⋯ menu and every link you have made for it stops working straight
+  away. Anyone who already saved the recipe keeps their copy.
+
+Under the hood, not for notes:
+- A lapsed link says *"This link has expired"* and does NOT name the sender –
+  turning a link off is a decision, running out is not, and naming someone would
+  imply they did something.
+- The database withholds the whole snapshot on an expired link, not just the
+  status: `share_by_token` is readable without a login by design, so an expired
+  token has to stop returning the recipe, not merely be labelled dead.
+
 ### 1.1.0 – Share a recipe (BUILD 24, VALID ON TESTFLIGHT 2026-08-18)
 
 **Sharing is UNGATED as of 2026-08-18** and is in the next production build. It

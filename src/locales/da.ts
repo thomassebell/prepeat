@@ -292,6 +292,10 @@ export const da: DeepPartial<typeof en> = {
       delete: 'Slet opskrift',
       share: 'Del opskrift',
         shareFailedTitle: 'Kunne ikke oprette linket',
+      stopSharing: 'Stop deling',
+      stopSharingBody:
+        'Alle du har sendt den til, kan ikke længere åbne linket. De, der allerede har gemt den, beholder deres kopi.',
+      stopSharingFailedTitle: 'Kunne ikke stoppe delingen',
       // ⚠️ ABBREVIATED ON PURPOSE, AND SHORTENED TWICE – Thomas's call, both
       // rounds on 2026-08-17 from his phone. The correct words are
       // "Forberedelse" and "Tilberedning"; they overflowed the row, and
@@ -569,6 +573,9 @@ export const da: DeepPartial<typeof en> = {
     notFoundBody: 'Det kan være skrevet forkert eller blevet klippet over. Bed afsenderen om at dele det igen.',
     errorTitle: 'Kan ikke åbne opskriften',
     errorBody: 'Vi kunne ikke få fat i Prep+Eat. Tjek din forbindelse, og prøv igen.',
+    expiredTitle: 'Linket er udløbet',
+    expiredBody:
+      'Links holder op med at virke efter 30 dage. Bed om et nyt – det tager kun et øjeblik.',
   },
 
 };

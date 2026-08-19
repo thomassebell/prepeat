@@ -42,7 +42,11 @@ import { t } from "@/lib/i18n";
 import { friendlyError } from "@/lib/error-messages";
 import { addRecipeToPlan } from "@/lib/meal-plan";
 import { usePreferences } from "@/lib/preferences";
-import { createRecipeShare } from "@/lib/recipe-shares";
+import {
+  createRecipeShare,
+  recipeHasLiveShares,
+  stopSharingRecipe,
+} from "@/lib/recipe-shares";
 import {
   addIngredient,
   addIngredientsToShoppingList,
@@ -65,7 +69,7 @@ import {
   type RecipeStep,
 } from "@/lib/recipes";
 
-type Dialog = "delete" | "shopping" | null;
+type Dialog = "delete" | "shopping" | "stopSharing" | null;
 
 // A just-deleted ingredient or step, kept so the undo toast can re-insert it.
 // These are hard deletes (no deleted_at), so undo re-adds from the snapshot.
@@ -115,6 +119,13 @@ export default function RecipeDetailScreen() {
     setMenuOpen(true);
   };
   const [dialog, setDialog] = useState<Dialog>(null);
+  // Whether "Stop sharing" belongs in the menu at all. Offering it on a recipe
+  // that was never shared is an offer to undo something that never happened -
+  // and it would also leak, to anyone glancing at the phone, that this recipe
+  // HAS been shared. Starts false so the menu never flashes an item that is
+  // about to disappear.
+  const [hasLiveShares, setHasLiveShares] = useState(false);
+  const [stoppingShare, setStoppingShare] = useState(false);
   const [editingIngredient, setEditingIngredient] = useState<
     RecipeIngredient | "new" | null
   >(null);
@@ -138,6 +149,15 @@ export default function RecipeDetailScreen() {
     } catch (error) {
       console.warn("[recipes] detail fetch failed", error);
       setFailed(true);
+    }
+    // Separate from the recipe fetch and deliberately NOT inside its try: a
+    // household member on an old build, or an outage on this one query, must
+    // not fail the whole screen over a menu item. Worst case the item is
+    // missing, and deleting the recipe still takes its page down.
+    try {
+      setHasLiveShares(await recipeHasLiveShares(id));
+    } catch (error) {
+      console.warn("[recipes] could not check for live shares", error);
     }
   }, [id]);
 
@@ -283,12 +303,38 @@ export default function RecipeDetailScreen() {
       Alert.alert(t("recipes.detail.shareFailedTitle"), friendlyError(error));
       return;
     }
+    // The link now exists whatever happens next: `createRecipeShare` already
+    // wrote the row, so "Stop sharing" has to appear even if the sheet is
+    // cancelled. Cancelling the share sheet does NOT unmint the token - the
+    // user may well have copied the URL out of it.
+    setHasLiveShares(true);
     try {
       await Share.share({
         message: t("recipes.detail.shareMessage", { url }),
       });
     } catch {
       // Sharing cancelled – nothing to do.
+    }
+  };
+
+  // Turning every link off. The confirmation is not optional politeness: this
+  // is irreversible for the people holding those links, and sharing again mints
+  // a fresh one that the old recipients do not have.
+  const stopSharing = async () => {
+    setStoppingShare(true);
+    try {
+      await stopSharingRecipe(recipe.id);
+      setHasLiveShares(false);
+      setDialog(null);
+    } catch (error) {
+      console.warn("[recipes] could not stop sharing", error);
+      setDialog(null);
+      Alert.alert(
+        t("recipes.detail.stopSharingFailedTitle"),
+        friendlyError(error),
+      );
+    } finally {
+      setStoppingShare(false);
     }
   };
 
@@ -326,6 +372,19 @@ export default function RecipeDetailScreen() {
       label: t("recipes.detail.share"),
       onPress: shareRecipe,
     },
+    // Directly under "Share recipe" and only while a link is live – Figma
+    // 742:12329 ("recipe – stop sharing 1"), which is the same menu as
+    // 742:11199 with this one row inserted. `do-disturb-alt` is the icon the
+    // frame names.
+    ...(hasLiveShares
+      ? [
+          {
+            icon: "do-disturb-alt" as keyof typeof MaterialIcons.glyphMap,
+            label: t("recipes.detail.stopSharing"),
+            onPress: () => setDialog("stopSharing"),
+          },
+        ]
+      : []),
     // "Add ingredient/instruction" left this menu 2026-07-16 (feedback):
     // ingredients and steps are edited inline on the lists below. Edit recipe
     // joined it 2026-07-27 (Thomas) – it keeps its button at the bottom of the
@@ -675,7 +734,7 @@ export default function RecipeDetailScreen() {
       )}
 
       <ConfirmSheet
-        visible={dialog != null}
+        visible={dialog === "delete" || dialog === "shopping"}
         title={
           dialog === "delete"
             ? t("recipes.detail.delete")
@@ -696,6 +755,13 @@ export default function RecipeDetailScreen() {
         destructive={dialog === "delete"}
         onCancel={() => setDialog(null)}
         onConfirm={confirmDialog}
+      />
+
+      <StopSharingSheet
+        visible={dialog === "stopSharing"}
+        busy={stoppingShare}
+        onCancel={() => setDialog(null)}
+        onConfirm={stopSharing}
       />
 
       <ReorderSheet
@@ -1057,6 +1123,65 @@ function StepRow({
         </Pressable>
       </SwipeActions>
     </View>
+  );
+}
+
+/**
+ * "Stop sharing" – Figma 742:25388 ("recipe – stop sharing 2").
+ *
+ * ⚠️ NOT `ConfirmSheet`, AND THAT IS THE DESIGN, not a shortcut. The delete
+ * dialog offers Cancel above the destructive action; this frame has no Cancel
+ * button at all - the sheet's own ✕ and its backdrop are the way out, and the
+ * single red button is the only thing to press. Building it on ConfirmSheet
+ * would have meant inventing a Cancel the frame does not draw, which is exactly
+ * the improvisation that makes a design flaw invisible.
+ *
+ * The button carries a leading `do_disturb_alt` icon (the frame's own name for
+ * it) and paints with `button/danger/*`, not the `error/*` family the delete
+ * dialog uses. Both resolve to #DE2D12 in the DS today; they are different
+ * tokens and the frame binds the button one, so a future retune that moves them
+ * apart moves this with the buttons.
+ */
+function StopSharingSheet({
+  visible,
+  busy,
+  onCancel,
+  onConfirm,
+}: {
+  visible: boolean;
+  busy: boolean;
+  onCancel: () => void;
+  onConfirm: () => void;
+}) {
+  return (
+    <BottomSheet
+      visible={visible}
+      title={t("recipes.detail.stopSharing")}
+      onClose={onCancel}
+    >
+      <Text className="font-paragraph text-paragraph font-default leading-xsmall text-text-default">
+        {t("recipes.detail.stopSharingBody")}
+      </Text>
+      <Pressable
+        onPress={onConfirm}
+        disabled={busy}
+        accessibilityRole="button"
+        accessibilityState={{ disabled: busy }}
+        className={
+          "w-full flex-row items-center justify-center gap-comp-xsmall rounded-medium bg-button-danger-fill-enabled px-comp-xlarge py-comp-large" +
+          (busy ? " opacity-60" : "")
+        }
+      >
+        <MaterialIcons
+          name="do-disturb-alt"
+          size={24}
+          color={ds.colors.button.danger.label.enabled}
+        />
+        <Text className="font-paragraph text-components-button-label font-default text-button-danger-label-enabled">
+          {t("recipes.detail.stopSharing")}
+        </Text>
+      </Pressable>
+    </BottomSheet>
   );
 }
 

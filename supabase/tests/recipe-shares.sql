@@ -320,6 +320,125 @@ begin
     v_row.status = 'revoked');
   perform pg_temp.check('deleted recipe hides the title', v_row.title is null);
 
+  -- ==== 8 & 9. Expiry and Stop sharing (0038) ====
+  --
+  -- ⚠️ A FRESH SHARE, NOT `t_own` - section 5 revoked that one, and `revoked`
+  -- outranks `expired` in share_by_token by design. Reusing it made three of
+  -- these checks report on a revoked link while the "expired hides the ..."
+  -- checks passed anyway, because a revoked share hides exactly the same
+  -- fields. Two of the four looked right for the wrong reason.
+  declare
+    t_live   text;   -- the one that will be aged into expiry
+    t_second text;   -- a second live link on the SAME recipe
+    r_other  uuid;   -- a different recipe, to bound the blast radius
+    t_other  text;
+  begin
+    perform pg_temp.as_user(pia);
+    t_live := public.create_recipe_share(r_own);
+
+    perform pg_temp.check('a new share expires in about 30 days',
+      (select expires_at from recipe_shares where token = t_live)
+        between now() + interval '29 days' and now() + interval '31 days');
+
+    -- Reach back in time rather than waiting 30 days. ⚠️ AS `postgres`, NOT as
+    -- Pia: `recipe_shares` deliberately has no UPDATE policy (0034 - nothing may
+    -- hand-assemble or edit a snapshot), so the same statement run as an
+    -- authenticated user updates ZERO rows and raises nothing. The test would
+    -- then check a still-live share and pass for the wrong reason.
+    perform set_config('role', 'postgres', true);
+    update recipe_shares set expires_at = now() - interval '1 minute'
+    where token = t_live;
+
+    perform pg_temp.as_anon();
+    select * into v_row from public.share_by_token(t_live);
+    perform pg_temp.check('a lapsed share reports expired', v_row.status = 'expired');
+
+    -- ⚠️ THE CHECKS THAT ALMOST DID NOT EXIST. The spec only changed the STATUS
+    -- branch, which would have left every snapshot field gated on
+    -- `revoked_at is null and deleted_at is null` - both true for an expired row.
+    -- The page would have looked right and the RPC would still have handed the
+    -- recipe to anyone who asked. share_by_token is anon-executable BY DESIGN, so
+    -- these are what prove expiry actually stops exposure.
+    perform pg_temp.check('expired hides the title', v_row.title is null);
+    perform pg_temp.check('expired hides the description', v_row.description is null);
+    perform pg_temp.check('expired hides the photo', v_row.image_url is null);
+    perform pg_temp.check('expired hides the times',
+      v_row.prep_minutes is null and v_row.cook_minutes is null);
+
+    -- Revoked names the sender because that was Pia's decision. Expiry is nobody's
+    -- decision, so naming her would imply she did something.
+    perform pg_temp.check('expired does NOT name the sender', v_row.shared_by is null);
+    -- The contrast, on the same recipe, so the two cannot silently converge.
+    select * into v_row from public.share_by_token(t_own);
+    perform pg_temp.check('revoked, unlike expired, DOES still name the sender',
+      v_row.status = 'revoked' and v_row.shared_by is not null);
+
+    -- ==== Stop sharing: every link for ONE recipe, and only that recipe ====
+    perform set_config('role', 'postgres', true);
+    update recipe_shares set expires_at = now() + interval '30 days'
+    where token = t_live;
+
+    -- Two live links on the same recipe, which is the normal case: each tap of
+    -- Share mints a new token so re-sharing cannot break the first link.
+    perform pg_temp.as_user(pia);
+    t_second := public.create_recipe_share(r_own);
+
+    insert into recipes (household_id, created_by_user_id, title, source_url)
+    values (h_pia, pia, 'Untouched Tagine', null)
+      returning id into r_other;
+    t_other := public.create_recipe_share(r_other);
+
+    -- A stranger cannot turn Pia's links off.
+    perform pg_temp.as_user(stranger);
+    begin
+      perform public.stop_sharing_recipe(r_own);
+      perform pg_temp.check('non-member cannot stop sharing', false);
+    exception when others then
+      perform pg_temp.check('non-member cannot stop sharing', true);
+    end;
+
+    -- anon cannot reach the function at all - 0036/0037's lesson applied to the
+    -- new function. The is_household_member check inside is the belt; this is
+    -- the braces, and it is the half that a careless default privilege undoes.
+    perform pg_temp.as_anon();
+    perform pg_temp.check('anon cannot execute stop_sharing_recipe',
+      not has_function_privilege('anon', 'public.stop_sharing_recipe(uuid)', 'execute'));
+
+    perform pg_temp.as_user(pia);
+    perform public.stop_sharing_recipe(r_own);
+
+    perform pg_temp.as_anon();
+    select * into v_row from public.share_by_token(t_live);
+    perform pg_temp.check('stop sharing kills the first link', v_row.status = 'revoked');
+    select * into v_row from public.share_by_token(t_second);
+    perform pg_temp.check('stop sharing kills the second link too', v_row.status = 'revoked');
+
+    -- The blast radius is one recipe. This is the check that would catch a
+    -- household-wide or account-wide mistake in the update's where clause.
+    select * into v_row from public.share_by_token(t_other);
+    perform pg_temp.check('another recipe''s link is untouched', v_row.status = 'live');
+
+    -- ⚠️ STOP SHARING DOES NOT RECALL WHAT WAS ALREADY SAVED, and this is the
+    -- assumption a user could act on wrongly - hence the second sentence in the
+    -- dialog. Sam's copy is an independent row in Sam's own kitchen.
+    perform pg_temp.as_user(stranger);
+    select * into v_saved from recipes where id = saved;
+    perform pg_temp.check('a saved copy survives stop sharing',
+      v_saved.id is not null and v_saved.deleted_at is null);
+
+    -- A lapsed link is left alone: nobody stopped it, it timed out, and the
+    -- page should keep saying so rather than being rewritten into a decision.
+    perform set_config('role', 'postgres', true);
+    update recipe_shares set revoked_at = null, expires_at = now() - interval '1 day'
+    where token = t_live;
+    perform pg_temp.as_user(pia);
+    perform public.stop_sharing_recipe(r_own);
+    perform pg_temp.as_anon();
+    select * into v_row from public.share_by_token(t_live);
+    perform pg_temp.check('stop sharing leaves an already-lapsed link reading expired',
+      v_row.status = 'expired');
+  end;
+
   -- Put back what section 4 borrowed. Without this, a second run in the same
   -- database reports a FALSE failure on the belt check - the leftover grant
   -- looks exactly like a missing revoke in the migration.

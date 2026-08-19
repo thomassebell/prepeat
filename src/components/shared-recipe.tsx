@@ -282,9 +282,14 @@ export function SharedRecipeScreen({ token, onClose }: { token: string; onClose:
     );
   }
 
-  // Unknown token and revoked share say different things, because we know
-  // different things: a revoked share still tells us who sent it.
+  // The three dead ends say different things, because we know different things.
+  // ⚠️ THE TEST IS THE STATUS, NOT WHETHER WE HAVE A NAME. It used to be
+  // `sharedBy != null`, which was right while `revoked` was the only way a
+  // link could die - an expired share would have picked up "Pia isn't sharing
+  // this one any more", turning a lapse into an accusation. The database also
+  // withholds the name on `expired` (0038), so this is belt and braces.
   const gone = share === "missing" || share.status !== "live";
+  const expired = share !== "missing" && share.status === "expired";
   const sharedBy = share !== "missing" ? share.sharedBy : null;
 
   return (
@@ -301,16 +306,30 @@ export function SharedRecipeScreen({ token, onClose }: { token: string; onClose:
         contentContainerStyle={{ paddingBottom: tabBarClearance(insets, Spacing.five) }}
       >
         {gone ? (
+          // ⚠️ NO FIGMA FRAME FOR THE EXPIRED STATE - it reuses this layout on
+          // the ruling in docs/share-expiry-and-stop-sharing.md ("the same
+          // white card with the broken heart, no button"), and the design link
+          // Thomas gave on 2026-08-19 covers share/stop sharing only. Flagged
+          // in the backlog as the one improvisation in this change: if the
+          // fourth dead end should look different, it is undrawn, not decided.
           <Card>
             <Notice
               icon="heart-broken"
               iconSize={32}
               title={
-                sharedBy != null
-                  ? t("share.revokedTitle", { name: sharedBy })
-                  : t("share.notFoundTitle")
+                expired
+                  ? t("share.expiredTitle")
+                  : sharedBy != null
+                    ? t("share.revokedTitle", { name: sharedBy })
+                    : t("share.notFoundTitle")
               }
-              body={sharedBy != null ? t("share.revokedBody") : t("share.notFoundBody")}
+              body={
+                expired
+                  ? t("share.expiredBody")
+                  : sharedBy != null
+                    ? t("share.revokedBody")
+                    : t("share.notFoundBody")
+              }
             />
           </Card>
         ) : (

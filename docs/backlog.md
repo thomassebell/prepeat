@@ -129,7 +129,7 @@ Everything else in this file is Claude's to get on with.
   <sub>Someday – not committed</sub>
 - **⭐ FOR THE MORNING: publish the privacy policy, then submit 1.1.0** – three reviews, in this order. Everything else is done.
   <sub>Someday – not committed</sub>
-- **⭐ Share links: 30-day expiry + "Stop sharing" in the menu** – a Figma frame for the EXPIRED state (web + in-app), or a ruling to reuse the revoked layout with new words. Plus a nod to the confirmation wording. Everything else is decided.
+- **⚠️ What is live and what is not, for share expiry + Stop sharing** – two decisions, below. Nothing is broken meanwhile.
   <sub>Someday – not committed</sub>
 - **⚠️ UNGATE "Share recipe" when the share page ships** – nothing – it is one `__DEV__` check to delete, in the same change that deploys the page.
   <sub>Someday – not committed</sub>
@@ -4402,10 +4402,10 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
       Order matters: the policy must be LIVE before 1.1.0 goes to review, since
          sharing is the headline feature and that URL is what Apple links to.
 
-- [ ] **⭐ Share links: 30-day expiry + "Stop sharing" in the menu**
-      Needs: Thomas – a Figma frame for the EXPIRED state (web + in-app), or a
-           ruling to reuse the revoked layout with new words. Plus a nod to the
-           confirmation wording. Everything else is decided.
+- [x] **⭐ Share links: 30-day expiry + "Stop sharing" in the menu**
+      Built 2026-08-19. Migration 0038 is **on dev**; the app and the share site
+           are in the working tree. NOT on production, NOT deployed, NOT in a
+           build – see "What is live and what is not" below.
       📄 **THE SPEC IS THE ENTRY: [share-expiry-and-stop-sharing.md](share-expiry-and-stop-sharing.md).**
            Read it rather than this summary – it carries the reasoning so the
            numbers are not re-argued.
@@ -4420,13 +4420,116 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
            option, because the OS share sheet means we never learn who a link
            went to. **It does not recall copies people already saved**, and the
            dialog must say so.
-      Size: migration 0038 (0036/0037 are already live), one app build, and a
-           same-day deploy of the share site. A new status degrades safely –
-           both readers treat anything not `live` as gone – so the database can
-           go first and the app can catch up.
-      After it ships: replace the "write to us" line in BOTH copies of the
-           privacy policy. Not before – a policy promising a control the app
-           lacks is worse than one admitting the limitation.
+      Design 2026-08-19: Figma section **"recipe – share/stop sharing recipe"**
+           (742:11146), five frames. The menu item sits directly under "Share
+           recipe" with `do_disturb_alt`; the sheet is heading + ✕ + body + ONE
+           red button, **no Cancel** – so it is NOT `ConfirmSheet`, which puts
+           Cancel above the destructive action.
+      ⚠️ **THE SPEC WOULD HAVE LEAKED THE EXPIRED SNAPSHOT, and this is the part
+           worth remembering.** It said to add an `expired` branch to
+           `share_by_token`'s status. But 0034 gates every recipe field on a
+           SECOND test, written out six times: `revoked_at is null and
+           deleted_at is null` – and an expired row satisfies both. The status
+           would have said `expired` while the title, description, photo and
+           times still came back. Neither reader would have shown them, so
+           nothing would have LOOKED wrong; but `share_by_token` is
+           anon-executable by design, so an expired token would still have
+           handed the snapshot to anyone calling the RPC. Expiry's only job is
+           to stop exposure. 0038 computes the status once in a lateral join and
+           gates every field on it, and the test suite now checks the fields, not
+           just the label.
+      ⚠️ **`stop_sharing_recipe` needed the anon revoke BY NAME** – the trap from
+           0036 and 0037, for the fourth time in this project (tables 0034,
+           sequences 0033, functions 0036/0037). Verified on the real dev ACL,
+           not locally: local default privileges are not the hosted ones, which
+           is exactly how 0036 slipped through.
+      Verified: 58 PASS / 0 FAIL in `supabase/tests/recipe-shares.sql` (20 of
+           them new), household-boundary suite still clean, all 38 migrations
+           replay onto an empty database, and the web expired page rendered
+           against the dev database.
+      ⚠️ **ONE IMPROVISATION, FLAGGED:** the EXPIRED state has no Figma frame.
+           The 742:11146 section covers share and stop sharing only. It reuses
+           the revoked dead-end layout on the spec's own ruling ("the same white
+           card with the broken heart, no button"). If the fourth dead end
+           should look different, it is undrawn, not decided.
+
+- [x] **Share links opened in the WRONG APP – fixed 2026-08-19**
+      Found on the device within minutes of the first Stop sharing test: Thomas
+           stopped sharing, tapped the link, and got *"This link doesn't lead
+           anywhere"* instead of the revoked wording.
+      ⚠️ **NOTHING WAS WRONG WITH STOP SHARING.** The database returned
+           `revoked` with his name and the title withheld, exactly as designed.
+           Proved with one token on both hosts: `share-dev.prepeat.app` → 410
+           and *"isn't sharing this one any more"*; `share.prepeat.app` → 404 and
+           *"doesn't lead anywhere"*. Same token, different database.
+      The cause: **one AASA file listing BOTH app IDs, served for BOTH hosts**,
+           and `app.json` claiming both domains for both builds. With the dev app
+           and the TestFlight app installed side by side, iOS could hand ANY
+           share link to EITHER app – and the wrong one looks in the wrong
+           database and finds nothing. **It is indistinguishable from a genuinely
+           broken link**, which is exactly why it fooled us, and why it had
+           already cost a confusing round on 2026-08-18. That round split the
+           HOSTS and left the CLAIMS shared; this is the other half.
+      Fixed on both sides, deliberately: `share.prepeat.app` serves only
+           `app.prepeat`, `share-dev.prepeat.app` only `app.prepeat.dev`
+           (prepeat-share `ea45f52`, deployed and verified: 200 on both, correct
+           appID on each); and the app claims match – `app.json` production,
+           `app.config.js` dev. **The entitlement is the binding half** (an app
+           that does not claim a domain cannot be handed its links), so either
+           side alone would fix it; both are narrowed so they cannot drift apart.
+      ⚠️ **A STATIC FILE AT THE WELL-KNOWN PATH BEATS ANY REWRITE** – Vercel
+           checks the filesystem first – so per-host content meant moving the
+           file to `public/aasa/{production,dev}.json` and adding two rewrites,
+           host-conditional FIRST because first match wins.
+      ⚠️ **iOS CACHES THE ASSOCIATION.** The server side is live and fixes both
+           directions with no rebuild, but a phone that already resolved the old
+           file may hold it until the app is reinstalled or iOS refreshes. A
+           reinstall (build 25, or another dev build) clears it.
+
+- [x] **Two things in the Stop sharing frame – both settled 2026-08-19**
+      1. **The Danish pasted into the middle of the English body string**
+           (742:25397) – **FIXED IN FIGMA** the same day. The layer read *"…won't
+           be able to open the Alle du har sendt den til, kan ikke længere åbne
+           link any more."* It now carries the agreed English only, with the
+           text style and IBM Plex Sans Regular untouched. The sheet lost a line
+           of text as a result (96px → 72px). The Danish still lives in `da.ts`
+           and in the spec's copy table, flagged as a draft for the translation
+           review.
+      2. **No Cancel button – Thomas, 2026-08-19: "no cancel button."** The ✕ and
+           the backdrop are the only ways out, and that is deliberate. It is a
+           departure from the delete dialog, which puts Cancel above the
+           destructive action, so it is recorded rather than left to look like an
+           omission. Built as drawn – `StopSharingSheet` is a separate component
+           precisely so it does not inherit `ConfirmSheet`'s Cancel.
+      Also settled: the sheet's heading is **"Stop sharing"**, not the spec's
+           "Stop sharing this recipe?" – the frame is newer, so the frame won,
+           and the heading, the button and the menu item now all read the same
+           three words.
+
+- [ ] **⚠️ What is live and what is not, for share expiry + Stop sharing**
+      Needs: Thomas – two decisions, below. Nothing is broken meanwhile.
+      **On dev only.** Migration 0038 is applied to the dev database. Production
+           has NOT had it, the share site is NOT deployed, and no build carries
+           the app changes.
+      1. **Production migration – when?** It degrades safely on its own: both
+           readers treat an unknown status as gone, so shipping it before the
+           app only means an expired link shows the revoked wording. The
+           expiry clock starts for links created after it lands, which is the
+           half that protects users without needing a build.
+      2. **Which release carries the app half?** 1.1.0 has **build 24 already
+           attached** and is waiting to be submitted – this is not in it. Either
+           a new build goes onto that record before submitting, or Stop sharing
+           waits for 1.2.0.
+      ⚠️ **THE PRIVACY POLICY MUST NOT BE UPDATED YET, and the spec's own
+           instruction is the trap.** It says to apply the new wording "in the
+           same change that ships the feature". But *ships* means a build in
+           users' hands, not a commit: real users are on build 12. A policy
+           saying "Open the recipe and choose Stop sharing" would be describing a
+           control nobody has. **The 30-day sentences become true the moment the
+           production migration lands; the Stop sharing paragraph only when a
+           release carrying it is live.** They can be published separately, and
+           the spec's two versions of the replacement wording disagree with each
+           other – use the "ready to paste" one.
 
 - [ ] **Imported-content rule: the photo of a hand-written recipe that credits a source**
       Decided: **THE RULE STANDS** (Thomas, 2026-08-18). No change. Logged so it
@@ -5640,6 +5743,34 @@ Not work. Kept so a cold thread can pick things up without re-litigating them.
             missing radius is not evidence of radius 0. `ds-theme.cjs` decides.
 
 ### Decisions log (recent)
+
+- **2026-08-19 – EACH BUILD CLAIMS ONLY ITS OWN SHARE HOST.** The dev app now
+  claims `share-dev.prepeat.app` and nothing else; the production app claims
+  `share.prepeat.app` and nothing else; each host's AASA lists only the matching
+  bundle.
+  **Why it is worth a decision entry:** the previous arrangement looked
+  deliberate and generous – both apps claim both hosts, so any link opens in
+  "the app" – and it was the opposite of helpful, because the two apps read
+  different databases. A link handed to the wrong app renders the "this link
+  doesn't lead anywhere" screen, which is the one dead end that means *we know
+  nothing about this token*. Debugging it costs a round every time, because the
+  app is behaving perfectly and the screen is telling the truth.
+  **The rule to keep:** a build may only claim the host that reads the database
+  that build writes to. If a third environment is ever added, it gets its own
+  host AND its own claim, or it will reintroduce this exactly.
+
+- **2026-08-19 – THE STOP SHARING SHEET HAS NO CANCEL BUTTON.** Thomas, asked
+  directly because it departs from every other destructive action in the app:
+  *"no cancel button."* The sheet is heading + ✕ + body + one red button; the ✕
+  and the backdrop are the way out.
+  **Why it is recorded rather than left implicit:** the delete dialog puts a
+  Cancel above the destructive action, so a reader coming to this code later
+  would reasonably assume the missing Cancel is an oversight and "fix" it. It is
+  the design. `StopSharingSheet` is therefore a component of its own rather than
+  a use of `ConfirmSheet`, specifically so it cannot inherit that Cancel.
+  **The related copy call, same day:** the sheet's heading is "Stop sharing",
+  not the spec's earlier "Stop sharing this recipe?" – the frame post-dates the
+  spec, so the frame won. Heading, button and menu item now read identically.
 
 - **2026-08-18 – THE IN-APP SHARED-RECIPE SCREEN STAYS SPARSE, AND THAT IS NOT A
   GAP.** Claude's flow review called it a problem that the same shared recipe
