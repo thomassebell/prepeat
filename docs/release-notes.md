@@ -71,9 +71,16 @@ CLI. Migration 0038 is live on **production** and the share site is deployed, so
 the whole chain is consistent for anyone on build 25. Verified on the device
 before building: share, Stop sharing, and the revoked link all behave.
 
-⚠️ **THE 1.1.0 RECORD STILL POINTS AT BUILD 24** unless someone changes it.
-Build 24 predates every app change here. Swapping build 25 onto the record, and
-submitting, are both still to do.
+**Build 25 is attached to the 1.1.0 record** (swapped 2026-08-19, read back from
+Apple). Still PREPARE_FOR_SUBMISSION, still MANUAL release. **Submitting is the
+only step left**, and it is Thomas's - along with publishing the privacy policy,
+which should go out with it.
+
+⚠️ **UPLOADING TO TESTFLIGHT DOES NOT ATTACH A BUILD TO THE VERSION RECORD.**
+Build 25 was VALID on TestFlight while 1.1.0 still pointed at build 24, and
+nothing warns you - submitting then would have shipped the OLD binary under the
+new release notes. Check the record, every release:
+`zsh -c 'source scripts/eas-env.sh && node scripts/asc-attach-build.mjs'`
 
 User-facing lines, App Store voice:
 
