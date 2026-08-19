@@ -71,10 +71,12 @@ CLI. Migration 0038 is live on **production** and the share site is deployed, so
 the whole chain is consistent for anyone on build 25. Verified on the device
 before building: share, Stop sharing, and the revoked link all behave.
 
-**Build 25 is attached to the 1.1.0 record** (swapped 2026-08-19, read back from
-Apple). Still PREPARE_FOR_SUBMISSION, still MANUAL release. **Submitting is the
-only step left**, and it is Thomas's - along with publishing the privacy policy,
-which should go out with it.
+🚀 **1.1.0 IS SUBMITTED FOR REVIEW** – WAITING_FOR_REVIEW with build 25, sent
+2026-08-19 20:32 UTC at Thomas's instruction, after he tested build 25 on
+TestFlight. Read back from Apple, not inferred from the API's response.
+**Release is MANUAL**, so approval does NOT put it in front of users – Thomas
+still presses release. The privacy policy went live the same day.
+Last review took 13 days.
 
 ⚠️ **UPLOADING TO TESTFLIGHT DOES NOT ATTACH A BUILD TO THE VERSION RECORD.**
 Build 25 was VALID on TestFlight while 1.1.0 still pointed at build 24, and
