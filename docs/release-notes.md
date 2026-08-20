@@ -5,9 +5,11 @@ is always something ready to post. Started 2026-08-03 – earlier builds are
 reconstructed from the backlog and git history.
 
 > **🎉 LIVE ON THE APP STORE: 1.0.0** (build 12), released 2026-08-13 ·
-> **1.1.0 IS WITH APPLE: WAITING_FOR_REVIEW since 2026-08-19 20:32 UTC,
-> carrying build 25.** Release is **MANUAL**, so approval does not put it in
-> front of anyone – Thomas presses release. The last review took 13 days.
+> **✅ 1.1.0 IS APPROVED (2026-08-20) AND WAITING ON THE RELEASE BUTTON:**
+> `PENDING_DEVELOPER_RELEASE`, carrying build 25. Apple took **under a day**
+> this time – submitted 2026-08-19 20:32 UTC – against thirteen for 1.0.
+> Release is **MANUAL**, so approval puts it in front of nobody; Thomas presses
+> release.
 >
 > Until he does, **real users are still on build 12**, frozen 2026-07-30.
 > Everything in builds 13–25 is written and tested and none of it has reached
@@ -79,11 +81,12 @@ with none, including a rebuild of the same version. It was the one part of "post
 what changed" that had to be done by hand, which is why it was the part that got
 skipped.
 
-⚠️ **App Store Connect will not let a 1.2.0 VERSION RECORD be created while
-1.1.0 is Waiting for Review**, and that is Apple's rule rather than a problem
+⚠️ **App Store Connect would not let a 1.2.0 VERSION RECORD be created while
+1.1.0 was Waiting for Review**, and that is Apple's rule rather than a problem
 with this build: TestFlight groups builds by version string on its own and
-needs no record. The 1.2.0 release page can only be started once 1.1.0 is
-released or pulled from review.
+needs no record. **1.1.0 has now been approved (2026-08-20) but not released**,
+so the 1.2.0 page is worth retrying – untested at this exact state, and the
+safe assumption remains that it opens once 1.1.0 is actually released.
 
 **Build 25 is commit `d7f6f6d`.**
 
@@ -92,11 +95,14 @@ to say the two were the same app; the drag-to-reorder work landed that
 afternoon and they are not any more. `src/app/recipes/`, `src/components/recipes/`,
 `src/lib/` and both locale files have all changed.
 
-⚠️ **SO: IF APPLE REJECTS 1.1.0 AND IT NEEDS A BUILD 26, THAT BUILD MUST COME
-FROM `d7f6f6d`, NOT FROM `main`.** Building main would quietly ship a whole
-reordering redesign under a version string that was reviewed without it.
-`build-iphone.sh` and EAS both build the WORKING TREE, so neither will warn –
-`git checkout d7f6f6d` first, and build from there.
+~~⚠️ **SO: IF APPLE REJECTS 1.1.0 AND IT NEEDS A BUILD 26, THAT BUILD MUST COME
+FROM `d7f6f6d`, NOT FROM `main`.**~~ **Moot as of 2026-08-20 – 1.1.0 was
+approved, so there is no rebuild to get wrong.** The rule it rests on is not
+moot and will apply again the moment a version is in review: `build-iphone.sh`
+and EAS both build the WORKING TREE, not your commits, so a rebuild of a
+submitted version means `git checkout <that build's commit>` first. Building
+`main` instead quietly ships whatever else has landed under a version string
+that was reviewed without it.
 
 **Which number this becomes** follows the rule below, not a guess: a fix makes
 it 1.1.1, a feature makes it 1.2.0, and it never goes back down within a
@@ -133,9 +139,11 @@ for the next testflight build"*). It is on his dev build and nowhere else:
 commit `8d5ef38`; anything after that needs a build 27 to reach even TestFlight.
 Still 1.2.0 – a fix inside an unreleased version does not move the number.
 
-## 1.1.0 – SUBMITTED FOR REVIEW 2026-08-19 (build 25)
+## 1.1.0 – ✅ APPROVED BY APPLE 2026-08-20, NOT YET RELEASED (build 25)
 
-WAITING_FOR_REVIEW since 20:32 UTC, carrying **build 25**. MANUAL release.
+`PENDING_DEVELOPER_RELEASE`, carrying **build 25**. Submitted 2026-08-19 at
+20:32 UTC and approved inside a day. MANUAL release, so it reaches nobody until
+Thomas presses **Release This Version**.
 Everything the release depends on outside the binary is already live: migration
 0038 on production, the share site deployed, and the privacy policy published
 and dated 19 August.

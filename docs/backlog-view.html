@@ -81,13 +81,17 @@
 <main>
   <header>
     <h1>Prep+Eat – open backlog</h1>
-    <p class="meta">72 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
+    <p class="meta">73 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
   </header>
   <div class="filter"><input id="q" type="search" placeholder="Filter tasks…" autocomplete="off"></div>
   <section class="waiting">
-      <h2>Waiting on you <span class="count" data-total="4">4</span></h2>
+      <h2>Waiting on you <span class="count" data-total="5">5</span></h2>
       <p class="lede">Nothing moves on these until you decide or draw something. Everything else is mine.</p>
       <article class="item">
+        <h3><span><strong>⭐ PRESS "RELEASE THIS VERSION" – APPLE APPROVED 1.1.0 ON 2026-08-20</strong></span></h3>
+        <dl><dt>Needs</dt><dd>Thomas – the release button in App Store Connect. Nothing else is left to do, by anyone.</dd></dl>
+        <p class="from">Now – before v1 goes live</p>
+      </article><article class="item">
         <h3><span><strong>Let someone join a kitchen by tapping a link, not typing a code</strong></span></h3>
         <dl><dt>Needs</dt><dd>Thomas – four questions, listed at the end of the spec. Design for the <code>/j/</code> page is one of them.</dd></dl>
         <p class="from">Next – v1.1</p>
@@ -106,6 +110,19 @@
       </article>
     </section>
   <div id="list">
+    <section>
+      <h2>Now – before v1 goes live <span class="count" data-total="1">1</span></h2>
+      
+    <article class="item">
+      <h3>
+        
+        
+        <span><strong>⭐ PRESS "RELEASE THIS VERSION" – APPLE APPROVED 1.1.0 ON 2026-08-20</strong></span>
+      </h3>
+      <dl><dt>Needs</dt><dd>Thomas – the release button in App Store Connect. Nothing else is left to do, by anyone.</dd><dt>Note</dt><dd>Claude can press it through the App Store Connect API instead, in seconds, if that is easier than the dashboard – but it puts an app in front of real people, so it waits for a yes rather than being assumed.</dd></dl>
+      <details><summary>Full note</summary><p>**The state, read from Apple's API rather than the dashboard (2026-08-20):** version 1.1.0 <code>PENDING_DEVELOPER_RELEASE</code>, carrying <strong>build 25</strong>, releaseType <code>MANUAL</code>; review submission <code>b3cdc162-943c-4b6b-b36d-8bbafa37c07d</code> <code>COMPLETE</code>, submitted <code>2026-08-19T20:32Z</code>. So: approved, not live, and nothing is queued behind it. <strong>⏱ Under a day, against thirteen for 1.0.</strong> Submitted Wednesday evening, approved by Thursday morning. Worth writing down because the 1.0 wait shaped every release decision since – "second reviews are quick" was the argument for a 1.0.1 back on 2026-08-13, and it turns out to have been right. It does not make the next one fast; one sample is one sample. **Until the button is pressed, real users are still on build 12, frozen 2026-07-30.** Everything in builds 13–25 – the Settings tab, sharing with 30-day expiry and Stop sharing, the leftover moves, the ingredient sections – has reached nobody outside TestFlight. That is three weeks of finished work sitting one click away. <strong>What ships with it that is known and imperfect:</strong> the Danish sharing strings are Claude's unproof-read drafts (flagged three times before submitting; correcting them now costs a version, not a build), and the expired-share screen has still never been seen on a phone because no link is old enough. Neither is a reason to hold the release – both were decided before it was submitted. <strong>After release, 1.2.0 stops being blocked:</strong> App Store Connect would not let a 1.2.0 version record exist while 1.1.0 was in review. Build 26 (1.2.0, drag-to-reorder) is already VALID on TestFlight.</p></details>
+    </article>
+    </section>
     <section>
       <h2>Next – v1.1 <span class="count" data-total="46">46</span></h2>
       <h4>Later (v1.1+)</h4>
