@@ -4238,10 +4238,17 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
         (foundation.md), and tags are recipe editing. Screens refetch on focus.
 
       SETTLED BY THOMAS, 2026-08-20 – do not reopen without a reason:
-      3. **Favourites does NOT become a tag.** *"No – favorite are it own."*
-         The heart keeps its own storage (`is_favorite`) and its own meaning.
-         This also protects installed builds: removing the column would break
-         build 26 and the App Store build (add first, remove a version later).
+      3. ⚠️ **REOPENED BY THOMAS THE SAME DAY – DO NOT READ THIS AS SETTLED.**
+         Settled first as *"No – favorite are it own"*; hours later he proposed
+         the opposite and followed it through: *"Could Favorite just be the
+         first tag, that every household has, including the ability to edit and
+         delete – this means the heart must go."* Which is the honest
+         conclusion of this item's own opening line – a favourite IS a tag the
+         family did not get to name – and it removes a mode, the pattern every
+         other answer here has followed. See the decisions-log entry for
+         2026-08-20 for the two costs and the one question that decides it.
+         **Not resolved. Nothing about favourites should be built either way
+         until it is.**
       4. **Tags do NOT travel to another household.** *"No – they belong to the
          household."* So a shared recipe saved into someone else's kitchen
          arrives untagged, and they tag it in their own words. Copy-on-leave
@@ -6083,6 +6090,48 @@ Not work. Kept so a cold thread can pick things up without re-litigating them.
     row is the outcome to avoid – so `Favorites` ANDs with the tags ("favourite
     desserts"), which costs nothing in storage since the heart keeps its own
     column, and `All` becomes the clear-everything chip.
+
+  **REOPENED HOURS LATER, AND IT IS THE BIGGEST QUESTION IN THE ITEM:** could
+  `Favorites` simply BE the first tag – one every household starts with, and can
+  rename or delete like any other – with the heart removed? Thomas proposed it
+  himself and accepted the consequence in the same breath.
+  **The concept is right, and this file should say so plainly:** it is the
+  honest conclusion of the item's own opening line (a favourite is a tag the
+  family did not get to name), it removes the last special case from the chip
+  row, and it removes a mode – which is the pattern every other answer here has
+  followed. A household that never thinks in favourites deletes it; one that
+  means "everyone eats this" renames it. Nothing has to be explained twice.
+  **Two costs, and only one of them is design:**
+  - **The heart is ONE TAP on the card, and favouriting is the most-used action
+    in the app.** It sits on the recipe card in the list
+    ([recipe-card.tsx:52](../src/components/recipes/recipe-card.tsx)), on the
+    recipe screen, and in that screen's menu. Tagging today would mean opening
+    the recipe and finding a picker. **That trade – a daily one-tap action for a
+    four-tap one – is the whole objection, and it is not really about
+    favourites.** Claude's proposed way out: let the CARD carry a quick-tag
+    affordance that opens the household's tags as chips in place. Favourite
+    costs one extra tap; every OTHER tag becomes taggable without opening the
+    recipe at all. That reframes it as a net gain, and it is the only version of
+    the proposal worth building.
+  - **⚠️ `is_favorite` IS LIVE, AND HOUSEHOLD MEMBERS RUN DIFFERENT BUILDS.**
+    This is the sharp edge and it is not a migration detail. Two people in one
+    kitchen, one updated and one not: if the new build writes favourites as tags
+    and the old build reads a boolean column, they disagree about what is
+    favourited, in a household feature, silently. Dual-writing both for one
+    version is the standard answer – **and it stops working the moment the tag
+    is renameable or deletable, which is the entire point of the proposal.**
+    So the sequencing is real work: seed the tag, migrate the flags, keep the
+    column written until no live build reads it, and only THEN allow the tag to
+    be renamed or deleted. The column goes a version later, per the migration
+    rule; the heart can go from the UI sooner.
+  **The question that decides it, and it is Thomas's:** with the heart gone, how
+  do you mark a favourite from the recipes list? A good answer makes this the
+  right call. If the answer is "open the recipe, open the picker, tick, close",
+  it is not.
+  Two smaller things to specify if it goes ahead: a deleted "Favorites" tag must
+  NOT come back on next launch (seed on household creation only, never
+  re-seed), and the sort/empty-state copy that currently assumes favourites
+  exist has to tolerate their absence.
 
   **The generalisation, since this is the second decision in two days to land
   the same way:** the settled answers all removed a mode rather than adding
