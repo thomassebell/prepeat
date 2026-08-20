@@ -18,10 +18,11 @@ Build spec. Decided with Thomas 2026-08-18, **built 2026-08-19**. Parent spec:
 > 2. **`stop_sharing_recipe` needed the anon revoke by name**, per 0036/0037.
 >    This spec did not mention grants at all.
 >
-> **The EXPIRED state still has no Figma frame.** The design Thomas linked on
-> 2026-08-19 (Figma section 742:11146) covers share and stop sharing only. The
-> expired dead end is built on this document's own ruling – the revoked layout
-> with new words – and that is the one improvisation in the change.
+> **The EXPIRED state's design is settled.** Thomas, 2026-08-20: *"expired state
+> is called revoked recipe"* – it uses the revoked frame's layout, which is what
+> both implementations already do. So the "one improvisation in this change" is
+> no longer an improvisation; it is the design. The one deliberate difference
+> stays: expired does NOT name the sender, because expiry is nobody's decision.
 >
 > **The design changed two things below.** The sheet's heading is "Stop
 > sharing", not "Stop sharing this recipe?", and it has **no Cancel button** –

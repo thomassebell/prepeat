@@ -121,7 +121,7 @@ the index below.
 Nothing moves on these until Thomas decides or draws something.
 Everything else in this file is Claude's to get on with.
 
-- **The share site has no DESKTOP design, no 404 frame, and no ⋯ ruling** – three drawings or three rulings. Nothing is blocked; the feature is live and these are the parts running on improvisation.
+- **The share site desktop build, and the one ruling still outstanding** – only the ⋯ ruling now. The designs arrived 2026-08-20.
   <sub>Next – v1.1</sub>
 - **⚠️ The Danish for the sharing strings shipped unproof-read** – he is the native speaker; this is reading, not deciding.
   <sub>Next – v1.1</sub>
@@ -2617,9 +2617,14 @@ are not a queue this project can work through.
            feature, because the feature shipped without them and they are still
            real gaps.
 
-- [ ] **The share site has no DESKTOP design, no 404 frame, and no ⋯ ruling**
-      Needs: Thomas – three drawings or three rulings. Nothing is blocked; the
-           feature is live and these are the parts running on improvisation.
+- [ ] **The share site desktop build, and the one ruling still outstanding**
+      Needs: Thomas – only the ⋯ ruling now. The designs arrived 2026-08-20.
+      ✅ **Desktop frames delivered: section 726:10982 "recipe – shared site
+           desktop"**, five frames at 1024px - shared own recipe (726:10983),
+           shared imported recipe (726:11069), revoked (726:11018), link broken
+           (726:11035) and 503 (726:11052). The 404 frame asked for below is
+           "link broken". **Not yet built** - the deployed site is still the
+           phone layout at every width.
       1. **Desktop frames for the share site.** The phone designs landed
            2026-08-18 (share site 726:8992). The desktop rendering is one layout
            at a wider width - Claude's call, never drawn. A share link opened on a
@@ -2632,10 +2637,17 @@ are not a queue this project can work through.
            accepting recipe" and deliberately left out, because there is no menu
            behind it and nothing it could do on a recipe you do not own yet.
            Either draw the menu or drop the button.
-      ⚠️ **And a fourth, added 2026-08-19: the EXPIRED state has no frame at
-           all**, web or in-app. It reuses the revoked dead-end layout on the
-           spec's own ruling. Nobody has seen it on a phone yet either - no link
-           is old enough - so if it should look different, now is cheap.
+      ✅ **The EXPIRED state is settled (Thomas, 2026-08-20): *"expired state is
+           called revoked recipe"*** - it uses the revoked frame's layout, which
+           is exactly what both implementations already do (`renderExpired` calls
+           the same `deadEnd()`; the app reuses the same Card + Notice). No code
+           changed; what changed is that it stopped being an improvisation and
+           became the design.
+           ⚠️ **One deliberate difference remains, and it is from the copy table,
+           not the frame: expired does NOT name the sender.** Revoked says "Pia
+           isn't sharing this one any more" because that was Pia's decision;
+           expiry is nobody's, so naming her would imply she did something. The
+           database enforces it by withholding `shared_by` for that status.
 
 - [ ] **⚠️ The Danish for the sharing strings shipped unproof-read**
       Needs: Thomas – he is the native speaker; this is reading, not deciding.
