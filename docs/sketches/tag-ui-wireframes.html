@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tag chip row – overflow wireframes</title>
+<title>Recipe tags – wireframes</title>
 <style>
   :root {
     --surface-0: #F2F1EF; --surface-1: #F8F7F7; --surface-2: #FFFFFF;
@@ -75,6 +75,18 @@
   .grid b { display: block; font-weight: 500; margin-bottom: 2px; }
   .grid span { color: var(--text-secondary); }
   footer { font-size: 12.5px; color: var(--text-secondary); margin-top: 18px; }
+  .tile { width: 128px; border: 0.5px solid var(--border); border-radius: 10px; overflow: hidden;
+          background: var(--surface-2); }
+  .photo { height: 62px; background: var(--border); position: relative; }
+  .glyph { position: absolute; right: 6px; top: 5px; width: 19px; height: 19px; border-radius: 10px;
+           background: rgba(0,0,0,.32); color: #fff; font-size: 10px; line-height: 19px;
+           text-align: center; }
+  .glyph.lit { background: var(--border-stronger); }
+  .meta { padding: 6px 7px 8px; }
+  .ttl { font-size: 11px; font-weight: 500; }
+  .min { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+  .grid2 { display: flex; gap: 8px; }
+  .sheet { border-top: 0.5px solid var(--border); margin-top: 8px; padding-top: 9px; }
   .fade { position: relative; }
   .fade::after { content: ""; position: absolute; right: 0; top: 0; bottom: 0; width: 30px;
                  background: linear-gradient(to right, transparent, var(--surface-2)); }
@@ -83,11 +95,11 @@
 <body>
 <div class="wrap">
 
-  <h1>What the tag row does when it stops fitting</h1>
+  <h1>Recipe tags – the filter row, and the tap that applies one</h1>
   <p class="lede">
-    Four ways to handle a filter row that outgrows one line, drawn 2026-08-20 at Thomas's
-    request. The open question is his to close in Figma — this exists so there is something
-    to argue with rather than a blank frame.
+    Two problems, drawn 2026-08-20 at Thomas's request. First: what a filter row does when it
+    outgrows one line. Then, added the same day once he chose it: the quick-tag on the recipe
+    card — the affordance that has to exist before the heart can go.
   </p>
 
   <div class="note">
@@ -296,16 +308,241 @@
     </div>
   </div>
 
+
+  <h3 style="margin-top:38px;">Part two · the tap that applies a tag <span class="tag" style="background:var(--bg-accent);color:var(--text-accent);">Thomas chose this, 2026-08-20</span></h3>
+  <div class="note" style="background:var(--bg-accent);color:var(--text-accent);margin-bottom:16px;">
+    <strong>Why this frame has to exist:</strong> if <code>Favorites</code> becomes an ordinary tag,
+    the heart goes — and the heart is <em>one tap on the card</em>, the most-used action in the app.
+    Without a fast way to tag from the list, favouriting becomes a four-tap job and the whole idea is
+    a downgrade. This affordance is what makes it a net gain instead: <em>every</em> tag becomes
+    applicable without opening the recipe.
+  </div>
+
+  <div class="note">
+    <strong>⚠️ The card is a HALF-WIDTH GRID TILE, and that is the constraint here.</strong>
+    Photo, one line of title, a time — about 128pt across
+    (<code>recipe-card.tsx</code>, Figma list section 78:4010). The heart worked because one glyph
+    carries exactly one bit. <strong>Several tags do not fit on this card at all</strong>, which is
+    the real design problem below, not the tap itself.
+  </div>
+
+  <h3>E · The affordance, where the heart is now</h3>
+  <div class="cols">
+    <div class="col">
+      <div class="frames">
+        <div class="step">the swap · same corner, same hit area</div>
+        <div class="grid2">
+          <div class="tile">
+            <div class="photo"><div class="glyph">♡</div></div>
+            <div class="meta"><div class="ttl">Lasagne</div><div class="min">🕘 45 min</div></div>
+          </div>
+          <div class="tile">
+            <div class="photo"><div class="glyph">🏷</div></div>
+            <div class="meta"><div class="ttl">Lasagne</div><div class="min">🕘 45 min</div></div>
+          </div>
+        </div>
+        <p class="aside">Today, and the swap. Same corner over the photo, same 8pt hit slop —
+        the muscle memory survives even though the meaning widens.</p>
+      </div>
+    </div>
+    <div class="col">
+      <p class="weak"><strong>The glyph is a design call, not this sketch's.</strong> A luggage-tag
+      shape reads as “tag” but is busy at 24pt; a bookmark reads as “saved”, which is nearly the old
+      meaning and may be a feature. Whatever it is, it is one icon doing what a heart did.</p>
+      <div class="verdict bad"><strong>Considered and rejected: long-press the card.</strong> No chrome
+      at all, and nobody would ever find it — the same objection that killed drag-to-merge in the
+      ingredient-alias sketch. It can exist as a shortcut; it cannot be the only way in.</div>
+    </div>
+  </div>
+
+  <h3>F · What opens when you tap it</h3>
+  <div class="cols">
+    <div class="col">
+      <div class="frames">
+        <div class="step">F1 · popover anchored to the card</div>
+        <div class="phone">
+          <div class="grid2" style="margin-bottom:6px;">
+            <div class="tile"><div class="photo"><div class="glyph lit">🏷</div></div>
+              <div class="meta"><div class="ttl">Lasagne</div><div class="min">🕘 45 min</div></div></div>
+            <div class="tile" style="opacity:.4;"><div class="photo"><div class="glyph">🏷</div></div>
+              <div class="meta"><div class="ttl">Tacos</div><div class="min">🕘 25 min</div></div></div>
+          </div>
+          <div style="border:0.5px solid var(--border-strong);border-radius:8px;padding:8px;box-shadow:0 2px 8px rgba(0,0,0,.08);">
+            <div class="chips">
+              <span class="c on">Favorites ✓</span><span class="c">dessert</span><span class="c">quick</span>
+              <span class="c">veggie</span><span class="c more">+ New</span>
+            </div>
+          </div>
+        </div>
+        <p class="aside">Keeps the card in view. Tight for a keyboard when “+ New” is tapped.</p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="frames">
+        <div class="step">F2 · short bottom sheet <span style="color:var(--text-success);">← leaning</span></div>
+        <div class="phone">
+          <div class="grid2" style="opacity:.45;margin-bottom:8px;">
+            <div class="tile"><div class="photo"><div class="glyph">🏷</div></div>
+              <div class="meta"><div class="ttl">Lasagne</div><div class="min">🕘 45 min</div></div></div>
+            <div class="tile"><div class="photo"><div class="glyph">🏷</div></div>
+              <div class="meta"><div class="ttl">Tacos</div><div class="min">🕘 25 min</div></div></div>
+          </div>
+          <div style="border:0.5px solid var(--border-strong);border-radius:10px 10px 0 0;padding:10px;">
+            <div style="height:5px;width:40px;background:var(--border-strong);border-radius:4px;margin:0 auto 9px;"></div>
+            <div style="font-size:11.5px;color:var(--text-secondary);margin-bottom:7px;">Tag <strong>Lasagne</strong></div>
+            <div class="chips">
+              <span class="c on">Favorites ✓</span><span class="c on">quick ✓</span><span class="c">dessert</span>
+              <span class="c">veggie</span><span class="c">kids like it</span><span class="c more">+ New tag</span>
+            </div>
+          </div>
+        </div>
+        <p class="aside">Hugs its content, so six tags is a small sheet — the height rule settled
+        2026-08-20 already covers it.</p>
+      </div>
+    </div>
+  </div>
+  <div class="cols"><div class="col" style="flex:1 1 100%;">
+    <p class="weak" style="margin-top:12px;"><strong>Leaning F2, and it is a consistency argument rather
+    than a purity one.</strong> This app already speaks in sheets and now has one settled height rule for
+    all of them, so a sheet needs no new vocabulary and no new decision. It also has room for the keyboard
+    the “+ New tag” field needs, which is exactly where a popover gets awkward.
+    The fair objection: option C above was marked down for putting filtering behind a sheet. <strong>The
+    difference is which action it is.</strong> Filtering is a thing you do while browsing and want
+    instantly reversible; tagging is a deliberate one-off per recipe. One tap to open, one to tag,
+    swipe away — and the recipe never had to open.</p>
+  </div></div>
+
+  <h3>G · The states, because they are the design too</h3>
+  <div class="cols">
+    <div class="col">
+      <div class="frames">
+        <div class="step">G1 · no tags in the household yet</div>
+        <div class="phone">
+          <div style="height:5px;width:40px;background:var(--border-strong);border-radius:4px;margin:0 auto 9px;"></div>
+          <div style="font-size:11.5px;color:var(--text-secondary);margin-bottom:7px;">Tag <strong>Lasagne</strong></div>
+          <div style="border:0.5px dashed var(--border-strong);border-radius:8px;padding:14px 10px;text-align:center;">
+            <div style="font-size:11.5px;margin-bottom:3px;">No tags yet</div>
+            <div style="font-size:10.5px;color:var(--text-muted);margin-bottom:9px;">Tags are shared with your kitchen</div>
+            <span class="c more">+ New tag</span>
+          </div>
+        </div>
+        <p class="aside">Reachable — they can delete <em>Favorites</em> like any other tag.</p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="frames">
+        <div class="step">G2 · making one, in place</div>
+        <div class="phone">
+          <div style="height:5px;width:40px;background:var(--border-strong);border-radius:4px;margin:0 auto 9px;"></div>
+          <div class="chips" style="margin-bottom:8px;">
+            <span class="c on">Favorites ✓</span><span class="c">quick</span><span class="c">dessert</span>
+          </div>
+          <div class="field" style="border-color:var(--border-stronger);color:var(--text-primary);margin-bottom:6px;">protein rich|</div>
+          <div style="font-size:10.5px;color:var(--text-muted);">Everyone in your kitchen will see this tag</div>
+          <div style="margin-top:10px;height:40px;border-radius:6px;background:var(--surface-1);border:0.5px dashed var(--border);"></div>
+        </div>
+        <p class="aside">Created and applied in one go. The line about sharing is the honest bit —
+        it is not a private label.</p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="frames">
+        <div class="step">G3 · upgrade day</div>
+        <div class="phone">
+          <div style="height:5px;width:40px;background:var(--border-strong);border-radius:4px;margin:0 auto 9px;"></div>
+          <div style="font-size:11.5px;color:var(--text-secondary);margin-bottom:7px;">Tag <strong>Lasagne</strong></div>
+          <div class="chips"><span class="c on">Favorites ✓</span><span class="c more">+ New tag</span></div>
+          <div class="sheet" style="font-size:10.5px;color:var(--text-muted);">
+            Every recipe that had a heart already carries this tag. Nothing to do.
+          </div>
+        </div>
+        <p class="aside">What a household sees the first time it opens the new build.</p>
+      </div>
+    </div>
+  </div>
+  <p class="weak" style="margin-top:10px;">Not drawn, deliberately: <strong>pressed and disabled</strong>.
+  Both belong to the DS Chip, which already ships them — improvising them here would be inventing design
+  that already exists.</p>
+
+  <h3>H · The hard part: the card cannot show its tags</h3>
+  <div class="cols">
+    <div class="col">
+      <div class="frames">
+        <div class="step">three answers, none free</div>
+        <div class="grid2" style="flex-wrap:wrap;">
+          <div class="tile">
+            <div class="photo"><div class="glyph lit">🏷</div></div>
+            <div class="meta"><div class="ttl">Lasagne</div><div class="min">🕘 45 min</div></div>
+          </div>
+          <div class="tile">
+            <div class="photo"><div class="glyph lit">2</div></div>
+            <div class="meta"><div class="ttl">Lasagne</div><div class="min">🕘 45 min</div></div>
+          </div>
+          <div class="tile">
+            <div class="photo"><div class="glyph lit">🏷</div></div>
+            <div class="meta"><div class="ttl">Lasagne</div>
+              <div class="chips" style="margin-top:4px;"><span class="c" style="font-size:9px;padding:2px 6px;">quick</span><span class="c" style="font-size:9px;padding:2px 6px;">+1</span></div></div>
+          </div>
+        </div>
+        <p class="aside">Lit glyph · count badge · one tag and an overflow. At 128pt the third
+        is already at its limit, and it displaces the cooking time.</p>
+      </div>
+    </div>
+    <div class="col">
+      <p class="weak"><strong>This is what the heart was quietly buying.</strong> One glyph, one bit,
+      no layout question. A tag set is not one bit, and a half-width tile has nowhere to put it.</p>
+      <p class="weak"><strong>Claude's leaning: the lit glyph, and nothing more.</strong> It says
+      “this one is tagged”, which is all the old heart said, and the answer to <em>which</em> tags is
+      the filter row — that is what the filter row is for. The count badge looks informative and is
+      not: “2” does not tell you it is the dessert you were hunting for.</p>
+      <div class="verdict bad"><strong>The cost, said plainly:</strong> you lose at-a-glance
+      “this is a favourite” across the grid. That is a genuine loss and it is the price of the tag
+      model — worth being sure about before the heart goes.</div>
+    </div>
+  </div>
+
+  <h3>I · The heart has two other homes, and they need answers too</h3>
+  <div class="cols">
+    <div class="col">
+      <div class="frames">
+        <div class="step">recipe screen · heart button → tag row</div>
+        <div class="phone">
+          <div style="height:52px;background:var(--border);border-radius:8px;margin-bottom:8px;"></div>
+          <div style="font-size:13px;font-weight:500;">Lasagne</div>
+          <div class="chips" style="margin-top:7px;">
+            <span class="c on">Favorites</span><span class="c on">quick</span><span class="c more">+</span>
+          </div>
+          <div class="sheet" style="font-size:10.5px;color:var(--text-muted);">
+            The tags live here in full — the card only ever hinted at them.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <p class="weak">The heart appears three times in the code, not once:
+      the card, a button on the recipe screen, and a row in that screen's menu
+      (<code>recipes/[id].tsx</code>). <strong>All three have to go together</strong>, or the app
+      contradicts itself — and the menu row becomes <em>Tags…</em>, opening the same sheet as F2.</p>
+      <p class="weak">The recipe screen is also the one surface with room to show tags properly,
+      which is the argument for the card staying quiet: the detail is one tap away and always was.</p>
+    </div>
+  </div>
+
   <div class="decisions">
-    <h2 style="margin-bottom:12px;">Still open — and B vs D is not the first one</h2>
+    <h2 style="margin-bottom:12px;">Still open after both parts</h2>
     <div class="grid">
       <div><b>How many tags does a real family make?</b><span>Nobody knows, and it decides B against D
         outright. Six means B; twenty means D. Worth a guess out loud before drawing either.</span></div>
       <div><b>What order do the chips sit in?</b><span>Alphabetical is predictable and builds muscle memory.
         Most-used-first is smarter and reshuffles the row between visits, which is the same disorientation
-        A was marked down for.</span></div>
-      <div><b>Where does a NEW tag get made?</b><span>Not drawn here at all. On the recipe, presumably — but
-        the picker that adds and chooses tags is its own frame and its own conversation.</span></div>
+        A was marked down for. The same question applies inside the quick-tag sheet.</span></div>
+      <div><b>Is losing at-a-glance favourites acceptable?</b><span>The grid stops showing WHICH recipes are
+        loved. That is the real cost of retiring the heart, and it is a judgement, not a trade-off with a
+        right answer.</span></div>
+      <div><b>What is the glyph?</b><span>A tag shape, a bookmark, something else. It replaces an icon
+        everyone already understands, so it is doing more work than it looks.</span></div>
+      <div><b>Where does a tag get RENAMED or DELETED?</b><span>Anybody may do both (settled), but no screen
+        here offers it. The quick-tag sheet is the obvious home and is not drawn that way yet.</span></div>
       <div><b>Does the sheet row scroll away?</b><span>The add-meal chip row rides in the list header today,
         so it scrolls off with the content. With a filter switched on, that hides the reason the list looks
         short.</span></div>
@@ -319,9 +556,15 @@
     a favourite, and typing is not tapping. Worth knowing it exists as the fallback if the row never
     earns its space.
     <br><br>
-    Claude's leaning, recorded for whoever picks this up: <strong>D, built so that a small cookbook is
-    indistinguishable from B</strong> — and if the answer to “how many tags” turns out to be six, build B
-    and stop.
+    Claude's leanings, recorded for whoever picks this up: <strong>D</strong> for the filter row, built so a
+    small cookbook cannot tell it apart from plain wrapping — and if the answer to “how many tags” turns out
+    to be six, build B and stop. <strong>F2</strong> for the quick-tag, because the app already speaks in
+    sheets and now has one height rule for all of them. <strong>A lit glyph and no count</strong> on the card.
+    <br><br>
+    <strong>And one warning that outranks all of them:</strong> the heart is live on the App Store build, and
+    two people in one kitchen can be on different builds. Nothing in part two ships until the seeding and
+    dual-write sequencing in the backlog item is done — otherwise one member's favourites quietly stop
+    reaching the other's phone.
   </footer>
 
 </div>

@@ -4197,11 +4197,14 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
            list" – they never were, until now.
       Needs: Thomas – play in Figma with a chip row that no longer fits one line.
       Sketch: ✏️ **WIREFRAMES EXIST, AND THEY ARE CLAUDE'S, NOT DESIGN** –
-           [tag-chip-row-wireframes.html](sketches/tag-chip-row-wireframes.html),
-           drawn 2026-08-20 at Thomas's request. Four ways an overflowing chip
-           row can behave, on BOTH canvases, plus the zero-result empty state
-           that the AND decision depends on. Nothing in it has been near Figma
-           or the DS. It is there to be argued with, not built from.
+           [tag-ui-wireframes.html](sketches/tag-ui-wireframes.html), drawn
+           2026-08-20 at Thomas's request, in two parts. **Part one:** four ways
+           an overflowing chip row can behave, on BOTH canvases, plus the
+           zero-result empty state the AND decision depends on. **Part two:**
+           the quick-tag on the card – the affordance, what opens when you tap
+           it, its three states, what the card can and cannot show, and the
+           heart's two other homes. Nothing in it has been near Figma or the DS.
+           It is there to be argued with, not built from.
       Scope: BOTH pickers – the recipes list AND the plan screen's add-meal
            sheet (Thomas, 2026-08-20). Not a follow-up; the same row.
       Blocked by: no Figma for the tag picker, nor for an overflowing chip row.
@@ -4238,17 +4241,34 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
         (foundation.md), and tags are recipe editing. Screens refetch on focus.
 
       SETTLED BY THOMAS, 2026-08-20 – do not reopen without a reason:
-      3. ⚠️ **REOPENED BY THOMAS THE SAME DAY – DO NOT READ THIS AS SETTLED.**
-         Settled first as *"No – favorite are it own"*; hours later he proposed
-         the opposite and followed it through: *"Could Favorite just be the
-         first tag, that every household has, including the ability to edit and
-         delete – this means the heart must go."* Which is the honest
-         conclusion of this item's own opening line – a favourite IS a tag the
-         family did not get to name – and it removes a mode, the pattern every
-         other answer here has followed. See the decisions-log entry for
-         2026-08-20 for the two costs and the one question that decides it.
-         **Not resolved. Nothing about favourites should be built either way
-         until it is.**
+      3. **FAVOURITES BECOMES AN ORDINARY TAG AND THE HEART GOES.** Settled
+         first the other way (*"No – favorite are it own"*), reopened by Thomas
+         hours later (*"Could Favorite just be the first tag, that every
+         household has, including the ability to edit and delete – this means
+         the heart must go"*), and closed when he chose the affordance that
+         makes it survivable: *"quick-tag on the card – draw that frame too."*
+         Every household is seeded with a `Favorites` tag it may rename or
+         delete like any other. Reasoning in the 2026-08-20 decisions log.
+         ⚠️ **THREE THINGS THIS DRAGS IN, none of them optional:**
+         (a) **The card needs a quick-tag** where the heart is, or the app's
+         most-used action goes from one tap to four. Drawn in the sketch, part
+         two. It is a NET GAIN, because every other tag becomes applicable
+         without opening the recipe.
+         (b) **The heart lives in THREE places** – the card, a button on the
+         recipe screen, and a row in that screen's menu
+         ([recipes/[id].tsx:341](../src/app/recipes/[id].tsx)). All three go
+         together, or the app contradicts itself.
+         (c) **⚠️ SEQUENCING, because `is_favorite` IS LIVE and household
+         members run different builds.** Seed the tag, migrate the existing
+         flags, keep the column written until no live build reads it, and only
+         THEN allow the tag to be renamed or deleted – a renamed tag cannot be
+         dual-written to a column called `is_favorite`. Get this wrong and one
+         member's favourites silently stop reaching the other's phone. The
+         column goes a version later (add first, remove later); the heart can
+         leave the UI sooner.
+         **Known cost, accepted:** the grid stops showing at a glance WHICH
+         recipes are loved. A lit glyph says "tagged", not "favourite".
+
       4. **Tags do NOT travel to another household.** *"No – they belong to the
          household."* So a shared recipe saved into someone else's kitchen
          arrives untagged, and they tag it in their own words. Copy-on-leave
@@ -6124,10 +6144,18 @@ Not work. Kept so a cold thread can pick things up without re-litigating them.
     column written until no live build reads it, and only THEN allow the tag to
     be renamed or deleted. The column goes a version later, per the migration
     rule; the heart can go from the UI sooner.
-  **The question that decides it, and it is Thomas's:** with the heart gone, how
-  do you mark a favourite from the recipes list? A good answer makes this the
-  right call. If the answer is "open the recipe, open the picker, tick, close",
-  it is not.
+  **ANSWERED THE SAME DAY, so the proposal carries:** Thomas chose the quick-tag
+  on the card (*"quick-tag on the card – draw that frame too"*). Favourites
+  becomes an ordinary tag, the heart goes, and the card's corner gains an
+  affordance that opens the household's tags in place.
+  **Drawing it found the thing neither of us had said out loud: the card is a
+  HALF-WIDTH GRID TILE, and it cannot show its tags at all.** Photo, one line of
+  title, a time, about 128pt across. The heart worked because one glyph carries
+  exactly one bit; a tag set is not one bit and there is nowhere to put it. So
+  the card keeps a single lit glyph meaning "tagged", and WHICH tags is answered
+  by the filter row and the recipe screen. **The accepted loss is at-a-glance
+  favourites across the grid** – that is the real price of the tag model, and it
+  is worth re-reading before anyone builds this.
   Two smaller things to specify if it goes ahead: a deleted "Favorites" tag must
   NOT come back on next launch (seed on household creation only, never
   re-seed), and the sort/empty-state copy that currently assumes favourites
