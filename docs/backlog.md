@@ -2818,67 +2818,30 @@ week, seven rows MON–SUN each carrying **+ Add meal** and nothing else, one
 line *Your shopping list updates as you plan*, four tabs. It is the Plan tab,
 empty, on first launch – the destination, not a step.
 
-- [ ] **⭐ Open the app on Recipes while the cookbook is empty, on Plan once it is not**
-      Why: an empty week asks people to plan before they have anything to plan
-           with. Agreed 2026-08-10; this is the surviving answer to it.
-      Watch out: the redirect must fire ONCE PER LAUNCH. Otherwise someone who
-           adds their first recipe and taps Plan is bounced back to Recipes.
-      Not: a tab-bar change. Plan stays first. Reordering was tried and
-           reverted – see below.
-      Size: sketched, not built. `RootGate` already waits on a fetch, so the
-           "any recipes?" query is nearly free.
-
-      This
-      replaces the tab-reorder idea below, which was tried and reverted.
-      **WHY THE EMPTY COOKBOOK AND NOT "FIRST LAUNCH"** (Thomas): someone who
-      onboards and closes the app to do the big task another time *"haven't
-      learned any think yet anyways"* – a first-launch flag would assume they
-      had, and drop them on the empty week the next morning. The cookbook being
-      empty is the honest signal, and it is self-correcting: the moment there is
-      a recipe, the app opens on Plan forever after.
-      **⚠️ NOT A TAB-BAR CHANGE.** Plan stays first and stays the `/` index
-      route, because most sessions are *"what's for dinner"* or *"I'm at the
-      shop"*. This is a redirect on launch, not a reordering.
-      **THE EDGE CASE THAT DECIDES THE IMPLEMENTATION:** the redirect must fire
-      ONCE PER LAUNCH, not whenever the plan renders. Otherwise a user who adds
-      their first recipe and then taps Plan is bounced straight back to Recipes.
-      **SKETCH, not built:** `RootGate` already awaits a fetch before rendering
-      anything, so a parallel "does this household have ≥1 recipe" query costs
-      almost nothing and avoids a flash; pass it down, and have the plan's index
-      return `<Redirect href="/recipes" />` on first mount only. Alternative is
-      a cached AsyncStorage flag per household – no query, but it needs
-      invalidating and gets existing users one odd launch.
-
-**⚠️ THE TAB-REORDER IDEA BELOW WAS TRIED AND REVERTED on 2026-08-10.** Two
-things were learned and are worth not rediscovering. **Trigger order does NOT
-decide the opening tab** – the INDEX route does (*"the tab file named index.tsx
-is the default tab when the app loads"*), so the first reorder changed the
-visual order and nothing else, leaving Plan demoted but still opening. Making
-Recipes the index then worked, but **it serves first-timers at the cost of every
-returning user**, which is the wrong trade: most sessions start at the plan or
-the shop. Kept only as the record of a dead end.
-
-**THOMAS'S PROPOSAL, 2026-08-10 – REORDER THE TAB BAR to Recipes · Plan ·
-Shopping · Kitchen, so the app opens on Recipes** and asks for one recipe
-instead of a week. Worth taking seriously because it matches the pre-mortem's
-sharpest observation: what beat Prep+Eat shared three properties, the first
-being **no plan has to exist first**. Opening on Recipes means none does.
-It also fixes a dependency the current order hides – *+ Add meal* is hollow
-with an empty cookbook, so Plan-first sends people to the one screen that
-cannot yet work. Cheap: the tab order IS the default route
-(`src/components/app-tabs.tsx`, first trigger wins).
-**What it does NOT fix:** *+ Add meal* is still an unknown when they get there,
-and the planner half of the split is unhelped – a planner with a week in their
-head still has to build a cookbook before they can enter it.
-**Weigh against:** Plan is the product's headline promise and the App Store
-screenshots lead on it; demoting it is a positioning call, not just a reorder.
-
-**THOMAS'S SECOND PROPOSAL – COPY LAST WEEK'S PLAN.** Aimed at the planner
-half, and it is the right shape for it: the planners stopped because the screen
-asks them to retype a plan they already hold, so making entry near-free is
-exactly the fix. Precedent exists – the shopping list already carries
-*transfer items from last week*. Does nothing for non-planners, who have no
-previous week to copy, which is the point: the split needs two fixes.
+- [x] **⭐ Open the app on Recipes while the cookbook is empty, on Plan once it is not – DONE**
+      Built 2026-08-10, hardened 2026-08-16. Verified in the code before closing:
+           `useEmptyCookbookNudge` in [(plan)/index.tsx](../src/app/(plan)/index.tsx).
+           The item said "sketched, not built" - that line was stale.
+      Every constraint this item set is met, and each was learned the hard way:
+      - **ONCE PER LAUNCH** via a module-level `launchNudged` set, so adding a
+           first recipe and tapping Plan does not bounce you back.
+      - **NOT a tab-bar change.** Plan stays the index route; this is a redirect.
+      - **The cookbook, not "first launch"** - Thomas's point that someone who
+           sets up and closes the app *"haven't learned any think yet anyways"*.
+           Self-correcting: one recipe and Plan opens for good.
+      ⚠️ **TWO BUGS FOUND ON THE DEVICE SHAPED IT, and both are worth keeping
+           because they are easy to reintroduce:**
+      - It **navigates in an effect rather than rendering `<Redirect>`**. A tab
+           screen stays MOUNTED while you are elsewhere, so a redirect held in
+           render state fires on every visit - which locked people out of the
+           plan entirely until they saved a recipe.
+      - It runs **only while Plan is focused**. As a plain effect on
+           `household.id` it fired while you stood on Settings, so switching
+           kitchen threw you onto Recipes: you had just chosen a kitchen and the
+           app answered by moving you somewhere you did not ask to go. Blur
+           cancels the in-flight check so a slow query cannot land late.
+      It is also non-blocking and fails safe: a failed query never strands
+           anyone on an empty week.
 
 - [ ] **Give the empty week something to offer**
       Why: all five personas put the phone down there. Effort thresholds were

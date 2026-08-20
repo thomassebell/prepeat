@@ -79,7 +79,7 @@
 <main>
   <header>
     <h1>Prep+Eat – open backlog</h1>
-    <p class="meta">74 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
+    <p class="meta">73 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
   </header>
   <div class="filter"><input id="q" type="search" placeholder="Filter tasks…" autocomplete="off"></div>
   <section class="waiting">
@@ -97,7 +97,7 @@
     </section>
   <div id="list">
     <section>
-      <h2>Next – v1.1 <span class="count" data-total="47">47</span></h2>
+      <h2>Next – v1.1 <span class="count" data-total="46">46</span></h2>
       <h4>Later (v1.1+)</h4>
     <article class="item">
       <h3>
@@ -171,15 +171,6 @@
       <dl><dt>Why</dt><dd>it does seven things nobody discovers. The panel called this its biggest reframe – the problem is things unsaid, not things missing.</dd><dt>Left</dt><dd>several meals a day, per-meal servings, leftovers and eating out, link import, ingredient search, belonging to more than one kitchen.</dd><dt>Done so far</dt><dd>the choice screen now names recipes, plan, list and sharing.</dd></dl>
       <details><summary>Full note</summary><p>The single orienting sentence (<em>Your shopping list updates as you plan</em>, last line of screen 9) hides all seven capabilities above. (Synthetic User Panel: persona-as-lens, medium-high, all four reviews.) <strong>⚠️ PARTLY DONE 2026-08-10.</strong> The choice screen now names recipes, plan, list and the sharing. <strong>Still unsaid:</strong> several meals a day, per-meal servings, leftovers and eating out, link import, ingredient search, belonging to more than one kitchen. This was the panel's biggest reframe and is mostly still open.</p></details>
     </article><h4>Screen 9 is where it ends</h4>
-    <article class="item">
-      <h3>
-        
-        
-        <span><strong>⭐ Open the app on Recipes while the cookbook is empty, on Plan once it is not</strong></span>
-      </h3>
-      <dl><dt>Why</dt><dd>an empty week asks people to plan before they have anything to plan with. Agreed 2026-08-10; this is the surviving answer to it.</dd><dt>Watch out</dt><dd>the redirect must fire ONCE PER LAUNCH. Otherwise someone who adds their first recipe and taps Plan is bounced back to Recipes.</dd><dt>Not</dt><dd>a tab-bar change. Plan stays first. Reordering was tried and reverted – see below.</dd><dt>Size</dt><dd>sketched, not built. <code>RootGate</code> already waits on a fetch, so the "any recipes?" query is nearly free.</dd></dl>
-      <details><summary>Full note</summary><p>This replaces the tab-reorder idea below, which was tried and reverted. <strong>WHY THE EMPTY COOKBOOK AND NOT "FIRST LAUNCH"</strong> (Thomas): someone who onboards and closes the app to do the big task another time *"haven't learned any think yet anyways"* – a first-launch flag would assume they had, and drop them on the empty week the next morning. The cookbook being empty is the honest signal, and it is self-correcting: the moment there is a recipe, the app opens on Plan forever after. <strong>⚠️ NOT A TAB-BAR CHANGE.</strong> Plan stays first and stays the <code>/</code> index route, because most sessions are <em>"what's for dinner"</em> or *"I'm at the shop"*. This is a redirect on launch, not a reordering. <strong>THE EDGE CASE THAT DECIDES THE IMPLEMENTATION:</strong> the redirect must fire ONCE PER LAUNCH, not whenever the plan renders. Otherwise a user who adds their first recipe and then taps Plan is bounced straight back to Recipes. <strong>SKETCH, not built:</strong> <code>RootGate</code> already awaits a fetch before rendering anything, so a parallel "does this household have ≥1 recipe" query costs almost nothing and avoids a flash; pass it down, and have the plan's index return <code>&lt;Redirect href="/recipes" /&gt;</code> on first mount only. Alternative is a cached AsyncStorage flag per household – no query, but it needs invalidating and gets existing users one odd launch. <strong>⚠️ THE TAB-REORDER IDEA BELOW WAS TRIED AND REVERTED on 2026-08-10.</strong> Two things were learned and are worth not rediscovering. **Trigger order does NOT decide the opening tab*<em> – the INDEX route does (</em>"the tab file named index.tsx is the default tab when the app loads"*), so the first reorder changed the visual order and nothing else, leaving Plan demoted but still opening. Making Recipes the index then worked, but **it serves first-timers at the cost of every returning user**, which is the wrong trade: most sessions start at the plan or the shop. Kept only as the record of a dead end. **THOMAS'S PROPOSAL, 2026-08-10 – REORDER THE TAB BAR to Recipes · Plan · Shopping · Kitchen, so the app opens on Recipes** and asks for one recipe instead of a week. Worth taking seriously because it matches the pre-mortem's sharpest observation: what beat Prep+Eat shared three properties, the first being <strong>no plan has to exist first</strong>. Opening on Recipes means none does. It also fixes a dependency the current order hides – <em>+ Add meal</em> is hollow with an empty cookbook, so Plan-first sends people to the one screen that cannot yet work. Cheap: the tab order IS the default route (<code>src/components/app-tabs.tsx</code>, first trigger wins). <strong>What it does NOT fix:</strong> <em>+ Add meal</em> is still an unknown when they get there, and the planner half of the split is unhelped – a planner with a week in their head still has to build a cookbook before they can enter it. <strong>Weigh against:</strong> Plan is the product's headline promise and the App Store screenshots lead on it; demoting it is a positioning call, not just a reorder. <strong>THOMAS'S SECOND PROPOSAL – COPY LAST WEEK'S PLAN.</strong> Aimed at the planner half, and it is the right shape for it: the planners stopped because the screen asks them to retype a plan they already hold, so making entry near-free is exactly the fix. Precedent exists – the shopping list already carries <em>transfer items from last week</em>. Does nothing for non-planners, who have no previous week to copy, which is the point: the split needs two fixes.</p></details>
-    </article>
     <article class="item">
       <h3>
         
