@@ -1,10 +1,8 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { useRef } from "react";
 import { Pressable, View } from "react-native";
-import ReanimatedSwipeable, {
-  type SwipeableMethods,
-} from "react-native-gesture-handler/ReanimatedSwipeable";
+import ReanimatedSwipeable from "react-native-gesture-handler/ReanimatedSwipeable";
 
+import { useExclusiveSwipe } from "@/components/ui/exclusive-swipe";
 import { SwipeRowProvider } from "@/components/ui/swipe-hint";
 import { ds } from "@/constants/ds";
 import { t } from "@/lib/i18n";
@@ -24,13 +22,17 @@ export function SwipeActions({
   children: React.ReactNode;
   label: string;
 }) {
-  const swipeable = useRef<SwipeableMethods>(null);
+  const { swipeable, swipeOpening, swipeClosed } = useExclusiveSwipe();
   return (
     <ReanimatedSwipeable
       ref={swipeable}
       friction={2}
       rightThreshold={40}
       overshootRight={false}
+      // One open row in the whole app - see exclusive-swipe.ts.
+      onSwipeableOpenStartDrag={swipeOpening}
+      onSwipeableWillOpen={swipeOpening}
+      onSwipeableClose={swipeClosed}
       renderRightActions={() => (
         <View className="flex-row">
           <Pressable

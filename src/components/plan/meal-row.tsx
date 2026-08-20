@@ -2,10 +2,9 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useRef } from "react";
 import { Pressable, Text, View } from "react-native";
-import ReanimatedSwipeable, {
-  type SwipeableMethods,
-} from "react-native-gesture-handler/ReanimatedSwipeable";
+import ReanimatedSwipeable from "react-native-gesture-handler/ReanimatedSwipeable";
 
+import { useExclusiveSwipe } from "@/components/ui/exclusive-swipe";
 import { SwipeHint, SwipeRowProvider } from "@/components/ui/swipe-hint";
 import { ds } from "@/constants/ds";
 import { t } from "@/lib/i18n";
@@ -38,7 +37,7 @@ export function MealRow({
   onRemove: () => void;
 }) {
   const isManual = entry.recipeId == null;
-  const swipeable = useRef<SwipeableMethods>(null);
+  const { swipeable, swipeOpening, swipeClosed } = useExclusiveSwipe();
   // Same guard as the shopping rows: while a swipe is engaged, a tap only
   // closes the actions – it never navigates.
   const swipeEngaged = useRef(false);
@@ -60,14 +59,18 @@ export function MealRow({
       friction={2}
       rightThreshold={40}
       overshootRight={false}
+      // One open row in the whole app - see exclusive-swipe.ts.
       onSwipeableOpenStartDrag={() => {
         swipeEngaged.current = true;
+        swipeOpening();
       }}
       onSwipeableWillOpen={() => {
         swipeEngaged.current = true;
+        swipeOpening();
       }}
       onSwipeableClose={() => {
         swipeEngaged.current = false;
+        swipeClosed();
       }}
       renderRightActions={() => (
         <View className="flex-row">

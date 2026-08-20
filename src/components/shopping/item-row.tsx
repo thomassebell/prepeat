@@ -3,11 +3,10 @@ import { SymbolView } from 'expo-symbols';
 import { useRef } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
+import { useExclusiveSwipe } from '@/components/ui/exclusive-swipe';
 import { SwipeHint, SwipeRowProvider } from '@/components/ui/swipe-hint';
 import { ds } from '@/constants/ds';
-import ReanimatedSwipeable, {
-  type SwipeableMethods,
-} from 'react-native-gesture-handler/ReanimatedSwipeable';
+import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 
 import { t } from '@/lib/i18n';
 import type { ShoppingItem } from '@/lib/shopping-list';
@@ -58,7 +57,7 @@ export function ItemRow({
   showInitial,
   checkedByMe,
 }: ItemRowProps) {
-  const swipeable = useRef<SwipeableMethods>(null);
+  const { swipeable, swipeOpening, swipeClosed } = useExclusiveSwipe();
   // A far swipe used to fire the row press on release and check the item
   // off (found on-device 2026-07-16). While the swipe is engaged, a row tap
   // only closes the actions again.
@@ -138,14 +137,18 @@ export function ItemRow({
       friction={2}
       rightThreshold={40}
       overshootRight={false}
+      // One open row in the whole app - see exclusive-swipe.ts.
       onSwipeableOpenStartDrag={() => {
         swipeEngaged.current = true;
+        swipeOpening();
       }}
       onSwipeableWillOpen={() => {
         swipeEngaged.current = true;
+        swipeOpening();
       }}
       onSwipeableClose={() => {
         swipeEngaged.current = false;
+        swipeClosed();
       }}
       renderRightActions={() => (
         <View className="flex-row">

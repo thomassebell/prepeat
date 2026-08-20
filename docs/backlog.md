@@ -711,6 +711,34 @@ Committed work for the first update after launch. Panel findings default here un
 
 ### Known bugs (open)
 
+- [ ] **Two rows could show their swipe actions at once, anywhere in the app –
+      fixed 2026-08-20, not yet seen on a device**
+      Source: Thomas, 2026-08-20, with a screenshot of three open at once on one
+           recipe: *"it is possible to trigger the edit menu on multiple items at
+           once, all over the app. I think if you trigger an edit menu, the other
+           open edit menu should close."*
+      Wait for: the next build on his phone. **Not on TestFlight** – build 26 was
+           cut before this; his call: *"we'll publish on next build."*
+
+      Opening one row now closes whatever was open, the moment the new swipe
+      STARTS rather than when it finishes. Shopping items, plan meals and every
+      recipe row, because all three drew from the same shape and all three had
+      the same bug.
+
+      **ONE MODULE-LEVEL REFERENCE, NOT A CONTEXT**
+      ([exclusive-swipe.ts](../src/components/ui/exclusive-swipe.ts)). The rule
+      is "one open row in the app", not "one per list" – a shopping row and a
+      plan row are different components on different screens and a context would
+      give each its own. There is one finger, so there is one open row.
+      Note: the registry is keyed on the swipeable's REF OBJECT, not on a
+           callback. Callbacks are rebuilt every render, so a registry keyed on
+           one would read each render as a different row and close the row under
+           the user's finger.
+      Note: a row can also leave the screen while open – deleted, or navigated
+           away from – so the hook forgets it on unmount. Otherwise the next row
+           to open would close something that no longer exists instead of
+           finding nothing open.
+
 - [x] **DONE, CONFIRMED ON DEVICE 2026-08-20 – one heading style and one gap
       under it, on both recipe screens**
       Source: Thomas, 2026-08-20, from a screenshot: *"the gap between
