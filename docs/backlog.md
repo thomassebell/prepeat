@@ -4189,6 +4189,91 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
       or a group of equal names? One-directional is simpler and matches the
       category-memory precedent; start there unless Thomas wants groups.
 
+- [ ] **⭐ Household tags on a recipe – "protein rich", "dessert" – and tap one to filter**
+      Source: Thomas, 2026-08-20. Makes good on the 2026-07-12 decision, which
+           ruled out manual tags for v1 and said they were "parked on the ideas
+           list" – they never were, until now.
+      Decide first: one tag at a time, or several at once (see below).
+      Blocked by: no Figma for the tag picker, and none for a chip row that no
+           longer fits on one line. The data side can be built without either.
+
+      **Half of this already ships.** The recipes screen has a chip row with
+      `All` / `Favorites` on it, and the heart is already a SHARED HOUSEHOLD
+      flag, not a personal one (`is_favorite` on the recipe row, decided
+      2026-07-12). So a favourite is, exactly as Thomas put it, a tag – one the
+      family did not get to name. The feature is: let them name their own, and
+      let those names join the same row.
+      Thomas's framing, in his words: *"add a tag to a recipe or choose one that
+      has been added… the tags are not personal, but shared in the family. It
+      could be that my wife wants a tag for protein rich meals, or I can make
+      one for deserts."*
+
+      SHAPE:
+      - **Two new per-household tables, not a text array on the recipe.**
+        `recipe_tag(id, household_id, name, created_at)` with a case-insensitive
+        unique index on `(household_id, lower(name))`, plus a join table
+        `recipe_tag_link(recipe_id, tag_id)`. Both RLS'd through
+        `is_household_member()`, in the same migration that creates them.
+        An array column is less code, and it is the wrong trade: renaming
+        "desert" to "dessert" would mean rewriting every recipe row, and
+        misspelt near-duplicates are the exact mess the ingredient-alias item
+        above exists to clean up. A tag id makes rename and delete one row.
+      - **Reuse the Chip.** `src/components/ui/chip.tsx` is the DS Chip and it
+        already has the active/pressed states this needs. Nothing new to build
+        in the DS for the FILTER row – only for the picker.
+      - **Fold tags into search too.** `matchesSearch()` matches title and
+        ingredient names; adding tag names is three lines, and it means typing
+        "dessert" works even when the chip for it has scrolled off.
+      - **Not realtime.** Recipe editing is deliberately not realtime
+        (foundation.md), and tags are recipe editing. Screens refetch on focus.
+
+      DECISIONS THIS FORCES, none of them technical:
+      1. **Tapping two tags – AND or OR?** Recommendation: allow ONE at a time
+         to start, which is how `All` / `Favorites` already behaves. A chip row
+         cannot show the difference between "protein rich AND quick" and
+         "protein rich OR quick", so multi-select invites a wrong answer with
+         no way to see it. Add multi-select later if it is ever missed.
+      2. **What happens when there are fifteen tags?** Two chips fit on one
+         line; fifteen do not. Horizontal scroll, wrap to two lines, or a
+         "more" sheet – this is the real design question and there is no frame
+         for it. Worth deciding before any UI is drawn.
+      3. **Does Favourites become a tag?** Recommendation: NO. Keep the heart.
+         It is one tap from the card with nothing to name, it is already live
+         on build 26 and on the App Store build, and removing `is_favorite`
+         would break installed builds (the migration rule: add first, remove a
+         version later). Tags sit BESIDE it in the same row.
+      4. **Do tags travel when a recipe is copied?** Copy-on-leave keeps the
+         recipe inside the same household lineage, so tags should come along.
+         A SHARED recipe saved into a DIFFERENT household is the harder one –
+         its tags are that household's words, and importing them silently
+         plants foreign tags in your list. Recommendation: drop them on a
+         cross-household save; the saver can re-tag with their own.
+      5. **Who can delete a tag?** It is shared, so one person deleting
+         "protein rich" removes it from everyone's recipes. Recommendation: let
+         them, with a count in the confirm ("used on 9 recipes") – a household
+         is four people who talk to each other, not an org.
+
+      WHERE THE VALUE ACTUALLY COMPOUNDS – worth building the same week:
+      - **Tags on the "add a recipe to this day" picker, not just the browse
+        list.** Browsing is when you are curious; planning is when you have a
+        real question ("something quick for Tuesday", "a dessert for Saturday").
+        The filter earns far more there, and it is the same chip row.
+      - **This is the cheapest answer to panel finding `2.18`** ("say something
+        about one person in the house eating differently" – P07's vegetarian
+        daughter, P01's child who will not eat sauce). That finding is open with
+        no feature behind it. A household tag for `veggie` or `no sauce` is not
+        a diet system, but it is a real, honest answer, and it costs nothing
+        extra once tags exist. **NOT decided – flagged so the two are read
+        together.**
+
+      LATER, NOT NOW – deliberately parked so they do not inflate the first cut:
+      - Suggesting tags on import (the importer knows the recipe; "dessert" is
+        often obvious). A close sibling of the AI-guesses-a-category idea below,
+        and it should wait for the same verdict.
+      - A tag colour or an emoji. Nice, and a whole design conversation.
+      - Tag rename / merge from a manage screen. The unique index stops the
+        obvious duplicates at creation; the rest can wait for a real mess.
+
 - [ ] **Show amounts in the units the household actually uses**
       Why: recipes arrive in whatever the source used – a Danish site gives dl
            and spsk, a US one cups and oz – so one cookbook ends up mixing
@@ -7269,7 +7354,9 @@ Not work. Kept so a cold thread can pick things up without re-litigating them.
   scaling happens in the planner as planned ÷ recipe servings, with
   sensible display rounding. Parser to handle "1,5" and "1/2".
 - Recipes list gets one search field matching names AND ingredients – no
-  manual tags/filters in v1 (2026-07-12); tags parked on the ideas list.
+  manual tags/filters in v1 (2026-07-12); tags parked on the ideas list –
+  where they were finally WRITTEN UP on 2026-08-20, having been parked in a
+  sentence and nowhere else for five weeks.
 - DS 7-step colour ramps adopted (2026-07-11): tokens re-synced, existing
   screens remapped one step (old "lighter" tints are now "lightest" etc.)
   so backgrounds/badges kept their look; the brand green retuned
