@@ -711,12 +711,37 @@ Committed work for the first update after launch. Panel findings default here un
 
 ### Known bugs (open)
 
-- [ ] **Drag an ingredient straight into another section, without opening a
-      sheet – built 2026-08-20, not yet seen on a device**
+- [ ] **Let a whole SECTION be dragged in place too, not only in the sheet**
+      Why: an ingredient can now be picked up and moved by hand, and a heading
+           cannot – so the one gesture the screen teaches stops working the
+           moment you aim it at a heading. Thomas met this immediately
+           (2026-08-20) and parked it himself: *"it works, except sections – but
+           they are properly out of scope in this spike."*
+      Note: the handle on every heading still opens the reorder sheet, where
+           sections DO move as a block and can only land on a section boundary,
+           so nothing is unreachable – it is the inconsistency that will grate.
+
+      **What it actually takes, so this is not re-scoped from scratch.** A
+      section is a heading plus a card plus that card's rows, of variable
+      height, so the two things the ingredient drag leans on both stop being
+      true: the moving thing is no longer one 57px row (the floating copy would
+      have to be a whole card), and the destinations are no longer every gap but
+      only the boundaries between sections – a rule that already exists and is
+      already checked, in `validTargets`
+      ([reorder.ts](../src/lib/reorder.ts)). The geometry module can answer it:
+      `layoutTops` is already written against an arbitrary ORDER, so the
+      preview for a moved block is the same call with a different order. What is
+      missing is a block-sized floating copy and the boundary-only snapping.
+      Blocked by: nothing technical. It is a design question first – what a
+           section in flight looks like when it is taller than the screen.
+
+- [x] **DONE, CONFIRMED ON DEVICE 2026-08-20 – an ingredient can be dragged
+      straight into another section without opening a sheet**
       Source: Thomas, 2026-08-20 – *"is there a way where tapping the ingredient
            opens the edit sheet, but dragging it reorders the list?"*, then
            *"rows stay in their cards"* and *"follow Shopping, no frame"*.
-      Wait for: the next build on his phone. Tick it there, not here.
+           Verdict the same day: *"it works, except sections – but they are
+           properly out of scope in this spike"* (sections: see the item below).
 
       A **tap** still opens the edit sheet; a **hold of 200ms** lifts the row and
       it follows the finger, its own card closing behind it and the destination
@@ -767,7 +792,10 @@ Committed work for the first update after launch. Panel findings default here un
       Source: Thomas, 2026-08-20 – *"it's in edit recipe, when you have sections
            and want to move an ingredient to a new section. Things become
            weird."*
-      Wait for: the next build on his phone. Tick it there, not here.
+      Wait for: Thomas opening the reorder SHEET itself (the handle beside a
+           heading) and dragging a row there. The 2026-08-20 build he confirmed
+           exercised the new in-place drag, which is a different code path -
+           this fix is in the sheet.
 
       **What he saw:** drop an ingredient into another section and the rows draw
       in the wrong places – the dropped row painted far from where it landed,
