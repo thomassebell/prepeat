@@ -30,6 +30,7 @@ execFileSync('npx', ['tsc', '--ignoreConfig', '--target', 'es2020', '--module',
 const emitted = join(out, 'ingredient-drag-layout.js');
 writeFileSync(emitted, readFileSync(emitted, 'utf8').replace('"./reorder"', '"./reorder.js"'));
 const {
+  ROW_HEIGHT,
   ROW_SLOT,
   BLOCK_GAP,
   groupForDrag,
@@ -53,7 +54,10 @@ const check = (label, ok, detail) => {
 const H = 24; // one line of header/display-6 beside a 24px handle
 const S = (name) => ({ name, isSection: true });
 const R = (name) => ({ name });
-const heights = (items) => items.map((item) => (item.isSection ? H : 0));
+// How tall each item is drawn. An ingredient row is 56; a heading is one line
+// of header/display-6 beside a 24px handle. Instructions pass real measured
+// heights instead, which is the whole reason this takes an array.
+const heights = (items) => items.map((item) => (item.isSection ? H : ROW_HEIGHT));
 
 // DOUGH[a, b]  FILLING[c]
 const items = [S('DOUGH'), R('a'), R('b'), S('FILLING'), R('c')];
@@ -64,9 +68,9 @@ check('the first heading sits at the top', tops[0] === 0, String(tops[0]));
 check('its card clears the heading by one gap', tops[1] === H + BLOCK_GAP, String(tops[1]));
 check('the second row is one slot below the first', tops[2] === tops[1] + ROW_SLOT, String(tops[2]));
 check('the second heading clears the card by one gap',
-  tops[3] === tops[1] + cardHeight(2) + BLOCK_GAP, String(tops[3]));
-check('a card holding two rows clips the last divider', cardHeight(2) === 2 * ROW_SLOT - 1);
-check('an empty card is nothing at all', cardHeight(0) === 0 && cardMarginBottom(0) === -BLOCK_GAP);
+  tops[3] === tops[1] + cardHeight([ROW_HEIGHT,ROW_HEIGHT]) + BLOCK_GAP, String(tops[3]));
+check('a card holding two rows clips the last divider', cardHeight([ROW_HEIGHT,ROW_HEIGHT]) === 2 * ROW_SLOT - 1);
+check('an empty card is nothing at all', cardHeight([]) === 0 && cardMarginBottom(0) === -BLOCK_GAP);
 
 // ---- the invisible group above the first heading ----------------------------
 {
@@ -96,7 +100,7 @@ for (const target of [2, 3]) {
   check('the row already in FILLING does not move either - the card comes up to meet it',
     plan.displacement[4] === 0, String(plan.displacement[4]));
   check('DOUGH loses a row, FILLING gains one',
-    plan.cardHeights[1] === cardHeight(1) && plan.cardHeights[2] === cardHeight(2),
+    plan.cardHeights[1] === cardHeight([ROW_HEIGHT]) && plan.cardHeights[2] === cardHeight([ROW_HEIGHT,ROW_HEIGHT]),
     JSON.stringify(plan.cardHeights));
 }
 
@@ -119,12 +123,12 @@ for (const target of [2, 3]) {
 // ---- out of every section, above the first heading -------------------------
 {
   const plan = dragPlan(items, 2, 1, 0, heights(items));
-  check('a row can be dropped above the first heading', plan.cardHeights[0] === cardHeight(1),
+  check('a row can be dropped above the first heading', plan.cardHeights[0] === cardHeight([ROW_HEIGHT]),
     JSON.stringify(plan.cardHeights));
   const after = moveBlock(items, 2, 1, 0);
   check('...which pushes the first heading down by that row and its gap',
     plan.dropTop === 0
-      && layoutTops(after, heights(after))[1] === cardHeight(1) + BLOCK_GAP,
+      && layoutTops(after, heights(after))[1] === cardHeight([ROW_HEIGHT]) + BLOCK_GAP,
     `${plan.dropTop} / ${layoutTops(after, heights(after))[1]}`);
 }
 
@@ -143,19 +147,19 @@ for (const target of [2, 3]) {
 
   const plan = dragPlan(items, 0, 3, 5, heights(items));
   check('moving a section resizes no card at all',
-    plan.cardHeights[1] === cardHeight(2) && plan.cardHeights[2] === cardHeight(1),
+    plan.cardHeights[1] === cardHeight([ROW_HEIGHT,ROW_HEIGHT]) && plan.cardHeights[2] === cardHeight([ROW_HEIGHT]),
     JSON.stringify(plan.cardHeights));
   check('...and shifts nothing inside a card either',
     plan.displacement.every((d) => d === 0), JSON.stringify(plan.displacement));
   check('...so the section it passes travels as one unit, every pixel by hand',
-    plan.groupDisplacement[2] === -(H + BLOCK_GAP + cardHeight(2) + BLOCK_GAP)
-      && plan.groupDisplacement[1] === H + BLOCK_GAP + cardHeight(1) + BLOCK_GAP,
+    plan.groupDisplacement[2] === -(H + BLOCK_GAP + cardHeight([ROW_HEIGHT,ROW_HEIGHT]) + BLOCK_GAP)
+      && plan.groupDisplacement[1] === H + BLOCK_GAP + cardHeight([ROW_HEIGHT]) + BLOCK_GAP,
     JSON.stringify(plan.groupDisplacement));
   check('...by exactly the height of the block in the air, both ways',
     plan.groupDisplacement[2] === -(blockHeight(items, 0, 3, heights(items)) + BLOCK_GAP),
     JSON.stringify(plan.groupDisplacement));
   check('the block is as tall as its heading, its gap and its card',
-    blockHeight(items, 0, 3, heights(items)) === H + BLOCK_GAP + cardHeight(2),
+    blockHeight(items, 0, 3, heights(items)) === H + BLOCK_GAP + cardHeight([ROW_HEIGHT,ROW_HEIGHT]),
     String(blockHeight(items, 0, 3, heights(items))));
   check('an empty section in the air is just a heading',
     blockHeight([S('EMPTY'), S('D'), R('a')], 0, 1, heights([S('EMPTY'), S('D'), R('a')])) === H);
@@ -176,9 +180,36 @@ for (const target of [2, 3]) {
   const plan = dragPlan(loose, 1, 2, 0, heights(loose));
   const after = moveBlock(loose, 1, 2, 0);
   check('KNOWN: loose leading rows keep their own card in flight',
-    plan.cardHeights[0] === cardHeight(1), JSON.stringify(plan.cardHeights));
+    plan.cardHeights[0] === cardHeight([ROW_HEIGHT]), JSON.stringify(plan.cardHeights));
   check('...and are absorbed by the section only once it is dropped',
     after.map((i) => i.name).join() === 'DOUGH,a,salt', after.map((i) => i.name).join());
+}
+
+// ---- rows that are not all the same height (the instruction list) ----------
+{
+  const steps = [R('one'), R('two'), R('three')];
+  const sizes = [40, 96, 62]; // one line, three lines, two
+  const tops = layoutTops(steps, sizes);
+  check('a taller row pushes the next one further down, not by a constant',
+    tops[0] === 0 && tops[1] === 41 && tops[2] === 138, tops.join());
+  check('the card is its rows plus their dividers, less the clipped last one',
+    cardHeight(sizes) === 40 + 96 + 62 + 2, String(cardHeight(sizes)));
+
+  let worst = null;
+  for (let from = 0; from < steps.length; from += 1) {
+    const { targets, plans, offsets } = dragPlans(steps, from, 1, sizes);
+    const start = layoutTops(steps, sizes)[from];
+    targets.forEach((target, position) => {
+      const order = moveBlock([0, 1, 2], from, 1, target);
+      const actual = layoutTops(steps, sizes, order)[from];
+      if (plans[position].dropTop !== actual) {
+        worst = `from ${from} target ${target}: promised ${plans[position].dropTop}, drawn ${actual}`;
+      }
+      if (offsets[position] !== actual - start) worst = `offset from ${from} target ${target}`;
+    });
+  }
+  check('...and a drag still lands where it was promised, every from and to',
+    worst === null, worst);
 }
 
 // ---- the promise the drop animation makes ----------------------------------
@@ -249,7 +280,8 @@ for (const target of [2, 3]) {
             }
           }
           flow += plan.cardHeights[groupIndex] + plan.cardMarginBottoms[groupIndex]
-            - cardHeight(group.rowIndices.length) - cardMarginBottom(group.rowIndices.length);
+            - cardHeight(group.rowIndices.map((i) => hs[i]))
+            - cardMarginBottom(group.rowIndices.length);
         });
       }
     }

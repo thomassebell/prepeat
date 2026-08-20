@@ -711,6 +711,34 @@ Committed work for the first update after launch. Panel findings default here un
 
 ### Known bugs (open)
 
+- [ ] **Instructions drag in place too, and the reorder sheet has left the
+      recipe editor entirely – built 2026-08-20, not yet seen on a device**
+      Source: Thomas, 2026-08-20: *"yes, do the instructions too."*
+      Wait for: the next build on his phone. Tick it there, not here.
+
+      Same gesture as the ingredients: a grip that drags on contact, a hold on
+      the row body for anyone who does not notice it, a tap to edit, a swipe to
+      delete. **No reorder sheet is reachable from any recipe screen any more** –
+      the component survives only for the shopping list's aisle order.
+
+      **THE MACHINERY IS SHARED, NOT COPIED** ([use-in-place-drag.tsx](../src/components/recipes/use-in-place-drag.tsx)).
+      The plans, the gesture, the page scrolling under the finger, the cleanup
+      that has to happen in the commit that reorders – one copy, used by both
+      lists. What stays in each list is only what a row looks like. This project
+      has already paid for the alternative: `isSection` was dropped at six
+      separate sites because each one rebuilt the same shape by hand, and it
+      passed typecheck, lint and two device builds every time.
+
+      **What instructions needed that ingredients did not: MEASURED ROW
+      HEIGHTS.** An ingredient row is always 56 tall, so its geometry could
+      count rows; an instruction wraps onto as many lines as it needs, so a card
+      of three of them is not three of anything. `cardHeight()` now takes the
+      heights rather than a count, and every row reports its own as it lays out.
+      38 checks, including a list of rows of three different heights.
+      Note: the instructions box no longer clips its contents. A box that clips
+           its children also clips the step in the air the moment it passes the
+           top row; the rows round and clip themselves instead.
+
 - [x] **DONE 2026-08-20 – the recipe screen (non-edit) has no sorting at all
       any more**
       Source: Thomas, 2026-08-20: *"now we need to delete the sorting function
@@ -853,11 +881,14 @@ Committed work for the first update after launch. Panel findings default here un
       Source: Thomas, 2026-08-20 – *"it's in edit recipe, when you have sections
            and want to move an ingredient to a new section. Things become
            weird."*
-      Wait for: Thomas dragging in the reorder SHEET. ⚠️ THE WAY IN HAS
-           CHANGED SINCE THIS WAS WRITTEN: ingredients no longer open a sheet at
-           all, so on this screen the sheet is now reached from the
-           INSTRUCTIONS handle - which keys its rows by position exactly as the
-           ingredients did, and therefore had exactly the same bug.
+      Wait for: Thomas dragging in the SHOPPING list's aisle-order sheet, which
+           is now the only reorder sheet left in the app. ⚠️ THE BUG IS NO
+           LONGER REACHABLE WHERE IT WAS REPORTED: every recipe list drags in
+           place now, so nothing on those screens opens a sheet at all. The fix
+           stays because the sheet stays - and because the shopping list keys
+           its rows by CATEGORY NAME, which changes with the order, that screen
+           never had the bug. So this is a fix with no user-facing symptom left
+           to confirm; close it on the code, not on a build.
 
       **What he saw:** drop an ingredient into another section and the rows draw
       in the wrong places – the dropped row painted far from where it landed,

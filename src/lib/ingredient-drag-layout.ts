@@ -35,16 +35,17 @@
  */
 import { blockSizeAt, moveBlock, validTargets } from "./reorder";
 
-/** A row's own height, matching `h-[56px]` on the row itself. */
+/** An ingredient row's height, matching `h-[56px]` on the row itself, and the
+ *  fallback for any row that has not been measured yet. */
 export const ROW_HEIGHT = 56;
-/**
- * What a row COSTS in a card: its height plus the hairline divider under it.
- * A card is then `57n - 1` tall, which clips the last row's divider against the
- * card's rounded bottom - so every row can carry a divider unconditionally and
- * none of them has to know whether it is currently last. That matters here far
- * more than it looks: "last" changes while a row is in flight.
- */
-export const ROW_SLOT = ROW_HEIGHT + 1;
+/** The hairline under a row. It belongs to the row rather than sitting between
+ *  rows, so that it travels with it; a card is a pixel shorter than its rows
+ *  add up to, which clips the last one against the card's rounded bottom. No
+ *  row has to know whether it is currently last - and "last" changes while a
+ *  row is in flight. */
+export const DIVIDER = 1;
+/** What a fixed-height ingredient row costs in a card. */
+export const ROW_SLOT = ROW_HEIGHT + DIVIDER;
 /** The `gap-layout-small` between every heading and card in the builder. */
 export const BLOCK_GAP = 16;
 
@@ -89,9 +90,17 @@ function groupOrder(order: number[], items: DragItem[]): DragGroup[] {
   return groups;
 }
 
-/** A card holding `rowCount` rows, with the last divider clipped. */
-export function cardHeight(rowCount: number): number {
-  return rowCount > 0 ? rowCount * ROW_SLOT - 1 : 0;
+/**
+ * A card holding rows of these heights, with the last divider clipped.
+ *
+ * TAKES THE HEIGHTS RATHER THAN A COUNT, and that is what let the instruction
+ * list use this file too (2026-08-20). An ingredient row is always 56 tall; an
+ * instruction wraps onto as many lines as it needs, so a card of three of them
+ * is not three of anything.
+ */
+export function cardHeight(rowSizes: number[]): number {
+  if (rowSizes.length === 0) return 0;
+  return rowSizes.reduce((total, size) => total + size + DIVIDER, 0) - DIVIDER;
 }
 
 /**
@@ -105,13 +114,19 @@ export function cardMarginBottom(rowCount: number): number {
 }
 
 /**
- * The top edge of every item in the flat list, for a given ORDER of it.
- * `headingHeights` is indexed by the item's own index, not by group, because a
- * long section name wraps and the headings are then not all the same height.
+ * How tall each item is drawn, indexed by the item's own index: a heading's own
+ * height, a row's own height, both without the divider. MEASURED by the screen
+ * rather than assumed - a long section name wraps, and an instruction wraps
+ * further.
  */
+export type ItemSizes = number[];
+
+const sizeOf = (sizes: ItemSizes, index: number) => sizes[index] ?? ROW_HEIGHT;
+
+/** The top edge of every item in the flat list, for a given ORDER of it. */
 export function layoutTops(
   items: DragItem[],
-  headingHeights: number[],
+  sizes: ItemSizes,
   order: number[] = items.map((_, index) => index),
 ): number[] {
   const tops = new Array<number>(items.length).fill(0);
@@ -121,15 +136,17 @@ export function layoutTops(
     if (group.headingIndex !== null) {
       if (!first) y += BLOCK_GAP;
       tops[group.headingIndex] = y;
-      y += headingHeights[group.headingIndex] ?? 0;
+      y += sizeOf(sizes, group.headingIndex);
       first = false;
     }
     const count = group.rowIndices.length;
     if (!first) y += BLOCK_GAP;
-    group.rowIndices.forEach((index, position) => {
-      tops[index] = y + position * ROW_SLOT;
-    });
-    y += cardHeight(count);
+    let rowY = y;
+    for (const index of group.rowIndices) {
+      tops[index] = rowY;
+      rowY += sizeOf(sizes, index) + DIVIDER;
+    }
+    y += cardHeight(group.rowIndices.map((index) => sizeOf(sizes, index)));
     // The negative bottom margin above, in arithmetic form.
     if (count === 0) y -= BLOCK_GAP;
     first = false;
@@ -170,12 +187,14 @@ export function dragPlan(
   from: number,
   size: number,
   target: number,
-  headingHeights: number[],
+  sizes: ItemSizes,
 ): DragPlan {
   const order = items.map((_, index) => index);
   const previewOrder = moveBlock(order, from, size, target);
-  const current = layoutTops(items, headingHeights, order);
-  const preview = layoutTops(items, headingHeights, previewOrder);
+  const current = layoutTops(items, sizes, order);
+  const preview = layoutTops(items, sizes, previewOrder);
+  const cardOf = (group: DragGroup) =>
+    cardHeight(group.rowIndices.map((index) => sizeOf(sizes, index)));
   const currentGroups = groupOrder(order, items);
   const previewGroups = groupOrder(previewOrder, items);
 
@@ -201,12 +220,9 @@ export function dragPlan(
   let running = 0;
   currentGroups.forEach((group, index) => {
     above.push(running);
-    const before =
-      cardHeight(group.rowIndices.length) +
-      cardMarginBottom(group.rowIndices.length);
+    const before = cardOf(group) + cardMarginBottom(group.rowIndices.length);
     const after =
-      cardHeight(paired[index].rowIndices.length) +
-      cardMarginBottom(paired[index].rowIndices.length);
+      cardOf(paired[index]) + cardMarginBottom(paired[index].rowIndices.length);
     running += after - before;
   });
 
@@ -231,9 +247,7 @@ export function dragPlan(
         return first === undefined ? 0 : preview[first] - current[first];
       }),
       displacement: new Array<number>(items.length).fill(0),
-      cardHeights: currentGroups.map((group) =>
-        cardHeight(group.rowIndices.length),
-      ),
+      cardHeights: currentGroups.map(cardOf),
       cardMarginBottoms: currentGroups.map((group) =>
         cardMarginBottom(group.rowIndices.length),
       ),
@@ -253,7 +267,7 @@ export function dragPlan(
     // React's column layout carries everything below them.
     groupDisplacement: currentGroups.map(() => 0),
     displacement,
-    cardHeights: paired.map((group) => cardHeight(group.rowIndices.length)),
+    cardHeights: paired.map(cardOf),
     cardMarginBottoms: paired.map((group) =>
       cardMarginBottom(group.rowIndices.length),
     ),
@@ -296,7 +310,7 @@ export function dragPlans(
   items: DragItem[],
   from: number,
   size: number,
-  headingHeights: number[],
+  sizes: ItemSizes,
 ): DragPlanSet {
   const targets = validTargets(
     items.map((item, index) => ({ key: String(index), isSection: item.isSection })),
@@ -304,9 +318,9 @@ export function dragPlans(
     size,
   );
   const plans = targets.map((target) =>
-    dragPlan(items, from, size, target, headingHeights),
+    dragPlan(items, from, size, target, sizes),
   );
-  const start = layoutTops(items, headingHeights)[from];
+  const start = layoutTops(items, sizes)[from];
   return { targets, plans, offsets: plans.map((plan) => plan.dropTop - start) };
 }
 
@@ -318,10 +332,15 @@ export function blockHeight(
   items: DragItem[],
   from: number,
   size: number,
-  headingHeights: number[],
+  sizes: ItemSizes,
 ): number {
-  if (!items[from]?.isSection) return ROW_HEIGHT;
-  const rows = size - 1;
-  const heading = headingHeights[from] ?? 0;
-  return rows > 0 ? heading + BLOCK_GAP + cardHeight(rows) : heading;
+  if (!items[from]?.isSection) return sizeOf(sizes, from);
+  const carried: number[] = [];
+  for (let index = from + 1; index < from + size; index += 1) {
+    carried.push(sizeOf(sizes, index));
+  }
+  const heading = sizeOf(sizes, from);
+  return carried.length > 0
+    ? heading + BLOCK_GAP + cardHeight(carried)
+    : heading;
 }

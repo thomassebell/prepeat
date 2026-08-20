@@ -19,18 +19,10 @@ import { ServingsCounter } from "@/components/recipes/servings-counter";
 import { ImportRecipeSheet } from "@/components/recipes/import-recipe-sheet";
 import { IngredientSheet } from "@/components/recipes/ingredient-sheet";
 import { IngredientDragList } from "@/components/recipes/ingredient-drag-list";
+import { InstructionDragList } from "@/components/recipes/instruction-drag-list";
 import { StepSheet } from "@/components/recipes/step-sheet";
 import type { ImportedRecipe } from "@/lib/recipe-import";
-import { ReorderSheet } from "@/components/ui/reorder-sheet";
 import { moveBlock } from "@/lib/reorder";
-// SwipeHint is deliberately gone from this screen (2026-08-07). Its job was to
-// advertise the swipe; the whole row now opens the editor on a tap, and
-// deleting lives inside that editor beside Done (Thomas: "put the delete
-// function on the edit sheet instead"). So there are no hidden actions left to
-// hint at. The swipe still works underneath for anyone used to it.
-// It stays in use on the shopping list, the plan and the recipe DETAIL screen,
-// where a row tap already means something else (ticking an ingredient off).
-import { SwipeActions } from "@/components/recipes/swipe-actions";
 import { Input } from "@/components/ui/input";
 import { ds } from "@/constants/ds";
 import { Spacing, tabBarClearance } from "@/constants/theme";
@@ -100,12 +92,11 @@ export default function AddRecipeScreen() {
   const [busy, setBusy] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [loaded, setLoaded] = useState(!editing);
-  const [reorderingSteps, setReorderingSteps] = useState(false);
-  // True while an ingredient or a section is in the air. The page must not
+  // True while an ingredient, a section or an instruction is in the air. The page must not
   // scroll under it BY ITSELF: two vertical gestures on one finger is the one
   // thing that makes an in-place drag unusable. The drag scrolls the page
   // deliberately instead, through this ref, when the finger reaches an edge.
-  const [draggingIngredient, setDraggingIngredient] = useState(false);
+  const [dragging, setDragging] = useState(false);
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
   const [importing, setImporting] = useState(false);
   // Add and edit both go through the focused sheet: "add" opens it empty,
@@ -291,7 +282,7 @@ export default function AddRecipeScreen() {
       <Animated.ScrollView
         ref={scrollRef}
         style={{ flex: 1 }}
-        scrollEnabled={!draggingIngredient}
+        scrollEnabled={!dragging}
         keyboardShouldPersistTaps="handled"
         automaticallyAdjustKeyboardInsets
         contentContainerStyle={{
@@ -437,7 +428,7 @@ export default function AddRecipeScreen() {
                 setIngredients((current) => current.filter((_, i) => i !== index))
               }
               onEditSection={(index) => setIngredientSheet({ index })}
-              onDragChange={setDraggingIngredient}
+              onDragChange={setDragging}
               onReorder={(from, size, target) =>
                 setIngredients((current) => moveBlock(current, from, size, target))
               }
@@ -457,22 +448,13 @@ export default function AddRecipeScreen() {
               <Text className="flex-1 font-paragraph text-paragraph font-emphasized text-text-default">
                 {t("recipes.instructions")}
               </Text>
-              {steps.length > 1 && (
-                <Pressable
-                  onPress={() => setReorderingSteps(true)}
-                  hitSlop={8}
-                  accessibilityRole="button"
-                  accessibilityLabel={t("recipes.detail.reorderInstructions")}
-                >
-                  <MaterialIcons
-                    name="drag-handle"
-                    size={24}
-                    color={ds.colors.icon.subtle}
-                  />
-                </Pressable>
-              )}
             </View>
-            <View className="w-full gap-layout-small overflow-hidden rounded-large bg-surface-neutral-white p-layout-small">
+            {/* NOT overflow-hidden any more (2026-08-20): a step being dragged
+                is drawn over this box, and a box that clips its children clips
+                the thing in the air the moment it passes the top row. The rows
+                do their own clipping instead - they are the only full-bleed
+                thing in here, and they round their own top corners. */}
+            <View className="w-full gap-layout-small rounded-large bg-surface-neutral-white p-layout-small">
               {/* This screen's own box – it makes no claim to be the DS alert
                   banner, which is the DS's to build. A copy of that component
                   lived here briefly on 2026-08-16 and was deleted; see the
@@ -485,49 +467,27 @@ export default function AddRecipeScreen() {
                 </View>
               )}
               {steps.length > 0 && (
-                <View style={{ marginHorizontal: -16, marginTop: -16 }}>
-                  {steps.map((step, index) => (
-                    <Fragment key={`${index}-${step.slice(0, 12)}`}>
-                      {index > 0 && (
-                        <View
-                          className="h-px bg-border-subtle"
-                        />
-                      )}
-                      <SwipeActions
-                        label={`step ${index + 1}`}
-                        onEdit={() => setStepSheet({ index })}
-                        onDelete={() =>
-                          setSteps((current) =>
-                            current.filter((_, i) => i !== index),
-                          )
-                        }
-                      >
-                        <View className="w-full flex-row items-start gap-layout-small bg-surface-neutral-white px-layout-small py-layout-small">
-                          <Pressable
-                            className="min-w-0 flex-1 flex-row items-start gap-layout-small"
-                            onPress={() => setStepSheet({ index })}
-                            accessibilityRole="button"
-                            accessibilityLabel={t("recipes.form.editStep", { number: index + 1 })}
-                          >
-                            <View className="min-w-[32px] items-center justify-center rounded-xlarge bg-surface-neutral-main px-comp-medium py-comp-small">
-                              <Text className="font-paragraph text-small font-emphasized leading-xxsmall text-text-default">
-                                {index + 1}
-                              </Text>
-                            </View>
-                            <Text
-                              style={{ paddingTop: 4 }}
-                              className="min-w-0 flex-1 font-paragraph text-paragraph font-default leading-xsmall text-text-default"
-                            >
-                              {step}
-                            </Text>
-                          </Pressable>
-                        </View>
-                      </SwipeActions>
-                    </Fragment>
-                  ))}
-                  {/* Close off the list with a line before the add button. */}
-                  <View className="h-px bg-border-subtle" />
-                </View>
+                <>
+                  <InstructionDragList
+                    steps={steps}
+                    scrollRef={scrollRef}
+                    onEditStep={(index) => setStepSheet({ index })}
+                    onDeleteStep={(index) =>
+                      setSteps((current) => current.filter((_, i) => i !== index))
+                    }
+                    onDragChange={setDragging}
+                    onReorder={(from, size, target) =>
+                      setSteps((current) => moveBlock(current, from, size, target))
+                    }
+                  />
+                  {/* Close off the list with a line before the add button. The
+                      rows clip their own last divider, so this one is drawn
+                      here rather than inherited. */}
+                  <View
+                    style={{ marginHorizontal: -16 }}
+                    className="h-px bg-border-subtle"
+                  />
+                </>
               )}
               <OutlineButton
                 icon="add"
@@ -684,23 +644,6 @@ export default function AddRecipeScreen() {
         }}
       />
 
-      {/* INSTRUCTIONS ONLY (2026-08-20). The ingredients used to open this
-          sheet too; they are dragged in place now, and a sheet that reorders a
-          copy of a list you can already drag is a second place the list exists.
-          The instructions keep it until they get the same treatment. */}
-      <ReorderSheet
-        visible={reorderingSteps}
-        title={t("recipes.detail.reorderInstructions")}
-        hint={t("recipes.detail.reorderHint")}
-        items={steps.map((step, index) => ({
-          key: String(index),
-          label: `${index + 1}. ${step}`,
-        }))}
-        onClose={() => setReorderingSteps(false)}
-        onChange={(orderedKeys) => {
-          setSteps((current) => orderedKeys.map((key) => current[Number(key)]));
-        }}
-      />
     </SafeAreaView>
   );
 }
