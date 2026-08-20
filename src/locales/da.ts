@@ -351,6 +351,8 @@ export const da: DeepPartial<typeof en> = {
       // ⚠️ NOT PROOF-READ – Danish is Thomas's to check, like the sharing
       // strings (2026-08-17).
       dragRow: 'Hold og træk for at flytte den.',
+      moveUp: 'Flyt op',
+      moveDown: 'Flyt ned',
       editStep: 'Rediger trin %{number}',
       save: 'Gem opskrift',
       saveChanges: 'Gem ændringer',

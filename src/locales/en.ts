@@ -357,6 +357,11 @@ export const en = {
       // Spoken after the row's label, so it reads "Edit flour. Hold and drag
       // to move it." The gesture is invisible otherwise.
       dragRow: 'Hold and drag to move it.',
+      // The reorder sheet was this screen's only way to reorder without a
+      // drag, and it is gone (2026-08-20). These are its replacement: every row
+      // and heading carries them as VoiceOver actions.
+      moveUp: 'Move up',
+      moveDown: 'Move down',
       editStep: 'Edit step %{number}',
       save: 'Save recipe',
       saveChanges: 'Save changes',

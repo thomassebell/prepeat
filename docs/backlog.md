@@ -711,15 +711,34 @@ Committed work for the first update after launch. Panel findings default here un
 
 ### Known bugs (open)
 
-- [ ] **Let a whole SECTION be dragged in place too, not only in the sheet**
-      Why: an ingredient can now be picked up and moved by hand, and a heading
-           cannot – so the one gesture the screen teaches stops working the
-           moment you aim it at a heading. Thomas met this immediately
-           (2026-08-20) and parked it himself: *"it works, except sections – but
-           they are properly out of scope in this spike."*
-      Note: the handle on every heading still opens the reorder sheet, where
-           sections DO move as a block and can only land on a section boundary,
-           so nothing is unreachable – it is the inconsistency that will grate.
+- [ ] **Sections drag in place too, and the reorder sheet is gone from this
+      screen – built 2026-08-20, not yet seen on a device**
+      Source: Thomas, 2026-08-20, the same day he parked it: *"can you include
+           section as well? Section will not open a sheet – the clean
+           solution."*
+      Wait for: the next build on his phone. Tick it there, not here.
+
+      A section is dragged by the handle beside its name; the name itself still
+      opens the sheet that renames it. It carries its rows, and it can only land
+      on a section boundary – dropping one INSIDE another would silently re-home
+      the rows below the drop point, which is the 2026-08-07 decision and is
+      still enforced by the same `validTargets` the sheet used.
+
+      **THE SHEET IS GONE FROM THE EDIT SCREEN, and that was the point of his
+      sentence.** A handle that opens a sheet that reorders a COPY of the list
+      is a second place the list exists. It survives on the recipe DETAIL screen
+      (where a row tap already means ticking an ingredient off) and for
+      instructions here, which have not had the same treatment yet.
+
+      **Two things had to be built BECAUSE the sheet went, and neither is
+      optional:**
+      1. **The drag scrolls the page** when the finger reaches the top or bottom
+         edge – the sheet used to be the answer for a section that is off-screen,
+         and there is no other one now.
+      2. **Move up / Move down as VoiceOver actions** on every row and heading.
+         The sheet was this screen's only reordering that did not require
+         dragging, and dropping it would otherwise have quietly removed the
+         screen's accessibility.
 
       **What it actually takes, so this is not re-scoped from scratch.** A
       section is a heading plus a card plus that card's rows, of variable
@@ -792,10 +811,11 @@ Committed work for the first update after launch. Panel findings default here un
       Source: Thomas, 2026-08-20 – *"it's in edit recipe, when you have sections
            and want to move an ingredient to a new section. Things become
            weird."*
-      Wait for: Thomas opening the reorder SHEET itself (the handle beside a
-           heading) and dragging a row there. The 2026-08-20 build he confirmed
-           exercised the new in-place drag, which is a different code path -
-           this fix is in the sheet.
+      Wait for: Thomas dragging in the reorder SHEET. ⚠️ THE WAY IN HAS
+           CHANGED SINCE THIS WAS WRITTEN: ingredients no longer open a sheet at
+           all, so on this screen the sheet is now reached from the
+           INSTRUCTIONS handle - which keys its rows by position exactly as the
+           ingredients did, and therefore had exactly the same bug.
 
       **What he saw:** drop an ingredient into another section and the rows draw
       in the wrong places – the dropped row painted far from where it landed,

@@ -6,10 +6,10 @@ import { Fragment, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Pressable,
-  ScrollView,
   Text,
   View,
 } from "react-native";
+import Animated, { useAnimatedRef } from "react-native-reanimated";
 import {
   SafeAreaView,
   useSafeAreaInsets,
@@ -100,13 +100,13 @@ export default function AddRecipeScreen() {
   const [busy, setBusy] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [loaded, setLoaded] = useState(!editing);
-  const [reordering, setReordering] = useState<"ingredients" | "steps" | null>(
-    null,
-  );
-  // True while an ingredient row is in the air. The page must not scroll under
-  // it: two vertical gestures on one finger is the one thing that makes an
-  // in-place drag unusable.
+  const [reorderingSteps, setReorderingSteps] = useState(false);
+  // True while an ingredient or a section is in the air. The page must not
+  // scroll under it BY ITSELF: two vertical gestures on one finger is the one
+  // thing that makes an in-place drag unusable. The drag scrolls the page
+  // deliberately instead, through this ref, when the finger reaches an edge.
   const [draggingIngredient, setDraggingIngredient] = useState(false);
+  const scrollRef = useAnimatedRef<Animated.ScrollView>();
   const [importing, setImporting] = useState(false);
   // Add and edit both go through the focused sheet: "add" opens it empty,
   // { index } opens it on an existing draft row (Pia's feedback, 2026-07-15).
@@ -288,8 +288,9 @@ export default function AddRecipeScreen() {
         </Pressable>
       </View>
 
-      <ScrollView
-        className="flex-1"
+      <Animated.ScrollView
+        ref={scrollRef}
+        style={{ flex: 1 }}
         scrollEnabled={!draggingIngredient}
         keyboardShouldPersistTaps="handled"
         automaticallyAdjustKeyboardInsets
@@ -414,24 +415,14 @@ export default function AddRecipeScreen() {
             <View className="w-full flex-row items-center">
               {/* Same style as a section heading (Thomas, 2026-08-06): the
                   first section REPLACES this line, so they are one slot and
-                  must not change typeface when that happens. */}
+                  must not change typeface when that happens.
+                  NO HANDLE HERE ANY MORE (2026-08-20): a handle that opens a
+                  reorder sheet is a second place the list exists, and the rows
+                  themselves are draggable now. A section heading still has one,
+                  because there it IS the grip. */}
               <Text className="flex-1 font-header text-display-6 font-emphasized text-text-default">
                 {t("recipes.ingredients")}
               </Text>
-              {ingredients.length > 1 && (
-                <Pressable
-                  onPress={() => setReordering("ingredients")}
-                  hitSlop={8}
-                  accessibilityRole="button"
-                  accessibilityLabel={t("recipes.detail.reorderIngredients")}
-                >
-                  <MaterialIcons
-                    name="drag-handle"
-                    size={24}
-                    color={ds.colors.icon.subtle}
-                  />
-                </Pressable>
-              )}
             </View>
             )}
             {/* One card per section, its heading sitting outside the card
@@ -440,15 +431,15 @@ export default function AddRecipeScreen() {
                 component now (2026-08-20). */}
             <IngredientDragList
               rows={ingredients}
+              scrollRef={scrollRef}
               onEditRow={(index) => setIngredientSheet({ index })}
               onDeleteRow={(index) =>
                 setIngredients((current) => current.filter((_, i) => i !== index))
               }
               onEditSection={(index) => setIngredientSheet({ index })}
-              onOpenReorderSheet={() => setReordering("ingredients")}
               onDragChange={setDraggingIngredient}
-              onReorder={(from, target) =>
-                setIngredients((current) => moveBlock(current, from, 1, target))
+              onReorder={(from, size, target) =>
+                setIngredients((current) => moveBlock(current, from, size, target))
               }
             />
             <View className="w-full overflow-hidden rounded-large bg-surface-neutral-white p-layout-small">
@@ -468,7 +459,7 @@ export default function AddRecipeScreen() {
               </Text>
               {steps.length > 1 && (
                 <Pressable
-                  onPress={() => setReordering("steps")}
+                  onPress={() => setReorderingSteps(true)}
                   hitSlop={8}
                   accessibilityRole="button"
                   accessibilityLabel={t("recipes.detail.reorderInstructions")}
@@ -546,7 +537,7 @@ export default function AddRecipeScreen() {
             </View>
           </View>
         </>
-      </ScrollView>
+      </Animated.ScrollView>
 
       {/* Save is pinned to the bottom of the screen rather than scrolling
           away at the end of the form: on a long recipe it sat far below the
@@ -693,37 +684,21 @@ export default function AddRecipeScreen() {
         }}
       />
 
+      {/* INSTRUCTIONS ONLY (2026-08-20). The ingredients used to open this
+          sheet too; they are dragged in place now, and a sheet that reorders a
+          copy of a list you can already drag is a second place the list exists.
+          The instructions keep it until they get the same treatment. */}
       <ReorderSheet
-        visible={reordering != null}
-        title={
-          reordering === "steps"
-            ? t("recipes.detail.reorderInstructions")
-            : t("recipes.detail.reorderIngredients")
-        }
+        visible={reorderingSteps}
+        title={t("recipes.detail.reorderInstructions")}
         hint={t("recipes.detail.reorderHint")}
-        items={
-          reordering === "steps"
-            ? steps.map((step, index) => ({
-                key: String(index),
-                label: `${index + 1}. ${step}`,
-              }))
-            : ingredients.map((ingredient, index) => ({
-                key: String(index),
-                label: ingredient.name,
-                isSection: ingredient.isSection,
-              }))
-        }
-        onClose={() => setReordering(null)}
+        items={steps.map((step, index) => ({
+          key: String(index),
+          label: `${index + 1}. ${step}`,
+        }))}
+        onClose={() => setReorderingSteps(false)}
         onChange={(orderedKeys) => {
-          if (reordering === "steps") {
-            setSteps((current) =>
-              orderedKeys.map((key) => current[Number(key)]),
-            );
-          } else {
-            setIngredients((current) =>
-              orderedKeys.map((key) => current[Number(key)]),
-            );
-          }
+          setSteps((current) => orderedKeys.map((key) => current[Number(key)]));
         }}
       />
     </SafeAreaView>

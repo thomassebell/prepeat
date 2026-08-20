@@ -38,7 +38,8 @@ const {
   layoutTops,
   dragPlan,
   dragPlans,
-  dropOffsets,
+  blockSizeFor,
+  blockHeight,
 } = await import(pathToFileURL(join(out, 'ingredient-drag-layout.js')).href);
 const { moveBlock } = await import(pathToFileURL(join(out, 'reorder.js')).href);
 
@@ -80,7 +81,7 @@ check('an empty card is nothing at all', cardHeight(0) === 0 && cardMarginBottom
 
 // ---- a drop that changes nothing ------------------------------------------
 for (const target of [2, 3]) {
-  const plan = dragPlan(items, 2, target, heights(items));
+  const plan = dragPlan(items, 2, 1, target, heights(items));
   check(`dropping row 2 at ${target} moves nothing`,
     plan.displacement.every((d) => d === 0) && plan.dropTop === tops[2],
     JSON.stringify(plan.displacement));
@@ -88,7 +89,7 @@ for (const target of [2, 3]) {
 
 // ---- b joins FILLING, below c ---------------------------------------------
 {
-  const plan = dragPlan(items, 2, 5, heights(items));
+  const plan = dragPlan(items, 2, 1, 5, heights(items));
   check('the row that stayed in DOUGH does not move', plan.displacement[1] === 0);
   check('headings are never displaced by hand',
     plan.displacement[0] === 0 && plan.displacement[3] === 0);
@@ -101,7 +102,7 @@ for (const target of [2, 3]) {
 
 // ---- b joins FILLING, above c ---------------------------------------------
 {
-  const plan = dragPlan(items, 2, 4, heights(items));
+  const plan = dragPlan(items, 2, 1, 4, heights(items));
   check('landing above c pushes c down inside its own card',
     plan.displacement[4] === ROW_SLOT, String(plan.displacement[4]));
 }
@@ -109,7 +110,7 @@ for (const target of [2, 3]) {
 // ---- a section left empty --------------------------------------------------
 {
   const single = [S('DOUGH'), R('a'), S('FILLING'), R('c')];
-  const plan = dragPlan(single, 1, 4, heights(single));
+  const plan = dragPlan(single, 1, 1, 4, heights(single));
   check('emptying a section collapses its card', plan.cardHeights[1] === 0, String(plan.cardHeights[1]));
   check('...and the empty card swallows the gap it would have left',
     plan.cardMarginBottoms[1] === -BLOCK_GAP, String(plan.cardMarginBottoms[1]));
@@ -117,7 +118,7 @@ for (const target of [2, 3]) {
 
 // ---- out of every section, above the first heading -------------------------
 {
-  const plan = dragPlan(items, 2, 0, heights(items));
+  const plan = dragPlan(items, 2, 1, 0, heights(items));
   check('a row can be dropped above the first heading', plan.cardHeights[0] === cardHeight(1),
     JSON.stringify(plan.cardHeights));
   const after = moveBlock(items, 2, 1, 0);
@@ -125,6 +126,59 @@ for (const target of [2, 3]) {
     plan.dropTop === 0
       && layoutTops(after, heights(after))[1] === cardHeight(1) + BLOCK_GAP,
     `${plan.dropTop} / ${layoutTops(after, heights(after))[1]}`);
+}
+
+// ---- a whole section in the air --------------------------------------------
+{
+  check('a heading takes its own rows with it', blockSizeFor(items, 0) === 3, String(blockSizeFor(items, 0)));
+  check('...and an ingredient still travels alone', blockSizeFor(items, 1) === 1);
+  check('an empty section is just its heading',
+    blockSizeFor([S('EMPTY'), S('DOUGH'), R('a')], 0) === 1);
+
+  const { targets } = dragPlans(items, 0, 3, heights(items));
+  // 0 is where it already is - `movesAnything` rejects it on release, and
+  // keeping it means the block always has somewhere to snap back to.
+  check('a section may only land on a section boundary',
+    targets.join() === '0,3,5', targets.join());
+
+  const plan = dragPlan(items, 0, 3, 5, heights(items));
+  check('moving a section resizes no card at all',
+    plan.cardHeights[1] === cardHeight(2) && plan.cardHeights[2] === cardHeight(1),
+    JSON.stringify(plan.cardHeights));
+  check('...and shifts nothing inside a card either',
+    plan.displacement.every((d) => d === 0), JSON.stringify(plan.displacement));
+  check('...so the section it passes travels as one unit, every pixel by hand',
+    plan.groupDisplacement[2] === -(H + BLOCK_GAP + cardHeight(2) + BLOCK_GAP)
+      && plan.groupDisplacement[1] === H + BLOCK_GAP + cardHeight(1) + BLOCK_GAP,
+    JSON.stringify(plan.groupDisplacement));
+  check('...by exactly the height of the block in the air, both ways',
+    plan.groupDisplacement[2] === -(blockHeight(items, 0, 3, heights(items)) + BLOCK_GAP),
+    JSON.stringify(plan.groupDisplacement));
+  check('the block is as tall as its heading, its gap and its card',
+    blockHeight(items, 0, 3, heights(items)) === H + BLOCK_GAP + cardHeight(2),
+    String(blockHeight(items, 0, 3, heights(items))));
+  check('an empty section in the air is just a heading',
+    blockHeight([S('EMPTY'), S('D'), R('a')], 0, 1, heights([S('EMPTY'), S('D'), R('a')])) === H);
+}
+
+// ---- a row move never moves a whole unit -----------------------------------
+{
+  const plan = dragPlan(items, 2, 1, 5, heights(items));
+  check('a row moving leaves every unit where it is - the cards resize instead',
+    plan.groupDisplacement.every((d) => d === 0), JSON.stringify(plan.groupDisplacement));
+}
+
+// ---- the one thing the flight deliberately does not show -------------------
+{
+  // Grouping is positional, so a section dropped above loose leading rows
+  // swallows them. In flight they hold still; they join on release.
+  const loose = [R('salt'), S('DOUGH'), R('a')];
+  const plan = dragPlan(loose, 1, 2, 0, heights(loose));
+  const after = moveBlock(loose, 1, 2, 0);
+  check('KNOWN: loose leading rows keep their own card in flight',
+    plan.cardHeights[0] === cardHeight(1), JSON.stringify(plan.cardHeights));
+  check('...and are absorbed by the section only once it is dropped',
+    after.map((i) => i.name).join() === 'DOUGH,a,salt', after.map((i) => i.name).join());
 }
 
 // ---- the promise the drop animation makes ----------------------------------
@@ -136,29 +190,30 @@ for (const target of [2, 3]) {
     [R('salt'), S('DOUGH'), R('a'), R('b'), S('EMPTY'), S('FILLING'), R('c')],
     [R('one'), R('two'), R('three')],
     [S('ONLY'), R('a')],
+    [S('A'), R('a1'), R('a2'), S('B'), S('C'), R('c1')],
   ];
   let worst = null;
   for (const list of lists) {
     const hs = heights(list);
     for (let from = 0; from < list.length; from += 1) {
-      if (list[from].isSection) continue;
-      const plans = dragPlans(list, from, hs);
-      const offsets = dropOffsets(list, from, hs, plans);
+      const size = blockSizeFor(list, from);
+      const { targets, plans, offsets } = dragPlans(list, from, size, hs);
       const start = layoutTops(list, hs)[from];
-      for (let target = 0; target <= list.length; target += 1) {
-        const after = moveBlock(list, from, 1, target);
+      targets.forEach((target, slot) => {
+        const after = moveBlock(list, from, size, target);
         const landed = after.indexOf(list[from]);
         const actual = layoutTops(after, heights(after))[landed];
-        if (plans[target].dropTop !== actual) {
-          worst = `list ${list.map((i) => i.name).join(',')} from ${from} target ${target}: promised ${plans[target].dropTop}, drawn ${actual}`;
+        if (plans[slot].dropTop !== actual) {
+          worst = `list ${list.map((i) => i.name).join(',')} from ${from} size ${size} target ${target}: promised ${plans[slot].dropTop}, drawn ${actual}`;
         }
-        if (offsets[target] !== actual - start) {
+        if (offsets[slot] !== actual - start) {
           worst = `offset mismatch from ${from} target ${target}`;
         }
-      }
+      });
     }
   }
-  check('every promised landing is where the editor actually draws the row', worst === null, worst);
+  check('every promised landing is where the editor actually draws it - rows AND sections',
+    worst === null, worst);
 }
 
 // ---- displacement never double-counts a resized card -----------------------
@@ -175,18 +230,21 @@ for (const target of [2, 3]) {
     const before = layoutTops(list, hs);
     const groups = groupForDrag(list);
     for (let from = 0; from < list.length; from += 1) {
-      if (list[from].isSection) continue;
-      for (let target = 0; target <= list.length; target += 1) {
-        const plan = dragPlan(list, from, target, hs);
-        const after = layoutTops(list, hs, moveBlock(list.map((_, i) => i), from, 1, target));
+      const size = blockSizeFor(list, from);
+      for (const target of dragPlans(list, from, size, hs).targets) {
+        const plan = dragPlan(list, from, size, target, hs);
+        const after = layoutTops(list, hs, moveBlock(list.map((_, i) => i), from, size, target));
         let flow = 0;
         groups.forEach((group, groupIndex) => {
-          const drawn = (index) => before[index] + flow + plan.displacement[index];
-          if (group.headingIndex !== null && drawn(group.headingIndex) !== after[group.headingIndex]) {
+          const drawn = (index) =>
+            before[index] + flow + plan.groupDisplacement[groupIndex] + plan.displacement[index];
+          const moving = (index) => index >= from && index < from + size;
+          if (group.headingIndex !== null && !moving(group.headingIndex)
+              && drawn(group.headingIndex) !== after[group.headingIndex]) {
             worst = `heading ${group.headingIndex} from ${from} target ${target}: ${drawn(group.headingIndex)} vs ${after[group.headingIndex]}`;
           }
           for (const index of group.rowIndices) {
-            if (index !== from && drawn(index) !== after[index]) {
+            if (!moving(index) && drawn(index) !== after[index]) {
               worst = `row ${index} from ${from} target ${target}: ${drawn(index)} vs ${after[index]}`;
             }
           }

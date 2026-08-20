@@ -1,12 +1,23 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { Fragment, useLayoutEffect, useRef, useState } from "react";
-import { Pressable, Text, View, type LayoutChangeEvent } from "react-native";
+import {
+  Pressable,
+  Text,
+  View,
+  type AccessibilityActionEvent,
+  type LayoutChangeEvent,
+} from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
+  measure,
   runOnJS,
+  scrollTo,
   useAnimatedStyle,
+  useFrameCallback,
+  useScrollViewOffset,
   useSharedValue,
   withTiming,
+  type AnimatedRef,
   type SharedValue,
 } from "react-native-reanimated";
 
@@ -16,14 +27,14 @@ import { t } from "@/lib/i18n";
 import {
   ROW_HEIGHT,
   ROW_SLOT,
+  blockSizeFor,
   cardHeight,
   cardMarginBottom,
   dragPlans,
-  dropOffsets,
   groupForDrag,
   type DragPlan,
 } from "@/lib/ingredient-drag-layout";
-import { movesAnything } from "@/lib/reorder";
+import { movesAnything, validTargets } from "@/lib/reorder";
 import type { DraftIngredient } from "@/lib/recipes";
 
 /** One line of `header/display-6` beside a 24px handle, until measured. */
@@ -33,236 +44,349 @@ const HEADING_FALLBACK = 24;
 const MOVE_MS = 160;
 /** How long a hold arms the drag, matching the Shopping screen. */
 const LIFT_MS = 200;
-/** How long the lifted row takes to settle into the gap on release. */
+/** How long the lifted block takes to settle into the gap on release. */
 const DROP_MS = 140;
+/** How close to the top or bottom edge the finger has to be before the page
+ *  starts scrolling under it. */
+const EDGE = 90;
+/** Pixels per frame at the very edge of the screen, tapering to nothing at the
+ *  inner boundary of the edge zone. */
+const EDGE_SPEED = 14;
 
 /**
  * The recipe editor's ingredient list: section headings, one card per section,
- * and rows that can be picked up and dropped into a different section without
- * leaving the screen (Thomas, 2026-08-20 – *"is there a way where tapping the
- * ingredient opens the edit sheet, but dragging it reorders the list"*).
+ * and everything on it draggable in place – a row into another section, or a
+ * whole section past another one (Thomas, 2026-08-20 – *"is there a way where
+ * tapping the ingredient opens the edit sheet, but dragging it reorders the
+ * list"*, then *"can you include section as well? Section will not open a
+ * sheet – the clean solution"*).
  *
- * A TAP still opens the edit sheet, so the drag has to start from a HOLD.
- * There is no way around that and it is not a preference: these rows live
+ * **There is no reorder sheet on this screen any more.** That is the "clean
+ * solution" in his words: a handle that opens a sheet that reorders a copy of
+ * the list is a second place the list exists, and once the real list can be
+ * dragged there is no reason to keep it. Two consequences follow, and they are
+ * why this file is as long as it is: the drag has to reach a section that is
+ * off-screen, so it scrolls the page under the finger; and it has to be usable
+ * without dragging at all, so every row and heading carries Move up / Move down
+ * accessibility actions. The sheet remains on the recipe DETAIL screen and for
+ * instructions, which are untouched.
+ *
+ * A TAP still opens the edit sheet, so the drag on a ROW has to start from a
+ * hold. There is no way around that and it is not a preference: these rows live
  * inside the page's scroll view, so a finger moving down a row is asking for
  * one of two things and only a short press-and-hold separates them. 200ms,
- * matching the Shopping screen's category drag, which is the same interaction
- * and the only one Thomas has already approved.
+ * matching the Shopping screen's category drag – the same interaction, and the
+ * only one Thomas has already approved. A SECTION is dragged by its handle,
+ * which is unambiguous, but arms the same way so that the screen only teaches
+ * one gesture.
  *
  * THE GEOMETRY IS NOT IN HERE. It is in `src/lib/ingredient-drag-layout.ts`,
- * with `scripts/check-ingredient-drag.mjs` running the real functions – cards
- * that grow and shrink while headings hold still is exactly the arithmetic that
+ * with `scripts/check-ingredient-drag.mjs` running the real functions – 35
+ * checks, because cards that grow and shrink while headings hold still, and
+ * whole units travelling while nothing resizes, are exactly the arithmetic that
  * looks right and is off by one.
  *
- * ⚠️ IMPROVISED, AND MARKED AS SUCH (2026-08-20). No frame draws an ingredient
- * in flight, so three things here are Claude's and not Thomas's design:
- *   1. **The lifted row** is drawn `surface-neutral-lighter` with a shadow –
- *      the colour comes from the reorder sheet's own lifted row (Figma
- *      508:13822), which is the nearest thing that IS designed.
- *   2. **200ms to lift**, copied from Shopping.
- *   3. **160ms for everything else to move aside**, near the sheet's 140.
- * Two known gaps, deliberately left rather than invented: dragging past the top
- * or bottom of the screen does NOT scroll the page (the drag handle and its
- * sheet stay for long lists, which is also the only way to move a whole
- * section), and a lift has no haptic tick because the app has no haptics
+ * ⚠️ IMPROVISED, AND MARKED AS SUCH (2026-08-20). No frame draws anything in
+ * flight, so these are Claude's and not Thomas's design: the lifted thing is
+ * drawn on `surface-neutral-lighter` with a shadow – that colour is the reorder
+ * sheet's own lifted row (Figma 508:13822), the nearest thing that IS designed;
+ * 200ms to lift, from Shopping; 160ms for the list to move aside, near the
+ * sheet's 140. A lift has no haptic tick because the app has no haptics
  * dependency at all – adding one is a decision, not a detail.
  */
 export function IngredientDragList({
   rows,
+  scrollRef,
   onEditRow,
   onDeleteRow,
   onEditSection,
-  onOpenReorderSheet,
   onReorder,
   onDragChange,
 }: {
   rows: DraftIngredient[];
+  /** The page's scroll view, so a drag can reach what is off-screen. */
+  scrollRef: AnimatedRef<Animated.ScrollView>;
   onEditRow: (index: number) => void;
   onDeleteRow: (index: number) => void;
   onEditSection: (index: number) => void;
-  /** The heading handle still opens the reorder sheet – long lists and whole
-   *  sections are its job. */
-  onOpenReorderSheet: () => void;
-  onReorder: (from: number, target: number) => void;
-  /** Freezes the page's scroll while a row is in the air. */
+  onReorder: (from: number, size: number, target: number) => void;
+  /** Freezes the page's own scrolling while something is in the air. */
   onDragChange: (dragging: boolean) => void;
 }) {
   const groups = groupForDrag(rows);
   // Measured rather than assumed: a long section name wraps, and then the
   // headings are not all the same height.
   const headingHeights = useRef<number[]>([]);
-  // Measured too, and only ever used to place the floating copy where the row
+  // Measured too, and only ever used to place the floating copy where the thing
   // it replaces was actually drawn – so a model that is a pixel out cannot make
-  // the row jump the moment it is lifted.
+  // it jump the moment it is lifted.
+  const headingTops = useRef<number[]>([]);
   const cardTops = useRef<number[]>([]);
+  // The legal landings for the block currently in the air, on the JS side. The
+  // gesture reads its own copy in a shared value; this one is for the drop.
+  const targets = useRef<number[]>([]);
 
-  const [lifted, setLifted] = useState<{ index: number; top: number } | null>(
-    null,
-  );
+  const [lifted, setLifted] = useState<{
+    from: number;
+    size: number;
+    top: number;
+  } | null>(null);
   const [dropCount, setDropCount] = useState(0);
 
   const dragFrom = useSharedValue(-1);
+  const dragSize = useSharedValue(0);
   const dragY = useSharedValue(0);
-  const target = useSharedValue(-1);
+  /** Which entry of `plans` is currently the destination – NOT a target index. */
+  const slot = useSharedValue(-1);
   const plans = useSharedValue<DragPlan[]>([]);
   const offsets = useSharedValue<number[]>([]);
+  // Everything the auto-scroll needs, all of it on the UI thread.
+  const fingerY = useSharedValue(0);
+  const travelled = useSharedValue(0);
+  const scrolledAtStart = useSharedValue(0);
+  const scrollOffset = useScrollViewOffset(scrollRef);
 
   // ⚠️ EVERY WRITE TO A SHARED VALUE GOES THROUGH ONE OF THESE, and they carry
-  // the "worklet" directive - the same shape as the reorder sheet, for the same
+  // the "worklet" directive – the same shape as the reorder sheet, for the same
   // reason: the React Compiler forbids a child mutating a shared value it was
   // handed as a prop, so the rows are given setters rather than the values.
-  const setPlans = (computed: DragPlan[], reachable: number[]) => {
+  const armDrag = (from: number, size: number) => {
+    "worklet";
+    dragFrom.value = from;
+    dragSize.value = size;
+    slot.value = -1;
+    dragY.value = 0;
+    travelled.value = 0;
+    scrolledAtStart.value = scrollOffset.value;
+  };
+  const setPlanSet = (computed: DragPlan[], reachable: number[]) => {
     "worklet";
     plans.value = computed;
     offsets.value = reachable;
   };
-  const setDragState = (from: number, to: number) => {
+  const setFinger = (y: number) => {
     "worklet";
-    dragFrom.value = from;
-    target.value = to;
+    fingerY.value = y;
   };
-  const setDragY = (y: number) => {
+  /**
+   * The whole of the drag's per-frame work: where the block is, and which
+   * landing is nearest. Called from the gesture AND from the frame callback,
+   * because the page can scroll under a finger that is not moving – and then
+   * the block has moved through the list without the gesture saying anything.
+   */
+  const syncDrag = (translation: number) => {
     "worklet";
-    dragY.value = y;
+    travelled.value = translation;
+    // Measured against the CONTENT, not the screen: the finger has moved this
+    // far, and the page has moved this much underneath it.
+    dragY.value = translation + (scrollOffset.value - scrolledAtStart.value);
+    const reachable = offsets.value;
+    if (reachable.length === 0) return;
+    let best = 0;
+    let bestDistance = -1;
+    for (let candidate = 0; candidate < reachable.length; candidate += 1) {
+      const distance = Math.abs(reachable[candidate] - dragY.value);
+      if (bestDistance < 0 || distance < bestDistance) {
+        bestDistance = distance;
+        best = candidate;
+      }
+    }
+    slot.value = best;
   };
-  const setTarget = (to: number) => {
+  const settleDrag = (done: () => void) => {
     "worklet";
-    target.value = to;
-  };
-  const settleDragY = (to: number, done: () => void) => {
-    "worklet";
+    const reachable = offsets.value;
+    const to = slot.value < reachable.length ? reachable[slot.value] : dragY.value;
     dragY.value = withTiming(to, { duration: DROP_MS }, done);
   };
   // Note what this does NOT do: it leaves `lifted` alone. The floating copy
   // stays mounted and simply goes transparent, so that clearing a drag is
   // nothing but shared-value writes and can therefore happen inside the layout
-  // effect below. Its content is replaced the next time a row is lifted.
+  // effect below. Its content is replaced the next time something is lifted.
   const clearDrag = () => {
-    setDragState(-1, -1);
-    setDragY(0);
+    dragFrom.value = -1;
+    dragSize.value = 0;
+    slot.value = -1;
+    dragY.value = 0;
   };
 
+  // The page scrolls itself while the finger sits near an edge. Only ever
+  // active during a drag: a frame callback that runs all the time is a frame
+  // callback that shows up in every performance trace.
+  const edgeScroll = useFrameCallback(() => {
+    if (dragFrom.value < 0) return;
+    const bounds = measure(scrollRef);
+    if (bounds === null) return;
+    const top = bounds.pageY + EDGE;
+    const bottom = bounds.pageY + bounds.height - EDGE;
+    let delta = 0;
+    if (fingerY.value < top) {
+      delta = -Math.min(1, (top - fingerY.value) / EDGE) * EDGE_SPEED;
+    } else if (fingerY.value > bottom) {
+      delta = Math.min(1, (fingerY.value - bottom) / EDGE) * EDGE_SPEED;
+    }
+    if (delta === 0) return;
+    // Asked for against the LIVE offset every frame rather than accumulated, so
+    // that reaching the end of the content simply stops: the scroll view clamps
+    // the request, the next frame reads the clamped value, and nothing builds
+    // up a debt to unwind when the finger comes back.
+    scrollTo(scrollRef, 0, scrollOffset.value + delta, false);
+    syncDrag(travelled.value);
+  }, false);
+
   // ⚠️ THE SAME LAYOUT-EFFECT RULE AS THE REORDER SHEET, and for the same
-  // reason: on a drop the row's slot and its offset both change, and nothing
+  // reason: on a drop the block's slot and its offset both change, and nothing
   // makes them land in the same frame unless React is made to do it. Clearing
   // here – after the commit that reorders, before it is painted – is what stops
-  // the row flashing at its old position. Keyed on a counter rather than on the
-  // order, because the editor's rows are drafts with no ids and an order key
-  // built from their positions never changes (the bug fixed earlier today).
+  // the block flashing at its old position. Keyed on a counter rather than on
+  // the order, because the editor's rows are drafts with no ids and an order
+  // key built from their positions never changes (the bug fixed earlier today).
   useLayoutEffect(() => {
     clearDrag();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dropCount]);
 
-  const beginDrag = (index: number, groupIndex: number, position: number) => {
-    const heights = rows.map((row, i) =>
-      row.isSection ? (headingHeights.current[i] ?? HEADING_FALLBACK) : 0,
+  const beginDrag = (from: number, size: number, top: number) => {
+    const heights = rows.map((row, index) =>
+      row.isSection ? (headingHeights.current[index] ?? HEADING_FALLBACK) : 0,
     );
-    const computed = dragPlans(rows, index, heights);
-    setPlans(computed, dropOffsets(rows, index, heights, computed));
-    setDragState(index, index);
-    setLifted({
-      index,
-      top: (cardTops.current[groupIndex] ?? 0) + position * ROW_SLOT,
-    });
+    const set = dragPlans(rows, from, size, heights);
+    targets.current = set.targets;
+    setPlanSet(set.plans, set.offsets);
+    setLifted({ from, size, top });
+    edgeScroll.setActive(true);
     onDragChange(true);
   };
 
-  const finishDrag = (from: number, to: number) => {
+  const finishDrag = (from: number, size: number, chosen: number) => {
+    edgeScroll.setActive(false);
     onDragChange(false);
-    if (movesAnything(to, from, 1)) {
+    const to = targets.current[chosen];
+    if (to !== undefined && movesAnything(to, from, size)) {
       // Deliberately does NOT clear the drag here – the layout effect above
-      // does it in the commit that applies the new order. Until then the row
+      // does it in the commit that applies the new order. Until then the block
       // stays exactly where it was dropped, which is where it belongs.
       setDropCount((count) => count + 1);
-      onReorder(from, to);
+      onReorder(from, size, to);
       return;
     }
     clearDrag();
   };
 
   const cancelDrag = () => {
+    edgeScroll.setActive(false);
     onDragChange(false);
     clearDrag();
   };
 
-  const liftedRow = lifted === null ? null : rows[lifted.index];
+  /**
+   * Reordering without a drag, for anyone using VoiceOver – and the reason
+   * dropping the sheet does not cost the screen its accessibility. Moves the
+   * block to the nearest landing above or below the one it occupies, using the
+   * same legality rule as the drag.
+   */
+  const nudge = (from: number, size: number, direction: -1 | 1) => {
+    const legal = validTargets(
+      rows.map((row, index) => ({
+        key: String(index),
+        isSection: row.isSection,
+      })),
+      from,
+      size,
+    ).filter((target) => movesAnything(target, from, size));
+    const above = legal.filter((target) => target < from);
+    const below = legal.filter((target) => target > from);
+    const to = direction === -1 ? above[above.length - 1] : below[0];
+    if (to !== undefined) onReorder(from, size, to);
+  };
+
+  const moveActions = [
+    { name: "moveUp", label: t("recipes.form.moveUp") },
+    { name: "moveDown", label: t("recipes.form.moveDown") },
+  ];
+  const moveAction =
+    (from: number, size: number) => (event: AccessibilityActionEvent) => {
+      if (event.nativeEvent.actionName === "moveUp") nudge(from, size, -1);
+      if (event.nativeEvent.actionName === "moveDown") nudge(from, size, 1);
+    };
 
   return (
     <View className="w-full gap-layout-small">
       {groups.map((group, groupIndex) => (
         <Fragment key={group.headingIndex ?? "loose"}>
           {group.headingIndex !== null && (
-            <View
-              className="w-full flex-row items-center gap-comp-small"
-              onLayout={(event: LayoutChangeEvent) => {
-                headingHeights.current[group.headingIndex!] =
-                  event.nativeEvent.layout.height;
+            <SectionHeading
+              index={group.headingIndex}
+              groupIndex={groupIndex}
+              name={rows[group.headingIndex].name}
+              size={blockSizeFor(rows, group.headingIndex)}
+              draggable={rows.length > 1}
+              plans={plans}
+              slot={slot}
+              dragFrom={dragFrom}
+              dragSize={dragSize}
+              armDrag={armDrag}
+              syncDrag={syncDrag}
+              setFinger={setFinger}
+              settleDrag={settleDrag}
+              onLayoutHeading={(y, height) => {
+                headingTops.current[group.headingIndex!] = y;
+                headingHeights.current[group.headingIndex!] = height;
               }}
-            >
-              {/* Tap the NAME to rename; the handle opens the reorder sheet,
-                  which is what the Figma header draws it for. */}
-              <Pressable
-                className="flex-1"
-                onPress={() => onEditSection(group.headingIndex!)}
-                accessibilityRole="button"
-                accessibilityLabel={t("recipes.form.editSection", {
-                  name: rows[group.headingIndex].name,
-                })}
-              >
-                <Text className="font-header text-display-6 font-emphasized text-text-default">
-                  {rows[group.headingIndex].name}
-                </Text>
-              </Pressable>
-              {rows.length > 1 && (
-                <Pressable
-                  onPress={onOpenReorderSheet}
-                  hitSlop={8}
-                  accessibilityRole="button"
-                  accessibilityLabel={t("recipes.detail.reorderIngredients")}
-                >
-                  <MaterialIcons
-                    name="drag-handle"
-                    size={24}
-                    color={ds.colors.icon.subtle}
-                  />
-                </Pressable>
+              onEditSection={onEditSection}
+              onBeginDrag={(from, size) =>
+                beginDrag(from, size, headingTops.current[from] ?? 0)
+              }
+              onFinishDrag={finishDrag}
+              onCancelDrag={cancelDrag}
+              moveActions={moveActions}
+              onMoveAction={moveAction(
+                group.headingIndex,
+                blockSizeFor(rows, group.headingIndex),
               )}
-            </View>
+            />
           )}
           <IngredientCard
             groupIndex={groupIndex}
             rowIndices={group.rowIndices}
             rows={rows}
             plans={plans}
-            target={target}
+            slot={slot}
             dragFrom={dragFrom}
-            dragY={dragY}
-            offsets={offsets}
+            dragSize={dragSize}
+            armDrag={armDrag}
+            syncDrag={syncDrag}
+            setFinger={setFinger}
+            settleDrag={settleDrag}
             onLayoutCard={(y) => {
               cardTops.current[groupIndex] = y;
             }}
             onEditRow={onEditRow}
             onDeleteRow={onDeleteRow}
-            setDragY={setDragY}
-            setTarget={setTarget}
-            settleDragY={settleDragY}
-            onBeginDrag={(index, position) =>
-              beginDrag(index, groupIndex, position)
+            onBeginDrag={(from, position) =>
+              beginDrag(
+                from,
+                1,
+                (cardTops.current[groupIndex] ?? 0) + position * ROW_SLOT,
+              )
             }
             onFinishDrag={finishDrag}
             onCancelDrag={cancelDrag}
+            moveActions={moveActions}
+            onMoveAction={moveAction}
           />
         </Fragment>
       ))}
 
-      {/* The row in the air. It is a copy rather than the row itself because a
-          card clips its own contents – which is exactly what makes the hole and
-          the gap read, and exactly what would hide a row travelling between two
-          cards. */}
-      {liftedRow != null && lifted != null && (
-        <FloatingRow
-          row={liftedRow}
+      {/* The thing in the air. It is a copy rather than the row or section
+          itself because a card clips its own contents – which is exactly what
+          makes the hole and the gap read, and exactly what would hide anything
+          travelling between two cards. */}
+      {lifted != null && (
+        <FloatingBlock
+          rows={rows}
+          from={lifted.from}
+          size={lifted.size}
           top={lifted.top}
           dragFrom={dragFrom}
           dragY={dragY}
@@ -272,57 +396,219 @@ export function IngredientDragList({
   );
 }
 
+function SectionHeading({
+  index,
+  groupIndex,
+  name,
+  size,
+  draggable,
+  plans,
+  slot,
+  dragFrom,
+  dragSize,
+  armDrag,
+  syncDrag,
+  setFinger,
+  settleDrag,
+  onLayoutHeading,
+  onEditSection,
+  onBeginDrag,
+  onFinishDrag,
+  onCancelDrag,
+  moveActions,
+  onMoveAction,
+}: {
+  index: number;
+  groupIndex: number;
+  name: string;
+  size: number;
+  draggable: boolean;
+  plans: SharedValue<DragPlan[]>;
+  slot: SharedValue<number>;
+  dragFrom: SharedValue<number>;
+  dragSize: SharedValue<number>;
+  armDrag: (from: number, size: number) => void;
+  syncDrag: (translation: number) => void;
+  setFinger: (y: number) => void;
+  settleDrag: (done: () => void) => void;
+  onLayoutHeading: (y: number, height: number) => void;
+  onEditSection: (index: number) => void;
+  onBeginDrag: (from: number, size: number) => void;
+  onFinishDrag: (from: number, size: number, chosen: number) => void;
+  onCancelDrag: () => void;
+  moveActions: { name: string; label: string }[];
+  onMoveAction: (event: AccessibilityActionEvent) => void;
+}) {
+  const pan = Gesture.Pan()
+    .activateAfterLongPress(LIFT_MS)
+    .onStart((event) => {
+      armDrag(index, size);
+      setFinger(event.absoluteY);
+      runOnJS(onBeginDrag)(index, size);
+    })
+    .onUpdate((event) => {
+      setFinger(event.absoluteY);
+      syncDrag(event.translationY);
+    })
+    .onEnd(() => {
+      const chosen = slot.value;
+      settleDrag(() => {
+        "worklet";
+        runOnJS(onFinishDrag)(index, size, chosen);
+      });
+    })
+    .onFinalize((_event, success) => {
+      if (!success && dragFrom.value === index) runOnJS(onCancelDrag)();
+    });
+
+  const style = useAnimatedStyle(() => {
+    const inFlight =
+      dragFrom.value >= 0 &&
+      index >= dragFrom.value &&
+      index < dragFrom.value + dragSize.value;
+    if (inFlight) return { opacity: 0, transform: [{ translateY: 0 }] };
+    const plan = dragFrom.value < 0 ? undefined : plans.value[slot.value];
+    if (plan === undefined) {
+      return { opacity: 1, transform: [{ translateY: 0 }] };
+    }
+    return {
+      opacity: 1,
+      transform: [
+        {
+          translateY: withTiming(plan.groupDisplacement[groupIndex] ?? 0, {
+            duration: MOVE_MS,
+          }),
+        },
+      ],
+    };
+  });
+
+  return (
+    <Animated.View
+      style={style}
+      className="w-full flex-row items-center gap-comp-small"
+      onLayout={(event: LayoutChangeEvent) =>
+        onLayoutHeading(
+          event.nativeEvent.layout.y,
+          event.nativeEvent.layout.height,
+        )
+      }
+    >
+      {/* Tapping the NAME renames the section – the one sheet a heading still
+          opens. The handle beside it moves it. */}
+      <Pressable
+        className="flex-1"
+        onPress={() => onEditSection(index)}
+        accessibilityRole="button"
+        accessibilityLabel={t("recipes.form.editSection", { name })}
+        accessibilityActions={draggable ? moveActions : undefined}
+        onAccessibilityAction={onMoveAction}
+      >
+        <Text className="font-header text-display-6 font-emphasized text-text-default">
+          {name}
+        </Text>
+      </Pressable>
+      {draggable && (
+        <GestureDetector gesture={pan}>
+          <View
+            accessibilityLabel={t("recipes.detail.reorderIngredients")}
+            accessibilityHint={t("recipes.form.dragRow")}
+            hitSlop={12}
+            className="items-center justify-center"
+          >
+            <MaterialIcons
+              name="drag-handle"
+              size={24}
+              color={ds.colors.icon.subtle}
+            />
+          </View>
+        </GestureDetector>
+      )}
+    </Animated.View>
+  );
+}
+
 function IngredientCard({
   groupIndex,
   rowIndices,
   rows,
   plans,
-  target,
+  slot,
   dragFrom,
-  dragY,
-  offsets,
-  setDragY,
-  setTarget,
-  settleDragY,
+  dragSize,
+  armDrag,
+  syncDrag,
+  setFinger,
+  settleDrag,
   onLayoutCard,
   onEditRow,
   onDeleteRow,
   onBeginDrag,
   onFinishDrag,
   onCancelDrag,
+  moveActions,
+  onMoveAction,
 }: {
   groupIndex: number;
   rowIndices: number[];
   rows: DraftIngredient[];
   plans: SharedValue<DragPlan[]>;
-  target: SharedValue<number>;
+  slot: SharedValue<number>;
   dragFrom: SharedValue<number>;
-  dragY: SharedValue<number>;
-  offsets: SharedValue<number[]>;
-  setDragY: (y: number) => void;
-  setTarget: (to: number) => void;
-  settleDragY: (to: number, done: () => void) => void;
+  dragSize: SharedValue<number>;
+  armDrag: (from: number, size: number) => void;
+  syncDrag: (translation: number) => void;
+  setFinger: (y: number) => void;
+  settleDrag: (done: () => void) => void;
   onLayoutCard: (y: number) => void;
   onEditRow: (index: number) => void;
   onDeleteRow: (index: number) => void;
-  onBeginDrag: (index: number, position: number) => void;
-  onFinishDrag: (from: number, to: number) => void;
+  onBeginDrag: (from: number, position: number) => void;
+  onFinishDrag: (from: number, size: number, chosen: number) => void;
   onCancelDrag: () => void;
+  moveActions: { name: string; label: string }[];
+  onMoveAction: (
+    from: number,
+    size: number,
+  ) => (event: AccessibilityActionEvent) => void;
 }) {
   const idleHeight = cardHeight(rowIndices.length);
   const idleMargin = cardMarginBottom(rowIndices.length);
+  // The card belongs to the block in the air when its own heading does. The
+  // heading sits one index below the card's first row, or - for a section with
+  // no rows at all - there is no card to hide in the first place.
+  const headingIndex = rowIndices.length > 0 ? rowIndices[0] - 1 : -1;
   const style = useAnimatedStyle(() => {
-    const plan = dragFrom.value < 0 ? undefined : plans.value[target.value];
+    const plan = dragFrom.value < 0 ? undefined : plans.value[slot.value];
     if (plan === undefined) {
-      return { height: idleHeight, marginBottom: idleMargin };
+      return {
+        height: idleHeight,
+        marginBottom: idleMargin,
+        opacity: 1,
+        transform: [{ translateY: 0 }],
+      };
     }
+    const inFlight =
+      dragSize.value > 1 &&
+      headingIndex >= dragFrom.value &&
+      headingIndex < dragFrom.value + dragSize.value;
     return {
       height: withTiming(plan.cardHeights[groupIndex] ?? idleHeight, {
         duration: MOVE_MS,
       }),
-      marginBottom: withTiming(plan.cardMarginBottoms[groupIndex] ?? idleMargin, {
-        duration: MOVE_MS,
-      }),
+      marginBottom: withTiming(
+        plan.cardMarginBottoms[groupIndex] ?? idleMargin,
+        { duration: MOVE_MS },
+      ),
+      // Its copy is in the air, drawing this card; two of them must not show.
+      opacity: inFlight ? 0 : 1,
+      transform: [
+        {
+          translateY: withTiming(plan.groupDisplacement[groupIndex] ?? 0, {
+            duration: MOVE_MS,
+          }),
+        },
+      ],
     };
   });
 
@@ -341,18 +627,20 @@ function IngredientCard({
           position={position}
           row={rows[index]}
           plans={plans}
-          target={target}
+          slot={slot}
           dragFrom={dragFrom}
-          dragY={dragY}
-          offsets={offsets}
-          setDragY={setDragY}
-          setTarget={setTarget}
-          settleDragY={settleDragY}
+          dragSize={dragSize}
+          armDrag={armDrag}
+          syncDrag={syncDrag}
+          setFinger={setFinger}
+          settleDrag={settleDrag}
           onEdit={() => onEditRow(index)}
           onDelete={() => onDeleteRow(index)}
           onBeginDrag={onBeginDrag}
           onFinishDrag={onFinishDrag}
           onCancelDrag={onCancelDrag}
+          moveActions={moveActions}
+          onMoveAction={onMoveAction(index, 1)}
         />
       ))}
     </Animated.View>
@@ -364,68 +652,58 @@ function IngredientRow({
   position,
   row,
   plans,
-  target,
+  slot,
   dragFrom,
-  dragY,
-  offsets,
-  setDragY,
-  setTarget,
-  settleDragY,
+  dragSize,
+  armDrag,
+  syncDrag,
+  setFinger,
+  settleDrag,
   onEdit,
   onDelete,
   onBeginDrag,
   onFinishDrag,
   onCancelDrag,
+  moveActions,
+  onMoveAction,
 }: {
   index: number;
   position: number;
   row: DraftIngredient;
   plans: SharedValue<DragPlan[]>;
-  target: SharedValue<number>;
+  slot: SharedValue<number>;
   dragFrom: SharedValue<number>;
-  dragY: SharedValue<number>;
-  offsets: SharedValue<number[]>;
-  setDragY: (y: number) => void;
-  setTarget: (to: number) => void;
-  settleDragY: (to: number, done: () => void) => void;
+  dragSize: SharedValue<number>;
+  armDrag: (from: number, size: number) => void;
+  syncDrag: (translation: number) => void;
+  setFinger: (y: number) => void;
+  settleDrag: (done: () => void) => void;
   onEdit: () => void;
   onDelete: () => void;
-  onBeginDrag: (index: number, position: number) => void;
-  onFinishDrag: (from: number, to: number) => void;
+  onBeginDrag: (from: number, position: number) => void;
+  onFinishDrag: (from: number, size: number, chosen: number) => void;
   onCancelDrag: () => void;
+  moveActions: { name: string; label: string }[];
+  onMoveAction: (event: AccessibilityActionEvent) => void;
 }) {
   const pan = Gesture.Pan()
     .activateAfterLongPress(LIFT_MS)
-    .onStart(() => {
-      setDragY(0);
+    .onStart((event) => {
+      armDrag(index, 1);
+      setFinger(event.absoluteY);
       runOnJS(onBeginDrag)(index, position);
     })
     .onUpdate((event) => {
-      setDragY(event.translationY);
-      // Plain numbers only: the plans were worked out when the row was lifted,
-      // so the gesture never calls back into JavaScript while it runs.
-      const reachable = offsets.value;
-      if (reachable.length === 0) return;
-      let best = 0;
-      let bestDistance = -1;
-      for (let candidate = 0; candidate < reachable.length; candidate += 1) {
-        const distance = Math.abs(reachable[candidate] - event.translationY);
-        if (bestDistance < 0 || distance < bestDistance) {
-          bestDistance = distance;
-          best = candidate;
-        }
-      }
-      setTarget(best);
+      setFinger(event.absoluteY);
+      syncDrag(event.translationY);
     })
     .onEnd(() => {
-      const to = target.value;
-      const reachable = offsets.value;
-      const settle = to < reachable.length ? reachable[to] : dragY.value;
+      const chosen = slot.value;
       // Lands in the gap the list has opened, rather than snapping there once
       // the new order arrives.
-      settleDragY(settle, () => {
+      settleDrag(() => {
         "worklet";
-        runOnJS(onFinishDrag)(index, to);
+        runOnJS(onFinishDrag)(index, 1, chosen);
       });
     })
     .onFinalize((_event, success) => {
@@ -433,11 +711,11 @@ function IngredientRow({
     });
 
   const style = useAnimatedStyle(() => {
-    if (dragFrom.value === index) {
+    if (dragFrom.value === index && dragSize.value === 1) {
       // Its copy is in the air; this is the space it used to fill.
       return { opacity: 0, transform: [{ translateY: 0 }] };
     }
-    const plan = dragFrom.value < 0 ? undefined : plans.value[target.value];
+    const plan = dragFrom.value < 0 ? undefined : plans.value[slot.value];
     if (plan === undefined) {
       // No animation on the way back – by the time this runs the new order is
       // already what draws the row, so there is nothing to travel to.
@@ -470,6 +748,8 @@ function IngredientRow({
               accessibilityRole="button"
               accessibilityLabel={t("recipes.form.editRow", { name: row.name })}
               accessibilityHint={t("recipes.form.dragRow")}
+              accessibilityActions={moveActions}
+              onAccessibilityAction={onMoveAction}
             >
               <Text className="min-w-0 flex-1 font-paragraph text-paragraph font-default text-text-default">
                 {row.name}
@@ -487,13 +767,17 @@ function IngredientRow({
   );
 }
 
-function FloatingRow({
-  row,
+function FloatingBlock({
+  rows,
+  from,
+  size,
   top,
   dragFrom,
   dragY,
 }: {
-  row: DraftIngredient;
+  rows: DraftIngredient[];
+  from: number;
+  size: number;
   top: number;
   dragFrom: SharedValue<number>;
   dragY: SharedValue<number>;
@@ -502,6 +786,9 @@ function FloatingRow({
     opacity: dragFrom.value < 0 ? 0 : 1,
     transform: [{ translateY: dragY.value }],
   }));
+  const block = rows.slice(from, from + size);
+  const heading = block[0]?.isSection === true ? block[0] : null;
+  const carried = heading === null ? block : block.slice(1);
   return (
     <Animated.View
       style={[
@@ -511,7 +798,6 @@ function FloatingRow({
           left: 0,
           right: 0,
           top,
-          height: ROW_HEIGHT,
           zIndex: 10,
           elevation: 4,
           shadowColor: "#000",
@@ -521,15 +807,44 @@ function FloatingRow({
         },
         style,
       ]}
-      className="flex-row items-center gap-layout-small rounded-large bg-surface-neutral-lighter px-layout-small"
+      className="w-full gap-layout-small"
     >
-      <Text className="min-w-0 flex-1 font-paragraph text-paragraph font-default text-text-default">
-        {row.name}
-      </Text>
-      {(row.quantityText?.length ?? 0) > 0 && (
-        <Text className="font-paragraph text-paragraph font-default text-text-subtle">
-          {row.quantityText}
-        </Text>
+      {heading !== null && (
+        <View className="w-full flex-row items-center gap-comp-small">
+          <Text className="flex-1 font-header text-display-6 font-emphasized text-text-default">
+            {heading.name}
+          </Text>
+          <MaterialIcons
+            name="drag-handle"
+            size={24}
+            color={ds.colors.icon.subtle}
+          />
+        </View>
+      )}
+      {carried.length > 0 && (
+        <View
+          style={{ height: cardHeight(carried.length) }}
+          className="w-full overflow-hidden rounded-large bg-surface-neutral-lighter"
+        >
+          {carried.map((row, position) => (
+            <View
+              key={position}
+              className="h-[57px] w-full flex-row items-center gap-layout-small border-b border-border-subtle px-layout-small"
+            >
+              <Text className="min-w-0 flex-1 font-paragraph text-paragraph font-default text-text-default">
+                {row.name}
+              </Text>
+              {(row.quantityText?.length ?? 0) > 0 && (
+                <Text className="font-paragraph text-paragraph font-default text-text-subtle">
+                  {row.quantityText}
+                </Text>
+              )}
+            </View>
+          ))}
+        </View>
+      )}
+      {heading === null && carried.length === 0 && (
+        <View style={{ height: ROW_HEIGHT }} />
       )}
     </Animated.View>
   );

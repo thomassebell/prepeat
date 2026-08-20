@@ -1,7 +1,8 @@
 /**
- * Where every heading, card and row sits while ONE ingredient is being dragged
+ * Where every heading, card and row sits while something is being dragged
  * around the recipe editor (2026-08-20, Thomas: *"is there a way where tapping
- * the ingredient opens the edit sheet, but dragging it reorders the list"*).
+ * the ingredient opens the edit sheet, but dragging it reorders the list"*, and
+ * then *"can you include section as well"*).
  *
  * The reorder SHEET flattens the list into equal slots, which is what makes its
  * arithmetic a single multiplication (`src/lib/reorder.ts`). Dragging in place
@@ -16,21 +17,23 @@
  *
  * TWO COORDINATE ANSWERS COME OUT OF HERE AND THEY ARE NOT THE SAME NUMBER:
  *
- *   - `displacement` is what a row must be SHIFTED BY, given that its card is
- *     also being resized and React's own column layout therefore moves
- *     everything below that card on its own. Adding the full model delta here
- *     would count the card's resize twice, and the list would slide twice as
- *     far as it should. Headings always come out 0: a heading only ever moves
- *     because a card above it changed size, which flow already does.
- *   - `dropTop` is the FULL model position the dragged row will occupy, used by
- *     the floating copy under the finger, which is positioned absolutely and so
- *     gets no help from flow at all.
+ *   - `displacement` is what an item must be SHIFTED BY, given that the cards
+ *     are being resized too and React's own column layout therefore moves
+ *     everything below a resized card on its own. Adding the full model delta
+ *     here would count that resize twice, and the list would slide twice as far
+ *     as it should. When a single ROW moves this makes every heading come out
+ *     exactly 0 - a heading only moves because a card above it changed size.
+ *     When a whole SECTION moves it is the other way round: no card changes
+ *     size, flow does nothing, and every displacement is the full distance.
+ *   - `dropTop` is the FULL model position the dragged block will occupy, used
+ *     by the floating copy under the finger, which is positioned absolutely and
+ *     so gets no help from flow at all.
  *
  * The vocabulary matches `reorder.ts`: a TARGET is an insertion index in the
- * ORIGINAL array - "put the row immediately before item N", with n meaning "at
- * the end".
+ * ORIGINAL array - "put the block immediately before item N", with n meaning
+ * "at the end".
  */
-import { moveBlock } from "./reorder";
+import { blockSizeAt, moveBlock, validTargets } from "./reorder";
 
 /** A row's own height, matching `h-[56px]` on the row itself. */
 export const ROW_HEIGHT = 56;
@@ -135,100 +138,190 @@ export function layoutTops(
 }
 
 export interface DragPlan {
-  /** By item index: how far to shift it, GIVEN that the cards resize too. */
+  /** By group index: how far the whole unit - heading, card and everything in
+   *  it - has to travel. Zero for every group when a single ROW is moving. */
+  groupDisplacement: number[];
+  /** By item index: how far to shift a row INSIDE its card, given that the
+   *  cards resize too. Zero for every row when a SECTION is moving. */
   displacement: number[];
   /** By group index (same order as `groupForDrag`): the card's new height. */
   cardHeights: number[];
   /** By group index: the card's new bottom margin. */
   cardMarginBottoms: number[];
-  /** Where the dragged row itself ends up, in full model coordinates. */
+  /** Where the dragged block's top edge ends up, in full model coordinates. */
   dropTop: number;
 }
 
 /**
- * The whole layout, for one ingredient dragged from `from` and dropped at
- * `target`. `target === from` and `target === from + 1` both mean "nowhere",
- * and produce a plan of zeroes - the same rule as `movesAnything`.
+ * The whole layout, for the block of `size` items starting at `from`, dropped
+ * at `target`.
+ *
+ * ONE ROW AND A WHOLE SECTION ARE THE SAME CALCULATION, and it is worth saying
+ * why, because they look like different features (2026-08-20, when sections
+ * learned to move in place too). A row leaving its card changes two cards'
+ * HEIGHTS and moves nothing else by hand. A section moving takes its heading
+ * and its card with it, so no card changes height at all and every element
+ * between here and there moves by the block's own height. Both fall out of the
+ * same two questions - where is everything now, where would everything be - and
+ * a single subtraction between them. Only the answers differ.
  */
 export function dragPlan(
   items: DragItem[],
   from: number,
+  size: number,
   target: number,
   headingHeights: number[],
 ): DragPlan {
   const order = items.map((_, index) => index);
-  const previewOrder = moveBlock(order, from, 1, target);
+  const previewOrder = moveBlock(order, from, size, target);
   const current = layoutTops(items, headingHeights, order);
   const preview = layoutTops(items, headingHeights, previewOrder);
   const currentGroups = groupOrder(order, items);
   const previewGroups = groupOrder(previewOrder, items);
 
-  // How much each card has grown or shrunk, running down the list. Flow applies
-  // this to everything below the card by itself, so it comes back OUT of the
-  // per-item displacement below.
+  // ⚠️ PAIRED BY HEADING, NOT BY POSITION. A row move leaves the groups in the
+  // same order, so zipping them index by index happened to work; moving a
+  // SECTION reorders them, and zipping would then compare DOUGH with FILLING
+  // and hand one card the other's height.
+  const previewByHeading = new Map<number | null, DragGroup>(
+    previewGroups.map((group) => [group.headingIndex, group]),
+  );
+  const paired = currentGroups.map(
+    (group) => previewByHeading.get(group.headingIndex) ?? group,
+  );
+
+  // How much each card has grown or shrunk, running down the list IN THE ORDER
+  // THEY ARE DRAWN IN - which is the current order, because the reordering has
+  // not happened yet. React's own column layout applies this to everything
+  // below each card by itself, so it comes back OUT of the displacements below.
+  // For a section move every one of these is zero: no card changes size, so
+  // flow contributes nothing and the block's neighbours have to be moved by
+  // hand, every pixel of it.
   const above: number[] = [];
   let running = 0;
-  previewGroups.forEach((group, index) => {
+  currentGroups.forEach((group, index) => {
     above.push(running);
     const before =
-      cardHeight(currentGroups[index].rowIndices.length) +
-      cardMarginBottom(currentGroups[index].rowIndices.length);
-    const after =
       cardHeight(group.rowIndices.length) +
       cardMarginBottom(group.rowIndices.length);
+    const after =
+      cardHeight(paired[index].rowIndices.length) +
+      cardMarginBottom(paired[index].rowIndices.length);
     running += after - before;
   });
 
+  // ── A SECTION IN FLIGHT MOVES AS A UNIT ────────────────────────────────
+  // Not a special case for its own sake: a card is an opaque box that CLIPS its
+  // contents, so a card that stays put while its rows slide out of it does not
+  // draw a section moving, it draws rows disappearing. So when the thing in the
+  // air is a section, nothing resizes and nothing shifts inside a card - whole
+  // units travel, and each one travels as far as its first element does.
+  //
+  // ⚠️ ONE CASE THIS DELIBERATELY DOES NOT ANIMATE. Drop a section above rows
+  // that were sitting above the first heading and those rows become part of it,
+  // because grouping is positional. In flight they hold still and keep their
+  // own card; they join on release. Showing it honestly would mean re-homing
+  // rows mid-gesture, which is a bigger promise than a drag preview should make
+  // - and the outcome is the same either way. Checked as a known deviation
+  // rather than left to be discovered.
+  if (items[from]?.isSection) {
+    return {
+      groupDisplacement: currentGroups.map((group) => {
+        const first = group.headingIndex ?? group.rowIndices[0];
+        return first === undefined ? 0 : preview[first] - current[first];
+      }),
+      displacement: new Array<number>(items.length).fill(0),
+      cardHeights: currentGroups.map((group) =>
+        cardHeight(group.rowIndices.length),
+      ),
+      cardMarginBottoms: currentGroups.map((group) =>
+        cardMarginBottom(group.rowIndices.length),
+      ),
+      dropTop: preview[from],
+    };
+  }
+
   const displacement = new Array<number>(items.length).fill(0);
   currentGroups.forEach((group, index) => {
-    if (group.headingIndex !== null) {
-      displacement[group.headingIndex] = 0;
-    }
     for (const item of group.rowIndices) {
       displacement[item] = preview[item] - current[item] - above[index];
     }
   });
 
   return {
+    // A row moving never moves a whole unit: the cards resize instead, and
+    // React's column layout carries everything below them.
+    groupDisplacement: currentGroups.map(() => 0),
     displacement,
-    cardHeights: previewGroups.map((group) => cardHeight(group.rowIndices.length)),
-    cardMarginBottoms: previewGroups.map((group) =>
+    cardHeights: paired.map((group) => cardHeight(group.rowIndices.length)),
+    cardMarginBottoms: paired.map((group) =>
       cardMarginBottom(group.rowIndices.length),
     ),
     dropTop: preview[from],
   };
 }
 
+/** How many items travel together when the item at `index` is picked up: a
+ *  heading takes its rows, anything else moves alone. The rule itself lives in
+ *  `reorder.ts`, where the sheet already uses it. */
+export function blockSizeFor(items: DragItem[], index: number): number {
+  return blockSizeAt(
+    items.map((item, i) => ({ key: String(i), isSection: item.isSection })),
+    index,
+  );
+}
+
+export interface DragPlanSet {
+  /** The insertion indices this block may legally land on, ascending. */
+  targets: number[];
+  /** One plan per entry in `targets`. */
+  plans: DragPlan[];
+  /** How far the finger must travel for each entry in `targets`. */
+  offsets: number[];
+}
+
 /**
- * Every plan the drag could need, worked out ONCE when the finger lifts the row
+ * Every plan the drag could need, worked out ONCE when the block is lifted
  * rather than per frame. The gesture then only ever reads plain numbers - the
  * same rule the reorder sheet follows, for the same reason: a drag that calls
  * back into JavaScript mid-gesture stutters.
+ *
+ * Which landings are legal is NOT decided here: it is `validTargets` in
+ * `reorder.ts`, unchanged and already checked, which lets a single row go
+ * anywhere and a section only onto a section boundary. Dropping a section
+ * INSIDE another one would silently re-home the rows below the drop point,
+ * which is Thomas's 2026-08-07 decision and has nothing to do with geometry.
  */
 export function dragPlans(
   items: DragItem[],
   from: number,
+  size: number,
   headingHeights: number[],
-): DragPlan[] {
-  const plans: DragPlan[] = [];
-  for (let target = 0; target <= items.length; target += 1) {
-    plans.push(dragPlan(items, from, target, headingHeights));
-  }
-  return plans;
+): DragPlanSet {
+  const targets = validTargets(
+    items.map((item, index) => ({ key: String(index), isSection: item.isSection })),
+    from,
+    size,
+  );
+  const plans = targets.map((target) =>
+    dragPlan(items, from, size, target, headingHeights),
+  );
+  const start = layoutTops(items, headingHeights)[from];
+  return { targets, plans, offsets: plans.map((plan) => plan.dropTop - start) };
 }
 
 /**
- * How far the finger has to have travelled for each target to be the one - the
- * dragged row's own movement, measured from where it started. Positions the
- * floating copy on release too, so it lands in the gap the list has opened
- * rather than snapping there after the fact.
+ * How tall the thing in the air is: one row, or a heading and its card - and,
+ * for an empty section, just the heading with nothing under it.
  */
-export function dropOffsets(
+export function blockHeight(
   items: DragItem[],
   from: number,
+  size: number,
   headingHeights: number[],
-  plans: DragPlan[],
-): number[] {
-  const start = layoutTops(items, headingHeights)[from];
-  return plans.map((plan) => plan.dropTop - start);
+): number {
+  if (!items[from]?.isSection) return ROW_HEIGHT;
+  const rows = size - 1;
+  const heading = headingHeights[from] ?? 0;
+  return rows > 0 ? heading + BLOCK_GAP + cardHeight(rows) : heading;
 }
