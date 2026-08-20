@@ -316,7 +316,6 @@ export const en = {
       keepAwakeOn: 'Screen stays on',
       keepAwakeOff: 'Screen dims',
       keepAwakeHint: 'Change in settings',
-      reorderIngredients: 'Reorder ingredients',
       reorderInstructions: 'Reorder instructions',
       reorderHint: 'Drag to change the order.',
       noIngredients: 'No ingredients yet – add the first one below.',

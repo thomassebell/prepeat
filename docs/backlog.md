@@ -711,12 +711,34 @@ Committed work for the first update after launch. Panel findings default here un
 
 ### Known bugs (open)
 
-- [ ] **Sections drag in place too, and the reorder sheet is gone from this
-      screen – built 2026-08-20, not yet seen on a device**
+- [x] **DONE 2026-08-20 – the recipe screen (non-edit) has no sorting at all
+      any more**
+      Source: Thomas, 2026-08-20: *"now we need to delete the sorting function
+           on the recipe (non-edit mode)."*
+
+      The screen you cook from is not the screen you rearrange on: a tap there
+      ticks an ingredient off, and Edit recipe is where the order is changed –
+      by hand, now that it can be. Three handles and the last reorder sheet on
+      the recipe screens went with it: the Ingredients header, every section
+      heading, and Instructions.
+
+      ⚠️ **THE DATABASE KEEPS THE TWO RPCs, AND THAT IS THE POINT, NOT AN
+      OVERSIGHT.** `reorderIngredients()` and `reorderSteps()` are deleted from
+      [recipes.ts](../src/lib/recipes.ts) because nothing calls them, but
+      `reorder_recipe_ingredients` and `reorder_recipe_steps` (migration 0020)
+      stay: **build 12 is live in the App Store, it still has this screen's
+      reorder sheet, and it calls both.** A database change reaches those phones
+      the moment it runs; deleted client code only reaches them when they
+      update. Drop the RPCs a version later, once no live build needs them.
+      Note: `recipes.detail.reorderIngredients` went too – no caller left. The
+           instructions sheet on the EDIT screen still uses
+           `reorderInstructions` and `reorderHint`.
+
+- [x] **DONE, CONFIRMED ON DEVICE 2026-08-20 – sections drag in place too, and
+      the reorder sheet has left the recipe screens entirely**
       Source: Thomas, 2026-08-20, the same day he parked it: *"can you include
            section as well? Section will not open a sheet – the clean
-           solution."*
-      Wait for: the next build on his phone. Tick it there, not here.
+           solution."* Verdict after the grips landed: *"It's perfect."*
 
       A section is dragged by the handle beside its name; the name itself still
       opens the sheet that renames it. It carries its rows, and it can only land

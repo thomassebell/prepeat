@@ -28,7 +28,6 @@ import { KeepAwakeNote } from "@/components/recipes/keep-awake-note";
 import { StepSheet } from "@/components/recipes/step-sheet";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { LoadError } from "@/components/ui/load-error";
-import { ReorderSheet } from "@/components/ui/reorder-sheet";
 import { ServingsCounter } from "@/components/recipes/servings-counter";
 import { SwipeActions } from "@/components/recipes/swipe-actions";
 import { SwipeHint } from "@/components/ui/swipe-hint";
@@ -55,8 +54,6 @@ import {
   deleteStep,
   fetchRecipe,
   groupBySection,
-  reorderIngredients,
-  reorderSteps,
   scaledQuantityText,
   setFavorite,
   softDeleteRecipe,
@@ -131,9 +128,6 @@ export default function RecipeDetailScreen() {
   >(null);
   const [planSheetOpen, setPlanSheetOpen] = useState(false);
   const [editingStep, setEditingStep] = useState<RecipeStep | "new" | null>(
-    null,
-  );
-  const [reordering, setReordering] = useState<"ingredients" | "steps" | null>(
     null,
   );
   const [undoTarget, setUndoTarget] = useState<UndoTarget | null>(null);
@@ -505,25 +499,18 @@ export default function RecipeDetailScreen() {
                 card per section, 16px apart - because leaving the detail screen
                 flat would show DOUGH as a tickable ingredient while you cook,
                 which is the thing sections exist to stop. Worth a frame. */}
+            {/* NO REORDER HANDLE ANYWHERE ON THIS SCREEN (Thomas, 2026-08-20:
+                *"we need to delete the sorting function on the recipe (non-edit
+                mode)"*, once the editor could rearrange the real list by hand).
+                This screen is the one you cook from: a tap here ticks an
+                ingredient off, and rearranging the recipe is what Edit recipe
+                is for. It is also the last of the three reorder sheets to go
+                from the recipe screens. */}
             {!recipe.ingredients.some((row) => row.isSection) && (
             <View className="w-full flex-row items-center">
               <Text className="flex-1 font-header text-display-6 font-emphasized leading-xsmall text-text-default">
                 {t("recipes.ingredients")}
               </Text>
-              {recipe.ingredients.length > 1 && (
-                <Pressable
-                  onPress={() => setReordering("ingredients")}
-                  hitSlop={8}
-                  accessibilityRole="button"
-                  accessibilityLabel={t("recipes.detail.reorderIngredients")}
-                >
-                  <MaterialIcons
-                    name="drag-handle"
-                    size={24}
-                    color={ds.colors.icon.subtle}
-                  />
-                </Pressable>
-              )}
             </View>
             )}
             {groupBySection(recipe.ingredients).map((group, groupIndex) => (
@@ -535,20 +522,6 @@ export default function RecipeDetailScreen() {
                     <Text className="flex-1 font-header text-display-6 font-emphasized leading-xsmall text-text-default">
                       {group.section.row.name}
                     </Text>
-                    {recipe.ingredients.length > 1 && (
-                      <Pressable
-                        onPress={() => setReordering("ingredients")}
-                        hitSlop={8}
-                        accessibilityRole="button"
-                        accessibilityLabel={t("recipes.detail.reorderIngredients")}
-                      >
-                        <MaterialIcons
-                          name="drag-handle"
-                          size={24}
-                          color={ds.colors.icon.subtle}
-                        />
-                      </Pressable>
-                    )}
                   </View>
                 )}
                 {group.rows.length > 0 && (
@@ -599,20 +572,6 @@ export default function RecipeDetailScreen() {
               <Text className="flex-1 font-header text-display-6 font-emphasized leading-xsmall text-text-default">
                 {t("recipes.instructions")}
               </Text>
-              {recipe.steps.length > 1 && (
-                <Pressable
-                  onPress={() => setReordering("steps")}
-                  hitSlop={8}
-                  accessibilityRole="button"
-                  accessibilityLabel={t("recipes.detail.reorderInstructions")}
-                >
-                  <MaterialIcons
-                    name="drag-handle"
-                    size={24}
-                    color={ds.colors.icon.subtle}
-                  />
-                </Pressable>
-              )}
             </View>
             <View className="w-full overflow-hidden rounded-large">
               {recipe.steps.map((step, index) => (
@@ -762,64 +721,6 @@ export default function RecipeDetailScreen() {
         busy={stoppingShare}
         onCancel={() => setDialog(null)}
         onConfirm={stopSharing}
-      />
-
-      <ReorderSheet
-        visible={reordering != null}
-        title={
-          reordering === "steps"
-            ? t("recipes.detail.reorderInstructions")
-            : t("recipes.detail.reorderIngredients")
-        }
-        hint={t("recipes.detail.reorderHint")}
-        items={
-          reordering === "steps"
-            ? recipe.steps.map((step) => ({
-                key: step.id,
-                label: `${step.stepNumber}. ${step.text}`,
-              }))
-            : recipe.ingredients.map((ingredient) => ({
-                key: ingredient.id,
-                label: ingredient.name,
-                isSection: ingredient.isSection,
-              }))
-        }
-        onClose={() => setReordering(null)}
-        onChange={(orderedKeys) => {
-          // Optimistic local reorder, then persist.
-          if (reordering === "steps") {
-            const byId = new Map(recipe.steps.map((step) => [step.id, step]));
-            setRecipe({
-              ...recipe,
-              steps: orderedKeys.map((key, index) => ({
-                ...byId.get(key)!,
-                stepNumber: index + 1,
-              })),
-            });
-            reorderSteps(orderedKeys).catch((error) => {
-              console.warn("[recipes] reorder steps failed", error);
-              reload();
-            });
-          } else {
-            const byId = new Map(
-              recipe.ingredients.map((ingredient) => [
-                ingredient.id,
-                ingredient,
-              ]),
-            );
-            setRecipe({
-              ...recipe,
-              ingredients: orderedKeys.map((key, index) => ({
-                ...byId.get(key)!,
-                sortOrder: index,
-              })),
-            });
-            reorderIngredients(orderedKeys).catch((error) => {
-              console.warn("[recipes] reorder ingredients failed", error);
-              reload();
-            });
-          }
-        }}
       />
 
       <IngredientSheet

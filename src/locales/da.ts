@@ -311,7 +311,6 @@ export const da: DeepPartial<typeof en> = {
       keepAwakeOn: 'Skærmen forbliver tændt',
       keepAwakeOff: 'Skærmen dæmpes',
       keepAwakeHint: 'Ændr i indstillinger',
-      reorderIngredients: 'Sortér ingredienser',
       reorderInstructions: 'Sortér trin',
       reorderHint: 'Træk for at ændre rækkefølgen.',
       noIngredients: 'Ingen ingredienser endnu – tilføj den første nedenfor.',

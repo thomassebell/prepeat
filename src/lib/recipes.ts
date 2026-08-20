@@ -493,28 +493,18 @@ export async function deleteIngredient(id: string): Promise<void> {
   if (error) throw error;
 }
 
-/**
- * Persists a drag-reorder of ingredients (sort_order follows the array).
- * One atomic RPC (migration 0020) renumbers every row in a single write, so
- * an interrupted reorder can't leave the list half-saved – the old per-row
- * loop could.
- */
-export async function reorderIngredients(orderedIds: string[]): Promise<void> {
-  if (orderedIds.length === 0) return;
-  const { error } = await supabase.rpc("reorder_recipe_ingredients", {
-    p_ids: orderedIds,
-  });
-  if (error) throw error;
-}
-
-/** Persists a drag-reorder of steps (step_number follows the array). */
-export async function reorderSteps(orderedIds: string[]): Promise<void> {
-  if (orderedIds.length === 0) return;
-  const { error } = await supabase.rpc("reorder_recipe_steps", {
-    p_ids: orderedIds,
-  });
-  if (error) throw error;
-}
+// ⚠️ `reorderIngredients()` and `reorderSteps()` LIVED HERE and are gone
+// (2026-08-20, when the recipe screen lost its reorder sheets). They wrapped
+// the `reorder_recipe_ingredients` / `reorder_recipe_steps` RPCs from migration
+// 0020, and nothing in the app calls them any more: the editor rearranges the
+// draft and saves the whole list, and the detail screen no longer reorders at
+// all.
+//
+// ⚠️ THE RPCs THEMSELVES STAY IN THE DATABASE, and dropping them would be a
+// mistake rather than a tidy-up. Build 12 is live in the App Store, it has the
+// detail screen's reorder sheet, and it calls both. A database change reaches
+// those phones the moment it runs; this file only reaches them when they
+// update. Remove a version later, once no live build needs them.
 
 // ── Steps ────────────────────────────────────────────────────────────────
 // The design's step-number picker lets a step land at any position; numbers
