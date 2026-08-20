@@ -4643,7 +4643,19 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
       Watch, still true: this was the shape of the 2026-08-16 header-colour bug,
            where one screen's frame was read and four disagreed.
 
-- [ ] **⚠️ Put a height cap on the nine sheets that still lack one**
+- [ ] **⚠️ Put a height cap on the ELEVEN sheets that still lack one**
+      **Re-counted 2026-08-20** (it said nine): capped are `add-to-plan`,
+           `ingredient`, `step` and `edit-item`. Uncapped are **both sheets in
+           `recipes/[id].tsx`**, all six household sheets (delete/edit household,
+           delete/edit profile, invite, leave), `move-day`, `servings` and
+           `import-recipe`. `add-meal-sheet` is a separate case - it manages its
+           own height with a FlatList rather than the `scroll` prop.
+      ⚠️ **THE COUNT WENT UP BECAUSE OF THIS SESSION.** `StopSharingSheet` was
+           added 2026-08-19 with no cap. It is short today - a heading, one
+           paragraph, one button - which is precisely what was true of the
+           ingredient sheet until it was not. **A new sheet inherits this bug by
+           default**, so the real fix may be making the cap the BottomSheet's
+           default rather than an opt-in each caller must remember.
       Why: an uncapped sheet grows with its content until the close button goes
            off the top of the screen and the sheet cannot be dismissed. That
            already happened to the ingredient sheet the moment it gained one
