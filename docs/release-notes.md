@@ -60,8 +60,16 @@ Two more rules this file exists to keep straight:
 
 🔒 **1.1.0 IS LOCKED (Thomas, 2026-08-20): *"everything we do going forward is
 for a newer version."*** It is with Apple and nothing more goes into it.
-Anything from here is on the dev build only: not on TestFlight, not in review,
-and it needs a build to reach anyone.
+
+**1.2.0 IS ON TESTFLIGHT as build 26** (2026-08-20, commit `8d5ef38`). Not in
+review and not submitted – TestFlight only, so it reaches Thomas and nobody
+else. Real users are still on build 12.
+
+⚠️ **App Store Connect will not let a 1.2.0 VERSION RECORD be created while
+1.1.0 is Waiting for Review**, and that is Apple's rule rather than a problem
+with this build: TestFlight groups builds by version string on its own and
+needs no record. The 1.2.0 release page can only be started once 1.1.0 is
+released or pulled from review.
 
 **Build 25 is commit `d7f6f6d`.**
 
@@ -82,7 +90,7 @@ release. Known candidates: the sheet height caps (fix), join-by-link (feature,
 [spec](join-by-link.md)), the Danish proof-read (fix). **Reordering by hand is a
 feature, so as it stands this is 1.2.0.**
 
-### On the dev build only – 2026-08-20
+### 1.2.0 – ON TESTFLIGHT (build 26), 2026-08-20
 
 - **Rearrange a recipe by dragging it.** Ingredients, whole sections and
   instructions all move by hand now: take hold of the grip beside anything and
