@@ -4,16 +4,20 @@ What shipped in each build, in the App Store's "What's New" voice, so there
 is always something ready to post. Started 2026-08-03 – earlier builds are
 reconstructed from the backlog and git history.
 
-> **🎉 LIVE ON THE APP STORE: 1.0.0** (build 12), released 2026-08-13 ·
-> **✅ 1.1.0 IS APPROVED (2026-08-20) AND WAITING ON THE RELEASE BUTTON:**
-> `PENDING_DEVELOPER_RELEASE`, carrying build 25. Apple took **under a day**
-> this time – submitted 2026-08-19 20:32 UTC – against thirteen for 1.0.
-> Release is **MANUAL**, so approval puts it in front of nobody; Thomas presses
-> release.
+> **🎉 LIVE ON THE APP STORE: 1.1.0** (build 25), released 2026-08-20 –
+> submitted 2026-08-19 20:32 UTC, approved **inside a day** against thirteen
+> for 1.0, and released the same evening. It supersedes 1.0.0 (build 12), which
+> was live from 2026-08-13.
 >
-> Until he does, **real users are still on build 12**, frozen 2026-07-30.
-> Everything in builds 13–25 is written and tested and none of it has reached
-> them. That gap is the whole reason this file exists.
+> **The three-week gap is closed at the store, not yet on every phone.**
+> `READY_FOR_SALE` means released; storefronts take hours to propagate and an
+> installed app updates on its own schedule. Everything in builds 13–25 – the
+> Settings tab, sharing with expiry and Stop sharing, the leftover moves, the
+> ingredient sections – is what users are now getting.
+>
+> **The next gap starts here.** Build 26 (1.2.0, drag-to-reorder) is on
+> TestFlight and reaches nobody else, and `main` is already past it. Keeping
+> that difference written down is the whole reason this file exists.
 >
 > Thomas does not track the number; keeping these lines true is Claude's job
 > (agreed 2026-08-03). The rule below decides the next number, so this is
@@ -60,8 +64,8 @@ Two more rules this file exists to keep straight:
 
 ## Accumulating toward the next version
 
-🔒 **1.1.0 IS LOCKED (Thomas, 2026-08-20): *"everything we do going forward is
-for a newer version."*** It is with Apple and nothing more goes into it.
+🔒 **1.1.0 IS CLOSED (Thomas, 2026-08-20): *"everything we do going forward is
+for a newer version."*** It shipped that evening; nothing more can go into it.
 
 **1.2.0 IS ON TESTFLIGHT as build 26** (2026-08-20, commit `8d5ef38`). Not in
 review and not submitted – TestFlight only, so it reaches Thomas and nobody
@@ -84,9 +88,9 @@ skipped.
 ⚠️ **App Store Connect would not let a 1.2.0 VERSION RECORD be created while
 1.1.0 was Waiting for Review**, and that is Apple's rule rather than a problem
 with this build: TestFlight groups builds by version string on its own and
-needs no record. **1.1.0 has now been approved (2026-08-20) but not released**,
-so the 1.2.0 page is worth retrying – untested at this exact state, and the
-safe assumption remains that it opens once 1.1.0 is actually released.
+needs no record. **1.1.0 was released on 2026-08-20**, so that
+block is gone and the 1.2.0 version record can be created whenever the version
+is ready to be prepared.
 
 **Build 25 is commit `d7f6f6d`.**
 
@@ -139,11 +143,12 @@ for the next testflight build"*). It is on his dev build and nowhere else:
 commit `8d5ef38`; anything after that needs a build 27 to reach even TestFlight.
 Still 1.2.0 – a fix inside an unreleased version does not move the number.
 
-## 1.1.0 – ✅ APPROVED BY APPLE 2026-08-20, NOT YET RELEASED (build 25)
+## 1.1.0 – 🎉 LIVE ON THE APP STORE 2026-08-20 (build 25)
 
-`PENDING_DEVELOPER_RELEASE`, carrying **build 25**. Submitted 2026-08-19 at
-20:32 UTC and approved inside a day. MANUAL release, so it reaches nobody until
-Thomas presses **Release This Version**.
+`READY_FOR_SALE`, carrying **build 25**. Submitted 2026-08-19 at 20:32 UTC,
+approved inside a day, and released the same evening by Thomas – manual
+release, done with
+`node scripts/asc-release-version.mjs --release --version 1.1.0`.
 Everything the release depends on outside the binary is already live: migration
 0038 on production, the share site deployed, and the privacy policy published
 and dated 19 August.

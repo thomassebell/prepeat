@@ -72,6 +72,13 @@ Eat. Repeat." The old working name "Madapp" may linger in docs/foundation.md.
   first). Notes belong to a BUILD, not a version, so every build needs its own.
   Runbook: [docs/release-notes.md](docs/release-notes.md).
 
+- `node ./scripts/asc-release-version.mjs` – show what App Store Connect has,
+  and with `--release --version <n>` put an APPROVED version in front of real
+  users (source `scripts/eas-env.sh` first). Dry run by default; it refuses any
+  version not in `PENDING_DEVELOPER_RELEASE`, and re-reads the state afterwards
+  rather than trusting Apple's `201`. **Releasing is Thomas's call every time** –
+  the script removes the clicking, not the decision.
+
 - `npm run hooks:install` – install the git hooks from `scripts/git-hooks/`.
   **ALL FIVE REPOS NOW CARRY THIS HOOK** – prepeat, design-system, prepeat-web,
   synthetic-user-panel and prepeat-share (swept 2026-08-11, after a commit was
