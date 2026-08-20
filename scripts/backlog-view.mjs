@@ -114,13 +114,26 @@ const live = sections.filter((s) => !s.title.startsWith('⚠️'))
 const esc = (s) =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 
+// Links used to be flattened to their text, which meant the sketches this file
+// keeps pointing at could not be opened from the page Thomas actually reads.
+// ⚠️ ONLY THE ONES A BROWSER CAN ACTUALLY OPEN BECOME LINKS. Source-code refs
+// stay plain text on purpose, and that is not timidity – roughly half of them
+// are written `household.ts:93`, which is not a real path; expo-router route
+// groups put brackets in others; and a .tsx that does resolve just downloads.
+// A dead link on this page is worse than the plain text it replaced.
+const LINKABLE = /^(https?:\/\/|[^:\s]+\.html(#[^\s]*)?)$/
+
 // The backlog is written in markdown; render just enough of it to read.
 const md = (s) =>
   esc(s)
     .replace(/`([^`]+)`/g, '<code>$1</code>')
     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
     .replace(/\*([^*]+)\*/g, '<em>$1</em>')
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, text, href) =>
+      LINKABLE.test(href)
+        ? `<a href="${href.replace(/"/g, '&quot;')}" target="_blank" rel="noopener">${text}</a>`
+        : text,
+    )
 
 const total = live.reduce((n, s) => n + s.items.length, 0)
 
@@ -261,6 +274,8 @@ const html = `<!doctype html>
   dd { margin: 0; font-size: .8125rem; color: var(--subtle); }
   details { margin-top: .6rem; font-size: .8125rem; color: var(--subtle); }
   summary { cursor: pointer; color: var(--brand); }
+  a { color: var(--brand); text-underline-offset: .15em; }
+  a:hover { text-decoration-thickness: 2px; }
   details p { margin: .5rem 0 0; }
   code { font-size: .85em; background: var(--line); padding: 0 .25em; border-radius: .2em; }
   .waiting { border: 1px solid var(--brand); border-radius: .7rem; padding: 1rem 1rem .4rem; margin-bottom: 2.5rem; }
