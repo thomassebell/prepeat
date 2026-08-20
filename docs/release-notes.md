@@ -63,7 +63,21 @@ for a newer version."*** It is with Apple and nothing more goes into it.
 
 **1.2.0 IS ON TESTFLIGHT as build 26** (2026-08-20, commit `8d5ef38`). Not in
 review and not submitted – TestFlight only, so it reaches Thomas and nobody
-else. Real users are still on build 12.
+else. Real users are still on build 12. **Its "What to Test" notes are posted**,
+read back from Apple rather than assumed.
+
+**POSTING THOSE NOTES IS NOW A COMMAND, not a trip to a browser:**
+
+```
+source scripts/eas-env.sh
+node scripts/asc-testflight-notes.mjs --build 26 --file <notes.txt>
+node scripts/asc-testflight-notes.mjs --build 26          # read back what is there
+```
+
+⚠️ **The notes belong to a BUILD, not to a version** – every new build starts
+with none, including a rebuild of the same version. It was the one part of "post
+what changed" that had to be done by hand, which is why it was the part that got
+skipped.
 
 ⚠️ **App Store Connect will not let a 1.2.0 VERSION RECORD be created while
 1.1.0 is Waiting for Review**, and that is Apple's rule rather than a problem

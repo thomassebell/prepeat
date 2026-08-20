@@ -67,6 +67,11 @@ Eat. Repeat." The old working name "Madapp" may linger in docs/foundation.md.
   `npm run backup:install` is re-run** – the scheduled job runs an installed
   copy, because macOS forbids background jobs from reading `~/Documents`.
 
+- `node ./scripts/asc-testflight-notes.mjs --build <n> --file <notes.txt>` –
+  post a TestFlight build's "What to Test" notes (source `scripts/eas-env.sh`
+  first). Notes belong to a BUILD, not a version, so every build needs its own.
+  Runbook: [docs/release-notes.md](docs/release-notes.md).
+
 - `npm run hooks:install` – install the git hooks from `scripts/git-hooks/`.
   **ALL FIVE REPOS NOW CARRY THIS HOOK** – prepeat, design-system, prepeat-web,
   synthetic-user-panel and prepeat-share (swept 2026-08-11, after a commit was
