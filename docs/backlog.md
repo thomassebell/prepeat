@@ -4643,7 +4643,25 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
       Watch, still true: this was the shape of the 2026-08-16 header-colour bug,
            where one screen's frame was read and four disagreed.
 
-- [ ] **⚠️ The add-meal sheet is still uncapped, and needs its own layout work**
+- [ ] **⚠️ The add-meal sheet reserves space it does not use (NOT a height-cap problem)**
+      ⚠️ **CORRECTED 2026-08-20, by Thomas with a screenshot: *"how can it give
+           more room – there is no more room."*** He is right, and the framing
+           below was wrong. **This sheet already fills the whole screen with TWO
+           recipes**, roughly a third of it dead space between the list and the
+           servings counter. It does not grow past the screen the way the other
+           ten did - it always fills it, whatever the content. **The ✕ cannot go
+           off the top here, so there is no cap bug to fix.** Capping it at 90%
+           would only take 10% away.
+      **The real defect is the opposite of a cap:** the list EXPANDS to fill
+           whatever it is given instead of hugging its content. The fix is to let
+           it hug, and flex only once there are enough recipes to need the room -
+           so two recipes gives a half-height sheet with the servings and CTA
+           under the list, near the thumb.
+      **How it got miscounted:** the eleven were found by grepping for the
+           `scroll` prop, not by looking at the screens. This one lacked the prop
+           and was assumed to share the bug. **A count from a grep is a list of
+           suspects, not a list of defects.**
+      Size: its own sitting, on that one screen, with a device.
       ✅ **The other ten were fixed 2026-08-20 by changing the DEFAULT**, not the
            call sites: every sheet is now capped at 90% and scrolls past it
            unless it opts out. Both recipe-screen dialogs (including Stop
