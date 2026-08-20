@@ -711,12 +711,12 @@ Committed work for the first update after launch. Panel findings default here un
 
 ### Known bugs (open)
 
-- [ ] **The Instructions heading sat closer to its list than a section heading
-      does – fixed 2026-08-20, not yet seen on a device**
+- [x] **DONE, CONFIRMED ON DEVICE 2026-08-20 – one heading style and one gap
+      under it, on both recipe screens**
       Source: Thomas, 2026-08-20, from a screenshot: *"the gap between
            instructions and list is not the same as gap between section and
-           list – same in non-edit mode."*
-      Wait for: the next build on his phone. Tick it there, not here.
+           list – same in non-edit mode."* Then *"yes, match the instructions
+           heading style too"*, and *"it works – all good now."*
 
       4px under Instructions, 16 under every section heading, on BOTH the editor
       and the recipe screen. Two numbers for one relationship, which reads as
@@ -918,19 +918,21 @@ Committed work for the first update after launch. Panel findings default here un
       2. **No haptic tick on lift** – the app has no haptics dependency at all,
          and adding one is a decision rather than a detail.
 
-- [ ] **Reordering on the EDIT recipe screen left the list scrambled – fixed in
-      code 2026-08-20, not yet seen on a device**
+- [x] **CLOSED 2026-08-20 ON THE CODE, NOT ON A BUILD – reordering in the
+      reorder sheet left the list scrambled**
       Source: Thomas, 2026-08-20 – *"it's in edit recipe, when you have sections
            and want to move an ingredient to a new section. Things become
            weird."*
-      Wait for: Thomas dragging in the SHOPPING list's aisle-order sheet, which
-           is now the only reorder sheet left in the app. ⚠️ THE BUG IS NO
-           LONGER REACHABLE WHERE IT WAS REPORTED: every recipe list drags in
-           place now, so nothing on those screens opens a sheet at all. The fix
-           stays because the sheet stays - and because the shopping list keys
-           its rows by CATEGORY NAME, which changes with the order, that screen
-           never had the bug. So this is a fix with no user-facing symptom left
-           to confirm; close it on the code, not on a build.
+      ⚠️ **CLOSED WITHOUT A DEVICE CONFIRMATION, DELIBERATELY, AND THIS IS THE
+           REASON.** By the end of the same day every recipe list dragged in
+           place and no recipe screen opened a sheet at all, so the symptom was
+           not reachable where it was reported. The only sheet left in the app
+           is the shopping list's aisle order, and that one keys its rows by
+           CATEGORY NAME - which changes when the order does - so it never had
+           the bug and cannot demonstrate the fix either. A fix with no
+           reachable symptom is still worth keeping (the sheet lives on), but
+           leaving the item open would have parked it on a confirmation that
+           can never arrive.
 
       **What he saw:** drop an ingredient into another section and the rows draw
       in the wrong places – the dropped row painted far from where it landed,

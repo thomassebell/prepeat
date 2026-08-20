@@ -63,22 +63,43 @@ for a newer version."*** It is with Apple and nothing more goes into it.
 Anything from here is on the dev build only: not on TestFlight, not in review,
 and it needs a build to reach anyone.
 
-**Build 25 is commit `d7f6f6d`.** Checked 2026-08-20: nothing under `src/`,
-`app.json`, `app.config.js` or `package.json` has changed since, so `main` and
-the submitted binary are still the same app. Everything after it is docs and
-scripts.
+**Build 25 is commit `d7f6f6d`.**
 
-⚠️ **THAT STOPS BEING TRUE THE MOMENT ANY APP CODE LANDS, and the consequence is
-easy to miss: if Apple REJECTS 1.1.0 and it needs a build 26, that build must
-come from `d7f6f6d`, not from `main`.** Building main would quietly ship
-whatever the next version has accumulated, under a version string that was
-reviewed without it. `build-iphone.sh` and EAS both build the WORKING TREE, so
-neither will warn.
+⚠️ **AND `main` HAS NOW MOVED PAST IT (2026-08-20, 12:35).** The line above used
+to say the two were the same app; the drag-to-reorder work landed that
+afternoon and they are not any more. `src/app/recipes/`, `src/components/recipes/`,
+`src/lib/` and both locale files have all changed.
+
+⚠️ **SO: IF APPLE REJECTS 1.1.0 AND IT NEEDS A BUILD 26, THAT BUILD MUST COME
+FROM `d7f6f6d`, NOT FROM `main`.** Building main would quietly ship a whole
+reordering redesign under a version string that was reviewed without it.
+`build-iphone.sh` and EAS both build the WORKING TREE, so neither will warn –
+`git checkout d7f6f6d` first, and build from there.
 
 **Which number this becomes** follows the rule below, not a guess: a fix makes
 it 1.1.1, a feature makes it 1.2.0, and it never goes back down within a
 release. Known candidates: the sheet height caps (fix), join-by-link (feature,
-[spec](join-by-link.md)), the Danish proof-read (fix).
+[spec](join-by-link.md)), the Danish proof-read (fix). **Reordering by hand is a
+feature, so as it stands this is 1.2.0.**
+
+### On the dev build only – 2026-08-20
+
+- **Rearrange a recipe by dragging it.** Ingredients, whole sections and
+  instructions all move by hand now: take hold of the grip beside anything and
+  put it where you want it. An ingredient can be dropped straight into another
+  section, and a section takes its ingredients with it. Tap still opens an item
+  for editing, and swipe still deletes.
+- **The reorder sheet is gone from the recipe screens.** Rearranging happens on
+  the list itself, so there is no separate screen for it any more – and no
+  sorting at all on the recipe you cook from, where a tap ticks an ingredient
+  off instead.
+- **The list drags past the edge of the screen**, so a section further down the
+  recipe is reachable without letting go.
+- **Reordering works with VoiceOver**, through Move up / Move down actions on
+  every row and heading.
+- Fixes: reordering no longer leaves the list looking scrambled after a drop; a
+  newly added instruction no longer disappears until the recipe is saved; the
+  grips, dividers and headings line up with each other.
 
 ## 1.1.0 – SUBMITTED FOR REVIEW 2026-08-19 (build 25)
 
