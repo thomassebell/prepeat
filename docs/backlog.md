@@ -127,7 +127,7 @@ Everything else in this file is Claude's to get on with.
   <sub>Next – v1.1</sub>
 - **⭐ Let the household teach the app that two ingredient names mean the same thing** – design the "same as…" action, and settle whether an alias is one-directional.
   <sub>Someday – not committed</sub>
-- **Confirm the shortened recipe status copy against the frames** – the app deviates from the frames here and it was my call.
+- **Update the keep-awake frames to the shipped copy (supersedes the "dimes" typo)** – nothing – a Figma text edit, and Thomas has approved the wording.
   <sub>Someday – not committed</sub>
 - **Re-seed the reviewer's demo account before every submission** – Thomas for the mailbox check only – the seeding is Claude's and is now one command.
   <sub>Standing – recurring</sub>
@@ -4217,30 +4217,37 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
 
       (Item raised Thomas, 2026-08-07; built 2026-08-17.)
 
-- [ ] **Fix the "Screen dimes while cooking" typo in Figma**
-      Why: it is "dims". Figma 709:6858 (recipe – servings 3) and the same text
-           in any sibling frame. Cosmetic, but the file is the source of truth,
-           so leaving it means the frame and the app disagree on purpose.
-      Size: one text layer.
+- [ ] **Update the keep-awake frames to the shipped copy (supersedes the "dimes" typo)**
+      Needs: nothing – a Figma text edit, and Thomas has approved the wording.
+      What: 709:6812 and its "off" sibling read "Screen on while cooking" and
+           "Screen dimes while cooking". The app ships **"Screen stays on"** and
+           **"Screen dims"**, accepted by Thomas 2026-08-20.
+      This replaces the old "fix the dimes typo" item: the whole string is being
+           replaced, so the misspelling goes with it. Fixing the typo alone
+           would have left the frame disagreeing with the app in a bigger way.
+      Why it matters at all: the file is the source of truth, so a frame that
+           disagrees with a shipped screen on purpose is a trap for whoever
+           reads it next.
 
-      (Found 2026-08-17 while implementing the item above. The app ships "Screen
-      dims", so this is the frame catching up, not a code change.)
-
-- [ ] **Confirm the shortened recipe status copy against the frames**
-      Needs: Thomas – the app deviates from the frames here and it was my call.
-      Why: the frames read "Screen on while cooking" / "Screen dimes while
-           cooking". The app ships "Screen stays on" / "Screen dims", trimmed
-           for the same reason Thomas trimmed the Settings label from "Keep the
-           screen on in recipes" to "Keep screen on" – *"otherwise this will be
-           very long in danish"*. That reason applies harder here: an icon and
-           TWO texts share one 16px line.
-      Measured: the Danish pair plus the icon is ~291pt of the 370pt available,
-           so it fits today. The hint truncates rather than overflowing if a
-           future translation is longer.
-      Decide: accept the trim (and update the frames), or restore the full
-           phrase and let the line wrap to two rows in Danish.
-
-      (2026-08-17.)
+- [x] **Confirm the shortened recipe status copy against the frames – ACCEPTED 2026-08-20**
+      **Thomas: "4. is ok – close the issue."** The trim stands: the app keeps
+           **"Screen stays on" / "Screen dims"** (da: *"Skærmen forbliver
+           tændt"* / *"Skærmen dæmpes"*), and the frames read "Screen on while
+           cooking" / "Screen dimes while cooking".
+      Why the trim was right, kept because the reasoning generalises: an icon
+           and TWO texts share one 16pt line, and the Danish pair plus the icon
+           is ~291pt of the 370pt available. The full phrase does not fit in
+           Danish. It is the same reason Thomas shortened the Settings label
+           from "Keep the screen on in recipes" to "Keep screen on" – *"otherwise
+           this will be very long in danish"*.
+      ⚠️ **IT WAS STILL RIGHT TO ASK.** Applying Thomas's stated reason to a
+           string he had not ruled on is a design decision made on his behalf,
+           and the app is the instrument he judges his design with. The answer
+           was yes; the asking is what keeps that true.
+      **The frames now need to catch up** – 709:6812 (on) and its "off" sibling.
+           That is a Figma edit, not code, and it SUPERSEDES the separate typo
+           item: the "Screen dimes" text is being replaced wholesale, so the
+           misspelling goes with it.
 
 - [x] **DONE 2026-08-17. "Change in settings" is a link to Settings.** Thomas:
       *"it would be nice to have a link on the recipe 'Change in settings' to

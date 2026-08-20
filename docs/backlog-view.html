@@ -79,7 +79,7 @@
 <main>
   <header>
     <h1>Prep+Eat – open backlog</h1>
-    <p class="meta">78 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
+    <p class="meta">77 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
   </header>
   <div class="filter"><input id="q" type="search" placeholder="Filter tasks…" autocomplete="off"></div>
   <section class="waiting">
@@ -98,8 +98,8 @@
         <dl><dt>Needs</dt><dd>Thomas – design the "same as…" action, and settle whether an alias is one-directional.</dd></dl>
         <p class="from">Someday – not committed</p>
       </article><article class="item">
-        <h3><span><strong>Confirm the shortened recipe status copy against the frames</strong></span></h3>
-        <dl><dt>Needs</dt><dd>Thomas – the app deviates from the frames here and it was my call.</dd></dl>
+        <h3><span><strong>Update the keep-awake frames to the shipped copy (supersedes the "dimes" typo)</strong></span></h3>
+        <dl><dt>Needs</dt><dd>nothing – a Figma text edit, and Thomas has approved the wording.</dd></dl>
         <p class="from">Someday – not committed</p>
       </article><article class="item">
         <h3><span><strong>Re-seed the reviewer's demo account before every submission</strong></span></h3>
@@ -554,7 +554,7 @@
     </article>
     </section>
     <section>
-      <h2>Someday – not committed <span class="count" data-total="25">25</span></h2>
+      <h2>Someday – not committed <span class="count" data-total="24">24</span></h2>
       <h4>Ideas – not yet committed</h4>
     <article class="item">
       <h3>
@@ -623,19 +623,10 @@
       <h3>
         
         
-        <span><strong>Fix the "Screen dimes while cooking" typo in Figma</strong></span>
+        <span><strong>Update the keep-awake frames to the shipped copy (supersedes the "dimes" typo)</strong></span>
       </h3>
-      <dl><dt>Why</dt><dd>it is "dims". Figma 709:6858 (recipe – servings 3) and the same text in any sibling frame. Cosmetic, but the file is the source of truth, so leaving it means the frame and the app disagree on purpose.</dd><dt>Size</dt><dd>one text layer.</dd></dl>
-      <details><summary>Full note</summary><p>(Found 2026-08-17 while implementing the item above. The app ships "Screen dims", so this is the frame catching up, not a code change.)</p></details>
-    </article>
-    <article class="item">
-      <h3>
-        
-        
-        <span><strong>Confirm the shortened recipe status copy against the frames</strong></span>
-      </h3>
-      <dl><dt>Needs</dt><dd>Thomas – the app deviates from the frames here and it was my call.</dd><dt>Why</dt><dd>the frames read "Screen on while cooking" / "Screen dimes while cooking". The app ships "Screen stays on" / "Screen dims", trimmed for the same reason Thomas trimmed the Settings label from "Keep the screen on in recipes" to "Keep screen on" – <em>"otherwise this will be very long in danish"</em>. That reason applies harder here: an icon and TWO texts share one 16px line.</dd><dt>Measured</dt><dd>the Danish pair plus the icon is ~291pt of the 370pt available, so it fits today. The hint truncates rather than overflowing if a future translation is longer.</dd><dt>Decide</dt><dd>accept the trim (and update the frames), or restore the full phrase and let the line wrap to two rows in Danish.</dd></dl>
-      <details><summary>Full note</summary><p>(2026-08-17.)</p></details>
+      <dl><dt>Needs</dt><dd>nothing – a Figma text edit, and Thomas has approved the wording.</dd><dt>What</dt><dd>709:6812 and its "off" sibling read "Screen on while cooking" and "Screen dimes while cooking". The app ships <strong>"Screen stays on"</strong> and <strong>"Screen dims"</strong>, accepted by Thomas 2026-08-20.</dd></dl>
+      <details><summary>Full note</summary><p>This replaces the old "fix the dimes typo" item: the whole string is being replaced, so the misspelling goes with it. Fixing the typo alone would have left the frame disagreeing with the app in a bigger way. Why it matters at all: the file is the source of truth, so a frame that disagrees with a shipped screen on purpose is a trap for whoever reads it next.</p></details>
     </article>
     <article class="item">
       <h3>
