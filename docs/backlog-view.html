@@ -79,7 +79,7 @@
 <main>
   <header>
     <h1>Prep+Eat – open backlog</h1>
-    <p class="meta">76 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
+    <p class="meta">75 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
   </header>
   <div class="filter"><input id="q" type="search" placeholder="Filter tasks…" autocomplete="off"></div>
   <section class="waiting">
@@ -97,7 +97,7 @@
     </section>
   <div id="list">
     <section>
-      <h2>Next – v1.1 <span class="count" data-total="49">49</span></h2>
+      <h2>Next – v1.1 <span class="count" data-total="48">48</span></h2>
       <h4>Later (v1.1+)</h4>
     <article class="item">
       <h3>
@@ -143,15 +143,6 @@
       </h3>
       <dl><dt>Why</dt><dd>recipe sites are overwhelmingly local-language, so this hits a new user on their very first import. <code>2 EL Olivenöl</code> currently files the unit as part of the ingredient name.</dd><dt>When</dt><dd>per territory, as the App Store rollout reaches it.</dd><dt>Size</dt><dd>~30 lines per language – one units list, one participle list, one "to taste" phrase.</dd></dl>
       <details><summary>Full note</summary><p>(scoped 2026-07-29 – Thomas: *"English and danish is the most important. Log other languages as later versions"*). The parser in src/lib/recipe-import.ts splits an ingredient string into name + quantity. The language-INDEPENDENT half works everywhere already: leading amounts, ranges, vulgar fractions (½ ¼ ¾), metric units, parentheticals and colon-sentences. The half that needs to KNOW WORDS is hand-written vocabulary, and only English and Danish are complete: - <strong>local spoon/measure units</strong> – German <code>EL</code>/<code>TL</code>, Swedish <code>msk</code>, Dutch <code>eetlepels</code>, Spanish <code>cucharadas</code>, Italian <code>cucchiai</code>. Missing ones fall into the NAME: <code>2 EL Olivenöl</code> → quantity <code>2</code>, name <code>EL Olivenöl</code>. - <strong>prep participles</strong> – <code>, gewürfelt</code> / <code>, hackad</code> / <code>, tritata</code> / <code>, émincé</code> are all kept verbatim, so the shopping list reads <code>Zwiebel, gewürfelt</code>. - <strong>"to taste" qualifiers</strong> – <code>nach Geschmack</code>, <code>al gusto</code>, <code>selon le goût</code>, <code>efter smak</code> (Swedish – the Danish <code>efter smag</code> IS handled). - <strong>alternatives</strong> – only <code>or</code>/<code>eller</code> are known; <code>oder</code>, <code>ou</code>, <code>o</code>, <code>of</code> are not. - <strong>Romance connector words</strong> – <code>200 g de farine</code> → name <code>de farine</code>, <code>200 g di farina</code> → name <code>di farina</code>. The <code>de</code>/<code>di</code>/<code>du</code>/<code>della</code> should be dropped after the unit. Each language is roughly one units list + one participle list + one qualifier phrase – the same shape as the existing tables, ~30 lines. Worth doing per territory as the App Store rollout reaches it, since recipe sites are overwhelmingly local-language and this hits a user on their very FIRST import. One trap already found and guarded: French <code>c. à soupe</code> is a TABLESPOON, and reading the bare <code>c</code> as <code>cup</code> inflates the amount ~16x. The parser now bails out when <code>c</code> is followed by <code>à</code>/<code>a</code>. Any future language work needs the same paranoia about collisions with English abbreviations.</p></details>
-    </article>
-    <article class="item">
-      <h3>
-        
-        
-        <span><strong>Build the share site's DESKTOP layout</strong></span>
-      </h3>
-      <dl><dt>Needs</dt><dd>nothing. Every design question this item carried is now answered - what is left is work, not a decision.</dd></dl>
-      <details><summary>Full note</summary><p>✅ **Desktop frames delivered: section 726:10982 "recipe – shared site desktop"**, five frames at 1024px - shared own recipe (726:10983), shared imported recipe (726:11069), revoked (726:11018), link broken (726:11035) and 503 (726:11052). The 404 frame asked for below is "link broken". <strong>Not yet built</strong> - the deployed site is still the phone layout at every width. 1. <strong>Desktop frames for the share site.</strong> The phone designs landed 2026-08-18 (share site 726:8992). The desktop rendering is one layout at a wider width - Claude's call, never drawn. A share link opened on a laptop is a first impression of the product by someone who does not have it. 2. <strong>A 404 frame for the share site.</strong> "This link doesn't lead anywhere" exists in code and matches the in-app dead end; the web version was never designed. 3. ✅ **The ⋯ button on the in-app receive screen – ANSWERED BY THE FILE, 2026-08-20.** It was drawn in "recipe – accepting recipe" and left out of the build because there was no menu behind it and nothing it could do on a recipe you do not own yet - favourite, add to plan, edit, delete and share all belong to a recipe that is yours. Checked the frame today: <strong>725:8342's top bar now contains only the back arrow</strong>, with no ⋯ present, not even hidden. Thomas removed it after it was raised. Design and app agree; nothing to decide. <strong>Worth checking the frame before asking again</strong> - the question had already been answered in the file for two days. ✅ *<em>The EXPIRED state is settled (Thomas, 2026-08-20): </em>"expired state is called revoked recipe"*** - it uses the revoked frame's layout, which is exactly what both implementations already do (<code>renderExpired</code> calls the same <code>deadEnd()</code>; the app reuses the same Card + Notice). No code changed; what changed is that it stopped being an improvisation and became the design. ⚠️ **One deliberate difference remains, and it is from the copy table, not the frame: expired does NOT name the sender.** Revoked says "Pia isn't sharing this one any more" because that was Pia's decision; expiry is nobody's, so naming her would imply she did something. The database enforces it by withholding <code>shared_by</code> for that status.</p></details>
     </article>
     <article class="item">
       <h3>

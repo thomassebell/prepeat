@@ -2613,44 +2613,24 @@ are not a queue this project can work through.
            feature, because the feature shipped without them and they are still
            real gaps.
 
-- [ ] **Build the share site's DESKTOP layout**
-      Needs: nothing. Every design question this item carried is now answered -
-           what is left is work, not a decision.
-      ✅ **Desktop frames delivered: section 726:10982 "recipe – shared site
-           desktop"**, five frames at 1024px - shared own recipe (726:10983),
-           shared imported recipe (726:11069), revoked (726:11018), link broken
-           (726:11035) and 503 (726:11052). The 404 frame asked for below is
-           "link broken". **Not yet built** - the deployed site is still the
-           phone layout at every width.
-      1. **Desktop frames for the share site.** The phone designs landed
-           2026-08-18 (share site 726:8992). The desktop rendering is one layout
-           at a wider width - Claude's call, never drawn. A share link opened on a
-           laptop is a first impression of the product by someone who does not
-           have it.
-      2. **A 404 frame for the share site.** "This link doesn't lead anywhere"
-           exists in code and matches the in-app dead end; the web version was
-           never designed.
-      3. ✅ **The ⋯ button on the in-app receive screen – ANSWERED BY THE FILE,
-           2026-08-20.** It was drawn in "recipe – accepting recipe" and left out
-           of the build because there was no menu behind it and nothing it could
-           do on a recipe you do not own yet - favourite, add to plan, edit,
-           delete and share all belong to a recipe that is yours. Checked the
-           frame today: **725:8342's top bar now contains only the back arrow**,
-           with no ⋯ present, not even hidden. Thomas removed it after it was
-           raised. Design and app agree; nothing to decide.
-           **Worth checking the frame before asking again** - the question had
-           already been answered in the file for two days.
-      ✅ **The EXPIRED state is settled (Thomas, 2026-08-20): *"expired state is
-           called revoked recipe"*** - it uses the revoked frame's layout, which
-           is exactly what both implementations already do (`renderExpired` calls
-           the same `deadEnd()`; the app reuses the same Card + Notice). No code
-           changed; what changed is that it stopped being an improvisation and
-           became the design.
-           ⚠️ **One deliberate difference remains, and it is from the copy table,
-           not the frame: expired does NOT name the sender.** Revoked says "Pia
-           isn't sharing this one any more" because that was Pia's decision;
-           expiry is nobody's, so naming her would imply she did something. The
-           database enforces it by withholding `shared_by` for that status.
+- [x] **The share site's DESKTOP layout – DONE (Thomas, 2026-08-20)**
+      **It was already built.** Verified against the approved frames rather than
+           assumed: measured in the browser at 1024 wide, the card is **600px at
+           left 212** (212 + 600 + 212 = 1024), **radius 16**, **24px bottom
+           padding** - matching 726:10983 exactly. The original
+           `max-width: 600px; margin: auto` guess, written before the desktop
+           frames existed, turned out to be right, and the phone and desktop
+           frames really are one layout at two widths.
+      ⚠️ **ONE DIFFERENCE FOUND, AND DELIBERATELY LEFT** (Thomas: *"just let it
+           be"*): the Total / Prep / Cook row. The frames give each `time` group
+           `flex: 1 0 0`, so the three spread across the row - Total left, Prep
+           centred, Cook right. The build lets them take their natural width and
+           bunch to the left. **Invisible at 370, visible at 600**, which is why
+           it survived: the layout had only ever been checked at phone width.
+           A fix was written and discarded at Thomas's call; it is one CSS rule
+           (`flex: 1 0 0; min-width: 0` on each group) if it is ever wanted.
+      **The lesson, which outlives this item:** "the same layout at two widths"
+           is a claim about BOTH widths, and only one of them had been looked at.
 
 - [ ] **⚠️ The Danish for the sharing strings shipped unproof-read**
       Needs: Thomas – he is the native speaker; this is reading, not deciding.
