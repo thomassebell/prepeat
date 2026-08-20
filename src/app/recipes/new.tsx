@@ -448,7 +448,13 @@ export default function AddRecipeScreen() {
               there, which reads as two kinds of heading rather than one. */}
           <View className="w-full gap-layout-small px-layout-small">
             <View className="w-full flex-row items-center">
-              <Text className="flex-1 font-paragraph text-paragraph font-emphasized text-text-default">
+              {/* Same style as the Ingredients header and every section heading
+                  (Thomas, 2026-08-20: *"yes, match the instructions heading
+                  style too"*). It was the one heading on this screen drawn in
+                  paragraph type, which made it read as a lesser thing than the
+                  list above it rather than its equal. The recipe screen already
+                  had them matching. */}
+              <Text className="flex-1 font-header text-display-6 font-emphasized text-text-default">
                 {t("recipes.instructions")}
               </Text>
             </View>

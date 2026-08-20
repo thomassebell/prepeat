@@ -721,11 +721,15 @@ Committed work for the first update after launch. Panel findings default here un
       4px under Instructions, 16 under every section heading, on BOTH the editor
       and the recipe screen. Two numbers for one relationship, which reads as
       two kinds of heading. Now 16 in all four places.
-      Note: while in there – on the EDITOR the Instructions heading is drawn
-           `paragraph/emphasized` while section headings and Ingredients are
-           `header/display-6`. Left alone: that is a typographic decision, and
-           it is Thomas's, not a consequence of the spacing bug. Worth a look
-           when he next has the frames open.
+      **AND THE TYPE MATCHES NOW TOO** – raised as an observation, decided by
+      Thomas the same minute (*"yes, match the instructions heading style
+      too"*). On the EDITOR, Instructions was the one heading drawn
+      `paragraph/emphasized` while Ingredients and every section heading were
+      `header/display-6`, which made it read as a lesser thing than the list
+      above rather than its equal. The recipe screen already had them matching.
+      Note: raised rather than quietly fixed because it was a typographic
+           decision, not a consequence of the spacing bug – the same line the
+           improvisation notes on the drag work are drawn along.
 
 - [x] **DONE, CONFIRMED ON DEVICE 2026-08-20 – instructions drag in place too,
       and the reorder sheet has left the recipe editor entirely**
