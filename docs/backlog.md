@@ -129,7 +129,7 @@ Everything else in this file is Claude's to get on with.
   <sub>Someday – not committed</sub>
 - **Confirm the shortened recipe status copy against the frames** – the app deviates from the frames here and it was my call.
   <sub>Someday – not committed</sub>
-- **🚨 THE REVIEWER'S DEMO PLAN IS EMPTY, AND 1.1.0 IS WAITING FOR REVIEW** – Thomas for the mailbox check; the re-seed is Claude's.
+- **Re-seed the reviewer's demo account before every submission** – Thomas for the mailbox check only – the seeding is Claude's and is now one command.
   <sub>Standing – recurring</sub>
 
 <!-- WAITING-ON-THOMAS:END -->
@@ -4995,44 +4995,38 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
 
 Chores with a trigger rather than a finish line. These never get ticked off for good.
 
-- [ ] **🚨 THE REVIEWER'S DEMO PLAN IS EMPTY, AND 1.1.0 IS WAITING FOR REVIEW**
-      Needs: Thomas for the mailbox check; the re-seed is Claude's.
-      **Found 2026-08-19, an hour after submitting 1.1.0 – this check was NOT
-           run before the submission.** Read from production:
-      | week | planned meals |
-      |---|---|
-      | **2026-08-17 (current)** | **no plan row at all** |
-      | 2026-08-10 | a row, but **0 entries** |
-      | 2026-08-03 | 7 |
-      | 2026-07-27 | 7 |
-      **The last week with actual meals was 2026-08-03.** A reviewer signing in
-           today opens the app on an empty plan – the app looking broken at
-           exactly the moment it is being judged, which is the precise failure
-           this standing item exists to prevent. The account itself is fine:
-           9 recipes, household intact.
-      ⚠️ **AND THE SEED GENERATOR IS GONE.** The procedure said to re-run
-           `scratchpad/gen-demo.ts`. It lived in a scratchpad, is not in git and
-           is not on disk. So "re-run the generator" is not a step anyone can
-           take – it has to be rewritten, and this time committed.
-      Not blocked by the submission: seeding is a database write and touches no
-           metadata, so it can be done while the version sits in the queue.
-      Steps now: 1. **Claude** rewrites the seeder, commits it, and seeds the
-           current week; 2. **Thomas** signs in to `appreview@sebell.dk` webmail
-           and confirms a one-time code still arrives (that is the whole reviewer
-           path, and only he has the password); 3. **Thomas** confirms the App
-           Review Information in App Store Connect still matches.
-      ⚠️ **WHY IT KEEPS SLIPPING, and the fix that is not "remember".** The
-           seeded weeks are `date_trunc('week', now())`, so this decays on a
-           timer with nothing to show for it until a reviewer sees it. It went
-           unrun before this submission despite being written down as a standing
-           pre-submission task. A seeder that seeds the CURRENT week whenever it
-           runs, plus running it as part of the submit script, would remove the
-           remembering.
+- [ ] **Re-seed the reviewer's demo account before every submission**
+      Needs: Thomas for the mailbox check only – the seeding is Claude's and is
+           now one command.
+      ✅ **Seeded 2026-08-20**: the current week (2026-08-17) has 7 meals, one
+           per day across seven different recipes, and its shopping list has 92
+           lines. Verified on production after the write. It had been empty since
+           the week of 2026-08-03, and 1.1.0 was already in the review queue.
+      **`./scripts/seed-demo-week.sh`** – production by default, `--dev` and
+           `--email` for anything else. Idempotent: if the week already has meals
+           it refuses rather than duplicating. Tested on dev before production,
+           including that `contribute_entry` fed the shopping list and linked it
+           back to the entries, so removing a meal still shrinks the list.
+      ⚠️ **THE OLD PROCEDURE WAS UNRUNNABLE.** It said to re-run
+           `scratchpad/gen-demo.ts`, which lived in a scratchpad, was never in
+           git, and was gone when it was needed. A procedure whose tool is
+           untracked expires quietly – the same lesson as the git hooks and the
+           backup job. The script is committed this time.
+      **Still Thomas's, and not automatable:** sign in to `appreview@sebell.dk`
+           webmail with the password Apple holds and confirm a one-time code
+           still arrives – that is the whole reviewer path end to end, and only
+           he has the password. Then check the App Review Information in App
+           Store Connect still matches.
+      ⚠️ **THE REMAINING FIX IS STRUCTURAL, NOT "REMEMBER HARDER".** This decays
+           on a timer and shows nothing until a reviewer sees it, and it went
+           unrun before 1.1.0 despite being written down. Worth wiring a check
+           into `asc-submit-for-review.mjs`'s pre-flight so an empty current week
+           blocks a submission the way an unattached build already does.
       Do not: use the Postgres test-OTP trigger. It writes into Supabase's
            internal auth schema, is a permanent known-code backdoor, and rots
            silently. Fallback only if Apple pushes back, never the opening move.
-      History: built and seeded 2026-07-30, confirmed working 2026-08-07,
-           carried the v1.0 review (approved, live 2026-08-13).
+      History: built and seeded 2026-07-30, confirmed 2026-08-07, carried the
+           v1.0 review; found empty and re-seeded 2026-08-20.
 
 - [ ] **Watch for the moment Supabase Pro becomes necessary** (a standing check, not a task to do)
       Upgrade when ANY one of these is true:
