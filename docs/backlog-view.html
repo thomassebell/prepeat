@@ -83,7 +83,7 @@
   </header>
   <div class="filter"><input id="q" type="search" placeholder="Filter tasks…" autocomplete="off"></div>
   <section class="waiting">
-      <h2>Waiting on you <span class="count" data-total="3">3</span></h2>
+      <h2>Waiting on you <span class="count" data-total="4">4</span></h2>
       <p class="lede">Nothing moves on these until you decide or draw something. Everything else is mine.</p>
       <article class="item">
         <h3><span><strong>Let someone join a kitchen by tapping a link, not typing a code</strong></span></h3>
@@ -96,6 +96,10 @@
       </article><article class="item">
         <h3><span><strong>⭐ Let the household teach the app that two ingredient names mean the same thing</strong></span></h3>
         <dl><dt>Needs</dt><dd>Thomas – design the "same as…" action, and settle whether an alias is one-directional.</dd></dl>
+        <p class="from">Someday – not committed</p>
+      </article><article class="item">
+        <h3><span><strong>The other Settings frame is missing the hint row</strong></span></h3>
+        <dl><dt>Needs</dt><dd>Thomas – one row added to a variant. The label half is done.</dd></dl>
         <p class="from">Someday – not committed</p>
       </article>
     </section>
@@ -597,10 +601,10 @@
       <h3>
         
         
-        <span><strong>The other Settings frame still has the old switch row</strong></span>
+        <span><strong>The other Settings frame is missing the hint row</strong></span>
       </h3>
-      <dl><dt>Why</dt><dd>Thomas rewrote the row in <code>default 3</code> (684:3866 – the empty-People variant) to "Screen stays on" / "Only while you are on a recipe". <code>default 4</code> (709:7582 – the three-People variant) still reads "Screen on while cooking" with no hint. The app follows the rewritten one.</dd><dt>Watch</dt><dd>this is the shape of the 2026-08-16 header-colour bug, where one screen's frame was read and four disagreed. Two frames of the SAME screen disagreeing is the same trap one level down.</dd><dt>Size</dt><dd>one row, copied across.</dd></dl>
-      <details><summary>Full note</summary><p>(Found 2026-08-17 while implementing the rewrite.)</p></details>
+      <dl><dt>Needs</dt><dd>Thomas – one row added to a variant. The label half is done.</dd></dl>
+      <details><summary>Full note</summary><p>✅ <strong>Label fixed 2026-08-20:</strong> <code>709:7582</code> (<code>default 4</code>, the three-People variant) read "Screen on while cooking"; it now reads **"Screen stays on"**, matching <code>684:3866</code> and the app. Nothing in the file carries the old wording any more - checked document-wide, zero matches. ⬜ <strong>Still differs:</strong> <code>684:3866</code> has TWO text layers, the label <strong>and</strong> the hint <em>"Only while you are on a recipe"</em>. <code>709:7582</code> has only the label. **Adding a row is a structural change to the design, not a copy-paste**, so it was left for Thomas rather than invented. ⚠️ **Thomas believed this was already updated (2026-08-20) and it was not** - the frame still held the old text when checked. Worth the thirty seconds it took to look: the item would otherwise have been ticked with the disagreement still in the file, which is precisely the failure it was raised to prevent. Watch: this is the shape of the 2026-08-16 header-colour bug, where one screen's frame was read and four disagreed. Two frames of the SAME screen disagreeing is the same trap one level down.</p></details>
     </article>
     <article class="item">
       <h3>
