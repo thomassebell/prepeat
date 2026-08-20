@@ -5031,11 +5031,19 @@ Chores with a trigger rather than a finish line. These never get ticked off for 
            still arrives – that is the whole reviewer path end to end, and only
            he has the password. Then check the App Review Information in App
            Store Connect still matches.
-      ⚠️ **THE REMAINING FIX IS STRUCTURAL, NOT "REMEMBER HARDER".** This decays
-           on a timer and shows nothing until a reviewer sees it, and it went
-           unrun before 1.1.0 despite being written down. Worth wiring a check
-           into `asc-submit-for-review.mjs`'s pre-flight so an empty current week
-           blocks a submission the way an unattached build already does.
+      ✅ **THE STRUCTURAL FIX IS IN (2026-08-20).** `asc-submit-for-review.mjs`
+           now checks the demo plan in its pre-flight and **BLOCKS** if fewer
+           than the next **4 weeks** are seeded, printing the exact command to
+           fix it. It checks weeks AHEAD, not just the current one, because the
+           reviewer arrives when the queue does. A failure to check at all also
+           blocks - "could not verify" must not read as "fine". `--no-demo-check`
+           is the deliberate override, named so that skipping is something
+           someone types rather than a silent default.
+           All three paths tested: 4/4 passes, 0/4 blocks with the remediation
+           line, and an unreachable database blocks with the real connection
+           error rather than a masked one.
+           **The checklist already existed and was still missed. A check that
+           runs is worth more than an instruction that is read.**
       Do not: use the Postgres test-OTP trigger. It writes into Supabase's
            internal auth schema, is a permanent known-code backdoor, and rots
            silently. Fallback only if Apple pushes back, never the opening move.

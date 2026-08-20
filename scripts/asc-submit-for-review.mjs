@@ -3,6 +3,7 @@
 // Usage (config comes from scripts/eas-env.sh):
 //   node scripts/asc-submit-for-review.mjs                       # pre-flight only, changes NOTHING
 //   node scripts/asc-submit-for-review.mjs --submit --version 1.1.0
+//   ...add --no-demo-check only if the demo plan was verified another way
 //
 // ⚠️ DEFAULT IS A DRY RUN, AND DELIBERATELY SO. Submitting is not reversible in
 // the ordinary sense: it enters a review queue that has run to 13 days on this
@@ -12,6 +13,11 @@
 // ⚠️ SUBMITTING IS THOMAS'S DECISION, EVERY TIME. This script exists so the
 // mechanics are not his problem, not so the choice stops being his.
 //
+// ⚠️ THE PRE-FLIGHT BLOCKS ON THE REVIEWER'S DEMO PLAN, not just on the version
+// record. That check is here rather than in a checklist because the checklist
+// already existed and was still missed before 1.1.0 - the demo plan had been
+// empty for a fortnight and was found by chance the day after submitting.
+//
 // HOW APPLE'S CURRENT FLOW WORKS, because it is three calls and not one:
 //   1. create a reviewSubmission for the app (a basket)
 //   2. add the appStoreVersion to it as a reviewSubmissionItem
@@ -19,8 +25,10 @@
 // A basket created and never sent is a real state that blocks later attempts
 // with "already has a submission in progress", so this script reuses an
 // existing unsent basket rather than creating a second one.
+import { execFileSync } from 'node:child_process';
 import { createSign } from 'node:crypto';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
+import { homedir } from 'node:os';
 
 const KEY_PATH = process.env.EXPO_ASC_API_KEY_PATH;
 const KEY_ID = process.env.EXPO_ASC_KEY_ID;
@@ -48,6 +56,74 @@ const arg = (name) => {
 };
 const doSubmit = process.argv.includes('--submit');
 const wantVersion = arg('--version');
+// Deliberate escape hatch. Named so that using it is a choice someone has to
+// type, not a default that quietly disables the check.
+const skipDemoCheck = process.argv.includes('--no-demo-check');
+
+// The reviewer's demo account, and how far ahead its plan must be seeded.
+const DEMO_EMAIL = 'appreview@sebell.dk';
+const DEMO_WEEKS_REQUIRED = 4;
+const PSQL_CANDIDATES = ['/opt/homebrew/opt/libpq/bin/psql', 'psql'];
+
+/** The production connection string, without printing it anywhere. */
+function productionDbUrl() {
+  if (process.env.SUPABASE_DB_URL) return process.env.SUPABASE_DB_URL;
+  const file = `${homedir()}/.prepeat-backup.env`;
+  if (!existsSync(file)) return null;
+  const match = readFileSync(file, 'utf8').match(/^SUPABASE_DB_URL=(.*)$/m);
+  return match ? match[1].trim().replace(/^["']|["']$/g, '') : null;
+}
+
+/**
+ * How many of the next DEMO_WEEKS_REQUIRED weeks have meals on the reviewer's
+ * plan.
+ *
+ * ⚠️ WHY THIS BLOCKS A SUBMISSION. The demo plan is keyed by week and decays on
+ * a timer, showing nothing wrong until a reviewer opens an empty app - "the app
+ * looking broken at exactly the moment it is being judged". It was a written
+ * standing task and it was still missed before 1.1.0, found only by chance the
+ * next day. A check that runs is worth more than an instruction that is read.
+ *
+ * ⚠️ AND IT CHECKS WEEKS AHEAD, NOT JUST THIS ONE. The reviewer opens the app
+ * when the QUEUE reaches them, not when you submit - v1.0 waited thirteen days.
+ * Seeding only the current week leaves them on an empty plan a fortnight later.
+ */
+function demoWeeksSeeded() {
+  const url = productionDbUrl();
+  if (!url) return { ok: false, reason: 'no production database URL (is ~/.prepeat-backup.env there?)' };
+  const sql = `
+    with weeks as (
+      select (date_trunc('week', now())::date + (n * 7)) as week_start
+      from generate_series(0, ${DEMO_WEEKS_REQUIRED - 1}) as n
+    ), h as (
+      select hm.household_id from public.household_members hm
+      join auth.users u on u.id = hm.user_id where u.email = '${DEMO_EMAIL}'
+    )
+    select count(*) from weeks w where exists (
+      select 1 from public.meal_plans mp
+      join public.meal_plan_entries e on e.meal_plan_id = mp.id and e.deleted_at is null
+      where mp.household_id in (select * from h)
+        and mp.deleted_at is null and mp.week_start_date = w.week_start);`;
+  for (const psql of PSQL_CANDIDATES) {
+    try {
+      const out = execFileSync(psql, [url, '-qtA', '-c', sql], {
+        encoding: 'utf8',
+        stdio: ['ignore', 'pipe', 'pipe'],
+      });
+      return { ok: true, seeded: Number(out.trim()) };
+    } catch (error) {
+      // ⚠️ Only fall through when the BINARY is missing. Falling through on any
+      // error meant a real connection failure was reported as "psql ENOENT"
+      // from the next candidate - the true reason masked by the fallback.
+      const missingBinary = error.code === 'ENOENT';
+      if (!missingBinary || psql === PSQL_CANDIDATES.at(-1)) {
+        const detail = (error.stderr || error.message || '').toString().trim().split('\n')[0];
+        return { ok: false, reason: detail || String(error.code ?? 'unknown error') };
+      }
+    }
+  }
+  return { ok: false, reason: 'psql not found' };
+}
 
 const b64url = (input) =>
   Buffer.from(typeof input === 'string' ? input : JSON.stringify(input))
@@ -142,6 +218,33 @@ for (const l of locs.data) {
   const text = (l.attributes.whatsNew ?? '').trim();
   console.log(`    whatsNew[${l.attributes.locale}]  ${text ? `${text.length} chars` : 'EMPTY'}`);
   if (!text) problems.push(`whatsNew is empty for ${l.attributes.locale}`);
+}
+
+// ⚠️ THE REVIEWER'S DEMO PLAN. Checked here, and it BLOCKS, because being
+// written down was not enough: it was a standing pre-submission task and it was
+// still missed before 1.1.0.
+if (skipDemoCheck) {
+  console.log('    demo plan   SKIPPED (--no-demo-check)');
+} else {
+  const demo = demoWeeksSeeded();
+  if (!demo.ok) {
+    console.log(`    demo plan   COULD NOT CHECK – ${demo.reason}`);
+    problems.push(
+      `could not check the reviewer's demo plan (${demo.reason}). ` +
+        'Fix it, or pass --no-demo-check if you have verified it another way',
+    );
+  } else {
+    console.log(
+      `    demo plan   ${demo.seeded}/${DEMO_WEEKS_REQUIRED} upcoming weeks seeded`,
+    );
+    if (demo.seeded < DEMO_WEEKS_REQUIRED) {
+      problems.push(
+        `the reviewer's demo plan covers only ${demo.seeded} of the next ` +
+          `${DEMO_WEEKS_REQUIRED} weeks - a reviewer reaching it later opens an ` +
+          'empty app. Run: ./scripts/seed-demo-week.sh --weeks 6',
+      );
+    }
+  }
 }
 
 // An unsent basket from an earlier attempt blocks a new one with an unhelpful
