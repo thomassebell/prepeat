@@ -2770,23 +2770,26 @@ different nouns between them.
       **DONE 2026-08-10.** The create option now reads *"Start fresh.
       Invite people whenever you like, **or keep it to yourself**."* Reversibility
       is still unstated.
-- [ ] **Say what happens if both adults start their own kitchen**
-      Why: five readers independently feared ending up with two half-empty
-           kitchens, and nothing says whether that is possible, preventable or
-           recoverable.
-      Done so far: "Join an existing kitchen" is now equally weighted, so the
-           route exists.
-      Left: nothing says *"if someone at home already made one, join theirs."*
-      ⚠️ Do not reuse: the *"Is someone already using Prep+Eat?"* wording was
-           tried and dropped – Thomas: *"The yes and no is not the right way to
-           go."* This needs a different device.
-      (Synthetic User Panel: comprehension, high.)
-      **⚠️ PARTLY DONE 2026-08-10.** *"Join an existing kitchen"* is now equally
-      weighted with create, so the route exists. **But nothing says "if someone at
-      home already made one, join theirs instead."** The wording that addressed
-      this head-on (*"Is someone already using Prep+Eat?"*) was tried and dropped
-      2026-08-10 – Thomas: *"The yes and no is not the right way to go."* If this
-      matters, it needs a different device, not that one back.
+- [x] **Say what happens if both adults start their own kitchen – CLOSED (Thomas, 2026-08-20)**
+      **What shipped, and is enough:** *"Join an existing kitchen"* is equally
+           weighted with create (2026-08-10), so the route out is visible to
+           anyone who looks for it.
+      **What is being dropped:** the extra nudge – *"if someone at home already
+           made one, join theirs instead."* The wording that addressed it head
+           on (*"Is someone already using Prep+Eat?"*) was tried and rejected on
+           2026-08-10 – Thomas: *"The yes and no is not the right way to go."*
+           A replacement device was never found, and Thomas has now decided the
+           equal weighting carries it.
+      **The concern, kept rather than deleted, so reopening needs no
+           archaeology:** five panel readers independently feared ending up with
+           two half-empty kitchens.
+      ⚠️ **AND THE REASON THAT FEAR IS WEAKER EVIDENCE THAN IT LOOKS**, which is
+           the standing caveat on this whole section: those readers were
+           personas READING A DESCRIPTION of the screens, not people using the
+           app. Thomas, 2026-08-10, on this exact class of finding:
+           *"overtesting/overthinking"*. **Reopen on a real household hitting
+           it, not on a sixth persona predicting it.**
+
 - [x] **Stop asserting a permanent multi-person family.** Steps 1 to 7 assert one
       five to seven times, which is factually untrue of three of the four
       households reviewed. **Tier A** – Danish population statistics, not
