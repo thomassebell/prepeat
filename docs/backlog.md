@@ -4643,7 +4643,31 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
       Watch, still true: this was the shape of the 2026-08-16 header-colour bug,
            where one screen's frame was read and four disagreed.
 
-- [ ] **⚠️ Put a height cap on the ELEVEN sheets that still lack one**
+- [ ] **⚠️ The add-meal sheet is still uncapped, and needs its own layout work**
+      ✅ **The other ten were fixed 2026-08-20 by changing the DEFAULT**, not the
+           call sites: every sheet is now capped at 90% and scrolls past it
+           unless it opts out. Both recipe-screen dialogs (including Stop
+           sharing), all six household sheets, move-day, servings and
+           import-recipe. Walked on the device by Thomas.
+      ⬜ **`add-meal-sheet` opts out** via `bodyScrollsItself`, so it has NO cap:
+           the shell adds neither a scroller nor a ceiling. Capping it needs its
+           OWN layout changed so the LIST shrinks and the footer holds. Today
+           its body is a `flex-1` FlatList, which absorbs any slack it is given.
+      ⚠️ **IT BROKE TWICE IN TWENTY MINUTES GETTING THERE, exactly as this item
+           predicted** (*"nine screens changed without walking any is how a fix
+           becomes a bug round"*):
+      1. **Wrapped in a ScrollView** → the `flex-1` FlatList lost its bounded
+           height, leaving a dead gap and pushing "Add to plan" off the bottom.
+           Also a nested VirtualizedList, which React Native warns against.
+      2. **Wrapper removed but the cap kept** → worse. An unbounded card let the
+           list size to its content; a CAPPED card gave it slack to absorb, so
+           it grew and pushed the servings, day picker and CTA past the bottom.
+           In Swap mode - no tabs, more slack - **the CTA was unreachable.**
+      Both were caught within minutes because Thomas walked the sheets. Neither
+           would have been visible from the code.
+      Size: its own sitting, on that one screen, with a device.
+
+- [x] **⚠️ Put a height cap on the sheets that lack one – DONE for ten of eleven, 2026-08-20**
       **Re-counted 2026-08-20** (it said nine): capped are `add-to-plan`,
            `ingredient`, `step` and `edit-item`. Uncapped are **both sheets in
            `recipes/[id].tsx`**, all six household sheets (delete/edit household,

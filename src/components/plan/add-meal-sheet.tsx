@@ -97,6 +97,9 @@ export function AddMealSheet({
       }
       subtitle={mode === "swap" ? t("plan.add.subtitleSwap") : undefined}
       onClose={onClose}
+      // The body is a FlatList that flexes; it must not be wrapped in another
+      // scroller or the list stops sizing itself and the CTA leaves the screen.
+      bodyScrollsItself
     >
       {visible && (
         <>
