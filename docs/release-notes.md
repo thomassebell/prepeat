@@ -58,9 +58,27 @@ Two more rules this file exists to keep straight:
 
 ## Accumulating toward the next version
 
-Nothing yet – 1.1.0 went to review on 2026-08-19 and this section starts again
-from the next change. Anything added here is on the dev build only: not on
-TestFlight, not in review, and it needs a build to reach anyone.
+🔒 **1.1.0 IS LOCKED (Thomas, 2026-08-20): *"everything we do going forward is
+for a newer version."*** It is with Apple and nothing more goes into it.
+Anything from here is on the dev build only: not on TestFlight, not in review,
+and it needs a build to reach anyone.
+
+**Build 25 is commit `d7f6f6d`.** Checked 2026-08-20: nothing under `src/`,
+`app.json`, `app.config.js` or `package.json` has changed since, so `main` and
+the submitted binary are still the same app. Everything after it is docs and
+scripts.
+
+⚠️ **THAT STOPS BEING TRUE THE MOMENT ANY APP CODE LANDS, and the consequence is
+easy to miss: if Apple REJECTS 1.1.0 and it needs a build 26, that build must
+come from `d7f6f6d`, not from `main`.** Building main would quietly ship
+whatever the next version has accumulated, under a version string that was
+reviewed without it. `build-iphone.sh` and EAS both build the WORKING TREE, so
+neither will warn.
+
+**Which number this becomes** follows the rule below, not a guess: a fix makes
+it 1.1.1, a feature makes it 1.2.0, and it never goes back down within a
+release. Known candidates: the sheet height caps (fix), join-by-link (feature,
+[spec](join-by-link.md)), the Danish proof-read (fix).
 
 ## 1.1.0 – SUBMITTED FOR REVIEW 2026-08-19 (build 25)
 
