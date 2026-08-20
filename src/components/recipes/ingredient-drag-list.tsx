@@ -71,14 +71,24 @@ const EDGE_SPEED = 14;
  * accessibility actions. The sheet remains on the recipe DETAIL screen and for
  * instructions, which are untouched.
  *
- * A TAP still opens the edit sheet, so the drag on a ROW has to start from a
- * hold. There is no way around that and it is not a preference: these rows live
- * inside the page's scroll view, so a finger moving down a row is asking for
- * one of two things and only a short press-and-hold separates them. 200ms,
- * matching the Shopping screen's category drag – the same interaction, and the
- * only one Thomas has already approved. A SECTION is dragged by its handle,
- * which is unambiguous, but arms the same way so that the screen only teaches
- * one gesture.
+ * **EVERY ITEM HAS A GRIP, ROWS INCLUDED** (Thomas, 2026-08-20: *"in one case
+ * the drag handle is telling users this is draggable – but also communicating
+ * that ingredient is not"*). A grip on the headings alone did not just fail to
+ * advertise the rows, it argued against them.
+ *
+ * The grip is also what removes the hold. A tap and a drag begin identically on
+ * a row, so something had to separate them, and that something was a 200ms
+ * wait; a grip is unambiguous, so a drag from one starts on the first few
+ * pixels of movement instead. The hold survives on the body of a row and on a
+ * heading's name as an unadvertised shortcut – it costs nothing and it is what
+ * someone who has not noticed the grip will try. Tapping a row still opens the
+ * edit sheet, tapping a heading still renames it, swiping still deletes.
+ *
+ * The grips line up in one column because the heading carries a right padding
+ * that the rows get from their card - which is the reorder sheet's own rule
+ * (Figma 508:13966), and the sheet is also where the precedent for a grip on
+ * every row comes from. It is Thomas's pattern moved onto the real list rather
+ * than a new one invented for it.
  *
  * THE GEOMETRY IS NOT IN HERE. It is in `src/lib/ingredient-drag-layout.ts`,
  * with `scripts/check-ingredient-drag.mjs` running the real functions – 35
@@ -246,7 +256,15 @@ export function IngredientDragList({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dropCount]);
 
+  // Two gestures can reach the same block - its grip and the hold on its body -
+  // and a finger that rests on a grip arms both. They agree about everything,
+  // so the first one wins and the second is a no-op; without this the drop
+  // would be applied twice.
+  const inFlight = useRef(false);
+
   const beginDrag = (from: number, size: number, top: number) => {
+    if (inFlight.current) return;
+    inFlight.current = true;
     const heights = rows.map((row, index) =>
       row.isSection ? (headingHeights.current[index] ?? HEADING_FALLBACK) : 0,
     );
@@ -259,6 +277,8 @@ export function IngredientDragList({
   };
 
   const finishDrag = (from: number, size: number, chosen: number) => {
+    if (!inFlight.current) return;
+    inFlight.current = false;
     edgeScroll.setActive(false);
     onDragChange(false);
     const to = targets.current[chosen];
@@ -274,6 +294,8 @@ export function IngredientDragList({
   };
 
   const cancelDrag = () => {
+    if (!inFlight.current) return;
+    inFlight.current = false;
     edgeScroll.setActive(false);
     onDragChange(false);
     clearDrag();
@@ -396,6 +418,92 @@ export function IngredientDragList({
   );
 }
 
+/**
+ * The drag itself, in the one place both ways of starting it can share.
+ *
+ * `immediate` is the difference between a grip and everything else: a grip
+ * means only one thing, so a few pixels of vertical movement are enough to
+ * start; a row or a heading name also means "tap me", so there a hold has to
+ * arm it first.
+ */
+function useBlockDrag({
+  index,
+  size,
+  immediate,
+  dragFrom,
+  slot,
+  armDrag,
+  syncDrag,
+  setFinger,
+  settleDrag,
+  onBeginDrag,
+  onFinishDrag,
+  onCancelDrag,
+}: {
+  index: number;
+  size: number;
+  immediate: boolean;
+  dragFrom: SharedValue<number>;
+  slot: SharedValue<number>;
+  armDrag: (from: number, size: number) => void;
+  syncDrag: (translation: number) => void;
+  setFinger: (y: number) => void;
+  settleDrag: (done: () => void) => void;
+  onBeginDrag: () => void;
+  onFinishDrag: (from: number, size: number, chosen: number) => void;
+  onCancelDrag: () => void;
+}) {
+  const pan = Gesture.Pan()
+    .onStart((event) => {
+      armDrag(index, size);
+      setFinger(event.absoluteY);
+      runOnJS(onBeginDrag)();
+    })
+    .onUpdate((event) => {
+      setFinger(event.absoluteY);
+      syncDrag(event.translationY);
+    })
+    .onEnd(() => {
+      const chosen = slot.value;
+      // Lands in the gap the list has opened, rather than snapping there once
+      // the new order arrives.
+      settleDrag(() => {
+        "worklet";
+        runOnJS(onFinishDrag)(index, size, chosen);
+      });
+    })
+    .onFinalize((_event, success) => {
+      if (!success && dragFrom.value === index) runOnJS(onCancelDrag)();
+    });
+  return immediate
+    // Vertical movement claims the gesture before the page can read it as a
+    // scroll; the default threshold is generous enough that the page wins.
+    ? pan.activeOffsetY([-4, 4])
+    : pan.activateAfterLongPress(LIFT_MS);
+}
+
+/** The grip. Deliberately invisible to VoiceOver: dragging is not a gesture it
+ *  can perform, and the accessible way to reorder is the Move up / Move down
+ *  action on the row or heading itself. One focusable thing per item. */
+function DragGrip({ gesture }: { gesture: ReturnType<typeof useBlockDrag> }) {
+  return (
+    <GestureDetector gesture={gesture}>
+      <View
+        hitSlop={12}
+        importantForAccessibility="no-hide-descendants"
+        accessibilityElementsHidden
+        className="items-center justify-center"
+      >
+        <MaterialIcons
+          name="drag-handle"
+          size={24}
+          color={ds.colors.icon.subtle}
+        />
+      </View>
+    </GestureDetector>
+  );
+}
+
 function SectionHeading({
   index,
   groupIndex,
@@ -439,27 +547,21 @@ function SectionHeading({
   moveActions: { name: string; label: string }[];
   onMoveAction: (event: AccessibilityActionEvent) => void;
 }) {
-  const pan = Gesture.Pan()
-    .activateAfterLongPress(LIFT_MS)
-    .onStart((event) => {
-      armDrag(index, size);
-      setFinger(event.absoluteY);
-      runOnJS(onBeginDrag)(index, size);
-    })
-    .onUpdate((event) => {
-      setFinger(event.absoluteY);
-      syncDrag(event.translationY);
-    })
-    .onEnd(() => {
-      const chosen = slot.value;
-      settleDrag(() => {
-        "worklet";
-        runOnJS(onFinishDrag)(index, size, chosen);
-      });
-    })
-    .onFinalize((_event, success) => {
-      if (!success && dragFrom.value === index) runOnJS(onCancelDrag)();
-    });
+  const drag = {
+    index,
+    size,
+    dragFrom,
+    slot,
+    armDrag,
+    syncDrag,
+    setFinger,
+    settleDrag,
+    onBeginDrag: () => onBeginDrag(index, size),
+    onFinishDrag,
+    onCancelDrag,
+  };
+  const gripPan = useBlockDrag({ ...drag, immediate: true });
+  const namePan = useBlockDrag({ ...drag, immediate: false });
 
   const style = useAnimatedStyle(() => {
     const inFlight =
@@ -486,7 +588,11 @@ function SectionHeading({
   return (
     <Animated.View
       style={style}
-      className="w-full flex-row items-center gap-comp-small"
+      // The right padding is what puts this grip in the same column as the row
+      // grips below, which get theirs from the card's own padding - the reorder
+      // sheet's rule (Figma 508:13966), and the reason the grips read as one
+      // column rather than two stray icons.
+      className="w-full flex-row items-center gap-comp-small pr-layout-small"
       onLayout={(event: LayoutChangeEvent) =>
         onLayoutHeading(
           event.nativeEvent.layout.y,
@@ -495,35 +601,23 @@ function SectionHeading({
       }
     >
       {/* Tapping the NAME renames the section – the one sheet a heading still
-          opens. The handle beside it moves it. */}
-      <Pressable
-        className="flex-1"
-        onPress={() => onEditSection(index)}
-        accessibilityRole="button"
-        accessibilityLabel={t("recipes.form.editSection", { name })}
-        accessibilityActions={draggable ? moveActions : undefined}
-        onAccessibilityAction={onMoveAction}
-      >
-        <Text className="font-header text-display-6 font-emphasized text-text-default">
-          {name}
-        </Text>
-      </Pressable>
-      {draggable && (
-        <GestureDetector gesture={pan}>
-          <View
-            accessibilityLabel={t("recipes.detail.reorderIngredients")}
-            accessibilityHint={t("recipes.form.dragRow")}
-            hitSlop={12}
-            className="items-center justify-center"
-          >
-            <MaterialIcons
-              name="drag-handle"
-              size={24}
-              color={ds.colors.icon.subtle}
-            />
-          </View>
-        </GestureDetector>
-      )}
+          opens. Holding it, or using the grip, moves it. */}
+      <GestureDetector gesture={namePan}>
+        <Pressable
+          className="flex-1"
+          onPress={() => onEditSection(index)}
+          accessibilityRole="button"
+          accessibilityLabel={t("recipes.form.editSection", { name })}
+          accessibilityHint={t("recipes.form.dragRow")}
+          accessibilityActions={draggable ? moveActions : undefined}
+          onAccessibilityAction={onMoveAction}
+        >
+          <Text className="font-header text-display-6 font-emphasized text-text-default">
+            {name}
+          </Text>
+        </Pressable>
+      </GestureDetector>
+      {draggable && <DragGrip gesture={gripPan} />}
     </Animated.View>
   );
 }
@@ -686,29 +780,21 @@ function IngredientRow({
   moveActions: { name: string; label: string }[];
   onMoveAction: (event: AccessibilityActionEvent) => void;
 }) {
-  const pan = Gesture.Pan()
-    .activateAfterLongPress(LIFT_MS)
-    .onStart((event) => {
-      armDrag(index, 1);
-      setFinger(event.absoluteY);
-      runOnJS(onBeginDrag)(index, position);
-    })
-    .onUpdate((event) => {
-      setFinger(event.absoluteY);
-      syncDrag(event.translationY);
-    })
-    .onEnd(() => {
-      const chosen = slot.value;
-      // Lands in the gap the list has opened, rather than snapping there once
-      // the new order arrives.
-      settleDrag(() => {
-        "worklet";
-        runOnJS(onFinishDrag)(index, 1, chosen);
-      });
-    })
-    .onFinalize((_event, success) => {
-      if (!success && dragFrom.value === index) runOnJS(onCancelDrag)();
-    });
+  const drag = {
+    index,
+    size: 1,
+    dragFrom,
+    slot,
+    armDrag,
+    syncDrag,
+    setFinger,
+    settleDrag,
+    onBeginDrag: () => onBeginDrag(index, position),
+    onFinishDrag,
+    onCancelDrag,
+  };
+  const gripPan = useBlockDrag({ ...drag, immediate: true });
+  const bodyPan = useBlockDrag({ ...drag, immediate: false });
 
   const style = useAnimatedStyle(() => {
     if (dragFrom.value === index && dragSize.value === 1) {
@@ -736,12 +822,12 @@ function IngredientRow({
   return (
     <Animated.View style={style} className="w-full">
       <SwipeActions label={row.name} onEdit={onEdit} onDelete={onDelete}>
-        <GestureDetector gesture={pan}>
-          {/* 57 tall, not 56: the divider is inside the row so that it travels
-              with it, and the card is a pixel shorter than its rows so the last
-              one is clipped. Nothing has to know which row is currently last,
-              which changes while a row is in flight. */}
-          <View className="h-[57px] w-full flex-row items-center gap-layout-small border-b border-border-subtle bg-surface-neutral-white px-layout-small">
+        {/* 57 tall, not 56: the divider is inside the row so that it travels
+            with it, and the card is a pixel shorter than its rows so the last
+            one is clipped. Nothing has to know which row is currently last,
+            which changes while a row is in flight. */}
+        <View className="h-[57px] w-full flex-row items-center gap-comp-small border-b border-border-subtle bg-surface-neutral-white px-layout-small">
+          <GestureDetector gesture={bodyPan}>
             <Pressable
               className="min-w-0 flex-1 flex-row items-center gap-layout-small"
               onPress={onEdit}
@@ -760,8 +846,9 @@ function IngredientRow({
                 </Text>
               )}
             </Pressable>
-          </View>
-        </GestureDetector>
+          </GestureDetector>
+          <DragGrip gesture={gripPan} />
+        </View>
       </SwipeActions>
     </Animated.View>
   );
@@ -810,7 +897,7 @@ function FloatingBlock({
       className="w-full gap-layout-small"
     >
       {heading !== null && (
-        <View className="w-full flex-row items-center gap-comp-small">
+        <View className="w-full flex-row items-center gap-comp-small pr-layout-small">
           <Text className="flex-1 font-header text-display-6 font-emphasized text-text-default">
             {heading.name}
           </Text>
@@ -829,16 +916,25 @@ function FloatingBlock({
           {carried.map((row, position) => (
             <View
               key={position}
-              className="h-[57px] w-full flex-row items-center gap-layout-small border-b border-border-subtle px-layout-small"
+              className="h-[57px] w-full flex-row items-center gap-comp-small border-b border-border-subtle px-layout-small"
             >
-              <Text className="min-w-0 flex-1 font-paragraph text-paragraph font-default text-text-default">
-                {row.name}
-              </Text>
-              {(row.quantityText?.length ?? 0) > 0 && (
-                <Text className="font-paragraph text-paragraph font-default text-text-subtle">
-                  {row.quantityText}
+              <View className="min-w-0 flex-1 flex-row items-center gap-layout-small">
+                <Text className="min-w-0 flex-1 font-paragraph text-paragraph font-default text-text-default">
+                  {row.name}
                 </Text>
-              )}
+                {(row.quantityText?.length ?? 0) > 0 && (
+                  <Text className="font-paragraph text-paragraph font-default text-text-subtle">
+                    {row.quantityText}
+                  </Text>
+                )}
+              </View>
+              {/* The copy carries its grip too, or the row would appear to lose
+                  it the moment it left the list. */}
+              <MaterialIcons
+                name="drag-handle"
+                size={24}
+                color={ds.colors.icon.subtle}
+              />
             </View>
           ))}
         </View>

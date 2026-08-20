@@ -730,6 +730,26 @@ Committed work for the first update after launch. Panel findings default here un
       (where a row tap already means ticking an ingredient off) and for
       instructions here, which have not had the same treatment yet.
 
+      **A GRIP ON EVERY ITEM, ROWS INCLUDED** (Thomas, same day, and it is his
+      observation rather than a request: *"in one case the drag handle is
+      telling users this is draggable – but also communicating that ingredient
+      is not"*). A grip on the headings alone did not merely fail to advertise
+      the rows, it argued against them.
+
+      The grip is also what removed the hold. A tap and a drag begin identically
+      on a row, so something had to separate them and that something was a 200ms
+      wait; a grip means one thing, so a drag from one starts on the first few
+      pixels of movement. The hold survives on a row's body and a heading's name
+      as an unadvertised shortcut. His second question – *"how do the users know
+      that edit is a tap"* – needs no answer on the screen: a row in a list is
+      assumed tappable, and it is the invisible gesture that needs advertising.
+      Not an invented pattern either: the reorder sheet already drew a grip on
+      every row AND every heading, aligned to one right edge (Figma 508:13966),
+      which is where the heading's new right padding comes from.
+      Note: the cost, said out loud – a row is now name · quantity · grip, three
+           things where the frame draws two. Worth a look on a long ingredient
+           name on the narrowest phone.
+
       **Two things had to be built BECAUSE the sheet went, and neither is
       optional:**
       1. **The drag scrolls the page** when the finger reaches the top or bottom
