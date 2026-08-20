@@ -467,27 +467,18 @@ export default function AddRecipeScreen() {
                 </View>
               )}
               {steps.length > 0 && (
-                <>
-                  <InstructionDragList
-                    steps={steps}
-                    scrollRef={scrollRef}
-                    onEditStep={(index) => setStepSheet({ index })}
-                    onDeleteStep={(index) =>
-                      setSteps((current) => current.filter((_, i) => i !== index))
-                    }
-                    onDragChange={setDragging}
-                    onReorder={(from, size, target) =>
-                      setSteps((current) => moveBlock(current, from, size, target))
-                    }
-                  />
-                  {/* Close off the list with a line before the add button. The
-                      rows clip their own last divider, so this one is drawn
-                      here rather than inherited. */}
-                  <View
-                    style={{ marginHorizontal: -16 }}
-                    className="h-px bg-border-subtle"
-                  />
-                </>
+                <InstructionDragList
+                  steps={steps}
+                  scrollRef={scrollRef}
+                  onEditStep={(index) => setStepSheet({ index })}
+                  onDeleteStep={(index) =>
+                    setSteps((current) => current.filter((_, i) => i !== index))
+                  }
+                  onDragChange={setDragging}
+                  onReorder={(from, size, target) =>
+                    setSteps((current) => moveBlock(current, from, size, target))
+                  }
+                />
               )}
               <OutlineButton
                 icon="add"

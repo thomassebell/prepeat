@@ -57,28 +57,27 @@ export function InstructionDragList({
   const drag = useInPlaceDrag({ items, scrollRef, onReorder, onDragChange });
   const rowTops = useRef<number[]>([]);
 
-  const { dragFrom, plans, slot } = drag;
-  const cardStyle = useAnimatedStyle(() => {
-    const plan = dragFrom.value < 0 ? undefined : plans.value[slot.value];
-    // No height at all when nothing is moving: the rows decide it, which is the
-    // only honest answer when every one of them is a different height. An
-    // explicit height only appears once a plan says what it should become.
-    if (plan === undefined) return {};
-    return {
-      height: withTiming(plan.cardHeights[0] ?? 0, { duration: MOVE_MS }),
-    };
-  });
-
   return (
     <View className="w-full">
-      {/* Pulled out to the box's edges, as before – the rows are full-bleed
-          inside a padded card. */}
-      <Animated.View
-        style={[{ marginHorizontal: -16, marginTop: -16 }, cardStyle]}
+      {/* ⚠️ NO `w-full` ON THIS, and it is not an omission (Thomas, 2026-08-20:
+          *"drag handles is not aligned with ingredient drag handles"*). The
+          rows are pulled out to the box's edges by a negative margin, but
+          `w-full` is 100% of the box's PADDED content box - so the rows kept
+          that width, slid 16 left, and ended 32 short on the right. The grips
+          and every divider sat 32px in from where the ingredients' do. Left to
+          stretch, they reach both edges.
+          ⚠️ AND NO ANIMATED HEIGHT EITHER. There is one card here and rows
+          only ever swap places inside it, so its height never changes - and an
+          animated style that stops returning a height does not clear the last
+          one it set. That stale height is what swallowed a newly added
+          instruction until the screen was rebuilt (*"when I added a new
+          instruction they disappeared, but came back when saved"*). */}
+      <View
+        style={{ marginHorizontal: -16, marginTop: -16 }}
         // The rows are full-bleed, so THEY round the box's top corners and
         // clip themselves to them - the box no longer does it, because a box
         // that clips its children also clips the step in the air.
-        className="w-full overflow-hidden rounded-t-large"
+        className="overflow-hidden rounded-t-large"
       >
         {steps.map((step, index) => (
           <InstructionRow
@@ -97,7 +96,7 @@ export function InstructionDragList({
             }
           />
         ))}
-      </Animated.View>
+      </View>
 
       {drag.lifted != null && (
         <FloatingStep
@@ -178,9 +177,10 @@ function InstructionRow({
         onEdit={onEdit}
         onDelete={onDelete}
       >
-        {/* The divider belongs to the row, so it travels with it – and the card
-            is a pixel shorter than its rows add up to, which clips the last
-            one. The line before the Add button below is drawn separately. */}
+        {/* The divider belongs to the row, so it travels with it. Nothing
+            clips the last one here, which is deliberate: it IS the line that
+            closes the list off before the Add button (Thomas, 2026-08-20 –
+            *"there are an extra hair line"*, when both were drawn). */}
         <View className="w-full flex-row items-start gap-comp-small border-b border-border-subtle bg-surface-neutral-white px-layout-small py-layout-small">
           <GestureDetector gesture={bodyPan}>
             <Pressable

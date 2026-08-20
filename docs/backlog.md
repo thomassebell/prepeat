@@ -739,6 +739,27 @@ Committed work for the first update after launch. Panel findings default here un
            its children also clips the step in the air the moment it passes the
            top row; the rows round and clip themselves instead.
 
+      **THREE THINGS WERE WRONG ON THE FIRST BUILD** (Thomas, 2026-08-20, with a
+      screenshot – the fastest bug report of the day, and all three were mine):
+
+      1. **The grips did not line up with the ingredients'**, and neither did
+         the dividers. `w-full` on the rows container is 100% of the box's
+         PADDED content box; the negative margin then slid that width 16 left,
+         so every row ended 32 short on the right. Left to stretch, they reach
+         both edges. ⚠️ The general form is worth keeping: **`w-full` and a
+         negative margin do not compose.** Width first, offset second.
+      2. **A newly added instruction was invisible until the recipe was saved.**
+         The card's height was animated, and **an animated style that stops
+         returning a property does not clear the last value it set** – so the
+         height from the last drag outlived it, and `overflow-hidden` ate the
+         new row. Fixed by deleting the animation outright: there is ONE card
+         here and rows only swap places inside it, so its height never changes.
+         The ingredients need it because rows cross between cards; these never
+         do.
+      3. **Two hairlines above Add instruction.** The rows' own last divider is
+         no longer clipped (see 2), so the separate closing line drawn under
+         them was a second one. The row's divider IS the closing line.
+
 - [x] **DONE 2026-08-20 – the recipe screen (non-edit) has no sorting at all
       any more**
       Source: Thomas, 2026-08-20: *"now we need to delete the sorting function
