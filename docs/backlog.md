@@ -4998,15 +4998,29 @@ Chores with a trigger rather than a finish line. These never get ticked off for 
 - [ ] **Re-seed the reviewer's demo account before every submission**
       Needs: Thomas for the mailbox check only – the seeding is Claude's and is
            now one command.
-      ✅ **Seeded 2026-08-20**: the current week (2026-08-17) has 7 meals, one
-           per day across seven different recipes, and its shopping list has 92
-           lines. Verified on production after the write. It had been empty since
-           the week of 2026-08-03, and 1.1.0 was already in the review queue.
-      **`./scripts/seed-demo-week.sh`** – production by default, `--dev` and
-           `--email` for anything else. Idempotent: if the week already has meals
-           it refuses rather than duplicating. Tested on dev before production,
-           including that `contribute_entry` fed the shopping list and linked it
-           back to the entries, so removing a meal still shrinks the list.
+      ✅ **Seeded 2026-08-20, SIX WEEKS: 2026-08-17 through 2026-09-21.** Each
+           has 7 meals, 7 distinct recipes and its own shopping list of 79-95
+           lines. Verified on production. It had been empty since the week of
+           2026-08-03 while 1.1.0 sat in the review queue.
+      ⚠️ **ONE WEEK IS NOT ENOUGH, and this is the part that is easy to get
+           wrong.** The reviewer opens the app WHEN THE QUEUE REACHES THEM, not
+           when you submit. The v1.0 review took thirteen days, so this
+           submission is most likely opened around 2026-09-01 - a week that did
+           not exist when the account was seeded that morning. Seed past the
+           queue: `--weeks 6`.
+      **`./scripts/seed-demo-week.sh --weeks 6`** – production by default,
+           `--dev` and `--email` for anything else. Idempotent per week: a week
+           that already has meals is left alone, so it can be re-run to top up.
+           Tested on dev before production, including that `contribute_entry` fed
+           the shopping list and linked it back to the entries, so removing a
+           meal still shrinks the list.
+      ⚠️ **A BUG THE SMALL TEST ACCOUNT CAUGHT, worth keeping.** Rotating the
+           recipes with `offset n limit 7` TRUNCATES instead of cycling: on a
+           4-recipe account it produced 4, 3, 2 then 1 meal. On production's 9
+           recipes it would have degraded slowly enough to look fine - and the
+           thinnest weeks would have been the LATER ones, which are exactly the
+           weeks a reviewer actually reaches. Testing on the realistic account
+           would have passed it. It now cycles with a modulo join.
       ⚠️ **THE OLD PROCEDURE WAS UNRUNNABLE.** It said to re-run
            `scratchpad/gen-demo.ts`, which lived in a scratchpad, was never in
            git, and was gone when it was needed. A procedure whose tool is
