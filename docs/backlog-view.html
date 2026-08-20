@@ -79,11 +79,11 @@
 <main>
   <header>
     <h1>Prep+Eat – open backlog</h1>
-    <p class="meta">77 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
+    <p class="meta">76 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
   </header>
   <div class="filter"><input id="q" type="search" placeholder="Filter tasks…" autocomplete="off"></div>
   <section class="waiting">
-      <h2>Waiting on you <span class="count" data-total="5">5</span></h2>
+      <h2>Waiting on you <span class="count" data-total="4">4</span></h2>
       <p class="lede">Nothing moves on these until you decide or draw something. Everything else is mine.</p>
       <article class="item">
         <h3><span><strong>The share site has no DESKTOP design, no 404 frame, and no ⋯ ruling</strong></span></h3>
@@ -96,10 +96,6 @@
       </article><article class="item">
         <h3><span><strong>⭐ Let the household teach the app that two ingredient names mean the same thing</strong></span></h3>
         <dl><dt>Needs</dt><dd>Thomas – design the "same as…" action, and settle whether an alias is one-directional.</dd></dl>
-        <p class="from">Someday – not committed</p>
-      </article><article class="item">
-        <h3><span><strong>Update the keep-awake frames to the shipped copy (supersedes the "dimes" typo)</strong></span></h3>
-        <dl><dt>Needs</dt><dd>nothing – a Figma text edit, and Thomas has approved the wording.</dd></dl>
         <p class="from">Someday – not committed</p>
       </article><article class="item">
         <h3><span><strong>Re-seed the reviewer's demo account before every submission</strong></span></h3>
@@ -554,7 +550,7 @@
     </article>
     </section>
     <section>
-      <h2>Someday – not committed <span class="count" data-total="24">24</span></h2>
+      <h2>Someday – not committed <span class="count" data-total="23">23</span></h2>
       <h4>Ideas – not yet committed</h4>
     <article class="item">
       <h3>
@@ -618,15 +614,6 @@
       </h3>
       <dl><dt>Why</dt><dd>prep text left in the name splits a shopping row – "long beans, cut into short pieces" and "long beans" are two things to buy. Same wound as the duplicate-items bug and Teach-a-synonym.</dd><dt>Why it is hard</dt><dd>the boundary between a name and a modifier is semantic. <code>beans, black</code> and <code>long beans, chopped</code> have the same shape and opposite answers.</dd></dl>
       <details><summary>Full note</summary><p>⚠️ Less risky than it sounds: the human reviews every import before it saves, so this is assistive, not autonomous. A wrong guess costs one edit – which moves the bar from "near perfect" to "usefully better". (Thomas, 2026-08-07.) His examples, one per language: - <code>½ cup long beans, cut into short pieces</code> → <strong>long beans, ½ cup</strong> - <code>æg, sammenpisket til pensling, 1</code> → <strong>æg, 1</strong> <strong>WHY IT IS A MOONSHOT AND NOT A PARSER TWEAK.</strong> The boundary between a NAME and a MODIFIER is semantic, not syntactic, and no rule finds it: - <code>long beans, cut into short pieces</code> → the tail is prep, drop it. - <code>beans, black</code> → the tail is the ingredient. Same shape, opposite answer. - <code>salt, flaky sea</code> → is "flaky sea" prep, or a different salt you would buy separately? Genuinely ambiguous, and the shopping list cares. - The Danish example puts the quantity <strong>last</strong> and the prep in the <strong>middle</strong>; today's <code>parseIngredient</code> strips only a LEADING amount, so it would not even find the <code>1</code>. - It has to work in at least two languages, and the prep vocabulary is entirely different in each (<code>chopped</code>/<code>minced</code> vs <code>hakket</code>/<code>sammenpisket</code>/<code>snittet</code>). <strong>WHY IT MATTERS MORE THAN IT LOOKS.</strong> The shopping list merges rows on <code>item_merge_key</code>, which is the normalised NAME plus unit. Prep text left in the name splits a row: "long beans, cut into short pieces" and "long beans" are two different items to buy. So this feeds straight into the open duplicate-items bug, and it is the same underlying wound as Teach-a-synonym - the shopping list cannot merge what the importer did not clean. **⚠️ THE THING THAT MAKES IT FAR LESS RISKY THAN IT SOUNDS: the human already reviews every import before it saves.** The import screen shows the parsed recipe in the editor and nothing is stored until Save is pressed. So this is ASSISTIVE extraction, not autonomous - it does not have to be right, it has to be better than leaving an instruction in the name, and a wrong guess costs one edit. That single fact moves the acceptable error rate from "near perfect" to "usefully better", which is the difference between impossible and buildable. <strong>THREE ROUTES, cheapest first:</strong> 1. <strong>Extend the rules.</strong> Split on commas, drop a tail that starts with a known prep word, and look for a trailing amount as well as a leading one. Cheap, reuses everything already built (vulgar-fraction folding, <code>UNIT_SINGULARS</code>, the Danish unit lists). Partial by nature, and needs a hand-kept prep vocabulary per language. Will get <code>beans, black</code> wrong unless the list is conservative. 2. <strong>Ask a model per ingredient line</strong>, returning <code>{name, quantity, unit}</code>. The only route that handles arbitrary phrasing in any language. Costs: an API key in the app's supply chain, a per-import cost, a network dependency on a flow that currently works offline once fetched, and non-determinism. Also sends recipe text off-device, which the privacy policy would have to cover. 3. **Hybrid - rules first, model only for the lines rules cannot parse confidently.** Most lines are simple (<code>400 g cherry tomatoes</code>) and already work; the spend and the exposure land only on the hard ones. Probably the right shape if this is ever built. <strong>RELATED, and worth reading first:</strong> the existing code debt "Recipe import leaves prep instructions in the ingredient NAME" carries a list of real failures harvested from the demo household - that list is the test set for any of this. Note also that fixing the importer does NOT repair recipes already imported: there is still no re-import action.</p></details>
-    </article>
-    <article class="item">
-      <h3>
-        
-        
-        <span><strong>Update the keep-awake frames to the shipped copy (supersedes the "dimes" typo)</strong></span>
-      </h3>
-      <dl><dt>Needs</dt><dd>nothing – a Figma text edit, and Thomas has approved the wording.</dd><dt>What</dt><dd>709:6812 and its "off" sibling read "Screen on while cooking" and "Screen dimes while cooking". The app ships <strong>"Screen stays on"</strong> and <strong>"Screen dims"</strong>, accepted by Thomas 2026-08-20.</dd></dl>
-      <details><summary>Full note</summary><p>This replaces the old "fix the dimes typo" item: the whole string is being replaced, so the misspelling goes with it. Fixing the typo alone would have left the frame disagreeing with the app in a bigger way. Why it matters at all: the file is the source of truth, so a frame that disagrees with a shipped screen on purpose is a trap for whoever reads it next.</p></details>
     </article>
     <article class="item">
       <h3>
