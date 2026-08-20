@@ -711,6 +711,45 @@ Committed work for the first update after launch. Panel findings default here un
 
 ### Known bugs (open)
 
+- [ ] **Reordering on the EDIT recipe screen left the list scrambled – fixed in
+      code 2026-08-20, not yet seen on a device**
+      Source: Thomas, 2026-08-20 – *"it's in edit recipe, when you have sections
+           and want to move an ingredient to a new section. Things become
+           weird."*
+      Wait for: the next build on his phone. Tick it there, not here.
+
+      **What he saw:** drop an ingredient into another section and the rows draw
+      in the wrong places – the dropped row painted far from where it landed,
+      the rows it passed still holding the gap they opened for it. It stayed
+      that way until the sheet was closed and reopened, and a second drag made
+      it worse.
+
+      **Cause – the 2026-08-07 drop fix only ever covered two of the three
+      screens that use the sheet, and nothing said so.** That fix clears the
+      drag offset in a `useLayoutEffect` keyed on the item ORDER, so the new
+      slot and the cleared offset are painted in one commit
+      ([reorder-sheet.tsx](../src/components/ui/reorder-sheet.tsx)). The recipe
+      DETAIL screen keys its rows by ingredient id and the shopping list by
+      category name, so both keys move when the order does and the effect fires.
+      **The recipe EDIT screen has no ids** – its rows are unsaved drafts, so it
+      keys them by POSITION (`String(index)`). The order key reads `0 1 2 3`
+      before a move and `0 1 2 3` after it, whatever moved, so the effect never
+      ran and the offset was never cleared. Instructions on that screen had it
+      too; only ingredients get dragged often enough to notice.
+
+      **Fix:** the effect is now keyed on the order AND on a counter bumped by
+      every drop that asks for a new order, in the same batch as the parent's
+      own state update – so the cleanup lands in that commit whether or not the
+      parent's keys changed. It costs nothing on the two screens that were
+      already right.
+
+      **LESSON, and it is the same shape as the one logged with that fix:** the
+      fix was verified on the screen the bug was reported from and generalised
+      from there. A shared component is only fixed on the paths its CALLERS
+      make true – here, "the keys change when the order changes", which two of
+      three callers happened to satisfy. `scripts/check-reorder.mjs` could not
+      have caught it either: the arithmetic was never wrong, the cleanup was.
+
 - [x] **FIXED 2026-08-17, on Thomas's "fix the three rename misses". THREE
       PLACES SAID "household" OR "Kitchen tab"** – the 2026-08-10 and 08-13
       renames missed them; found the same day while translating.
