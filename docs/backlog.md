@@ -4196,8 +4196,12 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
            ruled out manual tags for v1 and said they were "parked on the ideas
            list" – they never were, until now.
       Needs: Thomas – play in Figma with a chip row that no longer fits one line.
-      Decide first: one tag at a time, or several at once. Claude's instinct is
-           MULTI-SELECT, AND – argued below, not yet Thomas's call.
+      Sketch: ✏️ **WIREFRAMES EXIST, AND THEY ARE CLAUDE'S, NOT DESIGN** –
+           [tag-chip-row-wireframes.html](sketches/tag-chip-row-wireframes.html),
+           drawn 2026-08-20 at Thomas's request. Four ways an overflowing chip
+           row can behave, on BOTH canvases, plus the zero-result empty state
+           that the AND decision depends on. Nothing in it has been near Figma
+           or the DS. It is there to be argued with, not built from.
       Scope: BOTH pickers – the recipes list AND the plan screen's add-meal
            sheet (Thomas, 2026-08-20). Not a follow-up; the same row.
       Blocked by: no Figma for the tag picker, nor for an overflowing chip row.
@@ -4247,26 +4251,40 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
          tag removes it from every recipe it is on, so the confirm should say
          how many ("used on 9 recipes") – the count is information, not a gate.
 
+      1. **Tags MULTI-SELECT, and two tags mean AND.** Thomas, 2026-08-20:
+         *"I agree on your assessment on no. 1."* Tapping "dessert" and "protein
+         rich" shows what is both, not what is either. Reasoning in the
+         decisions-log entry for that date: a family cookbook is small, so
+         narrowing is the only useful direction, and AND narrows while OR
+         widens.
+         ⚠️ **TWO THINGS RIDE ON THIS AND ARE NOT OPTIONAL.**
+         (a) **`Favorites` stops being a radio and ANDs with the tags**
+         ("favourite desserts"), so one identical-looking row does not hold two
+         different selection behaviours. `All` becomes the clear-everything
+         chip; nothing selected means everything. The heart keeps its own
+         column – this is filter behaviour, not storage (decision 3 stands).
+         (b) **The zero-result empty state is part of the feature, not polish.**
+         AND teaches itself while the list shrinks, and stops teaching the
+         moment it hits nothing. It must name both tags ("No recipe is both
+         protein rich and dessert") and offer a one-tap way to drop one.
+         Drawn in the sketch. If it is not built, single-select is the safer
+         build – that was the condition the recommendation carried.
+
       STILL OPEN:
-      1. **Tapping two tags – AND or OR, and can you even tap two?** Thomas,
-         2026-08-20: *"I don't know yet – what are your instincts?"* Claude's
-         instinct, argued at length in the decisions log entry for this date:
-         **multi-select, AND, with the empty state designed.** A family cookbook
-         is SMALL, so the only useful direction is narrowing, and AND narrows
-         while OR widens. The one real cost is the zero-result case, which must
-         name both tags and offer a one-tap way out rather than reading as an
-         empty cookbook. NOT DECIDED – Thomas has the call.
-         ⚠️ **This decides how `Favorites` behaves too**, because it shares the
-         row. If tags are multi-select AND, `Favorites` should AND with them
-         ("favourite desserts") instead of staying a radio – two different
-         selection behaviours in one identical-looking row is the bad outcome.
-         `All` then becomes "nothing selected", i.e. a clear-everything chip.
       2. **What happens at fifteen tags?** *"I don't know yet – need to play in
          Figma to find out."* Two chips fit one line; fifteen do not. Scroll,
          wrap, or a "more" sheet. **Worse in the add-meal sheet**, which already
          carries a search field, the All/Favorites row AND a day-chip row, and
          whose chip row scrolls away with the list header – so an active filter
          can end up off-screen while it is still filtering.
+         **The sketch lays out four answers** – swipe sideways, wrap to two
+         lines, one Filter button opening a sheet, or wrap-then-overflow – and
+         Claude's leaning is the last, built so a small cookbook cannot tell it
+         apart from plain wrapping.
+         ⚠️ **But the sketch also found a PRIOR question, and it is Thomas's
+         too: how many tags does a real family actually make?** Six and simple
+         wrapping wins outright; twenty and it does not. Everything else here
+         is downstream of that guess.
 
       BOTH PICKERS, ONE ROW – **in scope, Thomas 2026-08-20** (*"add the tag
       filter to the plan screen picker too"*):
@@ -6040,9 +6058,8 @@ Not work. Kept so a cold thread can pick things up without re-litigating them.
   approval on a delete – and the design work that would have gone into roles is
   free to go into the chip row instead.
 
-  **STILL OPEN, and Claude's instinct on it, on the record so it can be argued
-  with:** can you tap two tags at once, and does that mean AND or OR?
-  Claude's answer is **multi-select, AND**, which REVERSES the "start with one
+  **AGREED THE SAME DAY (Thomas: *"I agree on your assessment on no. 1"*):
+  tags MULTI-SELECT and two tags mean AND.** This REVERSES the "start with one
   at a time" written into the item hours earlier. The reversal is the useful
   part, so here is what changed it:
   - **The two examples are different KINDS of tag.** "Dessert" is a *course* –
@@ -6063,9 +6080,15 @@ Not work. Kept so a cold thread can pick things up without re-litigating them.
     way to drop one. If that is not designed, single-select is the safer build.
   - **It decides how `Favorites` behaves, too.** It shares the row, and it is a
     radio today. Two different selection behaviours in one identical-looking
-    row is the outcome to avoid – so `Favorites` should AND with the tags
-    ("favourite desserts"), which costs nothing in storage since the heart keeps
-    its own column, and `All` becomes the clear-everything chip.
+    row is the outcome to avoid – so `Favorites` ANDs with the tags ("favourite
+    desserts"), which costs nothing in storage since the heart keeps its own
+    column, and `All` becomes the clear-everything chip.
+
+  **The generalisation, since this is the second decision in two days to land
+  the same way:** the settled answers all removed a mode rather than adding
+  one – no roles, no owner, no per-person tag, and now no operator toggle. The
+  row has one behaviour and the result set explains it. Reach for that before
+  reaching for a control that explains itself in words.
 
 - **2026-08-20 – EVERY SHEET MAY USE THE WHOLE SCREEN EXCEPT THE TOP STRIP.**
   Thomas, drawing the line on a screenshot. One ceiling for every bottom sheet,

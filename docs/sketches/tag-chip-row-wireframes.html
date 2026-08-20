@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tag chip row – overflow wireframes</title>
+<style>
+  :root {
+    --surface-0: #F2F1EF; --surface-1: #F8F7F7; --surface-2: #FFFFFF;
+    --text-primary: #26241F; --text-secondary: #5F5B52; --text-muted: #8B857A;
+    --border: #DDD9D2; --border-strong: #9C958A; --border-stronger: #6E675C;
+    --bg-accent: #E6F1FB; --text-accent: #0C447C;
+    --bg-warning: #FBF0DC; --text-warning: #6B4A0B;
+    --bg-success: #E3F3E7; --text-success: #17501F;
+    --radius: 8px;
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --surface-0: #1C1B18; --surface-1: #24231F; --surface-2: #2D2B27;
+      --text-primary: #F0EEE9; --text-secondary: #B5AFA4; --text-muted: #8B857A;
+      --border: #3D3A34; --border-strong: #6E675C; --border-stronger: #9C958A;
+      --bg-accent: #10314F; --text-accent: #AFD2F2;
+      --bg-warning: #3D2E10; --text-warning: #F2D9A4;
+      --bg-success: #17331C; --text-success: #B7DDBF;
+    }
+  }
+  :root[data-theme="dark"] {
+    --surface-0: #1C1B18; --surface-1: #24231F; --surface-2: #2D2B27;
+    --text-primary: #F0EEE9; --text-secondary: #B5AFA4; --text-muted: #8B857A;
+    --border: #3D3A34; --border-strong: #6E675C; --border-stronger: #9C958A;
+    --bg-accent: #10314F; --text-accent: #AFD2F2;
+    --bg-warning: #3D2E10; --text-warning: #F2D9A4;
+    --bg-success: #17331C; --text-success: #B7DDBF;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 28px 20px 60px; background: var(--surface-0);
+         color: var(--text-primary); font-family: var(--font-sans); line-height: 1.5; }
+  .wrap { max-width: 1040px; margin: 0 auto; }
+  h1 { font-size: 21px; font-weight: 600; margin: 0 0 4px; }
+  h2 { font-size: 16px; margin: 0; font-weight: 500; }
+  h3 { font-size: 13px; margin: 26px 0 10px; font-weight: 600;
+       text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); }
+  .lede { font-size: 14px; color: var(--text-secondary); margin: 0 0 20px; }
+  .note { background: var(--bg-warning); color: var(--text-warning);
+          border-radius: var(--radius); padding: 12px 14px; margin-bottom: 8px; font-size: 13px; }
+  .cols { display: flex; gap: 24px; flex-wrap: wrap; }
+  .col { flex: 1 1 300px; min-width: 280px; }
+  .tag { font-size: 12px; padding: 3px 10px; border-radius: var(--radius); }
+  .phone { background: var(--surface-2); border: 0.5px solid var(--border);
+           border-radius: 12px; padding: 12px; }
+  .frames { background: var(--surface-1); border-radius: 12px; padding: 14px; }
+  .step { font-size: 11px; color: var(--text-muted); margin-bottom: 6px; }
+  .field { border: 0.5px solid var(--border); border-radius: 18px; padding: 7px 10px;
+           font-size: 12px; color: var(--text-muted); margin-bottom: 9px; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chips.oneline { flex-wrap: nowrap; overflow: hidden; }
+  .c { font-size: 11.5px; padding: 4px 10px; border-radius: 14px; white-space: nowrap;
+       border: 0.5px solid var(--border-strong); color: var(--text-secondary); }
+  .c.on { background: var(--border-stronger); border-color: var(--border-stronger);
+          color: var(--surface-2); }
+  .c.more { border-style: dashed; color: var(--text-accent);
+            border-color: var(--text-accent); background: var(--bg-accent); }
+  .c.cut { opacity: .35; }
+  .card { border: 0.5px solid var(--border); border-radius: 8px; height: 34px; margin-top: 7px; }
+  .card.tall { height: 46px; }
+  .aside { margin-top: 10px; font-size: 11.5px; color: var(--text-muted); }
+  .weak { font-size: 13px; color: var(--text-secondary); margin: 0 0 12px; }
+  .verdict { font-size: 12.5px; margin-top: 10px; padding: 9px 11px; border-radius: 6px; }
+  .good { background: var(--bg-success); color: var(--text-success); }
+  .bad { background: var(--bg-warning); color: var(--text-warning); }
+  .decisions { margin-top: 28px; background: var(--surface-1); border-radius: 12px; padding: 16px 18px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+          gap: 14px; font-size: 13px; }
+  .grid b { display: block; font-weight: 500; margin-bottom: 2px; }
+  .grid span { color: var(--text-secondary); }
+  footer { font-size: 12.5px; color: var(--text-secondary); margin-top: 18px; }
+  .fade { position: relative; }
+  .fade::after { content: ""; position: absolute; right: 0; top: 0; bottom: 0; width: 30px;
+                 background: linear-gradient(to right, transparent, var(--surface-2)); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>What the tag row does when it stops fitting</h1>
+  <p class="lede">
+    Four ways to handle a filter row that outgrows one line, drawn 2026-08-20 at Thomas's
+    request. The open question is his to close in Figma — this exists so there is something
+    to argue with rather than a blank frame.
+  </p>
+
+  <div class="note">
+    <strong>These are Claude's sketches, not design.</strong> Grey pills on purpose — no DS
+    tokens, no type ramp, no Figma. Nothing here is a decision, and the real chips are the
+    DS Chip component that already ships in <code>src/components/ui/chip.tsx</code>.
+  </div>
+  <div class="note" style="background:var(--bg-accent);color:var(--text-accent);">
+    <strong>Settled already, and it shapes all four:</strong> tags multi-select and combine with
+    AND, and <code>Favorites</code> joins them in the same row instead of staying a radio.
+    So <em>any</em> number of chips can be lit at once — which is exactly why a chip that is
+    ON must never be the one that scrolls out of sight.
+  </div>
+
+  <h3>The problem, in one picture</h3>
+  <div class="cols">
+    <div class="col">
+      <div class="frames">
+        <div class="step">today · two chips, one line, no problem</div>
+        <div class="phone">
+          <div class="field">Search recipes</div>
+          <div class="chips"><span class="c on">All</span><span class="c">Favorites</span></div>
+          <div class="card"></div><div class="card"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="frames">
+        <div class="step">with tags · the same row, unchanged</div>
+        <div class="phone fade">
+          <div class="field">Search recipes</div>
+          <div class="chips oneline">
+            <span class="c on">All</span><span class="c">Favorites</span><span class="c">dessert</span>
+            <span class="c">protein rich</span><span class="c cut">quick</span><span class="c cut">veggie</span>
+          </div>
+          <div class="card"></div><div class="card"></div>
+        </div>
+        <p class="aside">Eight more are off to the right, invisible. Nothing tells you they exist.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>A · Swipe the row sideways</h3>
+  <div class="cols">
+    <div class="col">
+      <div class="frames">
+        <div class="step">one line, scrolls horizontally</div>
+        <div class="phone fade">
+          <div class="field">Search recipes</div>
+          <div class="chips oneline">
+            <span class="c">All</span><span class="c on">dessert</span><span class="c">Favorites</span>
+            <span class="c">quick</span><span class="c cut">veggie</span>
+          </div>
+          <div class="card"></div><div class="card"></div><div class="card"></div>
+        </div>
+        <p class="aside">Active chips pulled to the front so the filter is always visible.</p>
+      </div>
+    </div>
+    <div class="col">
+      <p class="weak">The cheapest build and the standard iOS pattern — App Store, Music and
+      Photos all do it. Costs no vertical space at all, which matters in the add-meal sheet.</p>
+      <div class="verdict good"><strong>Good:</strong> nothing new to build, no height, scales to any number.</div>
+      <div class="verdict bad"><strong>Bad:</strong> you cannot see what tags exist without swiping,
+      so the family forgets its own vocabulary. And re-sorting active chips to the front means the row
+      reshuffles under your thumb — the chip you just tapped jumps somewhere else.</div>
+    </div>
+  </div>
+
+  <h3>B · Let it wrap to two lines</h3>
+  <div class="cols">
+    <div class="col">
+      <div class="frames">
+        <div class="step">wraps · everything visible at six tags</div>
+        <div class="phone">
+          <div class="field">Search recipes</div>
+          <div class="chips">
+            <span class="c">All</span><span class="c">Favorites</span><span class="c on">dessert</span>
+            <span class="c">protein rich</span><span class="c">quick</span><span class="c">veggie</span>
+            <span class="c">kids like it</span>
+          </div>
+          <div class="card"></div><div class="card"></div>
+        </div>
+        <p class="aside">No interaction needed — the whole vocabulary is just there.</p>
+      </div>
+    </div>
+    <div class="col">
+      <p class="weak">Best answer for a <em>small</em> set, and a family cookbook probably is one.
+      Six to eight tags fit two lines with room to spare.</p>
+      <div class="verdict good"><strong>Good:</strong> zero taps to see everything; no reshuffling;
+      an active chip can never hide.</div>
+      <div class="verdict bad"><strong>Bad:</strong> eats vertical space above the list, and the block
+      changes height as tags are added — the recipes jump down the screen. At fifteen tags it is four
+      lines and half the screen is chrome.</div>
+    </div>
+  </div>
+
+  <h3>C · One Filter button, everything in a sheet</h3>
+  <div class="cols">
+    <div class="col">
+      <div class="frames">
+        <div class="step">1 · a single button with a count</div>
+        <div class="phone">
+          <div class="field">Search recipes</div>
+          <div class="chips"><span class="c">All</span><span class="c">Favorites</span><span class="c on">Filter · 2</span></div>
+          <div class="card"></div><div class="card"></div><div class="card"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="frames">
+        <div class="step">2 · the sheet lists every tag</div>
+        <div class="phone">
+          <div style="height:5px;width:44px;background:var(--border-strong);border-radius:4px;margin:0 auto 12px;"></div>
+          <div class="chips" style="margin-bottom:8px;">
+            <span class="c on">dessert ✓</span><span class="c on">quick ✓</span><span class="c">protein rich</span>
+            <span class="c">veggie</span><span class="c">kids like it</span><span class="c">Christmas</span>
+            <span class="c">slow cooker</span><span class="c">bakes</span>
+          </div>
+          <div style="border-top:0.5px solid var(--border);padding-top:9px;font-size:11.5px;color:var(--text-muted);display:flex;justify-content:space-between;">
+            <span>Clear all</span><span style="color:var(--text-accent);">Show 3 recipes</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="cols"><div class="col" style="flex:1 1 100%;">
+    <div class="verdict good"><strong>Good:</strong> scales to any number, never touches the layout,
+    and it is the only option with room to grow a Manage / rename screen later.</div>
+    <div class="verdict bad"><strong>Bad, and it may be disqualifying:</strong> filtering becomes three
+    taps. Thomas's whole framing was <em>“searchable by tapping the tag… like a favourite”</em> — and a
+    favourite is one tap. This is the option that quietly answers a different question.</div>
+  </div></div>
+
+  <h3>D · Wrap, then hand the rest to a sheet <span class="tag" style="background:var(--bg-success);color:var(--text-success);">Claude's leaning</span></h3>
+  <div class="cols">
+    <div class="col">
+      <div class="frames">
+        <div class="step">recipes list · two lines, then “+7”</div>
+        <div class="phone">
+          <div class="field">Search recipes</div>
+          <div class="chips">
+            <span class="c">All</span><span class="c">Favorites</span><span class="c on">dessert</span>
+            <span class="c on">quick</span><span class="c">protein rich</span><span class="c">veggie</span>
+            <span class="c more">+7 more</span>
+          </div>
+          <div class="card"></div><div class="card"></div>
+        </div>
+        <p class="aside">Lit chips are always in the visible rows, whatever else moves.</p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="frames">
+        <div class="step">add-meal sheet · same row, capped at one line</div>
+        <div class="phone">
+          <div style="height:5px;width:44px;background:var(--border-strong);border-radius:4px;margin:0 auto 10px;"></div>
+          <div class="field">Search recipes</div>
+          <div class="chips oneline" style="margin-bottom:8px;">
+            <span class="c">All</span><span class="c on">quick</span><span class="c">Favorites</span><span class="c more">+9</span>
+          </div>
+          <div class="card tall"></div><div class="card tall"></div>
+          <div class="chips" style="margin-top:9px;border-top:0.5px solid var(--border);padding-top:9px;">
+            <span class="c on">Mon</span><span class="c">Tue</span><span class="c">Wed</span><span class="c">Thu</span>
+          </div>
+        </div>
+        <p class="aside">Three chip rows already live in this sheet. This is the tight canvas.</p>
+      </div>
+    </div>
+  </div>
+  <div class="cols"><div class="col" style="flex:1 1 100%;">
+    <p class="weak" style="margin-top:12px;">One component, one cap per canvas: two lines on the recipes
+    list, one line in the sheet. Below the cap it <em>is</em> option B and costs one tap. Above it, the last
+    slot becomes an overflow chip opening option C's sheet. The family that makes five tags never sees the
+    sheet exist; the family that makes twenty is not punished.</p>
+    <div class="verdict bad"><strong>The honest cost:</strong> it is two surfaces, so it is the expensive
+    answer — the same trap as the ingredient-alias sketch. If a real cookbook turns out to hold six tags,
+    B alone is the right build and this is over-engineering.</div>
+  </div></div>
+
+  <h3>Not an option, but it has to be drawn: two tags matching nothing</h3>
+  <div class="cols">
+    <div class="col">
+      <div class="frames">
+        <div class="step">AND narrows — sometimes to zero</div>
+        <div class="phone">
+          <div class="field">Search recipes</div>
+          <div class="chips">
+            <span class="c">All</span><span class="c">Favorites</span><span class="c on">dessert</span><span class="c on">protein rich</span>
+          </div>
+          <div style="border:0.5px dashed var(--border-strong);border-radius:8px;padding:16px 12px;margin-top:12px;text-align:center;">
+            <div style="font-size:13px;margin-bottom:4px;">No recipe is both <strong>dessert</strong> and <strong>protein rich</strong></div>
+            <div style="font-size:11.5px;color:var(--text-muted);margin-bottom:10px;">Try one at a time</div>
+            <div class="chips" style="justify-content:center;">
+              <span class="c more">dessert only</span><span class="c more">protein rich only</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <p class="weak">This is the condition attached to the AND decision, not a nice-to-have.
+      AND teaches itself while the list shrinks — thirty recipes become three and the meaning is obvious
+      without a word. The moment it hits zero, that teaching stops and it reads as an empty cookbook or a
+      broken screen.</p>
+      <p class="weak">So the empty state names both tags and offers a one-tap way out. It is also the most
+      likely state in the <strong>add-meal sheet</strong>, where the library is small and the questions are
+      specific — “quick and veggie, for Tuesday”.</p>
+    </div>
+  </div>
+
+  <div class="decisions">
+    <h2 style="margin-bottom:12px;">Still open — and B vs D is not the first one</h2>
+    <div class="grid">
+      <div><b>How many tags does a real family make?</b><span>Nobody knows, and it decides B against D
+        outright. Six means B; twenty means D. Worth a guess out loud before drawing either.</span></div>
+      <div><b>What order do the chips sit in?</b><span>Alphabetical is predictable and builds muscle memory.
+        Most-used-first is smarter and reshuffles the row between visits, which is the same disorientation
+        A was marked down for.</span></div>
+      <div><b>Where does a NEW tag get made?</b><span>Not drawn here at all. On the recipe, presumably — but
+        the picker that adds and chooses tags is its own frame and its own conversation.</span></div>
+      <div><b>Does the sheet row scroll away?</b><span>The add-meal chip row rides in the list header today,
+        so it scrolls off with the content. With a filter switched on, that hides the reason the list looks
+        short.</span></div>
+    </div>
+  </div>
+
+  <footer>
+    Also considered and not drawn: <strong>tags only in the search field</strong> — type “dessert”, get the
+    tagged recipes, no chip row beyond the two that ship today. It is free, and search will match tag names
+    anyway. It is not drawn because it is not the feature: Thomas asked to <em>tap</em> a tag the way you tap
+    a favourite, and typing is not tapping. Worth knowing it exists as the fallback if the row never
+    earns its space.
+    <br><br>
+    Claude's leaning, recorded for whoever picks this up: <strong>D, built so that a small cookbook is
+    indistinguishable from B</strong> — and if the answer to “how many tags” turns out to be six, build B
+    and stop.
+  </footer>
+
+</div>
+</body>
+</html>
