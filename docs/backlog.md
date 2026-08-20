@@ -2464,9 +2464,21 @@ are not a queue this project can work through.
       Left: the joiner still has to make an account – that cannot be skipped.
            What the link removes is the code and the "set up your kitchen"
            fork, which sidesteps two panel findings outright.
-      Blocked by: the site is on GitHub Pages, which cannot serve Apple's
-           association file as JSON. Move the site first (see the item below);
-           without that the links fail silently and look broken.
+      ⚠️ **THE BLOCKER HAS CLEARED, from an unexpected direction (found in the
+           2026-08-20 sweep).** It said: the site is on GitHub Pages, which
+           cannot serve Apple's association file as JSON, so move the site
+           first. **The site never moved - the SHARE feature brought its own
+           host.** `share.prepeat.app` runs on Vercel and already serves a valid
+           AASA (verified 2026-08-20: HTTP 200, correct content type, and
+           host-conditional so each app id gets its own file). prepeat.app can
+           stay exactly where it is.
+      What is actually left, which is much less than "move the site": the AASA
+           currently declares one path, `"/": "/r/*"`. An invite link needs its
+           own path added there plus a route on that host, and
+           `share.prepeat.app` is already in the production app's
+           `associatedDomains`. No hosting move, no new domain, no new security
+           model - the invite system already mints, expires, rotates and
+           throttles codes, and a link would only carry the code that exists.
 
       (Thomas, 2026-08-10; researched by Claude the same day). His reasoning: *"I find it a bit
       troublesome joining with a code because you first have to create a user
@@ -2515,6 +2527,10 @@ are not a queue this project can work through.
          that basis. This would cost a promise already made in public.
       4. **⛔ Clipboard bridge.** iOS now prompts before any app reads the
          clipboard – unreliable and reads as creepy. Skip.
+      **⚠️ SUPERSEDED 2026-08-20 – see the cleared-blocker note above. Kept
+      because the diagnosis was right, only the solution changed: the answer was
+      not moving prepeat.app but reusing the Vercel host the share feature
+      already needed.**
       **⚠️ BLOCKER TO CLEAR FIRST – THE SITE IS ON GITHUB PAGES.** GitHub Pages
       serves extensionless files as `application/octet-stream`, and Apple
       requires the association file as `application/json`; GitHub Pages cannot
@@ -5094,117 +5110,21 @@ Chores with a trigger rather than a finish line. These never get ticked off for 
       Why: added 2026-08-11 after two items were found finished – one of them
            for a week, unblocked by a fix whose own entry said it closed them.
            Closing is a separate job from doing and does not happen by itself.
+      **Last run: 2026-08-20 (build 25 / 1.1.0).** Ten items closed. It had not
+           run since it was written, and the cost showed: **three items were
+           behind the code, not behind the work** – the App Store listing URLs
+           were already correct, the ⋯ ruling had been answered in Figma two
+           days earlier, and the empty-cookbook nudge said "sketched, not built"
+           when it had shipped ten days before.
+      ⚠️ **STEP 3 IS THE ONE THAT PAYS, AND IT IS THE ONE THAT GETS SKIPPED.**
+           Ticking what shipped is obvious; re-reading every `Blocked by` is not,
+           and it is where the 2026-08-20 run found its best result: the
+           tap-a-link-to-join item had been blocked for ten days on "GitHub
+           Pages cannot serve Apple's association file", and the SHARE feature
+           had quietly supplied a Vercel host that does. **A blocker can be
+           cleared by work that never mentions it.** Nothing but re-reading the
+           blockers finds that.
 
-- **Before changing the plan → shopping reconciler, run
-  `node scripts/check-shopping-reconciler.mjs`** and read every row (agreed
-  2026-08-04, after getting that reconciler wrong three times in one afternoon).
-  WHAT WENT WRONG, because the two causes need different answers:
-  1. **A decision made silently.** The choice between showing the plan's TOTAL
-     and showing what is still OWED was noticed while writing migration 0028 and
-     settled in favour of the total *because it kept the bookkeeping simple*.
-     Thomas got a list asking for 4 litres when he needed 1.
-     THE RULE: when implementation surfaces a choice between two behaviours,
-     that is a decision, not a detail. Say so and ask. Convenience of the
-     invariant is never a reason to pick what the user sees.
-  2. **States nobody enumerated.** "Clear done items" silently switched the
-     whole mechanism off, and earlier the same day a plural fix worked in one
-     direction only. Both times the verification covered the path being thought
-     about, and the bug sat in a state that was never listed – even though
-     "cleared" is a BUTTON in the UI.
-     THE RULE: enumerate the states and walk the cross-product, rather than
-     writing down the scenarios that come to mind. That is what the script does:
-     every line state (ticked / cleared / unticked / hand-edited / deleted by
-     the shopper) against every plan change, plus the multi-step sequences that
-     single-state checks cannot reach.
-  IT PAID FOR ITSELF IMMEDIATELY: the grid found three more bugs in 0030 before
-  it was ever applied – a hand-edited outstanding line being overwritten, a
-  shopper-deleted one coming back, and sync's own tombstones being counted as
-  "already bought" so that un-doubling then re-doubling showed nothing.
-  ITS LIMIT, which matters: the script mirrors the SQL, it does not run it. It
-  proves the rules are coherent, not that the functions implement them – and on
-  both occasions the model was wrong, a mirror written from the same model would
-  have agreed with the bug. A local Postgres harness would close that gap and
-  does not exist; it is worth building if the mirror ever drifts, but it is not
-  what failed today. **A device walk-through remains the only thing that settles
-  a change.**
-  **UPDATE 2026-08-04: the harness now exists** – local Supabase in Docker (see
-  the next item and the 2026-08-04 decision). The mirror script keeps its value
-  for enumerating the state cross-product cheaply, but "the model was wrong so
-  the mirror agreed with the bug" is now testable against real SQL.
-
-- **Run every migration against local Supabase before it touches production**
-  (agreed 2026-08-04, off the back of the Free-plan-has-no-backups finding).
-  Production is one project serving every installed build at once, so an applied
-  migration has no blast radius limit. Two commands, in this order:
-  1. `npm run db:reset` – replays EVERY migration onto an empty database. This
-     is the one that catches what 0022 was: a migration that does not apply
-     cleanly from scratch. It is not a substitute for reading the SQL, it is the
-     check that the file even runs.
-  2. `npm run db:start` and point a dev build at it, for anything that changes
-     behaviour the shipped app relies on.
-  Still standing, and NOT replaced by any of this: **never drop or rename a
-  column in the same round as the code change that stops using it** (2026-07-27)
-  – local Postgres cannot see what is on somebody's phone.
-
-- **When a migration touches RLS, run and extend
-  `supabase/tests/household-boundary.sql`** (started 2026-08-07 with 0032).
-  It walks the household boundary as a REAL RLS-bound client against real SQL,
-  and most of its checks assert that a LEGITIMATE path still works – which is
-  where the risk in a policy change actually lives. A dropped policy reaches
-  every installed build the instant it runs, so "the hole is closed" is the easy
-  half; "the front door still opens" is the half that bites.
-  Run it against a fresh `npm run db:reset`; the file carries its own how-to.
-  Its first run also produced a false FAIL that was purely the test's own doing –
-  a check reading under one user's RLS to assert a fact about another's. Read a
-  failure before believing it.
-
-- **Keep [release-notes.md](release-notes.md) current, INCLUDING the version
-  number** (started 2026-08-03; Thomas wants something ready to post whenever
-  the app updates, and has explicitly handed the number over: "I will
-  forget"). Three standing jobs, in order of how easily they rot:
-  1. **Add the user-facing line when a change lands**, not when a build
-     ships – by build time the reasoning is cold and the wording is guesswork.
-  2. **Re-check the NEXT VERSION line in the same edit.** Semver decides it,
-     so this is bookkeeping: a feature raises a pending 1.0.1 to 1.1.0, and
-     the number never drops again within one release.
-  3. **Keep the three buckets honest** – accumulating (dev build only), per
-     TestFlight build, and server changes, which reach every phone whatever
-     version it runs and so belong to no version at all.
-  At submission time, and only then: bump `app.json` `expo.version` to the
-  number that line has been carrying, and move the section under its own
-  heading with the date.
-
-- **HOW TO RUN A BIG SQL SCRIPT: the Supabase SQL editor TRUNCATES long
-  pastes.** Standing note, learned the hard way 2026-07-30 – five failed
-  attempts at one 46 KB rebuild script before it landed. Not a hypothesis: the
-  same script cut off at the same point twice, and the "copy file content"
-  button lost content too (Thomas: *"Not all of the files content get
-  copied"*).
-  What each shape failed with, so the symptoms are recognisable next time:
-  - **One `do $seed$ … $seed$` block** → `42601: unterminated dollar-quoted
-    string`, echoing only the first third of the file. A truncated DO block can
-    never parse.
-  - **Plain statements wrapped in `begin;` / `commit;`** → `23503` foreign-key
-    violation. The `begin` arrived, the `commit` did not, so the first part
-    rolled back and later statements referenced rows that had vanished. This is
-    the dangerous one: it looks like a data bug, not a truncation.
-  - **Plain statements, no transaction, ~196 of them** → another `23503`,
-    further down the file.
-  What worked: **collapse to ~13 multi-row statements** (one `insert … values
-  (…),(…),(…)` per table instead of one insert per row), no transaction
-  wrapper, and every insert preceded by a delete of the same fixed ids so the
-  whole file is safe to RE-RUN from the top. 46 KB → 30 KB, 196 statements →
-  13. End the script with a verification `select` (counts + one known-merged
-  row) so success is provable rather than assumed – "Success. No rows returned"
-  proves nothing about a script that was cut in half.
-  Also: the editor warns "creates tables without enabling RLS" on scripts that
-  create no tables at all. Pattern-matching false positive – choose **Run
-  without RLS**, never "Run and enable RLS", which would change security
-  settings as a side effect.
-  Generator for the working shape:
-  `scratchpad/gen-bulk.ts` from that session – it drives the app's own
-  `importRecipeFromUrl` + `parseQuantity` offline, so seeded data goes through
-  exactly the same parser as a real import.
 - [x] **Rebuild the dev app when it stops opening – OBSOLETE, closed 2026-08-20**
       Its own condition for deletion: *"if the app is still opening fine, delete
            this item."* It is. Confirmed by the build on 2026-08-19, which
