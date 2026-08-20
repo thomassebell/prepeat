@@ -567,7 +567,12 @@ export default function RecipeDetailScreen() {
             )}
           </View>
 
-          <View className="w-full gap-comp-xsmall">
+          {/* 16 between a heading and its list, the same as every section
+              heading above (Thomas, 2026-08-20: *"the gap between instructions
+              and list is not the same as gap between section and list"*). It
+              had been 4 here and 16 there, which reads as two kinds of heading
+              rather than one. */}
+          <View className="w-full gap-layout-small">
             <View className="w-full flex-row items-center">
               <Text className="flex-1 font-header text-display-6 font-emphasized leading-xsmall text-text-default">
                 {t("recipes.instructions")}

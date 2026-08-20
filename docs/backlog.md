@@ -711,10 +711,27 @@ Committed work for the first update after launch. Panel findings default here un
 
 ### Known bugs (open)
 
-- [ ] **Instructions drag in place too, and the reorder sheet has left the
-      recipe editor entirely – built 2026-08-20, not yet seen on a device**
-      Source: Thomas, 2026-08-20: *"yes, do the instructions too."*
+- [ ] **The Instructions heading sat closer to its list than a section heading
+      does – fixed 2026-08-20, not yet seen on a device**
+      Source: Thomas, 2026-08-20, from a screenshot: *"the gap between
+           instructions and list is not the same as gap between section and
+           list – same in non-edit mode."*
       Wait for: the next build on his phone. Tick it there, not here.
+
+      4px under Instructions, 16 under every section heading, on BOTH the editor
+      and the recipe screen. Two numbers for one relationship, which reads as
+      two kinds of heading. Now 16 in all four places.
+      Note: while in there – on the EDITOR the Instructions heading is drawn
+           `paragraph/emphasized` while section headings and Ingredients are
+           `header/display-6`. Left alone: that is a typographic decision, and
+           it is Thomas's, not a consequence of the spacing bug. Worth a look
+           when he next has the frames open.
+
+- [x] **DONE, CONFIRMED ON DEVICE 2026-08-20 – instructions drag in place too,
+      and the reorder sheet has left the recipe editor entirely**
+      Source: Thomas, 2026-08-20: *"yes, do the instructions too."* Then, after
+           three bugs on the first build and a screenshot: *"it works now – all
+           three fixed."*
 
       Same gesture as the ingredients: a grip that drags on contact, a hold on
       the row body for anyone who does not notice it, a tap to edit, a swipe to

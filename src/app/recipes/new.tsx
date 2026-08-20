@@ -443,7 +443,10 @@ export default function AddRecipeScreen() {
           </View>
 
           {/* Instructions builder */}
-          <View className="w-full gap-comp-xsmall px-layout-small">
+          {/* 16 between a heading and its list, the same as every section
+              heading above (Thomas, 2026-08-20). It had been 4 here and 16
+              there, which reads as two kinds of heading rather than one. */}
+          <View className="w-full gap-layout-small px-layout-small">
             <View className="w-full flex-row items-center">
               <Text className="flex-1 font-paragraph text-paragraph font-emphasized text-text-default">
                 {t("recipes.instructions")}
