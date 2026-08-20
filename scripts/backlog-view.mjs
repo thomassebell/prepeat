@@ -116,12 +116,16 @@ const esc = (s) =>
 
 // Links used to be flattened to their text, which meant the sketches this file
 // keeps pointing at could not be opened from the page Thomas actually reads.
-// ⚠️ ONLY THE ONES A BROWSER CAN ACTUALLY OPEN BECOME LINKS. Source-code refs
-// stay plain text on purpose, and that is not timidity – roughly half of them
-// are written `household.ts:93`, which is not a real path; expo-router route
-// groups put brackets in others; and a .tsx that does resolve just downloads.
-// A dead link on this page is worse than the plain text it replaced.
-const LINKABLE = /^(https?:\/\/|[^:\s]+\.html(#[^\s]*)?)$/
+// ⚠️ ONLY THE ONES A BROWSER CAN ACTUALLY OPEN BECOME LINKS: the sketches
+// (.html), the sibling docs (.md, Thomas's call 2026-08-20) and external URLs.
+// Source-code refs stay plain text on purpose, and that is not timidity –
+// roughly half of them are written `household.ts:93`, which is not a real
+// path; expo-router route groups put brackets in others; and a .tsx that does
+// resolve just downloads. A dead link here is worse than the text it replaced.
+// The `[^:\s]+` is what excludes the `:93` forms, so keep it.
+// Every .md and .html target was verified to resolve from docs/ when this was
+// turned on; re-run that check if a batch of new ones ever appears.
+const LINKABLE = /^(https?:\/\/|[^:\s]+\.(html|md)(#[^\s]*)?)$/
 
 // The backlog is written in markdown; render just enough of it to read.
 const md = (s) =>
