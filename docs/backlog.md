@@ -127,7 +127,7 @@ Everything else in this file is Claude's to get on with.
   <sub>Next – v1.1</sub>
 - **⭐ Let the household teach the app that two ingredient names mean the same thing** – design the "same as…" action, and settle whether an alias is one-directional.
   <sub>Someday – not committed</sub>
-- **⭐ Household tags on a recipe – "protein rich", "dessert" – and tap one to filter** – play in Figma with a chip row that no longer fits one line.
+- **⭐ Household tags on a recipe – "protein rich", "dessert" – and tap one to filter** – two things in Figma: a chip row that no longer fits one line, and where a tag gets renamed or deleted.
   <sub>Someday – not committed</sub>
 
 <!-- WAITING-ON-THOMAS:END -->
@@ -4195,7 +4195,8 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
       Source: Thomas, 2026-08-20. Makes good on the 2026-07-12 decision, which
            ruled out manual tags for v1 and said they were "parked on the ideas
            list" – they never were, until now.
-      Needs: Thomas – play in Figma with a chip row that no longer fits one line.
+      Needs: Thomas – two things in Figma: a chip row that no longer fits one
+           line, and where a tag gets renamed or deleted.
       Sketch: ✏️ **WIREFRAMES EXIST, AND THEY ARE CLAUDE'S, NOT DESIGN** –
            [tag-ui-wireframes.html](sketches/tag-ui-wireframes.html), drawn
            2026-08-20 at Thomas's request, in two parts. **Part one:** four ways
@@ -4210,12 +4211,14 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
       Blocked by: no Figma for the tag picker, nor for an overflowing chip row.
            The data side can be built without either.
 
-      **Half of this already ships.** The recipes screen has a chip row with
-      `All` / `Favorites` on it, and the heart is already a SHARED HOUSEHOLD
-      flag, not a personal one (`is_favorite` on the recipe row, decided
-      2026-07-12). So a favourite is, exactly as Thomas put it, a tag – one the
-      family did not get to name. The feature is: let them name their own, and
-      let those names join the same row.
+      **Half of this already ships, and the other half REPLACES it.** The
+      recipes screen has a chip row with `All` / `Favorites` on it, and the
+      heart is already a SHARED HOUSEHOLD flag, not a personal one
+      (`is_favorite` on the recipe row, decided 2026-07-12). So a favourite is,
+      exactly as Thomas put it, a tag – one the family did not get to name.
+      **Which is why the heart does not survive this item** (decision 3): the
+      feature is to let the family name its own tags, and `Favorites` becomes
+      the first of them rather than a second concept sitting beside them.
       Thomas's framing, in his words: *"add a tag to a recipe or choose one that
       has been added… the tags are not personal, but shared in the family. It
       could be that my wife wants a tag for protein rich meals, or I can make
@@ -4241,6 +4244,28 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
         (foundation.md), and tags are recipe editing. Screens refetch on focus.
 
       SETTLED BY THOMAS, 2026-08-20 – do not reopen without a reason:
+      1. **Tags MULTI-SELECT, and two tags mean AND.** Thomas, 2026-08-20:
+         *"I agree on your assessment on no. 1."* Tapping "dessert" and "protein
+         rich" shows what is both, not what is either. Reasoning in the
+         decisions-log entry for that date: a family cookbook is small, so
+         narrowing is the only useful direction, and AND narrows while OR
+         widens.
+         ⚠️ **TWO THINGS RIDE ON THIS AND ARE NOT OPTIONAL.**
+         (a) **`Favorites` stops being a radio and ANDs like everything else**
+         ("favourite desserts"), so one identical-looking row does not hold two
+         different selection behaviours. `All` becomes the clear-everything
+         chip; nothing selected means everything.
+         ⚠️ This was written while `Favorites` was still its own thing, and
+         decision 3 then made it an ordinary tag – **which settles it rather
+         than complicating it.** There is no special case left to write: the
+         row holds tags, and they AND.
+         (b) **The zero-result empty state is part of the feature, not polish.**
+         AND teaches itself while the list shrinks, and stops teaching the
+         moment it hits nothing. It must name both tags ("No recipe is both
+         protein rich and dessert") and offer a one-tap way to drop one.
+         Drawn in the sketch. If it is not built, single-select is the safer
+         build – that was the condition the recommendation carried.
+
       3. **FAVOURITES BECOMES AN ORDINARY TAG AND THE HEART GOES.** Settled
          first the other way (*"No – favorite are it own"*), reopened by Thomas
          hours later (*"Could Favorite just be the first tag, that every
@@ -4278,25 +4303,6 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
          tag removes it from every recipe it is on, so the confirm should say
          how many ("used on 9 recipes") – the count is information, not a gate.
 
-      1. **Tags MULTI-SELECT, and two tags mean AND.** Thomas, 2026-08-20:
-         *"I agree on your assessment on no. 1."* Tapping "dessert" and "protein
-         rich" shows what is both, not what is either. Reasoning in the
-         decisions-log entry for that date: a family cookbook is small, so
-         narrowing is the only useful direction, and AND narrows while OR
-         widens.
-         ⚠️ **TWO THINGS RIDE ON THIS AND ARE NOT OPTIONAL.**
-         (a) **`Favorites` stops being a radio and ANDs with the tags**
-         ("favourite desserts"), so one identical-looking row does not hold two
-         different selection behaviours. `All` becomes the clear-everything
-         chip; nothing selected means everything. The heart keeps its own
-         column – this is filter behaviour, not storage (decision 3 stands).
-         (b) **The zero-result empty state is part of the feature, not polish.**
-         AND teaches itself while the list shrinks, and stops teaching the
-         moment it hits nothing. It must name both tags ("No recipe is both
-         protein rich and dessert") and offer a one-tap way to drop one.
-         Drawn in the sketch. If it is not built, single-select is the safer
-         build – that was the condition the recommendation carried.
-
       STILL OPEN:
       2. **What happens at fifteen tags?** *"I don't know yet – need to play in
          Figma to find out."* Two chips fit one line; fifteen do not. Scroll,
@@ -4312,6 +4318,14 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
          too: how many tags does a real family actually make?** Six and simple
          wrapping wins outright; twenty and it does not. Everything else here
          is downstream of that guess.
+      6. **Where does a tag get RENAMED or DELETED?** Not one of the original
+         five – it surfaced from the answers themselves. Decision 5 grants both
+         to anybody and decision 3 leans on them, and no frame in the sketch
+         offers either. **The largest undrawn surface in this item.** The
+         quick-tag sheet is the obvious home (long-press a chip, or an Edit
+         affordance in it), but that is a guess and it is Thomas's to draw.
+         Deleting needs the count in its confirm ("used on 9 recipes"), per
+         decision 5.
 
       BOTH PICKERS, ONE ROW – **in scope, Thomas 2026-08-20** (*"add the tag
       filter to the plan screen picker too"*):
@@ -4337,8 +4351,16 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
         often obvious). A close sibling of the AI-guesses-a-category idea below,
         and it should wait for the same verdict.
       - A tag colour or an emoji. Nice, and a whole design conversation.
-      - Tag rename / merge from a manage screen. The unique index stops the
-        obvious duplicates at creation; the rest can wait for a real mess.
+      - Tag MERGE ("desert" is the same as "dessert"). The unique index stops
+        the obvious duplicates at creation, and merging two that got made anyway
+        is the ingredient-alias problem in miniature – it can wait for a real
+        mess.
+        ⚠️ **RENAME AND DELETE CANNOT WAIT, and this line used to say they
+        could.** Decision 5 grants both to anybody, and decision 3 depends on
+        them – a seeded `Favorites` tag the household cannot rename or delete is
+        not "an ordinary tag", it is the heart with extra steps. **No screen in
+        the sketch offers either yet**, which makes it the largest undrawn
+        surface in this item.
 
 - [ ] **Show amounts in the units the household actually uses**
       Why: recipes arrive in whatever the source used – a Danish site gives dl
