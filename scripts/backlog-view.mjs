@@ -127,10 +127,20 @@ const total = live.reduce((n, s) => n + s.items.length, 0)
 // Anything parked on a Thomas decision is pulled to the top. Work waiting on
 // him is invisible otherwise: it reads as in-progress when nothing is moving.
 // This is the state the ingredient-sections item sat in for four days.
+// ⚠️ `Needs: nothing` MEANS NOTHING IS WAITING ON HIM, so it must not appear
+// here. The filter used to include any item carrying a Needs line at all, which
+// is how "UNGATE Share recipe – nothing – it is one __DEV__ check to delete"
+// sat in Thomas's list for days: the index said four things needed him when the
+// true number was three. An index that overstates is ignored, which defeats the
+// point of pulling these to the top (2026-08-20).
+const needsThomas = (it) => {
+  const need = it.details.find((d) => d.label === 'Needs')
+  if (!need) return false
+  return !/^nothing\b/i.test(need.text.trim())
+}
+
 const waiting = live.flatMap((s) =>
-  s.items
-    .filter((it) => it.details.some((d) => d.label === 'Needs'))
-    .map((it) => ({ ...it, from: s.title }))
+  s.items.filter(needsThomas).map((it) => ({ ...it, from: s.title }))
 )
 
 const itemHtml = (it) => {
