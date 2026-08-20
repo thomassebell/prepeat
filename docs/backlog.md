@@ -4643,47 +4643,35 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
       Watch, still true: this was the shape of the 2026-08-16 header-colour bug,
            where one screen's frame was read and four disagreed.
 
-- [ ] **⚠️ The add-meal sheet reserves space it does not use (NOT a height-cap problem)**
-      ⚠️ **CORRECTED 2026-08-20, by Thomas with a screenshot: *"how can it give
-           more room – there is no more room."*** He is right, and the framing
-           below was wrong. **This sheet already fills the whole screen with TWO
-           recipes**, roughly a third of it dead space between the list and the
-           servings counter. It does not grow past the screen the way the other
-           ten did - it always fills it, whatever the content. **The ✕ cannot go
-           off the top here, so there is no cap bug to fix.** Capping it at 90%
-           would only take 10% away.
-      **The real defect is the opposite of a cap:** the list EXPANDS to fill
-           whatever it is given instead of hugging its content. The fix is to let
-           it hug, and flex only once there are enough recipes to need the room -
-           so two recipes gives a half-height sheet with the servings and CTA
-           under the list, near the thumb.
-      **How it got miscounted:** the eleven were found by grepping for the
-           `scroll` prop, not by looking at the screens. This one lacked the prop
-           and was assumed to share the bug. **A count from a grep is a list of
-           suspects, not a list of defects.**
-      Size: its own sitting, on that one screen, with a device.
-      ✅ **The other ten were fixed 2026-08-20 by changing the DEFAULT**, not the
-           call sites: every sheet is now capped at 90% and scrolls past it
-           unless it opts out. Both recipe-screen dialogs (including Stop
-           sharing), all six household sheets, move-day, servings and
-           import-recipe. Walked on the device by Thomas.
-      ⬜ **`add-meal-sheet` opts out** via `bodyScrollsItself`, so it has NO cap:
-           the shell adds neither a scroller nor a ceiling. Capping it needs its
-           OWN layout changed so the LIST shrinks and the footer holds. Today
-           its body is a `flex-1` FlatList, which absorbs any slack it is given.
-      ⚠️ **IT BROKE TWICE IN TWENTY MINUTES GETTING THERE, exactly as this item
-           predicted** (*"nine screens changed without walking any is how a fix
-           becomes a bug round"*):
-      1. **Wrapped in a ScrollView** → the `flex-1` FlatList lost its bounded
-           height, leaving a dead gap and pushing "Add to plan" off the bottom.
-           Also a nested VirtualizedList, which React Native warns against.
-      2. **Wrapper removed but the cap kept** → worse. An unbounded card let the
-           list size to its content; a CAPPED card gave it slack to absorb, so
-           it grew and pushed the servings, day picker and CTA past the bottom.
-           In Swap mode - no tabs, more slack - **the CTA was unreachable.**
-      Both were caught within minutes because Thomas walked the sheets. Neither
-           would have been visible from the code.
-      Size: its own sitting, on that one screen, with a device.
+- [x] **Sheet heights: one ceiling for every sheet – DONE 2026-08-20**
+      **Thomas's rule, drawn on a screenshot: *"every sheet can stretch the whole
+           screen except the top."*** One ceiling, taken from the safe-area
+           inset, so it is right on any device instead of approximately right on
+           his. Verified on the phone: the plan sheets reach the strip, the
+           search field stays above the keyboard, and the list takes the room.
+      **What it replaced:** four different numbers reaching for the same idea -
+           the shell's 90%, and 96% passed separately by `edit-item`,
+           `add-to-plan` and `ingredient`. All three overrides are gone, and
+           `maxHeightPercent` with them.
+      **And it fixed the add-meal dead space by absorbing it.** That sheet was
+           computing its own `height: min(70% or 78% of screen, screen -
+           keyboard - 200)`, which is why it stopped short and left a third of
+           itself empty on a small cookbook. It no longer computes a height at
+           all; the shell gives it the ceiling and it fills it. The keyboard
+           shrink moved to the shell too, so every sheet gets it rather than one.
+      ⚠️ **DEFINITE HEIGHT vs MAXIMUM, the distinction that cost three broken
+           builds.** A `flex: 1` list needs a parent with a REAL height to fill.
+           Given only a maximum it has nothing to resolve against and collapses -
+           which is exactly what happened when `height` was changed to
+           `maxHeight`: the body vanished and only the title was left. So
+           self-scrolling sheets get `height: ceiling`; everything else gets
+           `maxHeight: ceiling` and hugs.
+      ⚠️ **IT TOOK FOUR ATTEMPTS ON THE DEVICE, and every wrong turn was a
+           confident diagnosis from the code.** Wrapping it in a ScrollView;
+           keeping the cap after removing the wrapper; swapping height for
+           maxHeight; and claiming a cap would "give more room" on a sheet that
+           already filled the screen. Thomas caught each in about thirty
+           seconds. **Nothing about sheet height is knowable from reading it.**
 
 - [x] **⚠️ Put a height cap on the sheets that lack one – DONE for ten of eleven, 2026-08-20**
       **Re-counted 2026-08-20** (it said nine): capped are `add-to-plan`,
@@ -5648,6 +5636,18 @@ Not work. Kept so a cold thread can pick things up without re-litigating them.
             missing radius is not evidence of radius 0. `ds-theme.cjs` decides.
 
 ### Decisions log (recent)
+
+- **2026-08-20 – EVERY SHEET MAY USE THE WHOLE SCREEN EXCEPT THE TOP STRIP.**
+  Thomas, drawing the line on a screenshot. One ceiling for every bottom sheet,
+  measured from the safe-area inset rather than a percentage.
+  **Why it is worth a decision entry:** four sheets were each carrying their own
+  number - 90%, three separate 96%s, and add-meal's own 70/78% - and every one
+  of them was an approximation of this single sentence. Nobody had said the
+  sentence, so each new sheet guessed again. The rule is the designer's; the
+  percentages were the code's, and they were all slightly wrong.
+  **The corollary for new sheets:** do not pass a height. The shell knows the
+  ceiling. A sheet whose body scrolls itself gets it as a definite height, and
+  everything else hugs its content up to it.
 
 - **2026-08-19 – THE "IS IT VALID?" CHECK COULD PASS ON THE WRONG BUILD, AND
   DOES NOT ANY MORE.** `asc-build-state.mjs --wait` waited for *the newest build

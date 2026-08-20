@@ -14,10 +14,18 @@ import {
   Pressable,
   ScrollView,
   Text,
+  useWindowDimensions,
   View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { ds } from "@/constants/ds";
+import { useKeyboardHeight } from "@/hooks/use-keyboard-height";
+
+/** How far the card deliberately overhangs the bottom of the screen, from the
+ *  keyboard-bleed fix below (marginBottom -80). The ceiling has to add it back,
+ *  or the sheet stops 80px short of where it looks like it stops. */
+const BOTTOM_OVERHANG = 80;
 
 // A sheet exposes its ScrollView to its own body, so a section can scroll
 // itself into view – e.g. the edit-item sheet brings the category list up when
@@ -49,7 +57,6 @@ export function BottomSheet({
   scroll = false,
   bodyScrollsItself = false,
   minHeightPercent = 55,
-  maxHeightPercent = 90,
   footer,
   children,
 }: {
@@ -74,9 +81,14 @@ export function BottomSheet({
    */
   scroll?: boolean;
   /**
-   * The body manages its own height AND its own scrolling (a FlatList or
-   * ScrollView). The shell then adds neither a scroller nor a cap: it steps
-   * out of the way entirely.
+   * The body manages its own scrolling (a FlatList or ScrollView), so the shell
+   * must not wrap it in another one - and it is given a DEFINITE height (the
+   * full ceiling) rather than a maximum, because a `flex: 1` list needs a real
+   * height to fill.
+   *
+   * Thomas's rule, 2026-08-20: *"every sheet can stretch the whole screen
+   * except the top."* These sheets always do; the rest grow to the same
+   * ceiling only if their content needs it.
    *
    * ⚠️ WHY THIS EXISTS, found on the device 2026-08-20 within minutes of making
    * the cap unconditional. The add-meal sheet's body is a `FlatList` with
@@ -112,12 +124,12 @@ export function BottomSheet({
    * space below itself.
    */
   minHeightPercent?: number;
-  /**
-   * The ceiling EVERY sheet grows to (percent of screen), scrolling past it.
-   * Defaults to 90; raise it for a sheet that should use almost the whole
-   * screen when full – e.g. the edit-item category list.
-   */
-  maxHeightPercent?: number;
+  // ⚠️ `maxHeightPercent` IS GONE (2026-08-20). Three sheets were passing 96,
+  // all reaching for the same thing - as much of the screen as possible - and
+  // the default 90 was a guess at the same idea. Thomas drew the rule instead:
+  // *"every sheet can stretch the whole screen except the top."* One ceiling,
+  // measured from the safe-area inset, so it is right on every device rather
+  // than approximately right on his.
   /**
    * Pinned below the scroll area – for a CTA that must stay reachable however
    * long the body is, or however much of the screen the keyboard takes
@@ -127,6 +139,21 @@ export function BottomSheet({
   children: ReactNode;
 }) {
   const scrollRef = useRef<ScrollView>(null);
+  // THE CEILING: the whole screen except the top strip (status bar / notch).
+  // The card hangs BOTTOM_OVERHANG below the screen, so that has to be added
+  // back for the visible top edge to land on the inset rather than 80px lower.
+  const { height: windowHeight } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
+  // ⚠️ THE KEYBOARD HAS TO SHRINK IT. The shell pushes the card up when the
+  // keyboard opens, so a card standing at the full ceiling would have its top -
+  // and its search field - shoved off the screen. This gives the height back
+  // instead. It used to live inside the add-meal sheet's own maths; it belongs
+  // here, with the ceiling it is limiting.
+  const keyboardHeight = useKeyboardHeight();
+  const ceiling = Math.min(
+    windowHeight + BOTTOM_OVERHANG - insets.top,
+    windowHeight - keyboardHeight + BOTTOM_OVERHANG - insets.top,
+  );
   return (
     <Modal
       visible={visible}
@@ -171,9 +198,17 @@ export function BottomSheet({
               // `bodyScrollsItself`. Capping such a sheet is worse than leaving
               // it: its `flex-1` list absorbs the slack and pushes the CTA off
               // the bottom.
+              // ⚠️ A DEFINITE HEIGHT, not a maximum, when the body manages its
+              // own scrolling. Its list is `flex: 1`, and flex needs a parent
+              // with a real height to fill - given only a MAXIMUM it has
+              // nothing to resolve against and collapses to nothing. That is
+              // exactly what happened on 2026-08-20 when `height` was changed
+              // to `maxHeight` in the add-meal sheet: the body vanished and
+              // only the title was left. Everything else hugs and takes the
+              // ceiling as a limit.
               ...(bodyScrollsItself
-                ? null
-                : { maxHeight: `${maxHeightPercent}%` as const }),
+                ? { height: ceiling }
+                : { maxHeight: ceiling }),
               // A minimum is opt-in and only meaningful with `scroll`: it is
               // for a sheet that should open tall (a list to browse), not for
               // a short form, which should still hug its content.

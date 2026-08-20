@@ -49,7 +49,6 @@ export function AddToPlanSheet({
       scroll
       // Grow to near full-height so the week nav, all seven days and the
       // servings counter show above the pinned button (Thomas, 2026-07-30).
-      maxHeightPercent={96}
       footer={
         <Pressable
           accessibilityRole="button"

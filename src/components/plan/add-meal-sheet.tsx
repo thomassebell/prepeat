@@ -14,7 +14,6 @@ import {
   Pressable,
   Text,
   TextInput,
-  useWindowDimensions,
   View,
 } from "react-native";
 
@@ -25,7 +24,6 @@ import { Chip } from "@/components/ui/chip";
 import { Input } from "@/components/ui/input";
 import { ServingsCounter } from "@/components/recipes/servings-counter";
 import { ds } from "@/constants/ds";
-import { useKeyboardHeight } from "@/hooks/use-keyboard-height";
 import { useHousehold } from "@/lib/household-context";
 import { t } from "@/lib/i18n";
 import { fetchRecentlyPlannedRecipeIds } from "@/lib/meal-plan";
@@ -262,7 +260,6 @@ function SheetContent({
 }) {
   const household = useHousehold();
   const router = useRouter();
-  const { height } = useWindowDimensions();
   const listRef = useRef<FlatList<RecipeSummary>>(null);
   // Which rows are fully on screen right now – used to skip the auto-scroll
   // when the picked row is already visible (Thomas, 2026-07-19).
@@ -384,18 +381,16 @@ function SheetContent({
   const canSubmit =
     hasSelection && (mode !== "add" || selectedDates.length > 0);
 
-  // The sheet takes most of the screen (feedback 2026-07-16) but shrinks
-  // when the keyboard opens, so the search field never leaves the screen –
-  // the KeyboardAvoidingView shell pushes the card up, the content gives
-  // the height back.
-  const keyboardHeight = useKeyboardHeight();
-  const contentHeight = Math.min(
-    height * (withTabs ? 0.7 : 0.78),
-    height - keyboardHeight - 200,
-  );
-
+  // ⚠️ THE HEIGHT IS THE SHELL'S NOW (2026-08-20). This used to compute its own
+  // `height: min(70% or 78% of screen, screen - keyboard - 200)`, which is why
+  // the sheet stopped well short of the top and left dead space with a short
+  // list. The shell gives every sheet one ceiling - the screen minus the top
+  // strip - and shrinks it for the keyboard, so this fills what it is given.
+  //
+  // `flex: 1` and not a fixed height, so the FlatList above the footer takes
+  // the slack and the servings, day picker and CTA stay put at the bottom.
   return (
-    <View className="w-full gap-layout-small" style={{ height: contentHeight }}>
+    <View className="w-full flex-1 gap-layout-small">
       {/* Tabs, search and chips ride in the list header so they scroll away
           with the recipes (Thomas, 2026-07-19) instead of staying pinned. */}
       <FlatList

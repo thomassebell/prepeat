@@ -42,7 +42,6 @@ export function EditItemSheet({ item, onClose, onSave }: EditItemSheetProps) {
       // picker is closed – no dead space above the Done button – and growing
       // to near full-height as the list opens (Thomas, 2026-07-30).
       minHeightPercent={0}
-      maxHeightPercent={96}
       footer={
         <Pressable
           onPress={() => saveRef.current?.()}

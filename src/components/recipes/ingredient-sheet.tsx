@@ -134,7 +134,6 @@ export function IngredientSheet({
       // decision rather than making a second one. The remaining 4% is what keeps
       // the title clear of the notch - the reorder sheet reserves the same
       // margin for the same reason.
-      maxHeightPercent={96}
     >
       <Tabs>
         <TabItem
