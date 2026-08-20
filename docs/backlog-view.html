@@ -79,7 +79,7 @@
 <main>
   <header>
     <h1>Prep+Eat – open backlog</h1>
-    <p class="meta">80 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
+    <p class="meta">78 open items, generated from docs/backlog.md. Read-only – edit the backlog, then re-run <code>npm run backlog:view</code>.</p>
   </header>
   <div class="filter"><input id="q" type="search" placeholder="Filter tasks…" autocomplete="off"></div>
   <section class="waiting">
@@ -554,7 +554,7 @@
     </article>
     </section>
     <section>
-      <h2>Someday – not committed <span class="count" data-total="26">26</span></h2>
+      <h2>Someday – not committed <span class="count" data-total="25">25</span></h2>
       <h4>Ideas – not yet committed</h4>
     <article class="item">
       <h3>
@@ -740,15 +740,6 @@
       <h3>
         
         
-        <span><strong>The first ingredient heading sits 16px lower than the design draws it</strong></span>
-      </h3>
-      <dl><dt>Why not fixed</dt><dd>every LATER heading matches Figma exactly. Only the first one differs, because the design gives it no space above and the code draws every slot the same height.</dd><dt>Cost of fixing</dt><dd>the uniform slot height is what makes the section-drag arithmetic provably correct (<code>src/lib/reorder.ts</code>, 24 checks). Losing it to win 16px is a bad trade.</dd><dt>Status</dt><dd>recorded 2026-08-11 when the sections work closed. Reopen only if it reads wrong on a long recipe.</dd></dl>
-      
-    </article>
-    <article class="item">
-      <h3>
-        
-        
         <span><strong>Clean up recipes imported before 2026-07-29</strong></span>
       </h3>
       <dl><dt>Why</dt><dd>the parser used to leave whole instructions in the ingredient name ("garlic clove, cut in half"), and the shopping list inherited it.</dd><dt>Left</dt><dd>the parser itself is FIXED. What remains is the old recipes still holding mangled names – which needs the re-import gap below.</dd></dl>
@@ -769,8 +760,8 @@
         
         <span><strong>Drop the <code>meal_plans.pushed_to_list_at</code> column, eventually</strong></span>
       </h3>
-      <dl><dt>Why</dt><dd>it is a compatibility shim kept alive only for TestFlight build 10. Nothing reads or writes it.</dd><dt>Wait for</dt><dd>every tester's phone to run build 11 or later, confirmed INSTALLED in App Store Connect – not merely committed here.</dd><dt>Size</dt><dd>no hurry. A nullable column nobody touches costs nothing.</dd></dl>
-      <details><summary>Full note</summary><p>Migration 0023, APPLIED 2026-07-27, an always-null compatibility shim so TestFlight build 10 keeps working. Nothing reads or writes it. Drop it again – a fresh migration, never by editing 0022 or 0023 – only once every tester's phone runs a build that does not SELECT it (11 or later, confirmed INSTALLED in App Store Connect, not merely committed here). No hurry: a nullable column nobody touches costs nothing.</p></details>
+      <dl><dt>Why</dt><dd>it is a compatibility shim kept alive only for TestFlight build 10. Nothing reads or writes it.</dd><dt>Wait for</dt><dd>every tester's phone to run build 11 or later, confirmed INSTALLED in App Store Connect – not merely committed here.</dd></dl>
+      <details><summary>Full note</summary><p>⚠️ **THE PRECONDITION NOW LOOKS MET (checked 2026-08-20), which is worth recording so it is not re-derived.** The only App Store release ever made is <strong>1.0.0 = build 12</strong>, so no App Store user can be below 11; TestFlight is on 24/25. The remaining doubt is a tester who installed build 10 and never updated - which is what "confirmed INSTALLED" was asking about, and is still worth a look before dropping it. Size: no hurry. A nullable column nobody touches costs nothing, and the migration-safety rule says add first, remove a version later. Migration 0023, APPLIED 2026-07-27, an always-null compatibility shim so TestFlight build 10 keeps working. Nothing reads or writes it. Drop it again – a fresh migration, never by editing 0022 or 0023 – only once every tester's phone runs a build that does not SELECT it (11 or later, confirmed INSTALLED in App Store Connect, not merely committed here). No hurry: a nullable column nobody touches costs nothing.</p></details>
     </article>
     <article class="item">
       <h3>
@@ -792,7 +783,7 @@
     </article>
     </section>
     <section>
-      <h2>Standing – recurring <span class="count" data-total="5">5</span></h2>
+      <h2>Standing – recurring <span class="count" data-total="4">4</span></h2>
       
     <article class="item">
       <h3>
@@ -820,15 +811,6 @@
       </h3>
       <dl><dt>Trigger</dt><dd>the build's release notes being written – that is the one moment what-shipped exists in writing.</dd><dt>Steps</dt><dd>read the new release-notes entry, find the open items it describes, tick them. Then check whether any <code>Blocked by</code> or <code>Wait for</code> line names something that has since landed.</dd><dt>Why</dt><dd>added 2026-08-11 after two items were found finished – one of them for a week, unblocked by a fix whose own entry said it closed them. Closing is a separate job from doing and does not happen by itself.</dd></dl>
       
-    </article>
-    <article class="item">
-      <h3>
-        
-        
-        <span><strong>Rebuild the dev app when it stops opening</strong> (probably obsolete – see below)</span>
-      </h3>
-      <dl><dt>When</dt><dd>if the dev app refuses to open on either phone, run <code>./scripts/build-iphone.sh</code> and re-trust it if prompted.</dd></dl>
-      <details><summary>Full note</summary><p>⚠️ Probably not needed at all: measured 2026-07-27, the signing is a PAID team, so the profile runs to 2027 – a year, not seven days. Kept as a safety net. If the app is still opening fine, delete this item. Note: TestFlight is separate and unaffected. BOTH phones now run the dev app ("Prep+Eat Dev", bundle app.prepeat.dev) from <code>./scripts/build-iphone.sh &lt;UDID&gt;</code> – no arg defaults to Thomas's. The 2026-07-25 builds expire around <strong>2026-08-01</strong>; when the app stops opening, rebuild. The script deletes the provisioning profile, rebuilds with `xcodebuild -allowProvisioningUpdates -allowProvisioningDeviceRegistration` (minting a fresh 7-day profile), installs with <code>devicectl</code>, and prints the new expiry. WATCH that expiry – under ~7 days out means the free dev CERTIFICATE (also 7-day) is the limiter and needs regenerating too. Re-trust on the phone if prompted (Settings → General → VPN &amp; Device Management → Trust). Device UDIDs are not kept in this public repo – read them off the Mac with <code>xcrun xctrace list devices</code>. (Note: <code>expo run:ios</code> does NOT pass -allowProvisioningUpdates, so xcodebuild must be driven directly – that is what the script does.) The TestFlight app is separate and unaffected, so this chore ends entirely once no phone needs cable builds. <strong>PREMISE LOOKS WRONG (measured 2026-07-27):</strong> the signing is a PAID team, so the profile runs to 2027-07-24 and the certificate to 2027-07-06 – a year each, not seven days. The "expires 2026-08-01" date above is fiction. Kept as a safety net until mid-August; if the app is still opening fine then, delete this item.</p></details>
     </article>
     <article class="item">
       <h3>

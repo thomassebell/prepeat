@@ -4840,15 +4840,18 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
       Related: `tabs.tsx` is NOT part of this – decided the same day, it is app
            UI and stays (see the decisions log).
 
-- [ ] **The first ingredient heading sits 16px lower than the design draws it**
+- [x] **The first ingredient heading sits 16px lower than the design draws it**
       Why not fixed: every LATER heading matches Figma exactly. Only the first
            one differs, because the design gives it no space above and the code
            draws every slot the same height.
       Cost of fixing: the uniform slot height is what makes the section-drag
            arithmetic provably correct (`src/lib/reorder.ts`, 24 checks). Losing
            it to win 16px is a bad trade.
-      Status: recorded 2026-08-11 when the sections work closed. Reopen only if
-           it reads wrong on a long recipe.
+      Status: **DECIDED, not deferred** - closed 2026-08-20 so it stops reading as
+           outstanding work. The trade is recorded above and stands: the uniform
+           slot height is what makes the section-drag arithmetic provably correct
+           (`src/lib/reorder.ts`, 24 checks), and losing that to win 16px is a bad
+           trade. Reopen only if it reads wrong on a long recipe.
 
 - [ ] **Clean up recipes imported before 2026-07-29**
       Why: the parser used to leave whole instructions in the ingredient name
@@ -4907,7 +4910,14 @@ Wanted, unscheduled, or waiting for a trigger. Nothing here has a promise attach
            Nothing reads or writes it.
       Wait for: every tester's phone to run build 11 or later, confirmed
            INSTALLED in App Store Connect – not merely committed here.
-      Size: no hurry. A nullable column nobody touches costs nothing.
+      ⚠️ **THE PRECONDITION NOW LOOKS MET (checked 2026-08-20), which is worth
+           recording so it is not re-derived.** The only App Store release ever
+           made is **1.0.0 = build 12**, so no App Store user can be below 11;
+           TestFlight is on 24/25. The remaining doubt is a tester who installed
+           build 10 and never updated - which is what "confirmed INSTALLED"
+           was asking about, and is still worth a look before dropping it.
+      Size: no hurry. A nullable column nobody touches costs nothing, and the
+           migration-safety rule says add first, remove a version later.
 
       Migration 0023,
       APPLIED 2026-07-27, an always-null compatibility shim so TestFlight
@@ -5214,35 +5224,16 @@ Chores with a trigger rather than a finish line. These never get ticked off for 
   `scratchpad/gen-bulk.ts` from that session – it drives the app's own
   `importRecipeFromUrl` + `parseQuantity` offline, so seeded data goes through
   exactly the same parser as a real import.
-- [ ] **Rebuild the dev app when it stops opening** (probably obsolete – see below)
-      When: if the dev app refuses to open on either phone, run
-           `./scripts/build-iphone.sh` and re-trust it if prompted.
-      ⚠️ Probably not needed at all: measured 2026-07-27, the signing is a PAID
-           team, so the profile runs to 2027 – a year, not seven days. Kept as
-           a safety net. If the app is still opening fine, delete this item.
-      Note: TestFlight is separate and unaffected.
+- [x] **Rebuild the dev app when it stops opening – OBSOLETE, closed 2026-08-20**
+      Its own condition for deletion: *"if the app is still opening fine, delete
+           this item."* It is. Confirmed by the build on 2026-08-19, which
+           printed **signing valid until 2027-08-19** - a year, not seven days,
+           exactly as the 2026-07-27 measurement predicted, because the signing
+           is a PAID team. Thomas signed in and used the app the same evening.
+      The rebuild command is not lost with the item: `./scripts/build-iphone.sh`
+           is documented in CLAUDE.md and gets run whenever a device build is
+           needed, which is often.
 
-      BOTH phones now run the dev
-      app ("Prep+Eat Dev", bundle app.prepeat.dev) from
-      `./scripts/build-iphone.sh <UDID>` – no arg defaults to Thomas's. The
-      2026-07-25 builds expire around **2026-08-01**; when the app stops
-      opening, rebuild. The script deletes the provisioning profile, rebuilds
-      with `xcodebuild -allowProvisioningUpdates
-      -allowProvisioningDeviceRegistration` (minting a fresh 7-day profile),
-      installs with `devicectl`, and prints the new expiry. WATCH that expiry –
-      under ~7 days out means the free dev CERTIFICATE (also 7-day) is the
-      limiter and needs regenerating too. Re-trust on the phone if prompted
-      (Settings → General → VPN & Device Management → Trust).
-      Device UDIDs are not kept in this public repo – read them off the Mac
-      with `xcrun xctrace list devices`. (Note: `expo run:ios` does NOT pass
-      -allowProvisioningUpdates, so xcodebuild must be driven directly – that
-      is what the script does.) The TestFlight app is separate and unaffected,
-      so this chore ends entirely once no phone needs cable builds.
-      **PREMISE LOOKS WRONG (measured 2026-07-27):** the signing is a PAID
-      team, so the profile runs to 2027-07-24 and the certificate to
-      2027-07-06 – a year each, not seven days. The "expires 2026-08-01" date
-      above is fiction. Kept as a safety net until mid-August; if the app is
-      still opening fine then, delete this item.
 - [ ] **After every DS publish, re-sync the tokens**
       Trigger: Thomas says "DS published".
       Steps: rebuild tokens in the DS repo → `npm run sync-ds-tokens` here →
