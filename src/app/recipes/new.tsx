@@ -18,9 +18,11 @@ import {
 import { ServingsCounter } from "@/components/recipes/servings-counter";
 import { ImportRecipeSheet } from "@/components/recipes/import-recipe-sheet";
 import { IngredientSheet } from "@/components/recipes/ingredient-sheet";
+import { IngredientDragList } from "@/components/recipes/ingredient-drag-list";
 import { StepSheet } from "@/components/recipes/step-sheet";
 import type { ImportedRecipe } from "@/lib/recipe-import";
 import { ReorderSheet } from "@/components/ui/reorder-sheet";
+import { moveBlock } from "@/lib/reorder";
 // SwipeHint is deliberately gone from this screen (2026-08-07). Its job was to
 // advertise the swipe; the whole row now opens the editor on a tap, and
 // deleting lives inside that editor beside Done (Thomas: "put the delete
@@ -39,7 +41,6 @@ import { useHousehold } from "@/lib/household-context";
 import {
   createRecipe,
   fetchRecipe,
-  groupBySection,
   replaceIngredientsAndSteps,
   updateRecipeFacts,
   uploadRecipePhoto,
@@ -102,6 +103,10 @@ export default function AddRecipeScreen() {
   const [reordering, setReordering] = useState<"ingredients" | "steps" | null>(
     null,
   );
+  // True while an ingredient row is in the air. The page must not scroll under
+  // it: two vertical gestures on one finger is the one thing that makes an
+  // in-place drag unusable.
+  const [draggingIngredient, setDraggingIngredient] = useState(false);
   const [importing, setImporting] = useState(false);
   // Add and edit both go through the focused sheet: "add" opens it empty,
   // { index } opens it on an existing draft row (Pia's feedback, 2026-07-15).
@@ -285,6 +290,7 @@ export default function AddRecipeScreen() {
 
       <ScrollView
         className="flex-1"
+        scrollEnabled={!draggingIngredient}
         keyboardShouldPersistTaps="handled"
         automaticallyAdjustKeyboardInsets
         contentContainerStyle={{
@@ -429,84 +435,22 @@ export default function AddRecipeScreen() {
             </View>
             )}
             {/* One card per section, its heading sitting outside the card
-                (Figma 496:9255). 16px between every heading and card. */}
-            {groupBySection(ingredients).map((group, groupIndex) => (
-              <Fragment key={group.section ? `s${group.section.index}` : `g${groupIndex}`}>
-                {group.section != null && (
-                  <View className="w-full flex-row items-center gap-comp-small">
-                    {/* Tap the NAME to rename; the handle reorders, which is
-                        what the Figma header draws it for. */}
-                    <Pressable
-                      className="flex-1"
-                      onPress={() =>
-                        setIngredientSheet({ index: group.section!.index })
-                      }
-                      accessibilityRole="button"
-                      accessibilityLabel={t("recipes.form.editSection", {
-                        name: group.section.row.name,
-                      })}
-                    >
-                      <Text className="font-header text-display-6 font-emphasized text-text-default">
-                        {group.section.row.name}
-                      </Text>
-                    </Pressable>
-                    {/* Same rule as the "Ingredients" header above and as the
-                        recipe detail screen: nothing to reorder, no handle
-                        (2026-08-07). This one was the odd one out. */}
-                    {ingredients.length > 1 && (
-                      <Pressable
-                        onPress={() => setReordering("ingredients")}
-                        hitSlop={8}
-                        accessibilityRole="button"
-                        accessibilityLabel={t("recipes.detail.reorderIngredients")}
-                      >
-                        <MaterialIcons
-                          name="drag-handle"
-                          size={24}
-                          color={ds.colors.icon.subtle}
-                        />
-                      </Pressable>
-                    )}
-                  </View>
-                )}
-                {group.rows.length > 0 && (
-                  <View className="w-full overflow-hidden rounded-large bg-surface-neutral-white">
-                    {group.rows.map(({ row, index }, rowIndex) => (
-                      <Fragment key={`${row.name}-${index}`}>
-                        {rowIndex > 0 && <View className="h-px bg-border-subtle" />}
-                        <SwipeActions
-                          label={row.name}
-                          onEdit={() => setIngredientSheet({ index })}
-                          onDelete={() =>
-                            setIngredients((current) =>
-                              current.filter((_, i) => i !== index),
-                            )
-                          }
-                        >
-                          <View className="h-[56px] w-full flex-row items-center gap-layout-small bg-surface-neutral-white px-layout-small">
-                            <Pressable
-                              className="min-w-0 flex-1 flex-row items-center gap-layout-small"
-                              onPress={() => setIngredientSheet({ index })}
-                              accessibilityRole="button"
-                              accessibilityLabel={t("recipes.form.editRow", { name: row.name })}
-                            >
-                              <Text className="min-w-0 flex-1 font-paragraph text-paragraph font-default text-text-default">
-                                {row.name}
-                              </Text>
-                              {(row.quantityText?.length ?? 0) > 0 && (
-                                <Text className="font-paragraph text-paragraph font-default text-text-subtle">
-                                  {row.quantityText}
-                                </Text>
-                              )}
-                            </Pressable>
-                          </View>
-                        </SwipeActions>
-                      </Fragment>
-                    ))}
-                  </View>
-                )}
-              </Fragment>
-            ))}
+                (Figma 496:9255). 16px between every heading and card - and the
+                rows are draggable in place, which is why the whole block is one
+                component now (2026-08-20). */}
+            <IngredientDragList
+              rows={ingredients}
+              onEditRow={(index) => setIngredientSheet({ index })}
+              onDeleteRow={(index) =>
+                setIngredients((current) => current.filter((_, i) => i !== index))
+              }
+              onEditSection={(index) => setIngredientSheet({ index })}
+              onOpenReorderSheet={() => setReordering("ingredients")}
+              onDragChange={setDraggingIngredient}
+              onReorder={(from, target) =>
+                setIngredients((current) => moveBlock(current, from, 1, target))
+              }
+            />
             <View className="w-full overflow-hidden rounded-large bg-surface-neutral-white p-layout-small">
               <OutlineButton
                 icon="add"

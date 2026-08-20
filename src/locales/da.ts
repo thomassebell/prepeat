@@ -348,6 +348,9 @@ export const da: DeepPartial<typeof en> = {
       addInstruction: 'Tilføj trin',
       editSection: 'Rediger sektion %{name}',
       editRow: 'Rediger %{name}',
+      // ⚠️ NOT PROOF-READ – Danish is Thomas's to check, like the sharing
+      // strings (2026-08-17).
+      dragRow: 'Hold og træk for at flytte den.',
       editStep: 'Rediger trin %{number}',
       save: 'Gem opskrift',
       saveChanges: 'Gem ændringer',

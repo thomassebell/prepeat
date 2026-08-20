@@ -354,6 +354,9 @@ export const en = {
       addInstruction: 'Add instruction',
       editSection: 'Edit section %{name}',
       editRow: 'Edit %{name}',
+      // Spoken after the row's label, so it reads "Edit flour. Hold and drag
+      // to move it." The gesture is invisible otherwise.
+      dragRow: 'Hold and drag to move it.',
       editStep: 'Edit step %{number}',
       save: 'Save recipe',
       saveChanges: 'Save changes',

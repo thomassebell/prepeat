@@ -711,6 +711,57 @@ Committed work for the first update after launch. Panel findings default here un
 
 ### Known bugs (open)
 
+- [ ] **Drag an ingredient straight into another section, without opening a
+      sheet – built 2026-08-20, not yet seen on a device**
+      Source: Thomas, 2026-08-20 – *"is there a way where tapping the ingredient
+           opens the edit sheet, but dragging it reorders the list?"*, then
+           *"rows stay in their cards"* and *"follow Shopping, no frame"*.
+      Wait for: the next build on his phone. Tick it there, not here.
+
+      A **tap** still opens the edit sheet; a **hold of 200ms** lifts the row and
+      it follows the finger, its own card closing behind it and the destination
+      card opening a gap for it. The headings never move by hand – they move
+      because a card above them changed size, which is what makes the whole
+      thing read as one list rearranging rather than rows flying about.
+
+      **THE HOLD IS NOT A PREFERENCE and is worth not re-litigating.** The rows
+      live inside the page's scroll view, so a finger moving down a row is
+      asking for one of two things and nothing but a short press separates
+      them. 200ms is the Shopping screen's number, which is the same
+      interaction and the only one already approved.
+
+      **Where the work went, and it was not the gesture.** The reorder sheet
+      flattens everything into equal slots, so its arithmetic is one
+      multiplication. In place there is real geometry: a card that shrinks, a
+      card that grows, a section left empty that loses its card entirely, and
+      React's own column layout moving everything below a resized card BY
+      ITSELF. Count that last part twice and the list slides twice as far as the
+      finger. So the geometry is a separate module with no React in it
+      ([ingredient-drag-layout.ts](../src/lib/ingredient-drag-layout.ts)) and
+      `node scripts/check-ingredient-drag.mjs` runs the real functions – 22
+      checks, the load-bearing one being *"every promised landing is where the
+      editor actually draws the row"*, which is the promise the drop animation
+      makes and the only thing that catches it breaking.
+
+      Note: the edit screen's rows are unsaved drafts with no ids, so the same
+           trap as this morning's bug applies – the cleanup after a drop is
+           keyed on a counter, never on the order.
+
+      **⚠️ THREE IMPROVISATIONS, because no frame draws a row in flight**
+      (agreed with Thomas: follow Shopping rather than wait for a frame). The
+      lifted row is `surface-neutral-lighter` with a shadow – that colour is the
+      reorder sheet's own lifted row (Figma 508:13822), the nearest thing that
+      IS designed; 200ms to lift, from Shopping; 160ms for the list to move
+      aside, near the sheet's 140.
+
+      **AND TWO GAPS LEFT OPEN RATHER THAN INVENTED:**
+      1. **Dragging to the top or bottom edge does not scroll the page**, so a
+         section that is off-screen cannot be reached by dragging. The handle
+         and its sheet stay for exactly that, and for moving a whole SECTION,
+         which is still sheet-only.
+      2. **No haptic tick on lift** – the app has no haptics dependency at all,
+         and adding one is a decision rather than a detail.
+
 - [ ] **Reordering on the EDIT recipe screen left the list scrambled – fixed in
       code 2026-08-20, not yet seen on a device**
       Source: Thomas, 2026-08-20 – *"it's in edit recipe, when you have sections
