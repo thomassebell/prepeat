@@ -711,14 +711,16 @@ Committed work for the first update after launch. Panel findings default here un
 
 ### Known bugs (open)
 
-- [ ] **Two rows could show their swipe actions at once, anywhere in the app –
-      fixed 2026-08-20, not yet seen on a device**
+- [x] **DONE, CONFIRMED ON DEVICE 2026-08-20 – one open swipe row in the app, not
+      one per row**
       Source: Thomas, 2026-08-20, with a screenshot of three open at once on one
            recipe: *"it is possible to trigger the edit menu on multiple items at
            once, all over the app. I think if you trigger an edit menu, the other
-           open edit menu should close."*
-      Wait for: the next build on his phone. **Not on TestFlight** – build 26 was
-           cut before this; his call: *"we'll publish on next build."*
+           open edit menu should close."* Confirmed the same hour: *"it works."*
+      Note: **NOT ON TESTFLIGHT.** Build 26 was cut before it, and he chose to
+           let it ride: *"it will wait for the next testflight build."* So it is
+           on his dev build only until build 27 is cut, which is the same gap
+           this file exists to keep visible.
 
       Opening one row now closes whatever was open, the moment the new swipe
       STARTS rather than when it finishes. Shopping items, plan meals and every

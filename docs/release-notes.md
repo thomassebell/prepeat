@@ -123,6 +123,16 @@ feature, so as it stands this is 1.2.0.**
   newly added instruction no longer disappears until the recipe is saved; the
   grips, dividers and headings line up with each other.
 
+**AFTER BUILD 26, so NOT on TestFlight yet** (Thomas, 2026-08-20: *"it will wait
+for the next testflight build"*). It is on his dev build and nowhere else:
+
+- **Swiping a row open now closes any other open one**, on the shopping list,
+  the plan and both recipe screens. Several could sit open at once before.
+
+⚠️ **So `main` is once again ahead of the newest TestFlight build.** Build 26 is
+commit `8d5ef38`; anything after that needs a build 27 to reach even TestFlight.
+Still 1.2.0 – a fix inside an unreleased version does not move the number.
+
 ## 1.1.0 – SUBMITTED FOR REVIEW 2026-08-19 (build 25)
 
 WAITING_FOR_REVIEW since 20:32 UTC, carrying **build 25**. MANUAL release.
